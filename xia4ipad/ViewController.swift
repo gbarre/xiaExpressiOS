@@ -17,7 +17,7 @@ var index:Int = 0
 
 let reuseIdentifier = "PhotoCell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         
     var b64IMG:String = ""
     var currentElement:String = ""
@@ -30,6 +30,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     @IBAction func btnPhotoAlbum(sender: AnyObject) {
+        let picker : UIImagePickerController = UIImagePickerController()
+        picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
+        picker.delegate = self
+        picker.allowsEditing = false
+        self.presentViewController(picker, animated: true, completion: nil)
     }
 
     @IBOutlet weak var CollectionView: UICollectionView!
@@ -42,6 +48,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        // fetch the photos from collection
+        self.navigationController!.hidesBarsOnTap = false
+        mytoolBar.clipsToBounds = true
+        
+        // Re-init arraySources
+        arraySources = []
         
         // We need to work with files
         let fileManager = NSFileManager.defaultManager()
@@ -58,20 +74,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            print("Copy Atlanta to Documents directory...")
             arraySources.append("Atlanta.svg")
             nbThumb = arraySources.count
         }
         else {
             nbThumb = arraySources.count
         }
-        
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        // fetch the photos from collection
-        self.navigationController!.hidesBarsOnTap = false
-        mytoolBar.clipsToBounds = true
         
         index = 0
         
@@ -125,7 +133,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         parser.parse()
         
         // Convert base 64 to image
-        let imageData = NSData(base64EncodedString: b64IMG.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: ""), options: .IgnoreUnknownCharacters)
+        let imageData = NSData(base64EncodedString: b64IMG.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: ""), options : .IgnoreUnknownCharacters)
         let image = UIImage(data: imageData!)
         
         return image!
@@ -141,6 +149,31 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
     func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
         NSLog("failure error: %@", parseError)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+            
+        })
+        
+        // Let's store the image into an svg file
+        let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
+
+        let imageData = UIImageJPEGRepresentation(image, 85)
+        let size:CGSize = (image?.size)!
+        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
+        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
+
+        let svgText = buildSVG(trimmedBase64String, size: size, name: now)
+        
+        let path = svgDirectory + "\(now).svg"
+        do {
+            try svgText.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
     }
 
 
