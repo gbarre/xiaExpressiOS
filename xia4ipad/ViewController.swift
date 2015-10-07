@@ -7,31 +7,24 @@
 //
 
 import UIKit
-import Photos
 
-let reuseIdentifier = "PhotoCell"
+let home = NSHomeDirectory()
+let svgDirectory = home + "/Documents/"
 
-let paths = NSSearchPathForDirectoriesInDomains(
-                NSSearchPathDirectory.DocumentDirectory,
-                NSSearchPathDomainMask.UserDomainMask, true)
-let documentsDirectory = paths[0] as String
-let dataSources = documentsDirectory.stringByAppendingString("/data.plist")
 var arraySources: Array = [String]()
 var nbThumb:Int = 0
 var index:Int = 0
-var local:Bool = false
+
+let reuseIdentifier = "PhotoCell"
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate {
-    
-    var albumFound: Bool = false
-    var assetCollection: PHAssetCollection!
-    var photosAsset: PHFetchResult!
-    
+        
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
     var passName:Bool=false
     var parser = NSXMLParser()
+    var nbSVG:Int = 0
     
     @IBAction func btnCamera(sender: AnyObject) {
     }
@@ -50,20 +43,27 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        // check if dataSources file exist, if not create it
-        let checkValidation = NSFileManager.defaultManager()
-        if (checkValidation.fileExistsAtPath(dataSources)) {
-            print("Ok let's read local file")
-            local = true
-            // Put the svg list in an array
-            arraySources = NSArray(contentsOfFile: dataSources) as! [String]
+        // We need to work with files
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath(svgDirectory)
+        while let file = files?.nextObject() {
+            arraySources.append(file as! String)
+        }
+        
+        // Copy Atlanta.svg if the is no svg in Documents directory
+        if ( arraySources.count == 0 ) {
+            let defaultFile: NSString = NSBundle.mainBundle().pathForResource("Atlanta", ofType: "svg")!
+            do {
+                try fileManager.copyItemAtPath(defaultFile as String, toPath: svgDirectory + "Atlanta.svg")
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            print("Copy Atlanta to Documents directory...")
+            arraySources.append("Atlanta.svg")
             nbThumb = arraySources.count
         }
         else {
-            print("Damned, we do not have local file ... -_-'")
-
-            // TODO : Create empty file and have a label to explain
-            
+            nbThumb = arraySources.count
         }
         
     }
@@ -72,9 +72,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // fetch the photos from collection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
-        
-        // handle no photos in the assetCollection
-        // ... Have a label ...
         
         index = 0
         
@@ -112,14 +109,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
 
-        // Check if svg exists and load image from it
-        let checkValidation = NSFileManager.defaultManager()
-        if (checkValidation.fileExistsAtPath(dataSources)) {
-            cell.setThumbnailImage(getImageFromSVG(documentsDirectory + "/" + arraySources[index]))
-        }
-        else {
-            cell.backgroundColor = UIColor.redColor()
-        }
+        // Load image from svg
+        cell.setThumbnailImage(getImageFromSVG(svgDirectory + arraySources[index]))
         index++
         
         return cell

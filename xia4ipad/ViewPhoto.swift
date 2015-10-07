@@ -7,14 +7,10 @@
 //
 
 import UIKit
-import Photos
 
 class ViewPhoto: UIViewController, NSXMLParserDelegate {
-    
-    var assetCollection: PHAssetCollection!
-    var photosAsset: PHFetchResult!
+
     var index: Int = 0
-    
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
@@ -49,15 +45,9 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Remove hairline on toolbar
         mytoolBar.clipsToBounds = true
         
-        // Check if svg exists and load image from it
-        let checkValidation = NSFileManager.defaultManager()
-        if (checkValidation.fileExistsAtPath(dataSources)) {
-            imgView.image = getImageFromSVG(documentsDirectory + "/" + arraySources[index])
-        }
-        else {
-            imgView.backgroundColor = UIColor.redColor()
-        }
-
+        // Load image from svg
+        imgView.image = getImageFromSVG(svgDirectory + arraySources[index])
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
