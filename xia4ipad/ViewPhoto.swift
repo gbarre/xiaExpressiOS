@@ -49,16 +49,20 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Remove hairline on toolbar
         mytoolBar.clipsToBounds = true
         
-        // Load image from svg
-        imgView.image = getImageFromSVG(sourceDirectory + array[self.index])
+        // Check if svg exists and load image from it
+        let checkValidation = NSFileManager.defaultManager()
+        if (checkValidation.fileExistsAtPath(dataSources)) {
+            imgView.image = getImageFromSVG(documentsDirectory + "/" + arraySources[index])
+        }
+        else {
+            imgView.backgroundColor = UIColor.redColor()
+        }
 
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        //UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
-        
+                
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,8 +70,9 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func getImageFromSVG(url : String) -> UIImage {
-        let urlToSend: NSURL = NSURL(string: url)!
+    func getImageFromSVG(path : String) -> UIImage {
+        let urlToSend: NSURL = NSURL(fileURLWithPath: path)
+        
         // Parse the XML
         parser = NSXMLParser(contentsOfURL: urlToSend)!
         parser.delegate = self

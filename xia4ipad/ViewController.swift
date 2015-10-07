@@ -12,18 +12,14 @@ import Photos
 let reuseIdentifier = "PhotoCell"
 
 let paths = NSSearchPathForDirectoriesInDomains(
-                NSSearchPathDirectory.DocumentationDirectory,
+                NSSearchPathDirectory.DocumentDirectory,
                 NSSearchPathDomainMask.UserDomainMask, true)
 let documentsDirectory = paths[0] as String
-let filename = documentsDirectory.stringByAppendingString("/theFile.txt")
-
-
-let sourceDirectory = "http://guillaume-barre.ac-versailles.fr/xiadev/"
-// Get data.plist
-let dataURL = NSURL(string: sourceDirectory + "data.plist")
-let array = NSArray(contentsOfURL: dataURL!) as! [String]
-let nbThumb = array.count
-var i:Int = 0
+let dataSources = documentsDirectory.stringByAppendingString("/data.plist")
+var arraySources: Array = [String]()
+var nbThumb:Int = 0
+var index:Int = 0
+var local:Bool = false
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate {
     
@@ -38,11 +34,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var parser = NSXMLParser()
     
     @IBAction func btnCamera(sender: AnyObject) {
-
     }
     
     @IBAction func btnPhotoAlbum(sender: AnyObject) {
-        print(filename)
     }
 
     @IBOutlet weak var CollectionView: UICollectionView!
@@ -52,8 +46,25 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+
+        // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+        // check if dataSources file exist, if not create it
+        let checkValidation = NSFileManager.defaultManager()
+        if (checkValidation.fileExistsAtPath(dataSources)) {
+            print("Ok let's read local file")
+            local = true
+            // Put the svg list in an array
+            arraySources = NSArray(contentsOfFile: dataSources) as! [String]
+            nbThumb = arraySources.count
+        }
+        else {
+            print("Damned, we do not have local file ... -_-'")
+
+            // TODO : Create empty file and have a label to explain
+            
+        }
         
     }
     
@@ -65,7 +76,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // handle no photos in the assetCollection
         // ... Have a label ...
         
-        i = 0 
+        index = 0
         
         self.CollectionView.reloadData()
     }
@@ -101,15 +112,22 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
 
-        // Modify the cell
-        cell.setThumbnailImage(getImageFromSVG(sourceDirectory + array[i]))
-        i++
+        // Check if svg exists and load image from it
+        let checkValidation = NSFileManager.defaultManager()
+        if (checkValidation.fileExistsAtPath(dataSources)) {
+            cell.setThumbnailImage(getImageFromSVG(documentsDirectory + "/" + arraySources[index]))
+        }
+        else {
+            cell.backgroundColor = UIColor.redColor()
+        }
+        index++
         
         return cell
     }
+    
+    func getImageFromSVG(path : String) -> UIImage {
+        let urlToSend: NSURL = NSURL(fileURLWithPath: path)
         
-    func getImageFromSVG(url : String) -> UIImage {
-        let urlToSend: NSURL = NSURL(string: url)!
         // Parse the XML
         parser = NSXMLParser(contentsOfURL: urlToSend)!
         parser.delegate = self
