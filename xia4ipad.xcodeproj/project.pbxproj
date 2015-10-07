@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0172F981BC54D1B00073DBC /* Atlanta.svg in Resources */ = {isa = PBXBuildFile; fileRef = F0172F971BC54D1B00073DBC /* Atlanta.svg */; settings = {ASSET_TAGS = (); }; };
+		F0172F9A1BC5611E00073DBC /* Atlanta.svg in Resources */ = {isa = PBXBuildFile; fileRef = F0172F991BC5611E00073DBC /* Atlanta.svg */; settings = {ASSET_TAGS = (); }; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; settings = {ASSET_TAGS = (); }; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */; };
@@ -19,7 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F0172F971BC54D1B00073DBC /* Atlanta.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Atlanta.svg; path = ../../../../../Desktop/Atlanta.svg; sourceTree = "<group>"; };
+		F0172F991BC5611E00073DBC /* Atlanta.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Atlanta.svg; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 		F0F15E671BB6FCDF00268F06 /* xia4ipad */ = {
 			isa = PBXGroup;
 			children = (
-				F0172F971BC54D1B00073DBC /* Atlanta.svg */,
+				F0172F991BC5611E00073DBC /* Atlanta.svg */,
 				F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */,
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */,
@@ -137,7 +137,7 @@
 			files = (
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
-				F0172F981BC54D1B00073DBC /* Atlanta.svg in Resources */,
+				F0172F9A1BC5611E00073DBC /* Atlanta.svg in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
