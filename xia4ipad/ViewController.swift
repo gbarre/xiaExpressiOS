@@ -143,7 +143,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         // Load image from svg
         let (img, _) = getImageFromSVG(svgDirectory + arrayNames[index])
-        cell.setThumbnailImage(img)
+        cell.setThumbnailImage(img, thumbnailLabel : arrayNames[index])
         index++
         
         return cell
