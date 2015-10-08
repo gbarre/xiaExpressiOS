@@ -11,7 +11,8 @@ import UIKit
 let home = NSHomeDirectory()
 let svgDirectory = home + "/Documents/"
 
-var arraySources: Array = [String]()
+var arrayNames: Array = [String]()
+var arrayBase64Images: Array = [String]()
 var nbThumb:Int = 0
 var index:Int = 0
 
@@ -44,42 +45,49 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
+        // Load all svg names & base64 images
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath(svgDirectory)
+        while let file = files?.nextObject() {
+            arrayNames.append(file as! String)
+            let (_, b64img) = getImageFromSVG(svgDirectory + (file as! String))
+            arrayBase64Images.append(cleanBase64Header(b64img))
+        }
+        
+        // Create default svg if the is no svg in Documents directory
+        if ( arrayNames.count == 0 ) {
+            // Get the source file (content base64 image
+            let Base64XiaLogo: NSString = NSBundle.mainBundle().pathForResource("Base64XiaLogo", ofType: "txt")!
+            do {
+                let trimmedBase64String = try NSString(contentsOfFile: Base64XiaLogo as String, encoding: NSUTF8StringEncoding)
+                let svgText = buildSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: 123456)
+                let path = svgDirectory + "xia.svg"
+                do {
+                    // Write svg file
+                    try svgText.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+
+                    arrayNames.append("xia.svg")
+                    nbThumb = arrayNames.count
+                    arrayBase64Images.append((trimmedBase64String as String))
+                }
+                catch let error as NSError {
+                    print(error.localizedDescription)
+                }
+            }
+            catch {/* error handling here */}
+        }
+        else {
+            nbThumb = arrayNames.count
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         // fetch the photos from collection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
-        
-        // Re-init arraySources
-        arraySources = []
-        
-        // We need to work with files
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath(svgDirectory)
-        while let file = files?.nextObject() {
-            arraySources.append(file as! String)
-        }
-        
-        // Copy Atlanta.svg if the is no svg in Documents directory
-        if ( arraySources.count == 0 ) {
-            let defaultFile: NSString = NSBundle.mainBundle().pathForResource("Atlanta", ofType: "svg")!
-            do {
-                try fileManager.copyItemAtPath(defaultFile as String, toPath: svgDirectory + "Atlanta.svg")
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
-            arraySources.append("Atlanta.svg")
-            nbThumb = arraySources.count
-        }
-        else {
-            nbThumb = arraySources.count
-        }
         
         index = 0
         
@@ -118,13 +126,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
 
         // Load image from svg
-        cell.setThumbnailImage(getImageFromSVG(svgDirectory + arraySources[index]))
+        let (img, _) = getImageFromSVG(svgDirectory + arrayNames[index])
+        cell.setThumbnailImage(img)
         index++
         
         return cell
     }
     
-    func getImageFromSVG(path : String) -> UIImage {
+    func getImageFromSVG(path : String) -> (image: UIImage, base64: String) {
+        // Need to convert path to url before parsing
         let urlToSend: NSURL = NSURL(fileURLWithPath: path)
         
         // Parse the XML
@@ -132,11 +142,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         parser.delegate = self
         parser.parse()
         
-        // Convert base 64 to image
-        let imageData = NSData(base64EncodedString: b64IMG.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: ""), options : .IgnoreUnknownCharacters)
+        // Convert base64 to image
+        let imageData = NSData(base64EncodedString: cleanBase64Header(b64IMG), options : .IgnoreUnknownCharacters)
         let image = UIImage(data: imageData!)
         
-        return image!
+        return (image!, b64IMG)
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -144,7 +154,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if ( elementName == "image" ) { // Get the base 64 image for background
             b64IMG = attributeDict["xlink:href"]!
         }
-        
+        // Need a fix to take the first image only...
     }
 
     func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
@@ -174,6 +184,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             print(error.localizedDescription)
         }
         
+        arrayNames.append("\(now).svg")
+        nbThumb = arrayNames.count
+        arrayBase64Images.append(trimmedBase64String)
     }
 
 

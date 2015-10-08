@@ -46,7 +46,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         mytoolBar.clipsToBounds = true
         
         // Load image from svg
-        imgView.image = getImageFromSVG(svgDirectory + arraySources[index])
+        //imgView.image = getImageFromSVG(svgDirectory + arrayNames[index])
+        imgView.image = getImageFromBase64(arrayBase64Images[index])
         
     }
     
@@ -60,27 +61,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func getImageFromSVG(path : String) -> UIImage {
-        let urlToSend: NSURL = NSURL(fileURLWithPath: path)
-        
-        // Parse the XML
-        parser = NSXMLParser(contentsOfURL: urlToSend)!
-        parser.delegate = self
-        parser.parse()
-        
-        // Convert base 64 to image
-        let imageData = NSData(base64EncodedString: b64IMG.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: ""), options: .IgnoreUnknownCharacters)
+    func getImageFromBase64(b64IMG : String) -> UIImage {
+        let imageData = NSData(base64EncodedString: b64IMG, options: .IgnoreUnknownCharacters)
         let image = UIImage(data: imageData!)
         
         return image!
-    }
-    
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        currentElement=elementName;
-        if ( elementName == "image" ) { // Get the base 64 image for background
-            b64IMG = attributeDict["xlink:href"]!
-        }
-        
     }
     
 }
