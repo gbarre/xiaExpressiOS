@@ -77,5 +77,5 @@ func buildSVG (base64: String, size: CGSize, name: Int) -> String{
 }
 
 func cleanBase64Header (source: String) -> String {
-    return source.stringByReplacingOccurrencesOfString("data:image/([A-Za-z]+);base64,", withString: "", options: .RegularExpressionSearch, range: nil)
+    return source.stringByReplacingOccurrencesOfString("data:image/[A-Za-z]+;base64,", withString: "", options: .RegularExpressionSearch, range: nil)
 }
