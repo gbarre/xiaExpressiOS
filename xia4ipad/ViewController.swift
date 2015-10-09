@@ -18,8 +18,8 @@ var index:Int = 0
 
 let reuseIdentifier = "PhotoCell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+    
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
@@ -98,6 +98,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         else {
             nbThumb = arrayNames.count
         }
+        
+        let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteSVG:")
+        lpgr.minimumPressDuration = 0.5
+        lpgr.delaysTouchesBegan = true
+        lpgr.delegate = self
+        CollectionView.addGestureRecognizer(lpgr)
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -204,7 +211,67 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         nbThumb = arrayNames.count
         arrayBase64Images.append(trimmedBase64String)
     }
-
+    
+    func deleteSVG(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
+        }
+        
+        let p = gestureReconizer.locationInView(CollectionView)
+        let indexPath = CollectionView.indexPathForItemAtPoint(p)
+        var deleteIndex:Int = 9999
+        
+        if let path = indexPath {
+            deleteIndex = path.row
+            
+            let svgName = arrayNames[deleteIndex]
+            
+            let controller = UIAlertController(title: "Warning!",
+                message: "Delete \(svgName)?", preferredStyle: .Alert)
+            let yesAction = UIAlertAction(title: "Yes, I'm sure!",
+                style: .Destructive, handler: { action in
+                    
+                    // Delete the file
+                    let fileManager = NSFileManager()
+                    do {
+                        try fileManager.removeItemAtPath(svgDirectory + svgName)
+                    }
+                    catch let error as NSError {
+                        print(error.localizedDescription)
+                    }
+                    
+                    // Update arrays
+                    arrayNames.removeAtIndex(deleteIndex)
+                    arrayBase64Images.removeAtIndex(deleteIndex)
+                    
+                    // Delete cell in CollectionView
+                    nbThumb--
+                    self.CollectionView.deleteItemsAtIndexPaths([path])
+                    
+                    // Information
+                    let msg = "\(svgName) has been deleted..."
+                    let controller2 = UIAlertController(
+                        title:nil,
+                        message: msg, preferredStyle: .Alert)
+                    let cancelAction = UIAlertAction(title: "OK",
+                        style: .Default , handler: nil)
+                    controller2.addAction(cancelAction)
+                    self.presentViewController(controller2, animated: true,
+                        completion: nil)
+            })
+            let noAction = UIAlertAction(title: "No way!",
+                style: .Cancel, handler: nil)
+            
+            controller.addAction(yesAction)
+            controller.addAction(noAction)
+            
+            presentViewController(controller, animated: true, completion: nil)
+        }
+        else {
+            print("Could not find index path")
+        }
+        
+    }
 
 }
 
