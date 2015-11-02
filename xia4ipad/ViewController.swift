@@ -11,8 +11,8 @@ import UIKit
 let home = NSHomeDirectory()
 let svgDirectory = home + "/Documents/"
 
-var arrayNames: Array = [String]()
-var arrayBase64Images: Array = [String]()
+var arrayNames = [String]()
+var arrayBase64Images = [String]()
 var nbThumb:Int = 0
 var index:Int = 0
 
