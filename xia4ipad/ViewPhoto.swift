@@ -30,6 +30,18 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         print("Trash")
     }
 
+    @IBAction func btnPlay(sender: AnyObject) {
+        print("Play")
+    }
+    
+    @IBAction func btnAdd(sender: AnyObject) {
+        print("Add")
+    }
+    
+    @IBAction func btnEdit(sender: AnyObject) {
+        print("Edit")
+    }
+    
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var mytoolBar: UIToolbar!
