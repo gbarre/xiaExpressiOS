@@ -155,7 +155,7 @@
                                             <action selector="btnAdd:" destination="fts-Lk-uqf" id="C44-oX-GVO"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="compose" id="CLi-a8-1cH">
+                                    <barButtonItem systemItem="reply" id="CLi-a8-1cH">
                                         <connections>
                                             <action selector="btnEdit:" destination="fts-Lk-uqf" id="vsD-sN-vHM"/>
                                         </connections>
