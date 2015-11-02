@@ -42,6 +42,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         print("Edit")
     }
     
+    
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var mytoolBar: UIToolbar!
