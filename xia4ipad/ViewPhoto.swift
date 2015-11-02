@@ -53,7 +53,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         //set image for button
         button.setImage(UIImage(named: "Info-24"), forState: UIControlState.Normal)
         //add function for button
-        button.addTarget(self, action: "btnOption", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: "btnOption:", forControlEvents: UIControlEvents.TouchUpInside)
         //set frame
         button.frame = CGRectMake(0, 0, 31, 31)
         
@@ -69,7 +69,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         mytoolBar.clipsToBounds = true
         
         // Load image from svg
-        //imgView.image = getImageFromSVG(svgDirectory + arrayNames[index])
         imgView.image = getImageFromBase64(arrayBase64Images[index])
         
     }
@@ -91,8 +90,27 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         return image!
     }
     
-    func btnOption() {
-        print("Edit")
+    func btnOption(sender: UIButton!) {
+        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
+        let growAction = UIAlertAction(title: "Enable Growing (ToDo)", style: .Default, handler: { action in
+            print("Enable growing")})
+        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 1...")})
+        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 2...")})
+        
+        menu.addAction(growAction)
+        menu.addAction(titleAction)
+        menu.addAction(descriptionAction)
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.sourceView = sender
+            ppc.sourceRect = sender.bounds
+            ppc.permittedArrowDirections = .Up
+        }
+        
+        presentViewController(menu, animated: true, completion: nil)
+        
     }
     
 }
