@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F0172FA21BC57EA200073DBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0172FA11BC57EA200073DBC /* Util.swift */; };
+		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F0B403A01BC678280064AAD9 /* Base64XiaLogo.txt in Resources */ = {isa = PBXBuildFile; fileRef = F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		F0172FA11BC57EA200073DBC /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Base64XiaLogo.txt; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +78,7 @@
 				F0F15E741BB6FCDF00268F06 /* Info.plist */,
 				F0172FA11BC57EA200073DBC /* Util.swift */,
 				F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */,
+				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 			);
 			path = xia4ipad;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
+				F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

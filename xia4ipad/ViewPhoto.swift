@@ -38,10 +38,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         print("Add")
     }
     
-    @IBAction func btnEdit(sender: AnyObject) {
-        print("Edit")
-    }
-    
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var mytoolBar: UIToolbar!
@@ -50,7 +46,22 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
 
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
-    
+        
+        
+        //create the option button
+        let button = UIButton(type : UIButtonType.Custom)
+        //set image for button
+        button.setImage(UIImage(named: "Info-24"), forState: UIControlState.Normal)
+        //add function for button
+        button.addTarget(self, action: "btnOption", forControlEvents: UIControlEvents.TouchUpInside)
+        //set frame
+        button.frame = CGRectMake(0, 0, 31, 31)
+        
+        let barButton = UIBarButtonItem(customView: button)
+        //assign button to navigationbar
+        self.navigationItem.rightBarButtonItem = barButton
+        self.mytoolBar.items?.insert(barButton, atIndex: 6)
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -78,6 +89,10 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         let image = UIImage(data: imageData!)
         
         return image!
+    }
+    
+    func btnOption() {
+        print("Edit")
     }
     
 }
