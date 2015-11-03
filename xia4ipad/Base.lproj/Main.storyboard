@@ -153,7 +153,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="1z8-uf-W2n"/>
                                     <barButtonItem systemItem="add" id="qmr-90-0VD">
                                         <connections>
-                                            <action selector="btnAdd:" destination="fts-Lk-uqf" id="C44-oX-GVO"/>
+                                            <action selector="btnAdd:" destination="fts-Lk-uqf" id="VYc-o2-fqq"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="7" style="plain" systemItem="fixedSpace" id="2NI-FH-Qic"/>
@@ -189,6 +189,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
                     <connections>
+                        <outlet property="btnAddImg" destination="qmr-90-0VD" id="jCN-hK-2Xa"/>
                         <outlet property="imgView" destination="Lor-vQ-XRZ" id="Wk5-YA-ZZ4"/>
                         <outlet property="mytoolBar" destination="c8Q-UV-Vxn" id="Kve-7L-DbT"/>
                     </connections>

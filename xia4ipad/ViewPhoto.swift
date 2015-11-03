@@ -34,9 +34,54 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         print("Play")
     }
     
-    @IBAction func btnAdd(sender: AnyObject) {
-        print("Add")
+    @IBOutlet weak var btnAddImg: UIBarButtonItem!
+    @IBAction func btnAdd(sender: UIBarButtonItem) {
+
+        let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
+
+        if (btnAddImg.tag == 0) { // Add/move points mode
+            let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
+                print("Enable growing")
+                self.btnAddImg.tag = 1
+            })
+            let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
+                print("ToDo : build interface 1...")
+                self.btnAddImg.tag = 1
+            })
+            let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
+                print("ToDo : build interface 2...")
+                self.btnAddImg.tag = 1
+            })
+            
+            menu.addAction(growAction)
+            menu.addAction(titleAction)
+            menu.addAction(descriptionAction)
+        }
+        else { // only move mode
+            let editAction = UIAlertAction(title: "Edit mode", style: .Default, handler: { action in
+                print("Edit mode")})
+            let moveAction = UIAlertAction(title: "Move mode", style: .Default, handler: { action in
+                print("Move mode")})
+            let endAction = UIAlertAction(title: "End creation", style: .Default, handler: { action in
+                print("End detail creation")
+                self.btnAddImg.tag = 0
+            })
+            
+            menu.addAction(editAction)
+            menu.addAction(moveAction)
+            menu.addAction(endAction)
+        }
+        
+        
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.barButtonItem = sender
+            ppc.permittedArrowDirections = .Up
+        }
+        
+        presentViewController(menu, animated: true, completion: nil)
     }
+    
     
     @IBOutlet weak var imgView: UIImageView!
     
