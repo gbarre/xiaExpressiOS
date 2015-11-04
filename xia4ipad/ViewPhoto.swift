@@ -212,8 +212,18 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         mytoolBar.clipsToBounds = true
         
         // Load image from svg
-        imgView.image = getImageFromBase64(arrayBase64Images[index])
+        let img = getImageFromBase64(arrayBase64Images[index])
+        imgView.image = img
         
+        var value: Int
+        if ( img.size.width > img.size.height ) { // turn device to landscape
+            value = UIInterfaceOrientation.LandscapeRight.rawValue
+        }
+        else { // turn device to portrait
+            value = UIInterfaceOrientation.Portrait.rawValue
+        }
+        UIDevice.currentDevice().setValue(value, forKey: "orientation")
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -381,6 +391,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     }
     
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
+        // translate from C : http://alienryderflex.com/polygon/
         let polyCorners = points.count
         var j = polyCorners - 1
         var oddNodes:Bool = false
