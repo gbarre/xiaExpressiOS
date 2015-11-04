@@ -83,6 +83,19 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     if subview.tag == 42 {
                         subview.removeFromSuperview()
                     }
+                    if subview.tag == 43 {
+                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
+                        myPoints.removeFirst()
+                        subview.removeFromSuperview()
+                        
+                        let imageName = "CropperCornerView.png"
+                        let image = UIImage(named: imageName)
+                        let imageView = UIImageView(image: image!)
+                        imageView.center = location
+                        imageView.tag = 43
+                        myPoints.append(imageView)
+                        self.view.addSubview(imageView)
+                    }
                 }
                 // Build polygon
                 if myPoints.count > 1 {
@@ -95,9 +108,59 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 self.endEditShape = false
                 if myPoints.count > 2 {
                     self.buildShape(true)
-                }})
+                }
+                
+                // Changing corner image
+                for subview in self.view.subviews {
+                    if subview.tag == 43 {
+                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
+                        myPoints.removeFirst()
+                        subview.removeFromSuperview()
+                        
+                        let imageName = "Info-24.png"
+                        let image = UIImage(named: imageName)
+                        let imageView = UIImageView(image: image!)
+                        imageView.center = location
+                        imageView.tag = 43
+                        myPoints.append(imageView)
+                        self.view.addSubview(imageView)
+                    }
+                }
+                
+            })
             let endAction = UIAlertAction(title: "End shape creation", style: .Default, handler: { action in
                 print("End detail creation")
+                // Remove and rebuild the shape to avoid the overlay on alpha channel
+                for subview in self.view.subviews {
+                    if subview.tag == 42 {
+                        subview.removeFromSuperview()
+                    }
+                    if subview.tag == 43 {
+                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
+                        myPoints.removeFirst()
+                        subview.removeFromSuperview()
+                        
+                        let imageName = "Info-24.png"
+                        let image = UIImage(named: imageName)
+                        let imageView = UIImageView(image: image!)
+                        imageView.center = location
+                        imageView.tag = 43
+                        imageView.layer.zPosition = 1
+                        myPoints.append(imageView)
+                        self.view.addSubview(imageView)
+                    }
+                }
+                if myPoints.count > 2 {
+                    self.buildShape(false)
+                    self.buildShape(true)
+                }
+                else { // only 1 or 2 points, remove them
+                    for subview in self.view.subviews {
+                        if subview.tag == 43 {
+                            subview.removeFromSuperview()
+                        }
+                    }
+                }
                 self.endEditShape = false
                 self.btnAddMenu.tag = 0
             })
@@ -163,71 +226,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func getImageFromBase64(b64IMG : String) -> UIImage {
-        let imageData = NSData(base64EncodedString: b64IMG, options: .IgnoreUnknownCharacters)
-        let image = UIImage(data: imageData!)
-        
-        return image!
-    }
-    
-    func btnOption(sender: UIButton!) {
-        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
-        let growAction = UIAlertAction(title: "Enable Growing (ToDo)", style: .Default, handler: { action in
-            print("Enable growing")})
-        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 1...")})
-        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 2...")})
-        
-        menu.addAction(growAction)
-        menu.addAction(titleAction)
-        menu.addAction(descriptionAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.sourceView = sender
-            ppc.sourceRect = sender.bounds
-            ppc.permittedArrowDirections = .Up
-        }
-        
-        presentViewController(menu, animated: true, completion: nil)
-        
-    }
-    
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let touch: UITouch = touches.first!
-        location = touch.locationInView(self.view)
-        
-        if ( movingPoint != -1 ) {
-            let ploc = myPoints[movingPoint].center
-            
-            let xDist: CGFloat = (location.x - ploc.x);
-            let yDist: CGFloat = (location.y - ploc.y);
-            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist));
-            
-            if ( distance < 30 ) {
-                let toMove: UIView = myPoints[movingPoint] as! UIView
-                toMove.center = location
-                myPoints[movingPoint] = toMove
-                moving = true
-            }
-        }
-        
-        if ( movingShape != -1 ) {
-            let deltaX = location.x - movingCoords.x
-            let deltaY = location.y - movingCoords.y
-            
-            for subview in view.subviews {
-                if ( subview.tag == 42 || subview.tag == 43 ) {
-                    let origin = subview.frame.origin
-                    let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
-                    subview.frame.origin = destination
-                }
-            }
-            movingCoords = location
-            moving = true
-        }
-    }
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
@@ -288,6 +286,42 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         }
     }
     
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch: UITouch = touches.first!
+        location = touch.locationInView(self.view)
+        
+        if ( movingPoint != -1 ) {
+            let ploc = myPoints[movingPoint].center
+            
+            let xDist: CGFloat = (location.x - ploc.x);
+            let yDist: CGFloat = (location.y - ploc.y);
+            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist));
+            
+            if ( distance < 30 ) {
+                let toMove: UIView = myPoints[movingPoint] as! UIView
+                toMove.center = location
+                myPoints[movingPoint] = toMove
+                moving = true
+            }
+        }
+        
+        if ( movingShape != -1 ) {
+            let deltaX = location.x - movingCoords.x
+            let deltaY = location.y - movingCoords.y
+            
+            for subview in view.subviews {
+                if ( subview.tag == 42 || subview.tag == 43 ) {
+                    let origin = subview.frame.origin
+                    let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
+                    subview.frame.origin = destination
+                }
+            }
+            movingCoords = location
+            moving = true
+        }
+    }
+    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         if moving {
@@ -297,12 +331,9 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     subview.removeFromSuperview()
                 }
             }
-            
-            //buildShape(false)
-            
             moving = false
         }
-        if myPoints.count > 2 {
+        if ( myPoints.count > 2  && btnAddMenu.tag == 1 ) {
             buildShape(false)
         }
         if movingShape != -1 {
@@ -316,6 +347,37 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 subview.layer.zPosition = 1
             }
         }
+    }
+    
+    
+    func getImageFromBase64(b64IMG : String) -> UIImage {
+        let imageData = NSData(base64EncodedString: b64IMG, options: .IgnoreUnknownCharacters)
+        let image = UIImage(data: imageData!)
+        
+        return image!
+    }
+    
+    func btnOption(sender: UIButton!) {
+        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
+        let growAction = UIAlertAction(title: "Enable Growing (ToDo)", style: .Default, handler: { action in
+            print("Enable growing")})
+        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 1...")})
+        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 2...")})
+        
+        menu.addAction(growAction)
+        menu.addAction(titleAction)
+        menu.addAction(descriptionAction)
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.sourceView = sender
+            ppc.sourceRect = sender.bounds
+            ppc.permittedArrowDirections = .Up
+        }
+        
+        presentViewController(menu, animated: true, completion: nil)
+        
     }
     
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
