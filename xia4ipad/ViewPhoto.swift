@@ -218,7 +218,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         imgView.image = img
         
         var value: Int
-        
         if ( img.size.width > img.size.height ) { // turn device to landscape
             if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
             {
