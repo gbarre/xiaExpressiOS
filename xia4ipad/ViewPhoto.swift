@@ -244,7 +244,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     {
         if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
         {
-            print("landscape")
             if ( !landscape ) {
                 let value = UIInterfaceOrientation.Portrait.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
@@ -253,7 +252,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         
         if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
         {
-            print("Portrait")
             if ( landscape ) {
                 let value = UIInterfaceOrientation.LandscapeRight.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
