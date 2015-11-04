@@ -217,7 +217,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             let deltaY = location.y - movingCoords.y
             
             for subview in view.subviews {
-                if subview.tag == 43 { // moving only points, shape will be calculate
+                if ( subview.tag == 42 || subview.tag == 43 ) {
                     let origin = subview.frame.origin
                     let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
                     subview.frame.origin = destination
@@ -275,45 +275,14 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                 }
                 
-                var xMin: CGFloat = UIScreen.mainScreen().bounds.width
-                var xMax: CGFloat = 0
-                var yMin: CGFloat = UIScreen.mainScreen().bounds.height
-                var yMax: CGFloat = 0
-                // Get dimensions of the shape 43
-                for subview in view.subviews {
-                    if subview.tag == 43 {
-                        let xMinSubview = subview.frame.origin.x
-                        let yMinSubview = subview.frame.origin.y
-                        let xMaxSubview = subview.frame.origin.x + 29
-                        let yMaxSubview = subview.frame.origin.y + 29
-                        if ( xMinSubview < xMin ) {
-                            xMin = xMinSubview
-                        }
-                        if ( yMinSubview < yMin ) {
-                            yMin = yMinSubview
-                        }
-                        if ( xMaxSubview > xMax ) {
-                            xMax = xMaxSubview
-                        }
-                        if ( yMaxSubview > yMax ) {
-                            yMax = yMaxSubview
-                        }
-                    }
-                }
-                let shapeWidth = xMax - xMin
-                let shapeHeight = yMax - yMin
-                
-                // Build the shape
-                let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: 0, points: myPoints)
-                myView.backgroundColor = UIColor(white: 0, alpha: 0)
-                myView.tag = 42
-                view.addSubview(myView)
+                self.buildShape(false)
             }
             
         default:
             if ( myPoints.count > 2 && pointInPolygon(myPoints, touchPoint: location) && btnAddMenu.tag == 1 ) {
                 movingShape = 1
                 movingCoords = location
+                moving = true
             }
             
         }
