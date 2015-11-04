@@ -189,7 +189,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
                     <connections>
-                        <outlet property="btnAddImg" destination="qmr-90-0VD" id="jCN-hK-2Xa"/>
+                        <outlet property="btnAddMenu" destination="qmr-90-0VD" id="6gg-eE-R4f"/>
                         <outlet property="imgView" destination="Lor-vQ-XRZ" id="Wk5-YA-ZZ4"/>
                         <outlet property="mytoolBar" destination="c8Q-UV-Vxn" id="Kve-7L-DbT"/>
                     </connections>
