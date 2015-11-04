@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F0172FA21BC57EA200073DBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0172FA11BC57EA200073DBC /* Util.swift */; };
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
+		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F0B403A01BC678280064AAD9 /* Base64XiaLogo.txt in Resources */ = {isa = PBXBuildFile; fileRef = F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		F0172FA11BC57EA200073DBC /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
+		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Base64XiaLogo.txt; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				F0F15E741BB6FCDF00268F06 /* Info.plist */,
+				F0725E591BEA87D9007ACE9B /* AEXML.swift */,
 				F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */,
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
@@ -163,6 +166,7 @@
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
 				F0172FA21BC57EA200073DBC /* Util.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
+				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
 				F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */,
 				F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */,
 			);

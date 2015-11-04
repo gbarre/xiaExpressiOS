@@ -18,7 +18,7 @@ var index:Int = 0
 
 let reuseIdentifier = "PhotoCell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, NSXMLParserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     var b64IMG:String = ""
     var currentElement:String = ""
@@ -157,31 +157,24 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func getImageFromSVG(path : String) -> (image: UIImage, base64: String) {
-        // Need to convert path to url before parsing
-        let urlToSend: NSURL = NSURL(fileURLWithPath: path)
+        let data = NSData(contentsOfFile: path)
         
-        // Parse the XML
-        parser = NSXMLParser(contentsOfURL: urlToSend)!
-        parser.delegate = self
-        parser.parse()
+        var base64:String = ""
+        do {
+            let xmlDoc = try AEXMLDocument(xmlData: data!)
+            
+            // get base64 of the first image
+            base64 = xmlDoc.root["image"].attributes["xlink:href"]!
+        }
+        catch {
+            print("\(error)")
+        }
         
         // Convert base64 to image
-        let imageData = NSData(base64EncodedString: cleanBase64Header(b64IMG), options : .IgnoreUnknownCharacters)
+        let imageData = NSData(base64EncodedString: cleanBase64Header(base64), options : .IgnoreUnknownCharacters)
         let image = UIImage(data: imageData!)
         
-        return (image!, b64IMG)
-    }
-    
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        currentElement=elementName;
-        if ( elementName == "image" ) { // Get the base 64 image for background
-            b64IMG = attributeDict["xlink:href"]!
-        }
-        // Need a fix to take the first image only...
-    }
-
-    func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
-        NSLog("failure error: %@", parseError)
+        return (image!, base64)
     }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
