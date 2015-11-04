@@ -27,6 +27,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     var movingCoords = CGPointMake(0, 0)
     var endEditShape = false
     
+    var landscape = false
+    
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -216,14 +218,47 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         imgView.image = img
         
         var value: Int
+        
         if ( img.size.width > img.size.height ) { // turn device to landscape
-            value = UIInterfaceOrientation.LandscapeRight.rawValue
+            if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
+            {
+                value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+            landscape = true
         }
         else { // turn device to portrait
-            value = UIInterfaceOrientation.Portrait.rawValue
+            if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
+            {
+                value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+            landscape = false
         }
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
+    }
+    
+    func rotated()
+    {
+        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
+        {
+            print("landscape")
+            if ( !landscape ) {
+                let value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
+        
+        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
+        {
+            print("Portrait")
+            if ( landscape ) {
+                let value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
