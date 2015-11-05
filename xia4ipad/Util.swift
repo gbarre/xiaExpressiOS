@@ -8,72 +8,89 @@
 
 import UIKit
 
-func buildSVG (base64: String, size: CGSize, name: Int) -> String{
+func createSVG (base64: String, size: CGSize, name: String) -> String {
     let width:Int = Int(size.width)
     let height:Int = Int(size.height)
     
-    var svgParts:String = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
-    svgParts = svgParts + "<!-- Created with Inkscape (http://www.inkscape.org/) -->\n"
-    svgParts = svgParts + "\n"
-    svgParts = svgParts + "<svg\n"
-    svgParts = svgParts + "xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n"
-    svgParts = svgParts + "xmlns:cc=\"http://creativecommons.org/ns#\"\n"
-    svgParts = svgParts + "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-    svgParts = svgParts + "xmlns:svg=\"http://www.w3.org/2000/svg\"\n"
-    svgParts = svgParts + "xmlns=\"http://www.w3.org/2000/svg\"\n"
-    svgParts = svgParts + "xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
-    svgParts = svgParts + "xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n"
-    svgParts = svgParts + "xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"\n"
-    svgParts = svgParts + "id=\"svg3371\"\n"
-    svgParts = svgParts + "version=\"1.1\"\n"
-    svgParts = svgParts + "inkscape:version=\"0.91pre3 r13670\"\n"
-    svgParts = svgParts + "width=\"\(width)\"\n"
-    svgParts = svgParts + "height=\"\(height)\"\n"
-    svgParts = svgParts + "viewBox=\"0 0 \(width) \(height)\"\n"
-    svgParts = svgParts + "sodipodi:docname=\"\(name)\">\n"
-    svgParts = svgParts + "<metadata\n"
-    svgParts = svgParts + "id=\"metadata3377\">\n"
-    svgParts = svgParts + "<rdf:RDF>\n"
-    svgParts = svgParts + "<cc:Work\n"
-    svgParts = svgParts + "rdf:about=\"\">\n"
-    svgParts = svgParts + "<dc:format>image/svg+xml</dc:format>\n"
-    svgParts = svgParts + "<dc:type\n"
-    svgParts = svgParts + "rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\n"
-    svgParts = svgParts + "<dc:title></dc:title>\n"
-    svgParts = svgParts + "</cc:Work>\n"
-    svgParts = svgParts + "</rdf:RDF>\n"
-    svgParts = svgParts + "</metadata>\n"
-    svgParts = svgParts + "<defs\n"
-    svgParts = svgParts + "id=\"defs3375\" />\n"
-    svgParts = svgParts + "<sodipodi:namedview\n"
-    svgParts = svgParts + "pagecolor=\"#ffffff\"\n"
-    svgParts = svgParts + "bordercolor=\"#666666\"\n"
-    svgParts = svgParts + "borderopacity=\"1\"\n"
-    svgParts = svgParts + "objecttolerance=\"10\"\n"
-    svgParts = svgParts + "gridtolerance=\"10\"\n"
-    svgParts = svgParts + "guidetolerance=\"10\"\n"
-    svgParts = svgParts + "inkscape:pageopacity=\"0\"\n"
-    svgParts = svgParts + "inkscape:pageshadow=\"2\"\n"
-    svgParts = svgParts + "inkscape:window-width=\"640\"\n"
-    svgParts = svgParts + "inkscape:window-height=\"480\"\n"
-    svgParts = svgParts + "id=\"namedview3373\"\n"
-    svgParts = svgParts + "showgrid=\"false\"\n"
-    svgParts = svgParts + "inkscape:zoom=\"0.65065147\"\n"
-    svgParts = svgParts + "inkscape:cx=\"909\"\n"
-    svgParts = svgParts + "inkscape:cy=\"614\"\n"
-    svgParts = svgParts + "inkscape:current-layer=\"svg3371\" />\n"
-    svgParts = svgParts + "<image\n"
-    svgParts = svgParts + "width=\"\(width)\"\n"
-    svgParts = svgParts + "height=\"\(height)\"\n"
-    svgParts = svgParts + "preserveAspectRatio=\"none\"\n"
-    svgParts = svgParts + "xlink:href=\"data:image/jpeg;base64,\(base64)\n"
-    svgParts = svgParts + "\"\n"
-    svgParts = svgParts + "id=\"\(name)\"\n"
-    svgParts = svgParts + "x=\"0\"\n"
-    svgParts = svgParts + "y=\"0\" />\n"
-    svgParts = svgParts + "</svg>\n"
+    let svgFile = AEXMLDocument()
     
-    return svgParts
+    // Create root svg with attributes
+    let svgAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
+        "xmlns:cc" : "http://creativecommons.org/ns#",
+        "xmlns:rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "xmlns:svg" : "http://www.w3.org/2000/svg",
+        "xmlns" : "http://www.w3.org/2000/svg",
+        "xmlns:xlink" : "http://www.w3.org/1999/xlink",
+        "xmlns:sodipodi" : "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+        "xmlns:inkscape" : "http://www.inkscape.org/namespaces/inkscape",
+        "id" : "svg3336",
+        "version" : "1.1",
+        "inkscape:version" : "0.91 r13725",
+        "width" : "\(width)",
+        "height" : "\(height)",
+        "viewBox" : "0 0 \(width) \(height)",
+        "sodipodi:docname" : "\(name).svg"]
+    let svg = svgFile.addChild(name: "svg", attributes: svgAttributes)
+    
+    // Insert default title
+    svg.addChild(name: "title", value: "\(name)", attributes: ["id" : "title1"])
+    
+    // Insert default metadatas
+    let metadata = svg.addChild(name: "metadata", value: nil, attributes: ["id" : "metadata1"])
+    let rdf = metadata.addChild(name: "rdf:RDF")
+    let work = rdf.addChild(name: "cc:work", value: nil, attributes: ["rdf:about" : ""])
+    work.addChild(name: "dc:format", value: "image/svg+xml", attributes: nil)
+    work.addChild(name: "dc:type", value: nil, attributes: ["rdf:resource" : "http://purl.org/dc/dcmitype/StillImage"])
+    work.addChild(name: "dc:title", value: "\(name)", attributes: nil)
+    let creator = work.addChild(name: "dc:creator")
+    let agent = creator.addChild(name: "cc:agent")
+    agent.addChild(name: "dc:title", value: "Author", attributes: nil)
+    
+    // Insert def
+    svg.addChild(name: "def", value: nil, attributes: ["id" : "def1"])
+    
+    // Insert default inkscape view
+    let namedviewAttributes = ["pagecolor" : "#ffffff",
+        "bordercolor" : "#666666",
+        "borderopacity" : "1",
+        "objecttolerance" : "10",
+        "gridtolerance" : "10",
+        "guidetolerance" : "10",
+        "inkscape:pageopacity" : "0",
+        "inkscape:pageshadow" : "2",
+        "inkscape:window-width" : "640",
+        "inkscape:window-height" : "480",
+        "id" : "namedview3338",
+        "showgrid" : "false",
+        "inkscape:zoom" : "0.65",
+        "inkscape:cx" : "300",
+        "inkscape:cy" : "600",
+        "inkscape:window-x" : "800",
+        "inkscape:window-y" : "20",
+        "inkscape:window-maximized" : "0",
+        "inkscape:current-layer " : "svg3336"]
+    svg.addChild(name: "sodipodi:namedview", value: nil, attributes: namedviewAttributes)
+    
+    // Insert background image
+    let imageAttributes = ["width" : "\(width)",
+        "height" : "\(height)",
+        "preserveAspectRatio" : "none",
+        "xlink:href" : "data:image/jpeg;base64,\(base64)",
+        "id" : "image3344",
+        "x" : "0",
+        "y" : "0"]
+    let image = svg.addChild(name: "image", value: nil, attributes: imageAttributes)
+    image.addChild(name: "desc", value: "Default background description", attributes: ["id" : "desc1"])
+    image.addChild(name: "title", value: "Default background title", attributes: ["id" : "title2"])
+    
+    return svgFile.xmlString
+}
+
+func addPathInSVG (sourceFile: AEXMLDocument, points: Array<AnyObject>) -> String {
+    // make a copy of sourceFile
+    let newFile = sourceFile
+    
+    return newFile.xmlString
 }
 
 func cleanBase64Header (source: String) -> String {

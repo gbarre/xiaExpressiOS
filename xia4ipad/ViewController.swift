@@ -79,7 +79,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let Base64XiaLogo: NSString = NSBundle.mainBundle().pathForResource("Base64XiaLogo", ofType: "txt")!
             do {
                 let trimmedBase64String = try NSString(contentsOfFile: Base64XiaLogo as String, encoding: NSUTF8StringEncoding)
-                let svgText = buildSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: 123456)
+                let svgText = createSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: "123456")
                 let path = svgDirectory + "xia.svg"
                 do {
                     // Write svg file
@@ -190,7 +190,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
         let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
 
-        let svgText = buildSVG(trimmedBase64String, size: size, name: now)
+        let svgText = createSVG(trimmedBase64String, size: size, name: "\(now)")
         
         let path = svgDirectory + "\(now).svg"
         do {
