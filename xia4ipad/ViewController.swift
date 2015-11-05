@@ -79,7 +79,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let Base64XiaLogo: NSString = NSBundle.mainBundle().pathForResource("Base64XiaLogo", ofType: "txt")!
             do {
                 let trimmedBase64String = try NSString(contentsOfFile: Base64XiaLogo as String, encoding: NSUTF8StringEncoding)
-                let svgText = createSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: "123456")
+                let svg = AEXMLDocument()
+                let svgText = svg.createSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: "123456")
+                
                 let path = svgDirectory + "xia.svg"
                 do {
                     // Write svg file
@@ -190,7 +192,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
         let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
 
-        let svgText = createSVG(trimmedBase64String, size: size, name: "\(now)")
+        let svg = AEXMLDocument()
+        let svgText = svg.createSVG((trimmedBase64String as String), size: size, name: "\(now)")
         
         let path = svgDirectory + "\(now).svg"
         do {
@@ -264,6 +267,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             print("Could not find index path")
         }
         
+    }
+    
+    func cleanBase64Header (source: String) -> String {
+        return source.stringByReplacingOccurrencesOfString("data:image/[A-Za-z]+;base64,", withString: "", options: .RegularExpressionSearch, range: nil)
     }
 
 }
