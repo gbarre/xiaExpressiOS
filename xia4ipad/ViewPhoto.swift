@@ -174,7 +174,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         presentViewController(menu, animated: true, completion: nil)
     }
     
-    func btnOption(sender: UIButton) {
+    @IBAction func btnOption(sender: UIBarButtonItem) {
         let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
         let growAction = UIAlertAction(title: "Enable Zoom (ToDo)", style: .Default, handler: { action in
             print("Enable zoom")})
@@ -188,13 +188,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         menu.addAction(descriptionAction)
         
         if let ppc = menu.popoverPresentationController {
-            ppc.sourceView = sender
-            ppc.sourceRect = sender.bounds
+            ppc.barButtonItem = sender
             ppc.permittedArrowDirections = .Up
         }
         
         presentViewController(menu, animated: true, completion: nil)
-        
     }
     
     @IBAction func btnTrash(sender: AnyObject) {
@@ -214,21 +212,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
 
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
-        
-        //Build the toolbar
-        let toolBarAction = ViewPhotoToolbar()
-        toolBarAction.addButtonSystem(myToolbar, action: "btnCancel:", systemItem: .Reply)
-        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
-        toolBarAction.addButtonSystem(myToolbar, action: "btnPlay:", systemItem: .Play)
-        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FlexibleSpace)
-        toolBarAction.addButtonSystem(myToolbar, action: "btnAdd:", systemItem: .Add)
-        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
-        toolBarAction.addButtonCustom(myToolbar, customAction: "btnOption:", image: "Info-24", size: CGSize(width: 40, height: 40))
-        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
-        toolBarAction.addButtonSystem(myToolbar, action: "btnTrash:", systemItem: .Trash)
-        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FlexibleSpace)
-        toolBarAction.addButtonSystem(myToolbar, action: "btnExport:", systemItem: .Action)
-        
+              
     }
     
     override func viewWillAppear(animated: Bool) {
