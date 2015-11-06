@@ -28,40 +28,32 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     var endEditShape = false
     
     var landscape = false
+    var btnAddMenu:Int = 0
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
-    @IBAction func btnExport(sender: AnyObject) {
-        print("Export")
-    }
-    
-    @IBAction func btnTrash(sender: AnyObject) {
-        print("Trash")
-    }
-
     @IBAction func btnPlay(sender: AnyObject) {
         print("Play")
     }
     
-    @IBOutlet weak var btnAddMenu: UIBarButtonItem!
     @IBAction func btnAdd(sender: UIBarButtonItem) {
-
+        
         let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
-
-        if (btnAddMenu.tag == 0) { // Choose tool mode
+        
+        if (btnAddMenu == 0) { // Choose tool mode
             let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
                 print("Rectangle tool (ToDo)")
-                self.btnAddMenu.tag = 0
+                self.btnAddMenu = 0
             })
             let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
                 print("Ellipse tool (ToDo)")
-                self.btnAddMenu.tag = 0
+                self.btnAddMenu = 0
             })
             let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
-                self.btnAddMenu.tag = 1
+                self.btnAddMenu = 1
                 self.endEditShape = true
                 // Remove old shape (temp)
                 for subview in self.view.subviews {
@@ -164,7 +156,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                 }
                 self.endEditShape = false
-                self.btnAddMenu.tag = 0
+                self.btnAddMenu = 0
             })
             
             menu.addAction(editAction)
@@ -182,36 +174,66 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         presentViewController(menu, animated: true, completion: nil)
     }
     
+    func btnOption(sender: UIButton) {
+        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
+        let growAction = UIAlertAction(title: "Enable Zoom (ToDo)", style: .Default, handler: { action in
+            print("Enable zoom")})
+        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 1...")})
+        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
+            print("ToDo : build interface 2...")})
+        
+        menu.addAction(growAction)
+        menu.addAction(titleAction)
+        menu.addAction(descriptionAction)
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.sourceView = sender
+            ppc.sourceRect = sender.bounds
+            ppc.permittedArrowDirections = .Up
+        }
+        
+        presentViewController(menu, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func btnTrash(sender: AnyObject) {
+        print("Trash")
+    }
+    
+    @IBAction func btnExport(sender: AnyObject) {
+        print("Export")
+    }
+    
+    @IBOutlet weak var myToolbar: UIToolbar!
     
     @IBOutlet weak var imgView: UIImageView!
     
-    @IBOutlet weak var mytoolBar: UIToolbar!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        
-        //create the option button
-        let button = UIButton(type : UIButtonType.Custom)
-        //set image for button
-        button.setImage(UIImage(named: "Info-24"), forState: UIControlState.Normal)
-        //add function for button
-        button.addTarget(self, action: "btnOption:", forControlEvents: UIControlEvents.TouchUpInside)
-        //set frame
-        button.frame = CGRectMake(0, 0, 31, 31)
-        
-        let barButton = UIBarButtonItem(customView: button)
-        //assign button to navigationbar
-        self.navigationItem.rightBarButtonItem = barButton
-        self.mytoolBar.items?.insert(barButton, atIndex: 6)
+        //Build the toolbar
+        let toolBarAction = ViewPhotoToolbar()
+        toolBarAction.addButtonSystem(myToolbar, action: "btnCancel:", systemItem: .Reply)
+        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
+        toolBarAction.addButtonSystem(myToolbar, action: "btnPlay:", systemItem: .Play)
+        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FlexibleSpace)
+        toolBarAction.addButtonSystem(myToolbar, action: "btnAdd:", systemItem: .Add)
+        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
+        toolBarAction.addButtonCustom(myToolbar, customAction: "btnOption:", image: "Info-24", size: CGSize(width: 40, height: 40))
+        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FixedSpace)
+        toolBarAction.addButtonSystem(myToolbar, action: "btnTrash:", systemItem: .Trash)
+        toolBarAction.addButtonSystem(myToolbar, action: nil, systemItem: .FlexibleSpace)
+        toolBarAction.addButtonSystem(myToolbar, action: "btnExport:", systemItem: .Action)
         
     }
     
     override func viewWillAppear(animated: Bool) {
         // Remove hairline on toolbar
-        mytoolBar.clipsToBounds = true
+        myToolbar.clipsToBounds = true
         
         // Load image from svg
         let img = getImageFromBase64(arrayBase64Images[index])
@@ -319,7 +341,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             
         default:
-            if ( myPoints.count > 2 && pointInPolygon(myPoints, touchPoint: location) && btnAddMenu.tag == 1 ) {
+            if ( myPoints.count > 2 && pointInPolygon(myPoints, touchPoint: location) && btnAddMenu == 1 ) {
                 movingShape = 1
                 movingCoords = location
                 moving = true
@@ -375,7 +397,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             moving = false
         }
-        if ( myPoints.count > 2  && btnAddMenu.tag == 1 ) {
+        if ( myPoints.count > 2  && btnAddMenu == 1 ) {
             buildShape(false)
         }
         if movingShape != -1 {
@@ -398,30 +420,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         
         return image!
     }
-    
-    func btnOption(sender: UIButton!) {
-        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
-        let growAction = UIAlertAction(title: "Enable Growing (ToDo)", style: .Default, handler: { action in
-            print("Enable growing")})
-        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 1...")})
-        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 2...")})
-        
-        menu.addAction(growAction)
-        menu.addAction(titleAction)
-        menu.addAction(descriptionAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.sourceView = sender
-            ppc.sourceRect = sender.bounds
-            ppc.permittedArrowDirections = .Up
-        }
-        
-        presentViewController(menu, animated: true, completion: nil)
-        
-    }
-    
+
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
         // translate from C : http://alienryderflex.com/polygon/
         let polyCorners = points.count
@@ -484,5 +483,4 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         myView.tag = 42
         view.addSubview(myView)
     }
-    
 }
