@@ -72,6 +72,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             let editAction = UIAlertAction(title: "Edit points mode", style: .Default, handler: { action in
                 print("Edit mode")
                 self.endEditShape = true
+                
                 // Remove polygon (filled)
                 for subview in self.view.subviews {
                     if subview.tag == 42 {
@@ -82,26 +83,31 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                         myPoints.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "CropperCornerView.png"
+                        let imageName = "corner-draggable.png"
                         let image = UIImage(named: imageName)
                         let imageView = UIImageView(image: image!)
                         imageView.center = location
                         imageView.tag = 43
                         myPoints.append(imageView)
-                        self.view.addSubview(imageView)
+                        //self.view.addSubview(imageView)
                     }
                 }
+                
                 // Build polygon
                 if myPoints.count > 1 {
-                    self.buildShape(false)
+                    self.buildShape(false, color: UIColor.redColor())
                 }
-
+                
+                // Draw corners
+                for ( var i = 0; i < myPoints.count; i++ ) {
+                    self.view.addSubview(myPoints[i] as! UIView)
+                }
             })
             let moveAction = UIAlertAction(title: "Move shape mode", style: .Default, handler: { action in
                 print("Move mode")
                 self.endEditShape = false
                 if myPoints.count > 2 {
-                    self.buildShape(true)
+                    self.buildShape(true, color: UIColor.redColor())
                 }
                 
                 // Changing corner image
@@ -111,7 +117,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                         myPoints.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "Info-24.png"
+                        let imageName = "corner-moving.png"
                         let image = UIImage(named: imageName)
                         let imageView = UIImageView(image: image!)
                         imageView.center = location
@@ -134,7 +140,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                         myPoints.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "Info-24.png"
+                        let imageName = "corner-ok.png"
                         let image = UIImage(named: imageName)
                         let imageView = UIImageView(image: image!)
                         imageView.center = location
@@ -145,8 +151,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                 }
                 if myPoints.count > 2 {
-                    self.buildShape(false)
-                    self.buildShape(true)
+                    self.buildShape(false, color: UIColor.greenColor())
+                    self.buildShape(true, color: UIColor.greenColor())
                 }
                 else { // only 1 or 2 points, remove them
                     for subview in self.view.subviews {
@@ -306,7 +312,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             if ( create || nbPoints == 0 )  {
                 // Add new point
-                let imageName = "CropperCornerView.png"
+                let imageName = "corner-draggable.png"
                 let image = UIImage(named: imageName)
                 let imageView = UIImageView(image: image!)
                 imageView.center = location
@@ -321,7 +327,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                 }
                 
-                self.buildShape(false)
+                self.buildShape(false, color: UIColor.redColor())
             }
             
         default:
@@ -382,10 +388,10 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             moving = false
         }
         if ( myPoints.count > 2  && btnAddMenu == 1 ) {
-            buildShape(false)
+            buildShape(false, color: UIColor.redColor())
         }
         if movingShape != -1 {
-            buildShape(true)
+            buildShape(true, color: UIColor.redColor())
         }
         movingPoint = -1
         movingShape = -1
@@ -425,7 +431,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         return oddNodes
     }
     
-    func buildShape(fill: Bool) {
+    func buildShape(fill: Bool, color: UIColor) {
         var shapeArg: Int = 0
         switch fill {
         case true:
@@ -462,7 +468,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         let shapeHeight = yMax - yMin
         
         // Build the shape
-        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: myPoints)
+        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: myPoints, color: color)
         myView.backgroundColor = UIColor(white: 0, alpha: 0)
         myView.tag = 42
         view.addSubview(myView)

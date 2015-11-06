@@ -13,12 +13,14 @@ class ShapeView: UIView {
     var currentShapeType: Int = 0
     var arrayPoints = [AnyObject]()
     var origin: CGPoint = CGPointMake(0, 0)
+    var color: UIColor = UIColor.blackColor()
     
-    init(frame: CGRect, shape: Int, points: Array<AnyObject>) {
+    init(frame: CGRect, shape: Int, points: Array<AnyObject>, color: UIColor) {
         super.init(frame: frame)
         self.currentShapeType = shape
         self.arrayPoints = points
         self.origin = frame.origin
+        self.color = color
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,7 +54,9 @@ class ShapeView: UIView {
             CGContextAddLineToPoint(ctx, point.x, point.y)
         }
         CGContextSetLineDash(ctx, 0, [5], 1)
-        CGContextSetRGBStrokeColor(ctx, 1, 0, 0, 0.8)
+//        CGContextSetRGBStrokeColor(ctx, 1, 0, 0, 0.8)
+        let alphaColor = CGColorCreateCopyWithAlpha(color.CGColor, 0.8)
+        CGContextSetStrokeColorWithColor(ctx, alphaColor)
         CGContextSetLineWidth(ctx, 2.5)
         
         CGContextClosePath(ctx)
@@ -77,8 +81,9 @@ class ShapeView: UIView {
         }
         CGContextSetLineWidth(ctx, 2)
         
-        let semiRed = CGColorCreateCopyWithAlpha(UIColor.redColor().CGColor, 0.5)
-
+        //let semiRed = CGColorCreateCopyWithAlpha(UIColor.redColor().CGColor, 0.5)
+        let semiRed = CGColorCreateCopyWithAlpha(color.CGColor, 0.5)
+        
         CGContextSetFillColorWithColor(ctx, semiRed)
         CGContextFillPath(ctx)
         //CGContextStrokePath(ctx)
