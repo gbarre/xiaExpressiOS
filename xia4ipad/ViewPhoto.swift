@@ -30,6 +30,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     var landscape = false
     var btnAddMenu:Int = 0
     
+    var details = [xiaDetail]()
+    
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -62,6 +64,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                         subview.removeFromSuperview()
                     }
                 }
+                
+                // test xiaDetails class
+                let testDetail = xiaDetail(tag: 44)
+                self.details.insert(testDetail, atIndex: 0)
+                
             })
             
             menu.addAction(growAction)
@@ -89,7 +96,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                         imageView.center = location
                         imageView.tag = 43
                         myPoints.append(imageView)
-                        //self.view.addSubview(imageView)
                     }
                 }
                 
@@ -275,6 +281,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 
     }
 
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -319,6 +326,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 imageView.tag = 43
                 myPoints.append(imageView)
                 view.addSubview(imageView)
+                
+                
+                let newPoint = details[0].createPoint(location, imageName: "corner-ok.png")
+                view.addSubview(newPoint)
+
                 
                 // Remove all shapeview
                 for subview in view.subviews {
