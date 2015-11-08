@@ -40,6 +40,25 @@ class xiaDetail: NSObject {
         // view.addSubview(newPoint)
     }
     
+    func createPath() -> String {
+        if (points.count < 2) {
+            return "Needs 2 points at least..."
+        }
+        else {
+            
+            var path: String = "M "
+            for point in points {
+                let x = point.center.x
+                let y = point.center.y
+                path += "\(x),\(y) "
+            }
+            path += "Z"
+        
+            return path
+        }
+    }
+    
+    
     func test() {
         print("This xia detail have \(self.points.count) points.")
         for var i = 0; i < self.points.count; i++ {

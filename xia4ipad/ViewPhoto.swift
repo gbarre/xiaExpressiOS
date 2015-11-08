@@ -8,8 +8,6 @@
 
 import UIKit
 
-var myPoints = [AnyObject]()
-
 class ViewPhoto: UIViewController, NSXMLParserDelegate {
 
     var index: Int = 0
@@ -30,7 +28,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     var landscape = false
     var btnAddMenu:Int = 0
     
-    var details = [xiaDetail]()
+    var details = [String: xiaDetail]()
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
@@ -59,15 +57,14 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 self.endEditShape = true
                 // Remove old shape (temp)
                 for subview in self.view.subviews {
-                    myPoints = []
                     if subview.tag == 42 || subview.tag == 43 {
                         subview.removeFromSuperview()
                     }
                 }
                 
-                // test xiaDetails class
-                let testDetail = xiaDetail(tag: 44)
-                self.details.insert(testDetail, atIndex: 0)
+                // Create new detail object
+                let newDetail = xiaDetail(tag: 43)
+                self.details["freeform 43"] = newDetail
                 
             })
             
@@ -87,32 +84,29 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                     if subview.tag == 43 {
                         let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        myPoints.removeFirst()
+                        self.details["freeform 43"]?.points.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "corner-draggable.png"
-                        let image = UIImage(named: imageName)
-                        let imageView = UIImageView(image: image!)
-                        imageView.center = location
-                        imageView.tag = 43
-                        myPoints.append(imageView)
+                        _ = self.details["freeform 43"]?.createPoint(location, imageName: "corner-draggable.png")
                     }
                 }
                 
+                let nbPoints = self.details["freeform 43"]?.points.count
+                
                 // Build polygon
-                if myPoints.count > 1 {
+                if nbPoints > 1 {
                     self.buildShape(false, color: UIColor.redColor())
                 }
                 
                 // Draw corners
-                for ( var i = 0; i < myPoints.count; i++ ) {
-                    self.view.addSubview(myPoints[i] as! UIView)
+                for ( var i = 0; i < nbPoints; i++ ) {
+                    self.view.addSubview(self.details["freeform 43"]!.points[i])
                 }
             })
             let moveAction = UIAlertAction(title: "Move shape mode", style: .Default, handler: { action in
                 print("Move mode")
                 self.endEditShape = false
-                if myPoints.count > 2 {
+                if self.details["freeform 43"]?.points.count > 2 {
                     self.buildShape(true, color: UIColor.redColor())
                 }
                 
@@ -120,16 +114,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 for subview in self.view.subviews {
                     if subview.tag == 43 {
                         let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        myPoints.removeFirst()
+                        self.details["freeform 43"]?.points.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "corner-moving.png"
-                        let image = UIImage(named: imageName)
-                        let imageView = UIImageView(image: image!)
-                        imageView.center = location
-                        imageView.tag = 43
-                        myPoints.append(imageView)
-                        self.view.addSubview(imageView)
+                        let newPoint = self.details["freeform 43"]?.createPoint(location, imageName: "corner-moving.png")
+                        self.view.addSubview(newPoint!)
                     }
                 }
                 
@@ -143,20 +132,14 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                     if subview.tag == 43 {
                         let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        myPoints.removeFirst()
+                        self.details["freeform 43"]?.points.removeFirst()
                         subview.removeFromSuperview()
                         
-                        let imageName = "corner-ok.png"
-                        let image = UIImage(named: imageName)
-                        let imageView = UIImageView(image: image!)
-                        imageView.center = location
-                        imageView.tag = 43
-                        imageView.layer.zPosition = 1
-                        myPoints.append(imageView)
-                        self.view.addSubview(imageView)
+                        let newPoint = self.details["freeform 43"]?.createPoint(location, imageName: "corner-ok.png")
+                        self.view.addSubview(newPoint!)
                     }
                 }
-                if myPoints.count > 2 {
+                if self.details["freeform 43"]?.points.count > 2 {
                     self.buildShape(false, color: UIColor.greenColor())
                     self.buildShape(true, color: UIColor.greenColor())
                 }
@@ -292,22 +275,22 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         location = touch.locationInView(self.view)
         
         var create = false
-        let nbPoints = myPoints.count
+        let nbPoints = details["freeform 43"]?.points.count
         switch endEditShape {
         case true: // editing points
             if ( nbPoints != 0 ) { // Points exists
                 
                 for var i=0; i<nbPoints; i++ { // should we move an existing point or add a new one
-                    let ploc = myPoints[i].center
+                    let ploc = details["freeform 43"]?.points[i].center
                     
-                    let xDist: CGFloat = (location.x - ploc.x)
-                    let yDist: CGFloat = (location.y - ploc.y)
+                    let xDist: CGFloat = (location.x - ploc!.x)
+                    let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 30 ) { // We are close to an exiting point, move it
-                        let toMove: UIView = myPoints[i] as! UIView
+                        let toMove: UIImageView = details["freeform 43"]!.points[i]
                         toMove.center = location
-                        myPoints[i] = toMove
+                        details["freeform 43"]?.points[i] = toMove
                         movingPoint = i
                         create = false
                         break
@@ -319,18 +302,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             if ( create || nbPoints == 0 )  {
                 // Add new point
-                let imageName = "corner-draggable.png"
-                let image = UIImage(named: imageName)
-                let imageView = UIImageView(image: image!)
-                imageView.center = location
-                imageView.tag = 43
-                myPoints.append(imageView)
-                view.addSubview(imageView)
-                
-                
-                let newPoint = details[0].createPoint(location, imageName: "corner-ok.png")
-                view.addSubview(newPoint)
-
+                let newPoint = details["freeform 43"]?.createPoint(location, imageName: "corner-draggable.png")
+                view.addSubview(newPoint!)
                 
                 // Remove all shapeview
                 for subview in view.subviews {
@@ -343,7 +316,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             
         default:
-            if ( myPoints.count > 2 && pointInPolygon(myPoints, touchPoint: location) && btnAddMenu == 1 ) {
+            if ( nbPoints > 2 && pointInPolygon(details["freeform 43"]!.points, touchPoint: location) && btnAddMenu == 1 ) {
                 movingShape = 1
                 movingCoords = location
                 moving = true
@@ -358,16 +331,16 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         location = touch.locationInView(self.view)
         
         if ( movingPoint != -1 ) {
-            let ploc = myPoints[movingPoint].center
+            let ploc = details["freeform 43"]?.points[movingPoint].center
             
-            let xDist: CGFloat = (location.x - ploc.x);
-            let yDist: CGFloat = (location.y - ploc.y);
+            let xDist: CGFloat = (location.x - ploc!.x);
+            let yDist: CGFloat = (location.y - ploc!.y);
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist));
             
             if ( distance < 30 ) {
-                let toMove: UIView = myPoints[movingPoint] as! UIView
+                let toMove: UIImageView = details["freeform 43"]!.points[movingPoint]
                 toMove.center = location
-                myPoints[movingPoint] = toMove
+                details["freeform 43"]?.points[movingPoint] = toMove
                 moving = true
             }
         }
@@ -389,6 +362,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let nbPoints = details["freeform 43"]?.points.count
         
         if moving {
             // Remove polygon (filled)
@@ -399,7 +373,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             }
             moving = false
         }
-        if ( myPoints.count > 2  && btnAddMenu == 1 ) {
+        if ( nbPoints > 2  && btnAddMenu == 1 ) {
             buildShape(false, color: UIColor.redColor())
         }
         if movingShape != -1 {
@@ -480,7 +454,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         let shapeHeight = yMax - yMin
         
         // Build the shape
-        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: myPoints, color: color)
+        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: details["freeform 43"]!.points, color: color)
         myView.backgroundColor = UIColor(white: 0, alpha: 0)
         myView.tag = 42
         view.addSubview(myView)
