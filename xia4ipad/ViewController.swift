@@ -9,7 +9,7 @@
 import UIKit
 
 let home = NSHomeDirectory()
-let svgDirectory = home + "/Documents/"
+let documentsDirectory = home + "/Documents/"
 
 var arrayNames = [String]()
 var nbThumb:Int = 0
@@ -24,7 +24,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passData:Bool=false
     var passName:Bool=false
     var parser = NSXMLParser()
-    var nbSVG:Int = 0
     
     @IBAction func btnCamera(sender: AnyObject) {
         if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
@@ -65,20 +64,35 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath(svgDirectory)
+        let files = fileManager.enumeratorAtPath(documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
-            arrayNames.append(file)
+            let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
+            print(ext)
+            if (ext == "jpg") {
+                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
+                arrayNames.append(file)
+            }
+            print(file)
         }
-        
+        print(arrayNames)
         // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
             let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
             let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
             let img = UIImage(contentsOfFile: filePath!)
             let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(svgDirectory + "\(now).jpg", atomically: true)
+            imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
+            
+            // Create associated xml
+            let xml = AEXMLDocument()
+            let xmlString = xml.createXML("\(now)")
+            do {
+                try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                print("\(error)")
+            }
             
             arrayNames.append("\(now)")
             nbThumb = arrayNames.count
@@ -136,7 +150,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
 
         // Load image
-        let filePath = "\(svgDirectory)\(arrayNames[index]).jpg"
+        let filePath = "\(documentsDirectory)\(arrayNames[index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
         cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
         index++
@@ -148,12 +162,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
         })
         
-        // Let's store the image into an svg file
+        // Let's store the image
         let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
 
         let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(svgDirectory + "\(now).jpg", atomically: true)
+        imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
         
+        // Create associated xml
+        let xml = AEXMLDocument()
+        let xmlString = xml.createXML("\(now)")
+        do {
+            try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch {
+            print("\(error)")
+        }
         arrayNames.append("\(now)")
         nbThumb = arrayNames.count
     }
@@ -180,7 +203,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     // Delete the file
                     let fileManager = NSFileManager()
                     do {
-                        let filePath = "\(svgDirectory)/fileName.jpg"
+                        var filePath = "\(documentsDirectory)/\(fileName).jpg"
+                        try fileManager.removeItemAtPath(filePath)
+                        filePath = "\(documentsDirectory)/\(fileName).xml"
                         try fileManager.removeItemAtPath(filePath)
                     }
                     catch let error as NSError {

@@ -121,8 +121,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             let endAction = UIAlertAction(title: "End shape creation", style: .Default, handler: { action in
                 print("End detail creation")
                 
-                // Write path to svg
-                let filePath = "\(svgDirectory) + \(arrayNames[self.index]).jpg"
+                // Write path to xml
+/*                let filePath = "\(documentsDirectory) + \(arrayNames[self.index]).jpg"
                 let data = NSData(contentsOfFile: filePath)
                 let path: String = (self.details["freeform 43"]?.createPath())!
                 do {
@@ -133,14 +133,14 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                     else {
                         svg.addPathInSVG(path)
-                        //try svg.xmlString.writeToFile(svgDirectory + arrayNames[self.index], atomically: false, encoding: NSUTF8StringEncoding)
+                        //try svg.xmlString.writeToFile(documentsDirectory + arrayNames[self.index], atomically: false, encoding: NSUTF8StringEncoding)
                     }
                     print(svg.xmlString)
                 }
                 catch {
                     print("\(error)")
                 }
-                
+*/                
                 // Remove and rebuild the shape to avoid the overlay on alpha channel
                 for subview in self.view.subviews {
                     if subview.tag == 42 {
@@ -230,8 +230,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Remove hairline on toolbar
         myToolbar.clipsToBounds = true
         
-        // Load image from svg
-        let filePath = "\(svgDirectory)\(arrayNames[self.index]).jpg"
+        // Load image
+        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
         imgView.image = img
         
@@ -243,8 +243,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         let coefWidth = UIScreen.mainScreen().bounds.size.width / img.size.width
         let coefHeight = (UIScreen.mainScreen().bounds.size.height - myToolbar.bounds.origin.y - myToolbar.bounds.height) / img.size.height
         
-        // Load path from svg
-        let data = NSData(contentsOfFile: svgDirectory + arrayNames[index])
+        // Load path from xml
+        let data = NSData(contentsOfFile: documentsDirectory + arrayNames[index])
         
         var path: String = ""
         do {
