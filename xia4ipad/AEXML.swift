@@ -452,11 +452,14 @@ public class AEXMLDocument: AEXMLElement {
     }
     
     // MARK: Add Path into SVG file
-    public func addPathInSVG (sourceFile: AEXMLDocument, points: Array<AnyObject>) -> String {
-        // make a copy of sourceFile
-        let newFile = sourceFile
+    public func addPathInSVG (path: String) -> String {
+        let attributes = ["style" : "fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1",
+            "id" : "path3437",
+            "d" : "\(path)",
+            "inkscape:connector-curvature" : "0"]
+        self.addChild(name: "path", value: nil, attributes: attributes)
         
-        return newFile.xmlString
+        return self.xmlString
     }
     
 }

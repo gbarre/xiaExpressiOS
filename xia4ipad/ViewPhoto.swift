@@ -125,6 +125,27 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
             })
             let endAction = UIAlertAction(title: "End shape creation", style: .Default, handler: { action in
                 print("End detail creation")
+                
+                // Write path to svg
+                let data = NSData(contentsOfFile: svgDirectory + arrayNames[self.index])       
+                let path: String = (self.details["freeform 43"]?.createPath())!
+                do {
+                    let svg = try AEXMLDocument(xmlData: data!)
+                    
+                    if (svg.root["path"].attributes["d"] != nil) {
+                        svg.root["path"].attributes["d"] = path
+                        try svg.xmlString.writeToFile(svgDirectory + arrayNames[self.index], atomically: false, encoding: NSUTF8StringEncoding)
+                    }
+                    else {
+                        svg.addPathInSVG(path)
+                        //try svg.xmlString.writeToFile(svgDirectory + arrayNames[self.index], atomically: false, encoding: NSUTF8StringEncoding)
+                    }
+                    print(svg.xmlString)
+                }
+                catch {
+                    print("\(error)")
+                }
+                
                 // Remove and rebuild the shape to avoid the overlay on alpha channel
                 for subview in self.view.subviews {
                     if subview.tag == 42 {
@@ -217,6 +238,70 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         // Load image from svg
         let img = getImageFromBase64(arrayBase64Images[index])
         imgView.image = img
+        print("img : \(img.size.width) x \(img.size.height)")
+        print("imgView : \(imgView.bounds.size.width) x \(imgView.bounds.size.height)")
+        print("Screen size : \(UIScreen.mainScreen().bounds)")
+        print("screen scale : \(UIScreen.mainScreen().scale)")
+        print("navbar height : \(myToolbar.bounds.size)")
+        let coefWidth = UIScreen.mainScreen().bounds.size.width / img.size.width
+        let coefHeight = (UIScreen.mainScreen().bounds.size.height - myToolbar.bounds.origin.y - myToolbar.bounds.height) / img.size.height
+        
+        // Load path from svg
+        let data = NSData(contentsOfFile: svgDirectory + arrayNames[index])
+        
+        var path: String = ""
+        do {
+            let xmlDoc = try AEXMLDocument(xmlData: data!)
+            
+            // Get data of the first path
+            path = xmlDoc.root["path"].attributes["d"]!
+        }
+        catch {
+            print("\(error)")
+        }
+        
+        if (path != "") {
+            btnAddMenu = 1
+            endEditShape = true
+            // Create new detail object
+            let newDetail = xiaDetail(tag: 43)
+            self.details["freeform 43"] = newDetail
+            
+            var pointsArray = path.characters.split{$0 == " "}.map(String.init)
+            var relativeCoords = false
+            if ( pointsArray[0] == "m" ) {
+                relativeCoords = true
+            }
+            pointsArray.removeFirst() // delete "m" or "M"
+            pointsArray.removeLast() // delete "z" or "Z"
+            var lastPoint = CGPointMake(0, 0)
+            for var i = 0; i < pointsArray.count; i++ {
+                // Change X.xxx,Y.yyy coords to X,xxx Y,yyy
+                pointsArray[i] = pointsArray[i].stringByReplacingOccurrencesOfString(",", withString: " ")
+                pointsArray[i] = pointsArray[i].stringByReplacingOccurrencesOfString(".", withString: ",")
+                
+                print(pointsArray[i])
+                
+                let coords = pointsArray[i].characters.split{$0 == " "}.map(String.init)
+                let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * coefWidth // convert String to CGFloat
+                let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * coefHeight + myToolbar.bounds.height / coefHeight // convert String to CGFloat
+                print("\(x), \(y)")
+                
+                
+                if relativeCoords { // add coord to lastPoint
+                    // Something's wrong here, need to check
+                    print(CGPointMake(lastPoint.x + x, lastPoint.y + y))
+                    lastPoint = CGPointMake(x, y)
+                }
+                else {
+                    let newPoint = details["freeform 43"]?.createPoint(CGPointMake(x, y), imageName: "corner-draggable.png")
+                    view.addSubview(newPoint!)
+                }
+            }
+            if details["freeform 43"]?.points.count > 2 {
+                buildShape(false, color: UIColor.redColor())
+            }
+        }
         
         var value: Int
         if ( img.size.width > img.size.height ) { // turn device to landscape

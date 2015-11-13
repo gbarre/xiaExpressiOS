@@ -18,6 +18,8 @@ class xiaDetail: NSObject {
 */
     var points = [UIImageView]()
     var tag: Int = 0
+    var title: String = ""
+    var desc: String = ""
     
     init(tag: Int){
         self.tag = tag
@@ -29,6 +31,7 @@ class xiaDetail: NSObject {
     }
     
     func createPoint(location: CGPoint, imageName: String) -> UIImageView {
+        print(location)
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location
