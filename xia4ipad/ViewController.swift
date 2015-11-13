@@ -68,14 +68,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
             let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
-            print(ext)
             if (ext == "jpg") {
                 file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
                 arrayNames.append(file)
             }
-            print(file)
         }
-        print(arrayNames)
         // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
             let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
@@ -136,6 +133,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 if let cell = sender as? UICollectionViewCell {
                     if let indexPath: NSIndexPath = self.CollectionView.indexPathForCell(cell) {
                         controller.index = indexPath.item
+                        
+                        let xmlPath = "\(documentsDirectory)/\(arrayNames[indexPath.item]).xml"
+                        let data = NSData(contentsOfFile: xmlPath)
+                        do {
+                            try controller.xml = AEXMLDocument(xmlData: data!)
+                        }
+                        catch {
+                            print("\(error)")
+                        }
                     }
                 }
             }

@@ -49,15 +49,15 @@ class xiaDetail: NSObject {
         }
         else {
             
-            var path: String = "M "
+            var path: String = ""
             for point in points {
                 let x = point.center.x
                 let y = point.center.y
-                path += "\(x),\(y) "
+                path += "\(x);\(y) "
             }
-            path += "Z"
+            path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
         
-            return path
+            return path // return X1,xxx;Y1,yyy X2,xxx;Y2,yyy X3,xxx;Y3,yyy ...
         }
     }
     

@@ -8,10 +8,10 @@
 
 import UIKit
 
-class ViewPhoto: UIViewController, NSXMLParserDelegate {
+class ViewPhoto: UIViewController {
 
     var index: Int = 0
-    var b64IMG:String = ""
+    var xml: AEXMLDocument = AEXMLDocument()
     
     var location = CGPoint(x: 0, y: 0)
     var moving = false
@@ -23,7 +23,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     var landscape = false
     var btnAddMenu:Int = 0
     
-    var details = [String: xiaDetail]()
+    var details = [Int: xiaDetail]()
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
@@ -32,6 +32,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
     
     @IBAction func btnPlay(sender: AnyObject) {
         print("Play")
+        print(xml.xmlString)
     }
     
     @IBAction func btnAdd(sender: UIBarButtonItem) {
@@ -57,9 +58,17 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                     }
                 }
                 
+                var nextTag: Int = 0
+                for detail in self.xml["xia"]["detail"].all! {
+                    if detail.attributes["flag"] == "0" {
+                        nextTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                        break
+                    }
+                }
+
                 // Create new detail object
-                let newDetail = xiaDetail(tag: 43)
-                self.details["freeform 43"] = newDetail
+                let newDetail = xiaDetail(tag: nextTag)
+                self.details[nextTag] = newDetail
                 
             })
             
@@ -223,7 +232,7 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
 
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
-              
+        
     }
     
     override func viewWillAppear(animated: Bool) {
