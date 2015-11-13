@@ -12,7 +12,6 @@ let home = NSHomeDirectory()
 let svgDirectory = home + "/Documents/"
 
 var arrayNames = [String]()
-var arrayBase64Images = [String]()
 var nbThumb:Int = 0
 var index:Int = 0
 
@@ -64,49 +63,28 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        // Load all svg names & base64 images
+        // Load all images names
         let fileManager = NSFileManager.defaultManager()
         let files = fileManager.enumeratorAtPath(svgDirectory)
-        while let file = files?.nextObject() {
-            arrayNames.append(file as! String)
-            let (_, b64img) = getImageFromSVG(svgDirectory + (file as! String))
-            arrayBase64Images.append(cleanBase64Header(b64img))
+        while let fileObject = files?.nextObject() {
+            var file = fileObject as! String
+            file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
+            arrayNames.append(file)
         }
         
-        // Create default svg if the is no svg in Documents directory
+        // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
-            // Get the source file (content base64 image
-            let Base64XiaLogo: NSString = NSBundle.mainBundle().pathForResource("Base64XiaLogo", ofType: "txt")!
-            do {
-                let trimmedBase64String = try NSString(contentsOfFile: Base64XiaLogo as String, encoding: NSUTF8StringEncoding)
-                let svg = AEXMLDocument()
-                let svgText = svg.createSVG((trimmedBase64String as String), size: CGSize(width: 200, height: 200), name: "123456")
-                
-                let path = svgDirectory + "xia.svg"
-                do {
-                    // Write svg file
-                    try svgText.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
-
-                    arrayNames.append("xia.svg")
-                    nbThumb = arrayNames.count
-                    arrayBase64Images.append((trimmedBase64String as String))
-                }
-                catch let error as NSError {
-                    print(error.localizedDescription)
-                }
-            }
-            catch {/* error handling here */}
+            print("just check there is images, if none, copy one")
         }
         else {
             nbThumb = arrayNames.count
         }
         
-        let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteSVG:")
+        /*let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteSVG:")
         lpgr.minimumPressDuration = 0.5
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
-        CollectionView.addGestureRecognizer(lpgr)
-        
+        CollectionView.addGestureRecognizer(lpgr)*/
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -150,64 +128,32 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
 
-        // Load image from svg
-        let (img, _) = getImageFromSVG(svgDirectory + arrayNames[index])
-        cell.setThumbnailImage(img, thumbnailLabel : arrayNames[index])
+        // Load image
+        let filePath = "\(svgDirectory)\(arrayNames[index]).jpg"
+        print(filePath)
+        let img = UIImage(contentsOfFile: filePath)
+        print(img)
+        cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
         index++
         
         return cell
     }
     
-    func getImageFromSVG(path : String) -> (image: UIImage, base64: String) {
-        let data = NSData(contentsOfFile: path)
-        
-        var base64:String = ""
-        do {
-            let xmlDoc = try AEXMLDocument(xmlData: data!)
-            
-            // get base64 of the first image
-            base64 = xmlDoc.root["image"].attributes["xlink:href"]!
-        }
-        catch {
-            print("\(error)")
-        }
-        
-        // Convert base64 to image
-        let imageData = NSData(base64EncodedString: cleanBase64Header(base64), options : .IgnoreUnknownCharacters)
-        let image = UIImage(data: imageData!)
-        
-        return (image!, base64)
-    }
-    
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
-            
         })
         
         // Let's store the image into an svg file
         let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
 
         let imageData = UIImageJPEGRepresentation(image, 85)
-        let size:CGSize = (image?.size)!
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
-        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
-
-        let svg = AEXMLDocument()
-        let svgText = svg.createSVG((trimmedBase64String as String), size: size, name: "\(now)")
+        imageData?.writeToFile(svgDirectory + "\(now).jpg", atomically: true)
         
-        let path = svgDirectory + "\(now).svg"
-        do {
-            try svgText.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch let error as NSError {
-            print(error.localizedDescription)
-        }
-        
-        arrayNames.append("\(now).svg")
+        arrayNames.append("\(now)")
         nbThumb = arrayNames.count
-        arrayBase64Images.append(trimmedBase64String)
     }
     
+    // Need to be rewritten...
     func deleteSVG(gestureReconizer: UILongPressGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
@@ -238,7 +184,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     
                     // Update arrays
                     arrayNames.removeAtIndex(deleteIndex)
-                    arrayBase64Images.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
                     nbThumb--
@@ -268,10 +213,5 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         
     }
-    
-    func cleanBase64Header (source: String) -> String {
-        return source.stringByReplacingOccurrencesOfString("data:image/[A-Za-z]+;base64,", withString: "", options: .RegularExpressionSearch, range: nil)
-    }
-
 }
 

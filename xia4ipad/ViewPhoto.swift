@@ -12,13 +12,8 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
 
     var index: Int = 0
     var b64IMG:String = ""
-    var currentElement:String = ""
-    var passData:Bool=false
-    var passName:Bool=false
-    var parser = NSXMLParser()
     
     var location = CGPoint(x: 0, y: 0)
-    let shapeInt = 0
     var moving = false
     var movingPoint = -1 // Id of point
     var movingShape = -1 // Id of Shape
@@ -127,14 +122,14 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 print("End detail creation")
                 
                 // Write path to svg
-                let data = NSData(contentsOfFile: svgDirectory + arrayNames[self.index])       
+                let filePath = "\(svgDirectory) + \(arrayNames[self.index]).jpg"
+                let data = NSData(contentsOfFile: filePath)
                 let path: String = (self.details["freeform 43"]?.createPath())!
                 do {
                     let svg = try AEXMLDocument(xmlData: data!)
                     
                     if (svg.root["path"].attributes["d"] != nil) {
                         svg.root["path"].attributes["d"] = path
-                        try svg.xmlString.writeToFile(svgDirectory + arrayNames[self.index], atomically: false, encoding: NSUTF8StringEncoding)
                     }
                     else {
                         svg.addPathInSVG(path)
@@ -236,9 +231,11 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
         myToolbar.clipsToBounds = true
         
         // Load image from svg
-        let img = getImageFromBase64(arrayBase64Images[index])
+        let filePath = "\(svgDirectory)\(arrayNames[self.index]).jpg"
+        let img = UIImage(contentsOfFile: filePath)
         imgView.image = img
-        print("img : \(img.size.width) x \(img.size.height)")
+        
+/*        print("img : \(img.size.width) x \(img.size.height)")
         print("imgView : \(imgView.bounds.size.width) x \(imgView.bounds.size.height)")
         print("Screen size : \(UIScreen.mainScreen().bounds)")
         print("screen scale : \(UIScreen.mainScreen().scale)")
@@ -302,9 +299,9 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 buildShape(false, color: UIColor.redColor())
             }
         }
-        
+*/        
         var value: Int
-        if ( img.size.width > img.size.height ) { // turn device to landscape
+        if ( img!.size.width > img!.size.height ) { // turn device to landscape
             if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
             {
                 value = UIInterfaceOrientation.LandscapeRight.rawValue
@@ -472,14 +469,6 @@ class ViewPhoto: UIViewController, NSXMLParserDelegate {
                 subview.layer.zPosition = 1
             }
         }
-    }
-    
-    
-    func getImageFromBase64(b64IMG : String) -> UIImage {
-        let imageData = NSData(base64EncodedString: b64IMG, options: .IgnoreUnknownCharacters)
-        let image = UIImage(data: imageData!)
-        
-        return image!
     }
 
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
