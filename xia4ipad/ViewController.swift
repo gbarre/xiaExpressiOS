@@ -74,17 +74,24 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
-            print("just check there is images, if none, copy one")
+            let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
+            let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
+            let img = UIImage(contentsOfFile: filePath!)
+            let imageData = UIImageJPEGRepresentation(img!, 85)
+            imageData?.writeToFile(svgDirectory + "\(now).jpg", atomically: true)
+            
+            arrayNames.append("\(now)")
+            nbThumb = arrayNames.count
         }
         else {
             nbThumb = arrayNames.count
         }
         
-        /*let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteSVG:")
+        let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteFiles:")
         lpgr.minimumPressDuration = 0.5
         lpgr.delaysTouchesBegan = true
         lpgr.delegate = self
-        CollectionView.addGestureRecognizer(lpgr)*/
+        CollectionView.addGestureRecognizer(lpgr)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -130,9 +137,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
         // Load image
         let filePath = "\(svgDirectory)\(arrayNames[index]).jpg"
-        print(filePath)
         let img = UIImage(contentsOfFile: filePath)
-        print(img)
         cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
         index++
         
@@ -153,8 +158,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         nbThumb = arrayNames.count
     }
     
-    // Need to be rewritten...
-    func deleteSVG(gestureReconizer: UILongPressGestureRecognizer) {
+    func deleteFiles(gestureReconizer: UILongPressGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
         }
@@ -166,17 +170,18 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if let path = indexPath {
             deleteIndex = path.row
             
-            let svgName = arrayNames[deleteIndex]
+            let fileName = arrayNames[deleteIndex]
             
             let controller = UIAlertController(title: "Warning!",
-                message: "Delete \(svgName)?", preferredStyle: .Alert)
+                message: "Delete \(fileName)?", preferredStyle: .Alert)
             let yesAction = UIAlertAction(title: "Yes, I'm sure!",
                 style: .Destructive, handler: { action in
                     
                     // Delete the file
                     let fileManager = NSFileManager()
                     do {
-                        try fileManager.removeItemAtPath(svgDirectory + svgName)
+                        let filePath = "\(svgDirectory)/fileName.jpg"
+                        try fileManager.removeItemAtPath(filePath)
                     }
                     catch let error as NSError {
                         print(error.localizedDescription)
@@ -190,7 +195,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information
-                    let msg = "\(svgName) has been deleted..."
+                    let msg = "\(fileName) has been deleted..."
                     let controller2 = UIAlertController(
                         title:nil,
                         message: msg, preferredStyle: .Alert)

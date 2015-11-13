@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
 				F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */,
+				F0013F801BF61A750000F83A /* default.jpg */,
 			);
 			path = xia4ipad;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
 				F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */,
+				F0013F811BF61A750000F83A /* default.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
