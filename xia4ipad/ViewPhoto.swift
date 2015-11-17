@@ -50,39 +50,7 @@ class ViewPhoto: UIViewController {
             "description" : "detail\(self.currentDetailTag) description"]
         self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
         self.createDetail = true
-        
-        // Change other details color
-        for detail in details {
-            let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
-            if thisDetailTag != self.currentDetailTag {
-                // Remove and rebuild the shape to avoid the overlay on alpha channel
-                for subview in self.view.subviews {
-                    if subview.tag == (thisDetailTag! + 100) { // polygon
-                        subview.removeFromSuperview()
-                    }
-                    if subview.tag == thisDetailTag! { // points
-                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        self.details["\(thisDetailTag!)"]?.points.removeFirst()
-                        subview.removeFromSuperview()
-                        
-                        let newPoint = self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: "corner-ok.png")
-                        newPoint?.layer.zPosition = 1
-                        self.view.addSubview(newPoint!)
-                    }
-                }
-                if self.details["\(thisDetailTag!)"]?.points.count > 2 {
-                    //self.buildShape(false, color: UIColor.greenColor(), tag: thisDetailTag!)
-                    self.buildShape(true, color: UIColor.greenColor(), tag: thisDetailTag!)
-                }
-                else { // only 1 or 2 points, remove them
-                    for subview in self.view.subviews {
-                        if subview.tag == thisDetailTag! {
-                            subview.removeFromSuperview()
-                        }
-                    }
-                }
-            }
-        }
+        changeDetailColor(self.currentDetailTag, color: "red")
     }
     
     @IBAction func btnAdd(sender: UIBarButtonItem) {
@@ -439,7 +407,7 @@ class ViewPhoto: UIViewController {
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
-        
+
         let detailTag = self.currentDetailTag
         
         switch createDetail {
@@ -456,12 +424,16 @@ class ViewPhoto: UIViewController {
                     let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                     toMove.center = location
                     details["\(detailTag)"]?.points[movingPoint] = toMove
-                    //moving = true
                 }
             }
             
         default:
             if ( movingShape != -1 ) {
+                if (movingShape != detailTag) {
+                    changeDetailColor(movingShape, color: "red")
+                    self.currentDetailTag = movingShape
+                }
+                
                 let xDist: CGFloat = (location.x - beginTouchLocation.x)
                 let yDist: CGFloat = (location.y - beginTouchLocation.y)
                 let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
@@ -489,7 +461,6 @@ class ViewPhoto: UIViewController {
                         }
                     }
                     movingCoords = location
-                    //moving = true
                 }
             }
 
@@ -533,6 +504,7 @@ class ViewPhoto: UIViewController {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("End moving shape : \(movingShape)")
         switch createDetail {
         case true:
             print("End touching in create mode")
@@ -657,5 +629,65 @@ class ViewPhoto: UIViewController {
         myView.backgroundColor = UIColor(white: 0, alpha: 0)
         myView.tag = shapeTag
         view.addSubview(myView)
+    }
+    
+    func changeDetailColor(tag: Int, color: String) {
+        var shapeColor: UIColor
+        var altShapeColor: UIColor
+        var imgName: String
+        var altImgName: String
+        switch color {
+        case "green":
+            shapeColor = UIColor.greenColor()
+            imgName = "corner-ok.png"
+            altShapeColor = UIColor.redColor()
+            altImgName = "corner-draggable.png"
+        default:
+            shapeColor = UIColor.redColor()
+            imgName = "corner-draggable.png"
+            altShapeColor = UIColor.greenColor()
+            altImgName = "corner-ok.png"
+        }
+        
+        // Change other details color
+        for detail in details {
+            let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
+            // Remove and rebuild the shape to avoid the overlay on alpha channel
+            for subview in self.view.subviews {
+                if subview.tag == (thisDetailTag! + 100) { // polygon
+                    subview.removeFromSuperview()
+                }
+                if subview.tag == thisDetailTag! { // points
+                    let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
+                    self.details["\(thisDetailTag!)"]?.points.removeFirst()
+                    subview.removeFromSuperview()
+                    
+                    var newPoint: UIView
+                    if thisDetailTag != tag {
+                        newPoint = (self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
+                    }
+                    else {
+                        newPoint = (self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
+                    }
+                    newPoint.layer.zPosition = 1
+                    self.view.addSubview(newPoint)
+                }
+            }
+            if self.details["\(thisDetailTag!)"]?.points.count > 2 {
+                if thisDetailTag != tag {
+                    self.buildShape(true, color: altShapeColor, tag: thisDetailTag!)
+                }
+                else {
+                    self.buildShape(true, color: shapeColor, tag: thisDetailTag!)
+                }
+            }
+            else { // only 1 or 2 points, remove them
+                for subview in self.view.subviews {
+                    if subview.tag == thisDetailTag! {
+                        subview.removeFromSuperview()
+                    }
+                }
+            }
+        }
     }
 }
