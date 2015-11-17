@@ -373,7 +373,6 @@ public class AEXMLDocument: AEXMLElement {
     
     // MARK: Create xml file
     public func createXML (name: String) -> String {
-        let nbDetails: Int = 100
         let xmlFile = AEXMLDocument()
         
         // Create root xml with attributes
@@ -383,15 +382,8 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "title", value: "\(name)", attributes: nil)
         xml.addChild(name: "description" , value: "\(name) descrption", attributes: nil)
         
-        // Create empty details
-        for (var i = 100; i < 100 + nbDetails; i++) {
-            let attributes = ["tag" : "\(i)",
-                "flag" : "0",
-                "zoom" : "no",
-                "title" : "detail\(i)",
-                "description" : "detail\(i) description"]
-            xml.addChild(name: "detail", value: "0;0", attributes: attributes)
-        }
+        // Create details
+        xml.addChild(name: "details")
         
         return xmlFile.xmlString
     }

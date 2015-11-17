@@ -31,7 +31,6 @@ class xiaDetail: NSObject {
     }
     
     func createPoint(location: CGPoint, imageName: String) -> UIImageView {
-        print(location)
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location
