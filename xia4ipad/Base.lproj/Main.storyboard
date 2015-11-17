@@ -152,7 +152,12 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="WCH-Vo-MIe"/>
-                                    <barButtonItem systemItem="add" id="101-Oh-Vrp">
+                                    <barButtonItem systemItem="add" id="YQ5-Yp-5Ul">
+                                        <connections>
+                                            <action selector="btnAddDetail:" destination="fts-Lk-uqf" id="gPN-ca-xjH"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Menu" id="101-Oh-Vrp">
                                         <connections>
                                             <action selector="btnAdd:" destination="fts-Lk-uqf" id="BIE-S0-yCG"/>
                                         </connections>

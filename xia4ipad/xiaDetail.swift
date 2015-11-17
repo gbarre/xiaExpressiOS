@@ -60,6 +60,19 @@ class xiaDetail: NSObject {
         }
     }
     
+    func distanceToTop() -> CGFloat {
+        var yDist = UIScreen.mainScreen().bounds.height
+        
+        if (points.count > 2) {
+            for point in points {
+                let y = point.frame.origin.y
+                if (y < yDist) {
+                    yDist = y
+                }
+            }
+        }
+        return yDist
+    }
     
     func test() {
         print("This xia detail have \(self.points.count) points.")

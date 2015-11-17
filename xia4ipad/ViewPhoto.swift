@@ -20,11 +20,13 @@ class ViewPhoto: UIViewController {
     var movingCoords = CGPointMake(0, 0)
     var endEditShape = false
     var currentShapeTag: Int = 0
-    
     var landscape = false
     var btnAddMenu:Int = 0
     
     var details = [String: xiaDetail]()
+    var currentDetailTag: Int = 0
+    var createDetail: Bool = false
+    var beginTouchLocation = CGPoint(x: 0, y: 0)
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
@@ -34,6 +36,53 @@ class ViewPhoto: UIViewController {
     @IBAction func btnPlay(sender: AnyObject) {
         print("Play")
         print(xml.xmlString)
+        self.createDetail = false
+    }
+    
+    @IBAction func btnAddDetail(sender: UIBarButtonItem) {
+        // Create new detail object
+        self.currentDetailTag = self.xml["xia"]["details"]["detail"].count + 100
+        let newDetail = xiaDetail(tag: self.currentDetailTag)
+        self.details["\(self.currentDetailTag)"] = newDetail
+        let attributes = ["tag" : "\(self.currentDetailTag)",
+            "zoom" : "no",
+            "title" : "detail\(self.currentDetailTag)",
+            "description" : "detail\(self.currentDetailTag) description"]
+        self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
+        self.createDetail = true
+        
+        // Change other details color
+        for detail in details {
+            let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
+            if thisDetailTag != self.currentDetailTag {
+                // Remove and rebuild the shape to avoid the overlay on alpha channel
+                for subview in self.view.subviews {
+                    if subview.tag == (thisDetailTag! + 100) { // polygon
+                        subview.removeFromSuperview()
+                    }
+                    if subview.tag == thisDetailTag! { // points
+                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
+                        self.details["\(thisDetailTag!)"]?.points.removeFirst()
+                        subview.removeFromSuperview()
+                        
+                        let newPoint = self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: "corner-ok.png")
+                        newPoint?.layer.zPosition = 1
+                        self.view.addSubview(newPoint!)
+                    }
+                }
+                if self.details["\(thisDetailTag!)"]?.points.count > 2 {
+                    //self.buildShape(false, color: UIColor.greenColor(), tag: thisDetailTag!)
+                    self.buildShape(true, color: UIColor.greenColor(), tag: thisDetailTag!)
+                }
+                else { // only 1 or 2 points, remove them
+                    for subview in self.view.subviews {
+                        if subview.tag == thisDetailTag! {
+                            subview.removeFromSuperview()
+                        }
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func btnAdd(sender: UIBarButtonItem) {
@@ -267,6 +316,70 @@ class ViewPhoto: UIViewController {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
         
+        switch createDetail {
+        case true:
+            print("Begin touching in create mode")
+            let detailTag = self.currentDetailTag
+            let detailPoints = details["\(detailTag)"]?.points.count
+            var addPoint = false
+            
+            if ( detailPoints != 0 ) { // Points exists
+                
+                for var i=0; i<detailPoints; i++ { // should we move an existing point or add a new one
+                    let ploc = details["\(detailTag)"]?.points[i].center
+                    
+                    let xDist: CGFloat = (location.x - ploc!.x)
+                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                    
+                    if ( distance < 30 ) { // We are close to an exiting point, move it
+                        let toMove: UIImageView = details["\(detailTag)"]!.points[i]
+                        toMove.center = location
+                        details["\(detailTag)"]?.points[i] = toMove
+                        movingPoint = i
+                        addPoint = false
+                        break
+                    }
+                    else { // No point here, we need to create one
+                        addPoint = true
+                    }
+                }
+            }
+            if ( addPoint || detailPoints == 0 )  {
+                // Add new point
+                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
+                newPoint?.layer.zPosition = 1
+                view.addSubview(newPoint!)
+                
+                // Remove old polygon
+                for subview in view.subviews {
+                    if subview.tag == (detailTag + 100) {
+                        subview.removeFromSuperview()
+                    }
+                }
+                
+                self.buildShape(true, color: UIColor.redColor(), tag: detailTag)
+            }
+            
+        default:
+            print("Try to edit or move existing detail... (ToDo)")
+            // Get tag of the touched detail
+            var touchedTag: Int = 0
+            for detail in details {
+                let (detailTag, detailPoints) = detail
+                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                    print("Detail \(detailTag) touched")
+                    beginTouchLocation = location
+                    movingShape = touchedTag
+                    movingCoords = location
+                    break
+                }
+            }
+        }
+        
+        // to remove later...
+        if false {
         // Get form tag
         let tag = self.currentShapeTag
         
@@ -318,7 +431,7 @@ class ViewPhoto: UIViewController {
                 movingCoords = location
                 moving = true
             }
-            
+        }
         }
     }
     
@@ -327,6 +440,63 @@ class ViewPhoto: UIViewController {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
         
+        let detailTag = self.currentDetailTag
+        
+        switch createDetail {
+        case true:
+            print("Moving in create mode")
+            if ( movingPoint != -1 ) {
+                let ploc = details["\(detailTag)"]?.points[movingPoint].center
+                
+                let xDist: CGFloat = (location.x - ploc!.x)
+                let yDist: CGFloat = (location.y - ploc!.y)
+                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                
+                if ( distance < 30 ) {
+                    let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
+                    toMove.center = location
+                    details["\(detailTag)"]?.points[movingPoint] = toMove
+                    //moving = true
+                }
+            }
+            
+        default:
+            if ( movingShape != -1 ) {
+                let xDist: CGFloat = (location.x - beginTouchLocation.x)
+                let yDist: CGFloat = (location.y - beginTouchLocation.y)
+                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                if (distance > 10) {
+                    let deltaX = location.x - movingCoords.x
+                    let deltaY = location.y - movingCoords.y
+                    
+                    if (self.details["\(movingShape)"]!.distanceToTop() < 55) {
+                        for subview in view.subviews {
+                            if ( subview.tag == movingShape || subview.tag == (movingShape + 100) ) {
+                                let origin = subview.frame.origin
+                                let destination = CGPointMake(origin.x, origin.y + 55.5)
+                                subview.frame.origin = destination
+                            }
+                        }
+                        movingShape = -1
+                    }
+                    else {
+                        for subview in view.subviews {
+                            if ( subview.tag == movingShape || subview.tag == (movingShape + 100) ) {
+                                let origin = subview.frame.origin
+                                let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
+                                subview.frame.origin = destination
+                            }
+                        }
+                    }
+                    movingCoords = location
+                    //moving = true
+                }
+            }
+
+        }
+        
+        // to be removed
+        if false {
         // Get form tag
         let tag = self.currentShapeTag
         
@@ -359,9 +529,40 @@ class ViewPhoto: UIViewController {
             movingCoords = location
             moving = true
         }
+        }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        switch createDetail {
+        case true:
+            print("End touching in create mode")
+            let detailTag = self.currentDetailTag
+            let detailPoints = details["\(detailTag)"]?.points.count
+            
+            if detailPoints > 2 {
+                // rebuild points & shape
+                for subview in view.subviews {
+                    if subview.tag == (detailTag + 100) {
+                        subview.removeFromSuperview()
+                    }
+                    if subview.tag == detailTag {
+                        subview.layer.zPosition = 1
+                    }
+                }
+                buildShape(true, color: UIColor.redColor(), tag: detailTag)
+                
+            }
+            
+        default:
+            print("End touching with no creation")
+            for detail in details {
+                detail.1.test()
+            }
+            movingShape = -1
+        }
+        
+        // to be removed
+        if false {
         // Get form tag
         let tag = self.currentShapeTag
         let nbPoints = details["\(tag)"]?.points.count
@@ -389,6 +590,7 @@ class ViewPhoto: UIViewController {
             if subview.tag == tag {
                 subview.layer.zPosition = 1
             }
+        }
         }
     }
 
