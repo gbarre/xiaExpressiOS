@@ -82,25 +82,6 @@ class ViewPhoto: UIViewController {
     
     @IBAction func btnOption(sender: UIBarButtonItem) {
         print ("remove ASAP")
-/*        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
-        let growAction = UIAlertAction(title: "Enable Zoom (ToDo)", style: .Default, handler: { action in
-            print("Enable zoom")})
-        let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 1...")})
-        let descriptionAction = UIAlertAction(title: "Change Description (ToDo)", style: .Default, handler: { action in
-            print("ToDo : build interface 2...")})
-        
-        menu.addAction(growAction)
-        menu.addAction(titleAction)
-        menu.addAction(descriptionAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.barButtonItem = sender
-            ppc.permittedArrowDirections = .Up
-        }
-        
-        presentViewController(menu, animated: true, completion: nil)
-*/
     }
     
     @IBAction func btnTrash(sender: AnyObject) {
@@ -196,6 +177,7 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(detailTag)"]!.points[i]
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
+                        xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                         movingPoint = i
                         addPoint = false
                         break
@@ -208,6 +190,7 @@ class ViewPhoto: UIViewController {
             if ( addPoint || detailPoints == 0 )  {
                 // Add new point
                 let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
+                xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                 newPoint?.layer.zPosition = 1
                 view.addSubview(newPoint!)
                 
@@ -249,6 +232,7 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(editDetail)"]!.points[i]
                         toMove.center = location
                         details["\(editDetail)"]?.points[i] = toMove
+                        xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                         movingPoint = i
                         moveDetail = false
                         break
@@ -280,6 +264,7 @@ class ViewPhoto: UIViewController {
                     let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                     toMove.center = location
                     details["\(detailTag)"]?.points[movingPoint] = toMove
+                    xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                 }
             }
             else {
@@ -307,6 +292,7 @@ class ViewPhoto: UIViewController {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x, origin.y + 55.5)
                                     subview.frame.origin = destination
+                                    xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                                 }
                             }
                             editDetail = -1
@@ -317,6 +303,7 @@ class ViewPhoto: UIViewController {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
                                     subview.frame.origin = destination
+                                    xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                                 }
                             }
                         }
@@ -334,6 +321,7 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(editDetail)"]!.points[movingPoint]
                         toMove.center = location
                         details["\(editDetail)"]?.points[movingPoint] = toMove
+                        xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                     }
                 }
             }
@@ -356,6 +344,14 @@ class ViewPhoto: UIViewController {
                 }
             }
             buildShape(true, color: UIColor.redColor(), tag: detailTag)
+            
+            // Save the detail in xml
+            do {
+                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                print("\(error)")
+            }
             
         }
         
