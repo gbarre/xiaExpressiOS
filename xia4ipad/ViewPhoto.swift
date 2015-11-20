@@ -102,6 +102,32 @@ class ViewPhoto: UIViewController {
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
+        // Load details from xml
+        if let xmlDetails = xml.root["details"]["detail"].all {
+            for detail in xmlDetails {
+                if let path = detail.value {
+                    // Add detail object
+                    let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                    let newDetail = xiaDetail(tag: detailTag)
+                    self.details["\(detailTag)"] = newDetail
+                    
+                    // Add points to detail
+                    let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                    for var point in pointsArray {
+                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                        let coords = point.characters.split{$0 == ";"}.map(String.init)
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
+                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
+                        newPoint?.layer.zPosition = 1
+                        view.addSubview(newPoint!)
+                    }
+                    
+                    self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
+                }
+            }
+        }
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -177,7 +203,6 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(detailTag)"]!.points[i]
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
-                        xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                         movingPoint = i
                         addPoint = false
                         break
@@ -190,7 +215,6 @@ class ViewPhoto: UIViewController {
             if ( addPoint || detailPoints == 0 )  {
                 // Add new point
                 let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
-                xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                 newPoint?.layer.zPosition = 1
                 view.addSubview(newPoint!)
                 
@@ -232,7 +256,6 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(editDetail)"]!.points[i]
                         toMove.center = location
                         details["\(editDetail)"]?.points[i] = toMove
-                        xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                         movingPoint = i
                         moveDetail = false
                         break
@@ -264,7 +287,6 @@ class ViewPhoto: UIViewController {
                     let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                     toMove.center = location
                     details["\(detailTag)"]?.points[movingPoint] = toMove
-                    xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
                 }
             }
             else {
@@ -292,7 +314,6 @@ class ViewPhoto: UIViewController {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x, origin.y + 55.5)
                                     subview.frame.origin = destination
-                                    xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                                 }
                             }
                             editDetail = -1
@@ -303,7 +324,6 @@ class ViewPhoto: UIViewController {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
                                     subview.frame.origin = destination
-                                    xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                                 }
                             }
                         }
@@ -321,7 +341,6 @@ class ViewPhoto: UIViewController {
                         let toMove: UIImageView = details["\(editDetail)"]!.points[movingPoint]
                         toMove.center = location
                         details["\(editDetail)"]?.points[movingPoint] = toMove
-                        xml["xia"]["details"].children[editDetail - 100].value = (details["\(editDetail)"]?.createPath())!
                     }
                 }
             }
@@ -346,6 +365,7 @@ class ViewPhoto: UIViewController {
             buildShape(true, color: UIColor.redColor(), tag: detailTag)
             
             // Save the detail in xml
+            xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
             do {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
