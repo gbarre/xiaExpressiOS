@@ -157,20 +157,10 @@
                                             <action selector="btnAddDetail:" destination="fts-Lk-uqf" id="gPN-ca-xjH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem enabled="NO" title="Menu" id="101-Oh-Vrp">
-                                        <connections>
-                                            <action selector="btnAdd:" destination="fts-Lk-uqf" id="BIE-S0-yCG"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="Xuz-3G-eji"/>
                                     <barButtonItem image="Info" id="g81-gt-cZy">
                                         <connections>
                                             <segue destination="cwz-uV-RB1" kind="presentation" modalPresentationStyle="formSheet" id="zI0-qU-CeA"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem enabled="NO" image="Info" id="bly-yc-W6K">
-                                        <connections>
-                                            <action selector="btnOption:" destination="fts-Lk-uqf" id="gCA-eG-fau"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>

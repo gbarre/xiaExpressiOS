@@ -76,16 +76,35 @@ class ViewPhoto: UIViewController {
         
     }
     
-    @IBAction func btnAdd(sender: UIBarButtonItem) {
-        print("remove this button ASAP")
-    }
-    
-    @IBAction func btnOption(sender: UIBarButtonItem) {
-        print ("remove ASAP")
-    }
-    
     @IBAction func btnTrash(sender: AnyObject) {
         print("Trash")
+        let detailTag = self.currentDetailTag
+        if ( detailTag != 0 ) {
+            // remove point & polygon
+            for subview in view.subviews {
+                if subview.tag == detailTag || subview.tag == (detailTag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            
+            // remove detail object
+            details["\(detailTag)"] = nil
+            
+            // remove detail in xml
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
+                for d in detail {
+                    d.removeFromParent()
+                }
+            }
+            
+            // write xml
+            do {
+                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                print("\(error)")
+            }
+        }
     }
     
     @IBAction func btnExport(sender: AnyObject) {
@@ -365,7 +384,12 @@ class ViewPhoto: UIViewController {
             buildShape(true, color: UIColor.redColor(), tag: detailTag)
             
             // Save the detail in xml
-            xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
+                for d in detail {
+                    d.value = (details["\(detailTag)"]?.createPath())!
+                }
+            }
+            //xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
             do {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
