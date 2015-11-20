@@ -160,7 +160,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="Xuz-3G-eji"/>
                                     <barButtonItem image="Info" id="g81-gt-cZy">
                                         <connections>
-                                            <segue destination="cwz-uV-RB1" kind="presentation" modalPresentationStyle="formSheet" id="zI0-qU-CeA"/>
+                                            <segue destination="cwz-uV-RB1" kind="presentation" identifier="viewDetailInfos" modalPresentationStyle="formSheet" id="zI0-qU-CeA"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
@@ -170,7 +170,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="2ha-T4-l71"/>
-                                    <barButtonItem systemItem="action" id="03J-iV-A5A">
+                                    <barButtonItem enabled="NO" systemItem="action" id="03J-iV-A5A">
                                         <connections>
                                             <action selector="btnExport:" destination="fts-Lk-uqf" id="gaC-Zu-0kV"/>
                                         </connections>
@@ -225,7 +225,11 @@
                                                 <action selector="btnCancel:" destination="cwz-uV-RB1" id="jch-MJ-36Y"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="p1a-NM-XcW"/>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="p1a-NM-XcW">
+                                            <connections>
+                                                <action selector="btnDone:" destination="cwz-uV-RB1" id="zIg-CB-zN4"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -251,7 +255,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TKS-5y-mBF">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TKS-5y-mBF">
                                 <rect key="frame" x="531" y="56" width="51" height="31"/>
                                 <animations/>
                             </switch>
@@ -279,6 +283,7 @@
                     <value key="contentSizeForViewInPopover" type="size" width="800" height="400"/>
                     <connections>
                         <outlet property="btnZoom" destination="TKS-5y-mBF" id="efq-Sh-TZZ"/>
+                        <outlet property="navbar" destination="XtW-Nd-uiH" id="I4w-gP-qpS"/>
                         <outlet property="txtDesc" destination="pK2-BQ-1RC" id="DHa-qM-VVU"/>
                         <outlet property="txtTitle" destination="jMP-Vq-Fkt" id="xtN-X8-bRS"/>
                     </connections>

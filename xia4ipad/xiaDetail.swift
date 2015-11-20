@@ -20,6 +20,7 @@ class xiaDetail: NSObject {
     var tag: Int = 0
     var title: String = ""
     var desc: String = ""
+    var zoom: Bool = false
     
     init(tag: Int){
         self.tag = tag

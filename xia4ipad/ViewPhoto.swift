@@ -55,10 +55,10 @@ class ViewPhoto: UIViewController {
             let newDetail = xiaDetail(tag: self.currentDetailTag)
             self.details["\(self.currentDetailTag)"] = newDetail
             let attributes = ["tag" : "\(self.currentDetailTag)",
-                "zoom" : "no",
+                "zoom" : "false",
                 "title" : "detail\(self.currentDetailTag)",
-                "description" : "detail\(self.currentDetailTag) description"]
-            self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
+                "path" : "0;0"]
+            self.xml["xia"]["details"].addChild(name: "detail", value: "detail\(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag, color: "red")
         })
@@ -124,7 +124,7 @@ class ViewPhoto: UIViewController {
         // Load details from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
             for detail in xmlDetails {
-                if let path = detail.value {
+                if let path = detail.attributes["path"] {
                     // Add detail object
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                     let newDetail = xiaDetail(tag: detailTag)
@@ -363,10 +363,8 @@ class ViewPhoto: UIViewController {
                     }
                 }
             }
-
         }
-        
-            }
+    }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let detailTag = self.currentDetailTag
@@ -386,17 +384,15 @@ class ViewPhoto: UIViewController {
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
                 for d in detail {
-                    d.value = (details["\(detailTag)"]?.createPath())!
+                    d.attributes["path"] = (details["\(detailTag)"]?.createPath())!
                 }
             }
-            //xml["xia"]["details"].children[detailTag - 100].value = (details["\(detailTag)"]?.createPath())!
             do {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
                 print("\(error)")
             }
-            
         }
         
         switch createDetail {
@@ -407,6 +403,25 @@ class ViewPhoto: UIViewController {
             editDetail = -1
         }
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "viewDetailInfos") {
+            if let controller:ViewDetailInfo = segue.destinationViewController as? ViewDetailInfo {
+                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                    for d in detail {
+                        let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
+                        controller.zoom = zoomStatus
+                        controller.detailTitle = d.attributes["title"]!
+                        controller.detailDescription = d.value!
+                        controller.tag = self.currentDetailTag
+                        controller.xml = self.xml
+                        controller.index = self.index
+                    }
+                }
+            }
+        }
+    }
+
 
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
         // translate from C : http://alienryderflex.com/polygon/
