@@ -27,6 +27,8 @@ class ViewPhoto: UIViewController {
     var currentDetailTag: Int = 0
     var createDetail: Bool = false
     var beginTouchLocation = CGPoint(x: 0, y: 0)
+    var editDetail = -1
+    var moveDetail = false
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
@@ -40,146 +42,30 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        // Create new detail object
-        self.currentDetailTag = self.xml["xia"]["details"]["detail"].count + 100
-        let newDetail = xiaDetail(tag: self.currentDetailTag)
-        self.details["\(self.currentDetailTag)"] = newDetail
-        let attributes = ["tag" : "\(self.currentDetailTag)",
-            "zoom" : "no",
-            "title" : "detail\(self.currentDetailTag)",
-            "description" : "detail\(self.currentDetailTag) description"]
-        self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
-        self.createDetail = true
-        changeDetailColor(self.currentDetailTag, color: "red")
-    }
-    
-    @IBAction func btnAdd(sender: UIBarButtonItem) {
-        
         let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
+        let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
+            print("Rectangle tool (ToDo)")
+        })
+        let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
+            print("Ellipse tool (ToDo)")
+        })
+        let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
+            // Create new detail object
+            self.currentDetailTag = self.xml["xia"]["details"]["detail"].count + 100
+            let newDetail = xiaDetail(tag: self.currentDetailTag)
+            self.details["\(self.currentDetailTag)"] = newDetail
+            let attributes = ["tag" : "\(self.currentDetailTag)",
+                "zoom" : "no",
+                "title" : "detail\(self.currentDetailTag)",
+                "description" : "detail\(self.currentDetailTag) description"]
+            self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag, color: "red")
+        })
         
-        if (btnAddMenu == 0) { // Choose tool mode
-            let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
-                print("Rectangle tool (ToDo)")
-                self.btnAddMenu = 0
-            })
-            let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
-                print("Ellipse tool (ToDo)")
-                self.btnAddMenu = 0
-            })
-            let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
-                self.btnAddMenu = 1
-                self.endEditShape = true
-                
-                self.currentShapeTag = self.xml["xia"]["details"]["detail"].count + 100
-                
-                // Create new detail object
-                let newDetail = xiaDetail(tag: self.currentShapeTag)
-                self.details["\(self.currentShapeTag)"] = newDetail
-                let attributes = ["tag" : "\(self.currentShapeTag)",
-                    "zoom" : "no",
-                    "title" : "detail\(self.currentShapeTag)",
-                    "description" : "detail\(self.currentShapeTag) description"]
-                self.xml["xia"]["details"].addChild(name: "detail", value: "0;0", attributes: attributes)
-            })
-            
-            menu.addAction(growAction)
-            menu.addAction(titleAction)
-            menu.addAction(descriptionAction)
-        }
-        else { // Edit shape mode
-            // Get form tag
-            let tag = self.currentShapeTag
-            
-            let editAction = UIAlertAction(title: "Edit points mode", style: .Default, handler: { action in
-                print("Edit mode")
-                self.endEditShape = true
-                
-                // Remove polygon (filled)
-                for subview in self.view.subviews {
-                    if subview.tag == (tag + 100) { // polygon
-                        subview.removeFromSuperview()
-                    }
-                    if subview.tag == (tag) { // points
-                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        
-                        
-                        self.details["\(tag)"]?.points.removeFirst()
-                        subview.removeFromSuperview()
-                        
-                        _ = self.details["\(tag)"]?.createPoint(location, imageName: "corner-draggable.png")
-                    }
-                }
-                
-                let nbPoints = self.details["\(tag)"]?.points.count
-                
-                // Build polygon
-                if nbPoints > 1 {
-                    self.buildShape(false, color: UIColor.redColor(), tag: tag)
-                }
-                
-                // Draw corners
-                for ( var i = 0; i < nbPoints; i++ ) {
-                    self.view.addSubview(self.details["\(tag)"]!.points[i])
-                }
-            })
-            let moveAction = UIAlertAction(title: "Move shape mode", style: .Default, handler: { action in
-                print("Move mode")
-                self.endEditShape = false
-                if self.details["\(tag)"]?.points.count > 2 {
-                    self.buildShape(true, color: UIColor.redColor(), tag: tag)
-                }
-                
-                // Changing corner image
-                for subview in self.view.subviews {
-                    if subview.tag == tag {
-                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        self.details["\(tag)"]?.points.removeFirst()
-                        subview.removeFromSuperview()
-                        
-                        let newPoint = self.details["\(tag)"]?.createPoint(location, imageName: "corner-moving.png")
-                        self.view.addSubview(newPoint!)
-                    }
-                }
-                
-            })
-            let endAction = UIAlertAction(title: "End shape creation", style: .Default, handler: { action in
-                print("End detail creation")
-                
-                // Remove and rebuild the shape to avoid the overlay on alpha channel
-                for subview in self.view.subviews {
-                    if subview.tag == (tag + 100) { // polygon
-                        subview.removeFromSuperview()
-                    }
-                    if subview.tag == tag { // points
-                        let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                        self.details["\(tag)"]?.points.removeFirst()
-                        subview.removeFromSuperview()
-                        
-                        let newPoint = self.details["\(tag)"]?.createPoint(location, imageName: "corner-ok.png")
-                        self.view.addSubview(newPoint!)
-                    }
-                }
-                if self.details["\(tag)"]?.points.count > 2 {
-                    self.buildShape(false, color: UIColor.greenColor(), tag: tag)
-                    self.buildShape(true, color: UIColor.greenColor(), tag: tag)
-                }
-                else { // only 1 or 2 points, remove them
-                    for subview in self.view.subviews {
-                        if subview.tag == tag {
-                            subview.removeFromSuperview()
-                        }
-                    }
-                }
-                self.endEditShape = false
-                self.btnAddMenu = 0
-            })
-            
-            menu.addAction(editAction)
-            menu.addAction(moveAction)
-            menu.addAction(endAction)
-        }
-        
-        
+        menu.addAction(growAction)
+        menu.addAction(titleAction)
+        menu.addAction(descriptionAction)
         
         if let ppc = menu.popoverPresentationController {
             ppc.barButtonItem = sender
@@ -187,10 +73,16 @@ class ViewPhoto: UIViewController {
         }
         
         presentViewController(menu, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func btnAdd(sender: UIBarButtonItem) {
+        print("remove this button ASAP")
     }
     
     @IBAction func btnOption(sender: UIBarButtonItem) {
-        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
+        print ("remove ASAP")
+/*        let menu = UIAlertController(title: "Options", message: nil, preferredStyle: .ActionSheet)
         let growAction = UIAlertAction(title: "Enable Zoom (ToDo)", style: .Default, handler: { action in
             print("Enable zoom")})
         let titleAction = UIAlertAction(title: "Change title (ToDo)", style: .Default, handler: { action in
@@ -208,6 +100,7 @@ class ViewPhoto: UIViewController {
         }
         
         presentViewController(menu, animated: true, completion: nil)
+*/
     }
     
     @IBAction func btnTrash(sender: AnyObject) {
@@ -286,7 +179,6 @@ class ViewPhoto: UIViewController {
         
         switch createDetail {
         case true:
-            print("Begin touching in create mode")
             let detailTag = self.currentDetailTag
             let detailPoints = details["\(detailTag)"]?.points.count
             var addPoint = false
@@ -325,94 +217,58 @@ class ViewPhoto: UIViewController {
                         subview.removeFromSuperview()
                     }
                 }
-                
                 self.buildShape(true, color: UIColor.redColor(), tag: detailTag)
             }
             
         default:
-            print("Try to edit or move existing detail... (ToDo)")
             // Get tag of the touched detail
             var touchedTag: Int = 0
             for detail in details {
                 let (detailTag, detailPoints) = detail
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    print("Detail \(detailTag) touched")
                     beginTouchLocation = location
-                    movingShape = touchedTag
+                    editDetail = touchedTag
                     movingCoords = location
+                    moveDetail = true
                     break
                 }
             }
-        }
-        
-        // to remove later...
-        if false {
-        // Get form tag
-        let tag = self.currentShapeTag
-        
-        var create = false
-        let nbPoints = details["\(tag)"]?.points.count
-        switch endEditShape {
-        case true: // editing points
-            if ( nbPoints != 0 ) { // Points exists
-                
-                for var i=0; i<nbPoints; i++ { // should we move an existing point or add a new one
-                    let ploc = details["\(tag)"]?.points[i].center
+            
+            // Should we move an existing point ?
+            if (editDetail != -1) {
+                let detailPoints = details["\(editDetail)"]?.points.count
+                for var i=0; i<detailPoints; i++ {
+                    let ploc = details["\(editDetail)"]?.points[i].center
                     
                     let xDist: CGFloat = (location.x - ploc!.x)
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
-                    if ( distance < 30 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(tag)"]!.points[i]
+                    if ( distance < 40 ) { // We are close to an exiting point, move it
+                        let toMove: UIImageView = details["\(editDetail)"]!.points[i]
                         toMove.center = location
-                        details["\(tag)"]?.points[i] = toMove
+                        details["\(editDetail)"]?.points[i] = toMove
                         movingPoint = i
-                        create = false
+                        moveDetail = false
                         break
                     }
-                    else { // No point here, we need to create one
-                        create = true
+                    else { // No point here, just move the detail
+                        moveDetail = true
                     }
                 }
             }
-            if ( create || nbPoints == 0 )  {
-                // Add new point
-                let newPoint = details["\(tag)"]?.createPoint(location, imageName: "corner-draggable.png")
-                print(newPoint)
-                view.addSubview(newPoint!)
-                
-                // Remove polygon
-                for subview in view.subviews {
-                    if subview.tag == (tag + 100) {
-                        subview.removeFromSuperview()
-                    }
-                }
-                
-                self.buildShape(false, color: UIColor.redColor(), tag: tag)
-            }
-            
-        default:
-            if ( nbPoints > 2 && pointInPolygon(details["\(tag)"]!.points, touchPoint: location) && btnAddMenu == 1 ) {
-                movingShape = 1
-                movingCoords = location
-                moving = true
-            }
-        }
         }
     }
-    
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
-
+        
         let detailTag = self.currentDetailTag
         
         switch createDetail {
         case true:
-            print("Moving in create mode")
             if ( movingPoint != -1 ) {
                 let ploc = details["\(detailTag)"]?.points[movingPoint].center
                 
@@ -426,143 +282,89 @@ class ViewPhoto: UIViewController {
                     details["\(detailTag)"]?.points[movingPoint] = toMove
                 }
             }
+            else {
+                print("Nothing to move")
+            }
             
         default:
-            if ( movingShape != -1 ) {
-                if (movingShape != detailTag) {
-                    changeDetailColor(movingShape, color: "red")
-                    self.currentDetailTag = movingShape
+            if ( editDetail != -1 ) {
+                if (editDetail != detailTag) {
+                    changeDetailColor(editDetail, color: "red")
+                    self.currentDetailTag = editDetail
                 }
                 
-                let xDist: CGFloat = (location.x - beginTouchLocation.x)
-                let yDist: CGFloat = (location.y - beginTouchLocation.y)
-                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                if (distance > 10) {
-                    let deltaX = location.x - movingCoords.x
-                    let deltaY = location.y - movingCoords.y
+                if (moveDetail) {
+                    let xDist: CGFloat = (location.x - beginTouchLocation.x)
+                    let yDist: CGFloat = (location.y - beginTouchLocation.y)
+                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                    if (distance > 10) {
+                        let deltaX = location.x - movingCoords.x
+                        let deltaY = location.y - movingCoords.y
+                        
+                        if (self.details["\(editDetail)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                            for subview in view.subviews {
+                                if ( subview.tag == editDetail || subview.tag == (editDetail + 100) ) {
+                                    let origin = subview.frame.origin
+                                    let destination = CGPointMake(origin.x, origin.y + 55.5)
+                                    subview.frame.origin = destination
+                                }
+                            }
+                            editDetail = -1
+                        }
+                        else {
+                            for subview in view.subviews {
+                                if ( subview.tag == editDetail || subview.tag == (editDetail + 100) ) {
+                                    let origin = subview.frame.origin
+                                    let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
+                                    subview.frame.origin = destination
+                                }
+                            }
+                        }
+                        movingCoords = location
+                    }
+                }
+                else if ( movingPoint != -1 ) {
+                    let ploc = details["\(editDetail)"]?.points[movingPoint].center
                     
-                    if (self.details["\(movingShape)"]!.distanceToTop() < 55) {
-                        for subview in view.subviews {
-                            if ( subview.tag == movingShape || subview.tag == (movingShape + 100) ) {
-                                let origin = subview.frame.origin
-                                let destination = CGPointMake(origin.x, origin.y + 55.5)
-                                subview.frame.origin = destination
-                            }
-                        }
-                        movingShape = -1
+                    let xDist: CGFloat = (location.x - ploc!.x)
+                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                    
+                    if ( distance < 30 ) {
+                        let toMove: UIImageView = details["\(editDetail)"]!.points[movingPoint]
+                        toMove.center = location
+                        details["\(editDetail)"]?.points[movingPoint] = toMove
                     }
-                    else {
-                        for subview in view.subviews {
-                            if ( subview.tag == movingShape || subview.tag == (movingShape + 100) ) {
-                                let origin = subview.frame.origin
-                                let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
-                                subview.frame.origin = destination
-                            }
-                        }
-                    }
-                    movingCoords = location
                 }
             }
 
         }
         
-        // to be removed
-        if false {
-        // Get form tag
-        let tag = self.currentShapeTag
-        
-        if ( movingPoint != -1 ) {
-            let ploc = details["\(tag)"]?.points[movingPoint].center
-            
-            let xDist: CGFloat = (location.x - ploc!.x);
-            let yDist: CGFloat = (location.y - ploc!.y);
-            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist));
-            
-            if ( distance < 30 ) {
-                let toMove: UIImageView = details["\(tag)"]!.points[movingPoint]
-                toMove.center = location
-                details["\(tag)"]?.points[movingPoint] = toMove
-                moving = true
             }
-        }
-        
-        if ( movingShape != -1 ) {
-            let deltaX = location.x - movingCoords.x
-            let deltaY = location.y - movingCoords.y
-            
-            for subview in view.subviews {
-                if ( subview.tag == tag || subview.tag == (tag + 100) ) {
-                    let origin = subview.frame.origin
-                    let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
-                    subview.frame.origin = destination
-                }
-            }
-            movingCoords = location
-            moving = true
-        }
-        }
-    }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("End moving shape : \(movingShape)")
-        switch createDetail {
-        case true:
-            print("End touching in create mode")
-            let detailTag = self.currentDetailTag
-            let detailPoints = details["\(detailTag)"]?.points.count
-            
-            if detailPoints > 2 {
-                // rebuild points & shape
-                for subview in view.subviews {
-                    if subview.tag == (detailTag + 100) {
-                        subview.removeFromSuperview()
-                    }
-                    if subview.tag == detailTag {
-                        subview.layer.zPosition = 1
-                    }
-                }
-                buildShape(true, color: UIColor.redColor(), tag: detailTag)
-                
-            }
-            
-        default:
-            print("End touching with no creation")
-            for detail in details {
-                detail.1.test()
-            }
-            movingShape = -1
-        }
-        
-        // to be removed
-        if false {
-        // Get form tag
-        let tag = self.currentShapeTag
-        let nbPoints = details["\(tag)"]?.points.count
-        
-        if moving {
-            // Remove polygon (filled)
+        let detailTag = self.currentDetailTag
+        let detailPoints = details["\(detailTag)"]?.points.count
+        if detailPoints > 2 {
+            // rebuild points & shape
             for subview in view.subviews {
-                print(subview)
-                if subview.tag == (tag + 100) {
+                if subview.tag == (detailTag + 100) {
                     subview.removeFromSuperview()
                 }
+                if subview.tag == detailTag {
+                    subview.layer.zPosition = 1
+                }
             }
-            moving = false
+            buildShape(true, color: UIColor.redColor(), tag: detailTag)
+            
         }
-        if ( nbPoints > 2  && btnAddMenu == 1 ) {
-            buildShape(false, color: UIColor.redColor(), tag: tag)
-        }
-        if movingShape != -1 {
-            buildShape(true, color: UIColor.redColor(), tag: tag)
-        }
-        movingPoint = -1
-        movingShape = -1
-        // Make point to top
-        for subview in view.subviews {
-            if subview.tag == tag {
-                subview.layer.zPosition = 1
-            }
-        }
+        
+        switch createDetail {
+        case true:
+            break
+            
+        default:
+            editDetail = -1
         }
     }
 
