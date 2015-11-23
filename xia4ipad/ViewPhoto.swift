@@ -38,6 +38,11 @@ class ViewPhoto: UIViewController {
     @IBAction func btnPlay(sender: AnyObject) {
         print("Play")
         print(xml.xmlString)
+        for detail in self.details {
+            print(detail.0)
+            print(detail.1.points)
+        }
+        
         self.createDetail = false
     }
     
@@ -51,7 +56,8 @@ class ViewPhoto: UIViewController {
         })
         let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
             // Create new detail object
-            self.currentDetailTag = self.xml["xia"]["details"]["detail"].count + 100
+            let lastDetailTag = self.xml["xia"]["details"]["detail"].last
+            self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
             let newDetail = xiaDetail(tag: self.currentDetailTag)
             self.details["\(self.currentDetailTag)"] = newDetail
             let attributes = ["tag" : "\(self.currentDetailTag)",
@@ -121,14 +127,14 @@ class ViewPhoto: UIViewController {
         // Do any additional setup after loading the view.
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        // Load details from xml
+        // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
             for detail in xmlDetails {
                 if let path = detail.attributes["path"] {
                     // Add detail object
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                     let newDetail = xiaDetail(tag: detailTag)
-                    self.details["\(detailTag)"] = newDetail
+                    details["\(detailTag)"] = newDetail
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
@@ -327,7 +333,7 @@ class ViewPhoto: UIViewController {
                         let deltaX = location.x - movingCoords.x
                         let deltaY = location.y - movingCoords.y
                         
-                        if (self.details["\(editDetail)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                        if (details["\(editDetail)"]!.distanceToTop() < 55) { // Avoid to move over navbar
                             for subview in view.subviews {
                                 if ( subview.tag == editDetail || subview.tag == (editDetail + 100) ) {
                                     let origin = subview.frame.origin
@@ -516,21 +522,21 @@ class ViewPhoto: UIViewController {
                 }
                 if subview.tag == thisDetailTag! { // points
                     let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                    self.details["\(thisDetailTag!)"]?.points.removeFirst()
+                    details["\(thisDetailTag!)"]?.points.removeFirst()
                     subview.removeFromSuperview()
                     
                     var newPoint: UIView
                     if thisDetailTag != tag {
-                        newPoint = (self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
+                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
                     }
                     else {
-                        newPoint = (self.details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
+                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     }
                     newPoint.layer.zPosition = 1
                     self.view.addSubview(newPoint)
                 }
             }
-            if self.details["\(thisDetailTag!)"]?.points.count > 2 {
+            if details["\(thisDetailTag!)"]?.points.count > 2 {
                 if thisDetailTag != tag {
                     self.buildShape(true, color: altShapeColor, tag: thisDetailTag!)
                 }
