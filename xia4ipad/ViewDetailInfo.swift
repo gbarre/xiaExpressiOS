@@ -48,6 +48,12 @@ class ViewDetailInfo: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Add border to description
+        
+        txtDesc.layer.borderWidth = 1
+        txtDesc.layer.cornerRadius = 5
+        txtDesc.layer.borderColor = UIColor.grayColor().CGColor
+        
         navbar.title = "Detail \(self.tag - 100)"
         btnZoom.setOn(self.zoom, animated: true)
         txtTitle.text = self.detailTitle

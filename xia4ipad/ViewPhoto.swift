@@ -16,12 +16,8 @@ class ViewPhoto: UIViewController {
     var location = CGPoint(x: 0, y: 0)
     var moving = false
     var movingPoint = -1 // Id of point
-    var movingShape = -1 // Id of Shape
     var movingCoords = CGPointMake(0, 0)
-    var endEditShape = false
-    var currentShapeTag: Int = 0
     var landscape = false
-    var btnAddMenu:Int = 0
     
     var details = [String: xiaDetail]()
     var currentDetailTag: Int = 0
@@ -57,7 +53,12 @@ class ViewPhoto: UIViewController {
         let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
             // Create new detail object
             let lastDetailTag = self.xml["xia"]["details"]["detail"].last
-            self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
+            if lastDetailTag != nil {
+                self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
+            }
+            else {
+                self.currentDetailTag = 100
+            }
             let newDetail = xiaDetail(tag: self.currentDetailTag)
             self.details["\(self.currentDetailTag)"] = newDetail
             let attributes = ["tag" : "\(self.currentDetailTag)",
@@ -152,7 +153,6 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -216,7 +216,6 @@ class ViewPhoto: UIViewController {
             var addPoint = false
             
             if ( detailPoints != 0 ) { // Points exists
-                
                 for var i=0; i<detailPoints; i++ { // should we move an existing point or add a new one
                     let ploc = details["\(detailTag)"]?.points[i].center
                     
@@ -261,26 +260,30 @@ class ViewPhoto: UIViewController {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
                     beginTouchLocation = location
                     editDetail = touchedTag
+                    currentDetailTag = touchedTag
                     movingCoords = location
                     moveDetail = true
+                    changeDetailColor(editDetail, color: "red")
                     break
                 }
             }
             
             // Should we move an existing point ?
-            if (editDetail != -1) {
-                let detailPoints = details["\(editDetail)"]?.points.count
+            if (currentDetailTag != -1) {
+                movingPoint = -1
+                let detailPoints = details["\(currentDetailTag)"]?.points.count
                 for var i=0; i<detailPoints; i++ {
-                    let ploc = details["\(editDetail)"]?.points[i].center
+                    let ploc = details["\(currentDetailTag)"]?.points[i].center
                     
                     let xDist: CGFloat = (location.x - ploc!.x)
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 40 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(editDetail)"]!.points[i]
+                        print("point \(i) of detail \(currentDetailTag) touched, move it!")
+                        let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
                         toMove.center = location
-                        details["\(editDetail)"]?.points[i] = toMove
+                        details["\(currentDetailTag)"]?.points[i] = toMove
                         movingPoint = i
                         moveDetail = false
                         break
@@ -296,36 +299,30 @@ class ViewPhoto: UIViewController {
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
-        
         let detailTag = self.currentDetailTag
+        
+        if ( movingPoint != -1 ) {
+            let ploc = details["\(detailTag)"]?.points[movingPoint].center
+            
+            let xDist: CGFloat = (location.x - ploc!.x)
+            let yDist: CGFloat = (location.y - ploc!.y)
+            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+            
+            if ( distance < 30 ) {
+                let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
+                toMove.center = location
+                details["\(detailTag)"]?.points[movingPoint] = toMove
+            }
+        }
         
         switch createDetail {
         case true:
-            if ( movingPoint != -1 ) {
-                let ploc = details["\(detailTag)"]?.points[movingPoint].center
-                
-                let xDist: CGFloat = (location.x - ploc!.x)
-                let yDist: CGFloat = (location.y - ploc!.y)
-                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                
-                if ( distance < 30 ) {
-                    let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
-                    toMove.center = location
-                    details["\(detailTag)"]?.points[movingPoint] = toMove
-                }
-            }
-            else {
-                print("Nothing to move")
-            }
+            break
             
         default:
             if ( editDetail != -1 ) {
-                if (editDetail != detailTag) {
-                    changeDetailColor(editDetail, color: "red")
-                    self.currentDetailTag = editDetail
-                }
-                
                 if (moveDetail) {
+                    movingPoint = -1
                     let xDist: CGFloat = (location.x - beginTouchLocation.x)
                     let yDist: CGFloat = (location.y - beginTouchLocation.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
@@ -333,9 +330,9 @@ class ViewPhoto: UIViewController {
                         let deltaX = location.x - movingCoords.x
                         let deltaY = location.y - movingCoords.y
                         
-                        if (details["\(editDetail)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                        if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
                             for subview in view.subviews {
-                                if ( subview.tag == editDetail || subview.tag == (editDetail + 100) ) {
+                                if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x, origin.y + 55.5)
                                     subview.frame.origin = destination
@@ -345,27 +342,14 @@ class ViewPhoto: UIViewController {
                         }
                         else {
                             for subview in view.subviews {
-                                if ( subview.tag == editDetail || subview.tag == (editDetail + 100) ) {
+                                if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                     let origin = subview.frame.origin
-                                    let destination = CGPointMake(origin.x + deltaX/2, origin.y + deltaY/2)
+                                    let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
                                     subview.frame.origin = destination
                                 }
                             }
                         }
                         movingCoords = location
-                    }
-                }
-                else if ( movingPoint != -1 ) {
-                    let ploc = details["\(editDetail)"]?.points[movingPoint].center
-                    
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
-                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                    
-                    if ( distance < 30 ) {
-                        let toMove: UIImageView = details["\(editDetail)"]!.points[movingPoint]
-                        toMove.center = location
-                        details["\(editDetail)"]?.points[movingPoint] = toMove
                     }
                 }
             }
@@ -400,13 +384,26 @@ class ViewPhoto: UIViewController {
                 print("\(error)")
             }
         }
-        
+                
         switch createDetail {
         case true:
             break
             
         default:
-            editDetail = -1
+            if (editDetail == -1 && movingPoint == -1) {
+                changeDetailColor(-1, color: "red")
+            }
+            else {
+                editDetail = -1
+                // Remove old (hidden) subviews
+                for subview in view.subviews {
+                    if subview.tag > 299 {
+                        subview.removeFromSuperview()
+                    }
+                    
+                }
+            }
+            break
         }
     }
     
@@ -518,12 +515,16 @@ class ViewPhoto: UIViewController {
             // Remove and rebuild the shape to avoid the overlay on alpha channel
             for subview in self.view.subviews {
                 if subview.tag == (thisDetailTag! + 100) { // polygon
-                    subview.removeFromSuperview()
+                    //subview.removeFromSuperview()
+                    subview.tag = thisDetailTag! + 300
+                    subview.layer.zPosition = -1
                 }
                 if subview.tag == thisDetailTag! { // points
                     let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
                     details["\(thisDetailTag!)"]?.points.removeFirst()
-                    subview.removeFromSuperview()
+                    //subview.removeFromSuperview()
+                    subview.tag = thisDetailTag! + 200
+                    subview.layer.zPosition = -1
                     
                     var newPoint: UIView
                     if thisDetailTag != tag {
