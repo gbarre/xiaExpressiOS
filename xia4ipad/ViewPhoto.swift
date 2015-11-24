@@ -216,6 +216,19 @@ class ViewPhoto: UIViewController {
             var addPoint = false
             
             if ( detailPoints != 0 ) { // Points exists
+                
+                // Are we in the polygon ?
+                if (detailPoints > 2) {
+                    if (pointInPolygon(details["\(detailTag)"]!.points, touchPoint: location)) {
+                        beginTouchLocation = location
+                        movingCoords = location
+                        moveDetail = true
+                    }
+                    else {
+                        addPoint = true
+                    }
+                }
+                
                 for var i=0; i<detailPoints; i++ { // should we move an existing point or add a new one
                     let ploc = details["\(detailTag)"]?.points[i].center
                     
@@ -228,15 +241,16 @@ class ViewPhoto: UIViewController {
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
                         movingPoint = i
+                        moveDetail = false
                         addPoint = false
                         break
                     }
-                    else { // No point here, we need to create one
+                    else {
                         addPoint = true
                     }
                 }
             }
-            if ( addPoint || detailPoints == 0 )  {
+            if ( (addPoint || detailPoints == 0) && !moveDetail )  {
                 // Add new point
                 let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
                 newPoint?.layer.zPosition = 1
@@ -280,7 +294,6 @@ class ViewPhoto: UIViewController {
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 40 ) { // We are close to an exiting point, move it
-                        print("point \(i) of detail \(currentDetailTag) touched, move it!")
                         let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
                         toMove.center = location
                         details["\(currentDetailTag)"]?.points[i] = toMove
@@ -317,6 +330,37 @@ class ViewPhoto: UIViewController {
         
         switch createDetail {
         case true:
+            if (moveDetail) {
+                movingPoint = -1
+                let xDist: CGFloat = (location.x - beginTouchLocation.x)
+                let yDist: CGFloat = (location.y - beginTouchLocation.y)
+                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                if (distance > 10) {
+                    let deltaX = location.x - movingCoords.x
+                    let deltaY = location.y - movingCoords.y
+                    
+                    if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                        for subview in view.subviews {
+                            if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
+                                let origin = subview.frame.origin
+                                let destination = CGPointMake(origin.x, origin.y + 55.5)
+                                subview.frame.origin = destination
+                            }
+                        }
+                        //editDetail = -1
+                    }
+                    else {
+                        for subview in view.subviews {
+                            if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
+                                let origin = subview.frame.origin
+                                let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
+                                subview.frame.origin = destination
+                            }
+                        }
+                    }
+                    movingCoords = location
+                }
+            }
             break
             
         default:
@@ -338,7 +382,7 @@ class ViewPhoto: UIViewController {
                                     subview.frame.origin = destination
                                 }
                             }
-                            editDetail = -1
+                            //editDetail = -1
                         }
                         else {
                             for subview in view.subviews {
@@ -387,6 +431,7 @@ class ViewPhoto: UIViewController {
                 
         switch createDetail {
         case true:
+            moveDetail = false
             break
             
         default:
