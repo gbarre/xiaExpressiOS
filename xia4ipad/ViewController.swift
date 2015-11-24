@@ -75,7 +75,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
-            let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
+            let now:Int = Int(NSDate().timeIntervalSince1970)
             let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
             let img = UIImage(contentsOfFile: filePath!)
             let imageData = UIImageJPEGRepresentation(img!, 85)
