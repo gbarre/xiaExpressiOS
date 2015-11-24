@@ -97,12 +97,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         else {
             nbThumb = arrayNames.count
         }
-        
-        let lpgr = UILongPressGestureRecognizer(target: self, action: "deleteFiles:")
-        lpgr.minimumPressDuration = 0.5
-        lpgr.delaysTouchesBegan = true
-        lpgr.delegate = self
-        CollectionView.addGestureRecognizer(lpgr)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -160,6 +154,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let img = UIImage(contentsOfFile: filePath)
         cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
         index++
+        
+        let cSelector = Selector("deleteFiles:")
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
+        cell.addGestureRecognizer(leftSwipe)
         
         return cell
     }
