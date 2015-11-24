@@ -54,10 +54,10 @@ class ViewDetailInfo: UIViewController {
         txtDesc.layer.cornerRadius = 5
         txtDesc.layer.borderColor = UIColor.grayColor().CGColor
         
-        navbar.title = "Detail \(self.tag - 100)"
         btnZoom.setOn(self.zoom, animated: true)
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
+        navbar.title = txtTitle.text
         
     }
     

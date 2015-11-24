@@ -437,6 +437,7 @@ class ViewPhoto: UIViewController {
         default:
             if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1, color: "red")
+                currentDetailTag = -1
             }
             else {
                 editDetail = -1

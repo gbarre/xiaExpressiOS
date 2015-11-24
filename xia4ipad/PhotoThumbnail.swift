@@ -16,7 +16,7 @@ class PhotoThumbnail: UICollectionViewCell {
     
     func setThumbnailImage(thumbnailImage: UIImage, thumbnailLabel: String) {
         self.imgView.image = thumbnailImage
-        self.imgLabel.text = thumbnailLabel.substringWithRange(Range<String.Index>(start: thumbnailLabel.startIndex.advancedBy(0), end: thumbnailLabel.endIndex.advancedBy(-4)))
+        self.imgLabel.text = thumbnailLabel
     }
     
 }

@@ -169,8 +169,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         })
         
         // Let's store the image
-        let now:Int = Int(NSDate().timeIntervalSince1970 * 1000)
-
+        let now:Int = Int(NSDate().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image, 85)
         imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
         
