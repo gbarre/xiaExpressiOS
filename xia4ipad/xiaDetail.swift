@@ -10,12 +10,6 @@ import UIKit
 
 class xiaDetail: NSObject {
 
-/*    var moving = false
-    var movingPoint = -1 // Id of point
-    var movingShape = -1 // Id of Shape
-    var movingCoords = CGPointMake(0, 0)
-    var endEditShape = false
-*/
     var points = [UIImageView]()
     var tag: Int = 0
     var title: String = ""

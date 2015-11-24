@@ -381,6 +381,8 @@ public class AEXMLDocument: AEXMLElement {
         // Insert default title
         xml.addChild(name: "title", value: "\(name)", attributes: nil)
         xml.addChild(name: "description" , value: "\(name) descrption", attributes: nil)
+        xml.addChild(name: "author", value: "", attributes: nil)
+        xml.addChild(name: "rights", value: "", attributes: nil)
         
         // Create details
         xml.addChild(name: "details")

@@ -63,9 +63,9 @@ class ViewPhoto: UIViewController {
             self.details["\(self.currentDetailTag)"] = newDetail
             let attributes = ["tag" : "\(self.currentDetailTag)",
                 "zoom" : "false",
-                "title" : "detail\(self.currentDetailTag)",
+                "title" : "detail \(self.currentDetailTag)",
                 "path" : "0;0"]
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail\(self.currentDetailTag) description", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag, color: "red")
         })
