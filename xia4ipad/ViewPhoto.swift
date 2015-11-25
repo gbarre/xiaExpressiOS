@@ -69,10 +69,16 @@ class ViewPhoto: UIViewController {
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag, color: "red")
         })
+        let stopAction = UIAlertAction(title: "Stop", style: .Default, handler: { action in
+            self.createDetail = false
+        })
         
         menu.addAction(growAction)
         menu.addAction(titleAction)
         menu.addAction(descriptionAction)
+        if self.createDetail == true {
+            menu.addAction(stopAction)
+        }
         
         if let ppc = menu.popoverPresentationController {
             ppc.barButtonItem = sender
