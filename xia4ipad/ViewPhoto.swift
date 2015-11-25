@@ -493,7 +493,6 @@ class ViewPhoto: UIViewController {
         }
         if (segue.identifier == "play") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                controller.xml = self.xml
                 controller.index = self.index
             }
         }
@@ -526,7 +525,6 @@ class ViewPhoto: UIViewController {
         switch fill {
         case true:
             shapeArg = 1
-            //shapeTag += 100
         default:
             shapeArg = 0
         }
