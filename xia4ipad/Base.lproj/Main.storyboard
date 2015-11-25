@@ -149,6 +149,7 @@
                                     <barButtonItem systemItem="play" id="hA7-sU-myB">
                                         <connections>
                                             <action selector="btnPlay:" destination="fts-Lk-uqf" id="CMA-fg-arp"/>
+                                            <segue destination="xod-8C-OKb" kind="show" id="g1C-J3-xmC"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="WCH-Vo-MIe"/>
@@ -307,7 +308,35 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2536" y="429"/>
+            <point key="canvasLocation" x="2554" y="41"/>
+        </scene>
+        <!--Play Xia-->
+        <scene sceneID="tPQ-XC-mp2">
+            <objects>
+                <viewController title="Play Xia" id="xod-8C-OKb" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xr2-Gl-F3b"/>
+                        <viewControllerLayoutGuide type="bottom" id="iNn-t7-ycD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hBu-vw-FzK">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4v-n0-bPD">
+                                <rect key="frame" x="49" y="48" width="42" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2554" y="830"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">

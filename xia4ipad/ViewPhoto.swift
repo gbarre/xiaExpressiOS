@@ -38,8 +38,6 @@ class ViewPhoto: UIViewController {
             print(detail.0)
             print(detail.1.points)
         }
-        
-        self.createDetail = false
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
@@ -162,6 +160,13 @@ class ViewPhoto: UIViewController {
             }
         }
         
+        // Add gesture to go back on right swipe
+        let cSelector = Selector("goBack")
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
+        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
+        view.addGestureRecognizer(rightSwipe)
+        
+        // Disable detail info
         btnInfos.enabled = false
     }
     
@@ -480,6 +485,9 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
+        if (segue.identifier == "play") {
+
+        }
     }
 
 
@@ -609,6 +617,12 @@ class ViewPhoto: UIViewController {
                     }
                 }
             }
+        }
+    }
+    
+    func goBack() {
+        if currentDetailTag == 0 {
+            navigationController?.popToRootViewControllerAnimated(true)
         }
     }
 }
