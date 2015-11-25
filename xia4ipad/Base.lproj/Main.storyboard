@@ -195,6 +195,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
                     <connections>
+                        <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
                         <outlet property="imgView" destination="Lor-vQ-XRZ" id="Wk5-YA-ZZ4"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                     </connections>
@@ -244,7 +245,7 @@
                                         <rect key="frame" x="8" y="4" width="110" height="21"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>

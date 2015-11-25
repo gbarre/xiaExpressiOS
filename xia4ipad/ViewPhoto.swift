@@ -83,6 +83,8 @@ class ViewPhoto: UIViewController {
         
     }
     
+    @IBOutlet weak var btnInfos: UIBarButtonItem!
+    
     @IBAction func btnTrash(sender: AnyObject) {
         print("Trash")
         let detailTag = self.currentDetailTag
@@ -153,6 +155,8 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
+        
+        btnInfos.enabled = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -438,6 +442,7 @@ class ViewPhoto: UIViewController {
             if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1, color: "red")
                 currentDetailTag = -1
+                btnInfos.enabled = false
             }
             else {
                 editDetail = -1
@@ -446,8 +451,8 @@ class ViewPhoto: UIViewController {
                     if subview.tag > 299 {
                         subview.removeFromSuperview()
                     }
-                    
                 }
+                btnInfos.enabled = true
             }
             break
         }

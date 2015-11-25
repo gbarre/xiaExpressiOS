@@ -21,7 +21,6 @@
 		F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */; };
 		F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */; };
 		F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */; };
-		F0F15E7D1BB824EB00268F06 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0F15E7C1BB824EB00268F06 /* Photos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +40,6 @@
 		F0F15E721BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F0F15E741BB6FCDF00268F06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPhoto.swift; sourceTree = "<group>"; };
-		F0F15E7C1BB824EB00268F06 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0F15E7D1BB824EB00268F06 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +56,6 @@
 		F0F15E5C1BB6FCDE00268F06 = {
 			isa = PBXGroup;
 			children = (
-				F0F15E7C1BB824EB00268F06 /* Photos.framework */,
 				F0F15E671BB6FCDF00268F06 /* xia4ipad */,
 				F0F15E661BB6FCDF00268F06 /* Products */,
 			);
