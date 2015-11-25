@@ -160,14 +160,20 @@ class ViewPhoto: UIViewController {
             }
         }
         
+        // Disable detail info
+        btnInfos.enabled = false
+        
         // Add gesture to go back on right swipe
+        if let recognizers = view.gestureRecognizers {
+            for recognizer in recognizers {
+                view.removeGestureRecognizer(recognizer)
+            }
+        }
         let cSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
-        // Disable detail info
-        btnInfos.enabled = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -452,7 +458,7 @@ class ViewPhoto: UIViewController {
         default:
             if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1, color: "red")
-                currentDetailTag = -1
+                currentDetailTag = 0
                 btnInfos.enabled = false
             }
             else {
@@ -486,7 +492,10 @@ class ViewPhoto: UIViewController {
             }
         }
         if (segue.identifier == "play") {
-
+            if let controller:PlayXia = segue.destinationViewController as? PlayXia {
+                controller.xml = self.xml
+                controller.index = self.index
+            }
         }
     }
 
