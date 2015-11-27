@@ -64,9 +64,7 @@ class PlayXia: UIViewController {
                     }
                     
                     buildShape(false, color: UIColor.blueColor(), tag: detailTag)
-                    
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
-                    
                 }
             }
         }
@@ -94,10 +92,38 @@ class PlayXia: UIViewController {
                 myMask.path = paths[touchedTag]!.CGPath
                 bkgdImage.layer.mask = myMask
                 
-                //performSegueWithIdentifier("playDetail", sender: self)
+                // Show the textview
+                let pathFrame = details["\(touchedTag)"]?.bezierFrame()
+                print(pathFrame)
+                let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 500.00, height: 300.00))
+                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
+                    for d in detail {
+                        //let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
+                        let detailTitle = d.attributes["title"]!
+                        let detailDescription = d.value!
+
+                        let titleWidth = detailTitle.characters.count
+                        let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
+                        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
+                        
+                        let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
+                        attributedText.appendAttributedString(attributedDescription)
+                        
+                        txtView.attributedText = attributedText
+                    }
+                }
+                txtView.backgroundColor = UIColor.redColor()
+                txtView.scrollEnabled = true
+                txtView.editable = false
+                txtView.selectable = true
+                txtView.tag = 666
+                txtView.center = CGPoint(x: 100, y: 300)
+                self.view.addSubview(txtView)
+                
                 break
             }
             else {
+                // show full image
                 let path = UIBezierPath()
                 path.moveToPoint(CGPoint(x: 0, y: 0))
                 path.addLineToPoint(CGPoint(x: UIScreen.mainScreen().bounds.width, y: 0))
@@ -107,10 +133,15 @@ class PlayXia: UIViewController {
                 myMask.path = path.CGPath
                 bkgdImage.layer.mask = myMask
                 
+                // hide the textview
+                
                 // Unhide lot of things...
                 for subview in view.subviews {
-                    if (subview.tag > 99) {
+                    if subview.tag > 99 {
                         subview.hidden = false
+                        if subview.tag == 666 {
+                            subview.removeFromSuperview()
+                        }
                     }
                 }
 
@@ -118,38 +149,6 @@ class PlayXia: UIViewController {
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "playDetail") {
-            if let controller:playDetail = segue.destinationViewController as? playDetail {
-                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
-                    for d in detail {
-                        /*let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
-                        controller.zoom = zoomStatus*/
-                        controller.detailTitle = d.attributes["title"]!
-                        controller.detailDescription = d.value!
-                        controller.detailPath = paths[touchedTag]
-                        
-                        // Cropping image
-                        let myMask = CAShapeLayer()
-                        myMask.path = paths[touchedTag]!.CGPath
-                        bkgdImage.layer.mask = myMask
-                        controller.croppedImage = bkgdImage
-                        
-                        /*bkgdImage.layer.mask = shapeLayers[touchedTag]?.mask
-                        UIGraphicsBeginImageContextWithOptions(bkgdImage.bounds.size, false, 1)
-                        bkgdImage.layer.renderInContext(UIGraphicsGetCurrentContext()!)
-                        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                        UIGraphicsEndImageContext()
-                        self.croppedImages = newImage
-                        print(newImage)
-                        print("done")
-                        controller.croppedImage = self.croppedImages*/
-                    }
-                }
-            }
-        }
-    }
-
     func buildShape(fill: Bool, color: UIColor, tag: Int) {
         var shapeArg: Int = 0
         let shapeTag = tag + 100

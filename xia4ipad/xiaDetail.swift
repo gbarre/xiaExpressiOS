@@ -65,9 +65,34 @@ class xiaDetail: NSObject {
                 path.addLineToPoint(point.center)
             }
         }
-        //path.closePath()
+        path.closePath()
         
         return path
+    }
+    
+    func bezierFrame() -> CGRect {
+        var xMin: CGFloat = UIScreen.mainScreen().bounds.width
+        var xMax: CGFloat = 0
+        var yMin: CGFloat = UIScreen.mainScreen().bounds.height
+        var yMax: CGFloat = 0
+        // Get dimensions of the shape
+        for point in points {
+            let xPoint = point.center.x
+            let yPoint = point.center.y
+            if ( xPoint < xMin ) {
+                xMin = xPoint
+            }
+            if ( yPoint < yMin ) {
+                yMin = yPoint
+            }
+            if ( xPoint > xMax ) {
+                xMax = xPoint
+            }
+            if ( yPoint > yMax ) {
+                yMax = yPoint
+            }
+        }
+        return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
     }
     
     func distanceToTop() -> CGFloat {

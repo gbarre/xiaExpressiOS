@@ -341,65 +341,11 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bkgdImage" destination="0Lw-CX-Jch" id="izJ-qn-wVK"/>
-                        <segue destination="xuu-sW-dvb" kind="show" identifier="playDetail" id="0f4-Ln-Aoe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2554" y="830"/>
-        </scene>
-        <!--Play Detail-->
-        <scene sceneID="3Z5-XG-PTk">
-            <objects>
-                <viewController title="Play Detail" id="xuu-sW-dvb" customClass="playDetail" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Fyr-Jf-8wW"/>
-                        <viewControllerLayoutGuide type="bottom" id="F3u-Yj-mNw"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="rpJ-qG-gJU">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bEu-dT-Cl0">
-                                <rect key="frame" x="340" y="20" width="240" height="560"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="32M-CJ-hEX">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="560"/>
-                                        <animations/>
-                                    </imageView>
-                                </subviews>
-                                <animations/>
-                                <color key="backgroundColor" red="0.4612928831" green="1" blue="0.30820281980000003" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="text" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="Vmx-HU-JID">
-                                <rect key="frame" x="20" y="20" width="310" height="560"/>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="Vmx-HU-JID" firstAttribute="top" secondItem="Fyr-Jf-8wW" secondAttribute="bottom" constant="20" id="GJL-QF-cgQ"/>
-                            <constraint firstItem="F3u-Yj-mNw" firstAttribute="top" secondItem="Vmx-HU-JID" secondAttribute="bottom" constant="20" id="GdZ-hy-iuq"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="Vmx-HU-JID" secondAttribute="leading" id="Lz6-3f-dvq"/>
-                            <constraint firstAttribute="bottom" secondItem="bEu-dT-Cl0" secondAttribute="bottom" constant="20" symbolic="YES" id="PXm-xZ-MRO"/>
-                            <constraint firstItem="bEu-dT-Cl0" firstAttribute="leading" secondItem="rpJ-qG-gJU" secondAttribute="leading" constant="340" id="SL0-FF-oMr"/>
-                            <constraint firstItem="bEu-dT-Cl0" firstAttribute="top" secondItem="rpJ-qG-gJU" secondAttribute="top" constant="20" symbolic="YES" id="Vmu-oM-jlt"/>
-                            <constraint firstItem="bEu-dT-Cl0" firstAttribute="trailing" secondItem="rpJ-qG-gJU" secondAttribute="trailingMargin" id="Xgf-2i-fvy"/>
-                            <constraint firstItem="bEu-dT-Cl0" firstAttribute="leading" secondItem="Vmx-HU-JID" secondAttribute="trailing" constant="10" id="d8U-qE-Wlw"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="croppedImg" destination="32M-CJ-hEX" id="LP9-l5-jfj"/>
-                        <outlet property="detailText" destination="Vmx-HU-JID" id="8lU-1N-qZP"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="72N-OX-wUY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3235" y="830"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
