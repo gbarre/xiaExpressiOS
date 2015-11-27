@@ -11,16 +11,12 @@ import UIKit
 class PlayXia: UIViewController {
     
     var xml: AEXMLDocument = AEXMLDocument()
-    var index: Int = 0
+    var fileName: String = ""
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
-    var showPopup: Bool = false
-    var popupCoords: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    var touchedTag: Int = 0
     
     @IBOutlet weak var bkgdImage: UIImageView!
-    @IBOutlet weak var detailView: UIView!
-    @IBOutlet weak var detailTitle: UITextField!
-    @IBOutlet weak var detailDescription: UITextView!
     
     override func viewDidLoad() {        
         // Add gesture to go back on right swipe
@@ -30,11 +26,11 @@ class PlayXia: UIViewController {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+        let filePath = "\(documentsDirectory)\(self.fileName).jpg"
         let img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
         
-        let xmlPath = "\(documentsDirectory)/\(arrayNames[self.index]).xml"
+        let xmlPath = "\(documentsDirectory)/\(self.fileName).xml"
         let data = NSData(contentsOfFile: xmlPath)
         do {
             try xml = AEXMLDocument(xmlData: data!)
@@ -68,53 +64,41 @@ class PlayXia: UIViewController {
                 }
             }
         }
-        for s in view.subviews {
-            print(s)
-        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
         
-        // Check we are not touching the detailView popup
-        if (!popupCoords.contains(location)) {
-            // Get tag of the touched detail
-            var touchedTag: Int = 0
-            popupCoords = CGRect(x: 0, y: 0, width: 0, height: 0)
-            showPopup = false
-            for detail in details {
-                let (detailTag, detailPoints) = detail
-                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    for subview in view.subviews {
-                        if (subview.tag == touchedTag + 100) {
-                            popupCoords = subview.frame
-                        }
-                    }
-                    break
-                }
+        // Get tag of the touched detail
+        touchedTag = 0
+        for detail in details {
+            let (detailTag, detailPoints) = detail
+            if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                
+                performSegueWithIdentifier("playDetail", sender: self)
+                
+                break
             }
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
-                for d in detail {
-                    detailTitle.text = d.attributes["title"]
-                    detailDescription.text = d.value
-                    showPopup = true
-                }
-            }
-            if showPopup {
-                detailView.layer.zPosition = 10
-                detailView.hidden = false
-            }
-            else {
-                detailView.hidden = true
-            }
-        }
-        else {
-            detailView.hidden = false
-        }
+        }        
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "playDetail") {
+            if let controller:playDetail = segue.destinationViewController as? playDetail {
+                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
+                    for d in detail {
+                        /*let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
+                        controller.zoom = zoomStatus*/
+                        controller.detailTitle = d.attributes["title"]!
+                        controller.detailDescription = d.value!
+                    }
+                }
+            }
+        }
+    }
+
     func buildShape(fill: Bool, color: UIColor, tag: Int) {
         var shapeArg: Int = 0
         let shapeTag = tag + 100

@@ -491,9 +491,10 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
-        if (segue.identifier == "play") {
+        if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                controller.index = self.index
+                //controller.index = self.index
+                controller.fileName = arrayNames[self.index]
             }
         }
     }
