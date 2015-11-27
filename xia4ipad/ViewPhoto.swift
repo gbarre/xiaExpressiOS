@@ -163,16 +163,21 @@ class ViewPhoto: UIViewController {
         // Disable detail info
         btnInfos.enabled = false
         
-        // Add gesture to go back on right swipe
+        // Add gesture on right swipe
         if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
             }
         }
-        let cSelector = Selector("goBack")
-        let rightSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
+        let gbSelector = Selector("goBack")
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
+        
+        let gfSelector = Selector("goForward")
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
+        view.addGestureRecognizer(leftSwipe)
         
     }
     
@@ -632,5 +637,9 @@ class ViewPhoto: UIViewController {
         if currentDetailTag == 0 {
             navigationController?.popToRootViewControllerAnimated(true)
         }
+    }
+    
+    func goForward() {
+        performSegueWithIdentifier("playXia", sender: self)
     }
 }

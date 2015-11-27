@@ -12,9 +12,12 @@ class playDetail: UIViewController {
     
     var detailTitle: String = ""
     var detailDescription: String = ""
-    var detailImg: UIImage?
+    var detailImg: UIImageView!
+    var detailPath: UIBezierPath!
+    var croppedImage: UIImageView!
     
     @IBOutlet weak var detailText: UITextView!
+    @IBOutlet weak var croppedImg: UIImageView!
     
     override func viewDidLoad() {
         // Add gesture to go back on right swipe
@@ -23,9 +26,9 @@ class playDetail: UIViewController {
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
-        // Load cropped image on detail
+        croppedImg.image = croppedImage.image
         
-        
+//        croppedImg.image = croppedImage
  
         // Load detail's infos
         let titleWidth = detailTitle.characters.count

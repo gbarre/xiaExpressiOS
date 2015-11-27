@@ -15,13 +15,16 @@ class PlayXia: UIViewController {
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
+    var paths = [Int: UIBezierPath]()
+    var shapeLayers = [Int: CAShapeLayer]()
+    var croppedImages = UIImage()
     
     @IBOutlet weak var bkgdImage: UIImageView!
     
     override func viewDidLoad() {        
-        // Add gesture to go back on right swipe
-        let cSelector = Selector("goBack")
-        let rightSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
+        // Add gestures on swipe
+        let gbSelector = Selector("goBack")
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
@@ -60,7 +63,10 @@ class PlayXia: UIViewController {
                         view.addSubview(newPoint!)
                     }
                     
-                    buildShape(true, color: UIColor.blueColor(), tag: detailTag)
+                    buildShape(false, color: UIColor.blueColor(), tag: detailTag)
+                    
+                    paths[detailTag] = details["\(detailTag)"]!.bezierPath()
+                    
                 }
             }
         }
@@ -77,11 +83,39 @@ class PlayXia: UIViewController {
             if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                 touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
                 
-                performSegueWithIdentifier("playDetail", sender: self)
+                // Hide lot of things...
+                for subview in view.subviews {
+                    if (subview.tag > 99) {
+                        subview.hidden = true
+                    }
+                }
+                // Cropping image
+                let myMask = CAShapeLayer()
+                myMask.path = paths[touchedTag]!.CGPath
+                bkgdImage.layer.mask = myMask
                 
+                //performSegueWithIdentifier("playDetail", sender: self)
                 break
             }
-        }        
+            else {
+                let path = UIBezierPath()
+                path.moveToPoint(CGPoint(x: 0, y: 0))
+                path.addLineToPoint(CGPoint(x: UIScreen.mainScreen().bounds.width, y: 0))
+                path.addLineToPoint(CGPoint(x: UIScreen.mainScreen().bounds.width, y: UIScreen.mainScreen().bounds.height))
+                path.addLineToPoint(CGPoint(x: 0, y: UIScreen.mainScreen().bounds.height))
+                let myMask = CAShapeLayer()
+                myMask.path = path.CGPath
+                bkgdImage.layer.mask = myMask
+                
+                // Unhide lot of things...
+                for subview in view.subviews {
+                    if (subview.tag > 99) {
+                        subview.hidden = false
+                    }
+                }
+
+            }
+        }
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -93,6 +127,23 @@ class PlayXia: UIViewController {
                         controller.zoom = zoomStatus*/
                         controller.detailTitle = d.attributes["title"]!
                         controller.detailDescription = d.value!
+                        controller.detailPath = paths[touchedTag]
+                        
+                        // Cropping image
+                        let myMask = CAShapeLayer()
+                        myMask.path = paths[touchedTag]!.CGPath
+                        bkgdImage.layer.mask = myMask
+                        controller.croppedImage = bkgdImage
+                        
+                        /*bkgdImage.layer.mask = shapeLayers[touchedTag]?.mask
+                        UIGraphicsBeginImageContextWithOptions(bkgdImage.bounds.size, false, 1)
+                        bkgdImage.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+                        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+                        UIGraphicsEndImageContext()
+                        self.croppedImages = newImage
+                        print(newImage)
+                        print("done")
+                        controller.croppedImage = self.croppedImages*/
                     }
                 }
             }
