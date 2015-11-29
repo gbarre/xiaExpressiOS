@@ -160,7 +160,7 @@ class ViewPhoto: UIViewController {
         btnInfos.enabled = false
         
         // Add gesture on right swipe
-        /*if let recognizers = view.gestureRecognizers {
+        if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
             }
@@ -174,7 +174,6 @@ class ViewPhoto: UIViewController {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
-        */
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -210,8 +209,8 @@ class ViewPhoto: UIViewController {
                     for var point in pointsArray {
                         point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
                         newPoint?.layer.zPosition = 1
                         imgView.addSubview(newPoint!)
@@ -579,6 +578,10 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
+        /*xMin = xMin / scale
+        xMax = xMax / scale
+        yMin = yMin / scale
+        yMax = yMax / scale*/
         let shapeWidth = xMax - xMin
         let shapeHeight = yMax - yMin
         

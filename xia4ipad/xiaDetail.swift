@@ -30,8 +30,7 @@ class xiaDetail: NSObject {
     func createPoint(location: CGPoint, imageName: String) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
-        let scaledLocation = CGPointMake(location.x * scale, location.y * scale)
-        imageView.center = scaledLocation
+        imageView.center = location
         imageView.tag = tag
         points.append(imageView)
         
