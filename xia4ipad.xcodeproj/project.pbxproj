@@ -12,7 +12,7 @@
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
-		F0B403A01BC678280064AAD9 /* Base64XiaLogo.txt in Resources */ = {isa = PBXBuildFile; fileRef = F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */; };
+		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
@@ -21,7 +21,6 @@
 		F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */; };
 		F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */; };
 		F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */; };
-		F0F15E7D1BB824EB00268F06 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0F15E7C1BB824EB00268F06 /* Photos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +29,7 @@
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfo.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
-		F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Base64XiaLogo.txt; sourceTree = "<group>"; };
+		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
 		F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,7 +40,6 @@
 		F0F15E721BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F0F15E741BB6FCDF00268F06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPhoto.swift; sourceTree = "<group>"; };
-		F0F15E7C1BB824EB00268F06 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0F15E7D1BB824EB00268F06 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +56,6 @@
 		F0F15E5C1BB6FCDE00268F06 = {
 			isa = PBXGroup;
 			children = (
-				F0F15E7C1BB824EB00268F06 /* Photos.framework */,
 				F0F15E671BB6FCDF00268F06 /* xia4ipad */,
 				F0F15E661BB6FCDF00268F06 /* Products */,
 			);
@@ -81,12 +77,12 @@
 				F0725E591BEA87D9007ACE9B /* AEXML.swift */,
 				F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */,
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
+				F098E28A1C06391000AB1185 /* PlayXia.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */,
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
-				F0B4039F1BC678280064AAD9 /* Base64XiaLogo.txt */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
 				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
@@ -153,7 +149,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0B403A01BC678280064AAD9 /* Base64XiaLogo.txt in Resources */,
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
@@ -172,6 +167,7 @@
 				F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */,
 				F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */,
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
+				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,

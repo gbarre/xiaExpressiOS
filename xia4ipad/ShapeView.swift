@@ -54,7 +54,6 @@ class ShapeView: UIView {
             CGContextAddLineToPoint(ctx, point.x, point.y)
         }
         CGContextSetLineDash(ctx, 0, [5], 1)
-//        CGContextSetRGBStrokeColor(ctx, 1, 0, 0, 0.8)
         let alphaColor = CGColorCreateCopyWithAlpha(color.CGColor, 0.8)
         CGContextSetStrokeColorWithColor(ctx, alphaColor)
         CGContextSetLineWidth(ctx, 2.5)
@@ -81,12 +80,9 @@ class ShapeView: UIView {
         }
         CGContextSetLineWidth(ctx, 2)
         
-        //let semiRed = CGColorCreateCopyWithAlpha(UIColor.redColor().CGColor, 0.5)
         let semiRed = CGColorCreateCopyWithAlpha(color.CGColor, 0.5)
-        
         CGContextSetFillColorWithColor(ctx, semiRed)
         CGContextFillPath(ctx)
-        //CGContextStrokePath(ctx)
     }
     
     func drawRectangle() {
