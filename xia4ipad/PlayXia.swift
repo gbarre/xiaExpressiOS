@@ -41,6 +41,11 @@ class PlayXia: UIViewController {
         let img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
         
+        // Get the scale...
+        let scaleX: CGFloat = screenWidth / img!.size.width
+        let scaleY: CGFloat = screenHeight / img!.size.height
+        scale = min(scaleX, scaleY)
+        
         let xmlPath = "\(documentsDirectory)/\(self.fileName).xml"
         let data = NSData(contentsOfFile: xmlPath)
         do {
@@ -64,8 +69,8 @@ class PlayXia: UIViewController {
                     for var point in pointsArray {
                         point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
