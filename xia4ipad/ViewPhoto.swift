@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewPhoto: UIViewController {
-
+    
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
     
@@ -31,7 +31,6 @@ class ViewPhoto: UIViewController {
     var scale: CGFloat = 1.0
     
     @IBAction func btnCancel(sender: AnyObject) {
-        print("Cancel")
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
@@ -154,12 +153,10 @@ class ViewPhoto: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
-        
-        
         // Disable detail info
         btnInfos.enabled = false
         
-        // Add gesture on right swipe
+        // Add gesture on swipe
         if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
@@ -246,13 +243,6 @@ class ViewPhoto: UIViewController {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.imgView)
         
-        // Remove old (hidden) subviews
-        for subview in imgView.subviews {
-            if subview.tag > 299 {
-                subview.removeFromSuperview()
-            }
-        }
-        
         switch createDetail {
         case true:
             let detailTag = self.currentDetailTag
@@ -322,6 +312,12 @@ class ViewPhoto: UIViewController {
                     movingCoords = location
                     moveDetail = true
                     changeDetailColor(editDetail, color: "red")
+                    // Remove old (hidden) subviews
+                    for subview in imgView.subviews {
+                        if subview.tag > 299 {
+                            subview.removeFromSuperview()
+                        }
+                    }
                     break
                 }
             }
@@ -372,38 +368,29 @@ class ViewPhoto: UIViewController {
             }
         }
         
+        if moveDetail {
+            // Disable swipe gesture
+            if let recognizers = view.gestureRecognizers {
+                for recognizer in recognizers {
+                    view.removeGestureRecognizer(recognizer)
+                }
+            }
+        }
+        
         switch createDetail {
         case true:
             if (moveDetail) {
                 movingPoint = -1
-                let xDist: CGFloat = (location.x - beginTouchLocation.x)
-                let yDist: CGFloat = (location.y - beginTouchLocation.y)
-                let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                if (distance > 10) {
-                    let deltaX = location.x - movingCoords.x
-                    let deltaY = location.y - movingCoords.y
-                    
-                    /*if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
-                        for subview in imgView.subviews {
-                            if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
-                                let origin = subview.frame.origin
-                                let destination = CGPointMake(origin.x, origin.y + 55.5)
-                                subview.frame.origin = destination
-                            }
-                        }
-                        //editDetail = -1
+                let deltaX = location.x - movingCoords.x
+                let deltaY = location.y - movingCoords.y
+                for subview in imgView.subviews {
+                    if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
+                        let origin = subview.frame.origin
+                        let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
+                        subview.frame.origin = destination
                     }
-                    else {*/
-                        for subview in imgView.subviews {
-                            if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
-                                let origin = subview.frame.origin
-                                let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
-                                subview.frame.origin = destination
-                            }
-                        }
-                    //}
-                    movingCoords = location
                 }
+                movingCoords = location
             }
             break
             
@@ -411,34 +398,16 @@ class ViewPhoto: UIViewController {
             if ( editDetail != -1 ) {
                 if (moveDetail) {
                     movingPoint = -1
-                    let xDist: CGFloat = (location.x - beginTouchLocation.x)
-                    let yDist: CGFloat = (location.y - beginTouchLocation.y)
-                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                    if (distance > 10) {
-                        let deltaX = location.x - movingCoords.x
-                        let deltaY = location.y - movingCoords.y
-                        
-                        /*if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
-                            for subview in imgView.subviews {
-                                if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
-                                    let origin = subview.frame.origin
-                                    let destination = CGPointMake(origin.x, origin.y + 55.5)
-                                    subview.frame.origin = destination
-                                }
-                            }
-                            //editDetail = -1
+                    let deltaX = location.x - movingCoords.x
+                    let deltaY = location.y - movingCoords.y
+                    for subview in imgView.subviews {
+                        if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
+                            let origin = subview.frame.origin
+                            let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
+                            subview.frame.origin = destination
                         }
-                        else {*/
-                            for subview in imgView.subviews {
-                                if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
-                                    let origin = subview.frame.origin
-                                    let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
-                                    subview.frame.origin = destination
-                                }
-                            }
-                        //}
-                        movingCoords = location
                     }
+                    movingCoords = location
                 }
             }
         }
@@ -472,7 +441,7 @@ class ViewPhoto: UIViewController {
                 print("\(error)")
             }
         }
-                
+        
         switch createDetail {
         case true:
             moveDetail = false
@@ -497,6 +466,22 @@ class ViewPhoto: UIViewController {
                 subview.removeFromSuperview()
             }
         }
+        
+        // Add gesture on right swipe
+        if let recognizers = view.gestureRecognizers {
+            for recognizer in recognizers {
+                view.removeGestureRecognizer(recognizer)
+            }
+        }
+        let gbSelector = Selector("goBack")
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
+        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
+        view.addGestureRecognizer(rightSwipe)
+        
+        let gfSelector = Selector("goForward")
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
+        view.addGestureRecognizer(leftSwipe)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -522,8 +507,7 @@ class ViewPhoto: UIViewController {
             }
         }
     }
-
-
+    
     func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
         // translate from C : http://alienryderflex.com/polygon/
         let polyCorners = points.count
@@ -578,10 +562,6 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
-        /*xMin = xMin / scale
-        xMax = xMax / scale
-        yMin = yMin / scale
-        yMax = yMax / scale*/
         let shapeWidth = xMax - xMin
         let shapeHeight = yMax - yMin
         
