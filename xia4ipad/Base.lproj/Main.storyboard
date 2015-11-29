@@ -166,7 +166,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="2ha-T4-l71"/>
-                                    <barButtonItem enabled="NO" systemItem="action" id="03J-iV-A5A">
+                                    <barButtonItem systemItem="action" id="03J-iV-A5A">
                                         <connections>
                                             <action selector="btnExport:" destination="fts-Lk-uqf" id="gaC-Zu-0kV"/>
                                         </connections>

@@ -23,6 +23,7 @@ class PlayXia: UIViewController {
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
+    var scale: CGFloat = 1.0
     
     let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 500.00, height: 300.00))
     
@@ -55,7 +56,7 @@ class PlayXia: UIViewController {
                 if let path = detail.attributes["path"] {
                     // Add detail object
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
-                    let newDetail = xiaDetail(tag: detailTag)
+                    let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
                     
                     // Add points to detail

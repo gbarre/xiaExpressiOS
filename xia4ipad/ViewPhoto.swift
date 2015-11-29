@@ -26,9 +26,9 @@ class ViewPhoto: UIViewController {
     var editDetail = -1
     var moveDetail = false
     
-    let screenWidth = UIScreen.mainScreen().bounds.width
-    let screenHeight = UIScreen.mainScreen().bounds.height
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    var img = UIImage()
+    var scale: CGFloat = 1.0
     
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
@@ -55,7 +55,7 @@ class ViewPhoto: UIViewController {
             else {
                 self.currentDetailTag = 100
             }
-            let newDetail = xiaDetail(tag: self.currentDetailTag)
+            let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
             self.details["\(self.currentDetailTag)"] = newDetail
             let attributes = ["tag" : "\(self.currentDetailTag)",
                 "zoom" : "false",
@@ -88,7 +88,6 @@ class ViewPhoto: UIViewController {
     @IBOutlet weak var btnInfos: UIBarButtonItem!
     
     @IBAction func btnTrash(sender: AnyObject) {
-        print("Trash")
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
             // remove point & polygon
@@ -119,45 +118,43 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnExport(sender: AnyObject) {
-        print("Export")
+        print(xml.xmlString)
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
     
     @IBOutlet weak var imgBackground: UIView!
-    //@IBOutlet weak var imgView2: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view
+        
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        // Load xmlDetails from xml
-        if let xmlDetails = xml.root["details"]["detail"].all {
-            for detail in xmlDetails {
-                if let path = detail.attributes["path"] {
-                    // Add detail object
-                    let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
-                    let newDetail = xiaDetail(tag: detailTag)
-                    details["\(detailTag)"] = newDetail
-                    
-                    // Add points to detail
-                    let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    for var point in pointsArray {
-                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
-                        let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
-                        newPoint?.layer.zPosition = 1
-                        imgView.addSubview(newPoint!)
-                    }
-                    
-                    self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
-                }
+        // Load image
+        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+        img = UIImage(contentsOfFile: filePath)!
+        
+        var value: Int
+        if ( img.size.width > img.size.height ) { // turn device to landscape
+            if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
+            {
+                value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
+            landscape = true
         }
+        else { // turn device to portrait
+            if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
+            {
+                value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+            landscape = false
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
+        
         
         // Disable detail info
         btnInfos.enabled = false
@@ -184,18 +181,14 @@ class ViewPhoto: UIViewController {
         // Remove hairline on toolbar
         myToolbar.clipsToBounds = true
         
-        // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
-        let img = UIImage(contentsOfFile: filePath)
-        
-        // Build  the imgView frame
-        let availableWidth: CGFloat = screenWidth
-        let availableHeight: CGFloat = screenHeight - (myToolbar.frame.origin.y + myToolbar.frame.height)
-        let scaleX: CGFloat = availableWidth / (img?.size.width)!
-        let scaleY: CGFloat = availableHeight / (img?.size.height)!
-        let scale: CGFloat = min(scaleX, scaleY)
-        let imageWidth: CGFloat = scale * (img?.size.width)!
-        let imageHeight: CGFloat = scale * (img?.size.height)!
+        // Build the imgView frame
+        let availableWidth: CGFloat = UIScreen.mainScreen().bounds.width
+        let availableHeight: CGFloat = UIScreen.mainScreen().bounds.height - (myToolbar.frame.origin.y + myToolbar.frame.height)
+        let scaleX: CGFloat = availableWidth / img.size.width
+        let scaleY: CGFloat = availableHeight / img.size.height
+        scale = min(scaleX, scaleY)
+        let imageWidth: CGFloat = scale * img.size.width
+        let imageHeight: CGFloat = scale * img.size.height
         let x: CGFloat = (availableWidth - imageWidth) / 2
         let y: CGFloat = myToolbar.frame.origin.y + myToolbar.frame.height + (availableHeight - imageHeight) / 2
         imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
@@ -203,27 +196,31 @@ class ViewPhoto: UIViewController {
         imgView.image = img
         view.addSubview(imgView)
         
-        print("imgview bounds : \(imgView.bounds) ; img scaled size : \(imageWidth) x \(imageHeight) ; image original size : \(imgView.image!.size)")
-       
-        var value: Int
-        if ( img!.size.width > img!.size.height ) { // turn device to landscape
-            if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
-            {
-                value = UIInterfaceOrientation.LandscapeRight.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+        // Load xmlDetails from xml
+        if let xmlDetails = xml.root["details"]["detail"].all {
+            for detail in xmlDetails {
+                if let path = detail.attributes["path"] {
+                    // Add detail object
+                    let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                    let newDetail = xiaDetail(tag: detailTag, scale: scale)
+                    details["\(detailTag)"] = newDetail
+                    
+                    // Add points to detail
+                    let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                    for var point in pointsArray {
+                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                        let coords = point.characters.split{$0 == ";"}.map(String.init)
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
+                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
+                        newPoint?.layer.zPosition = 1
+                        imgView.addSubview(newPoint!)
+                    }
+                    
+                    self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
+                }
             }
-            landscape = true
         }
-        else { // turn device to portrait
-            if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
-            {
-                value = UIInterfaceOrientation.Portrait.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
-            }
-            landscape = false
-        }
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
         
     }
     
@@ -249,20 +246,10 @@ class ViewPhoto: UIViewController {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.imgView)
-        print(location)
-        /*print("subviews of view :")
-        for s in view.subviews {
-            print(s)
-        }
         
-        print("subviews of imgView :")
-        for s in imgView.subviews {
-            print(s)
-        }*/
         // Remove old (hidden) subviews
         for subview in imgView.subviews {
             if subview.tag > 299 {
-                print("remove this fucking subview !!!")
                 subview.removeFromSuperview()
             }
         }
@@ -503,11 +490,6 @@ class ViewPhoto: UIViewController {
                 
                 btnInfos.enabled = true
             }
-            /*print("touch end, imgView.subviews :")
-            for subview in imgView.subviews {
-                print(subview)
-            }
-            print("editDetail : \(editDetail) ; movingPoint : \(movingPoint)")*/
             break
         }
         // Remove old (hidden) subviews

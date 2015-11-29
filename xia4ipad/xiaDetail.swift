@@ -15,10 +15,12 @@ class xiaDetail: NSObject {
     var title: String = ""
     var desc: String = ""
     var zoom: Bool = false
+    var scale: CGFloat = 1.0
     
-    init(tag: Int){
+    init(tag: Int, scale: CGFloat){
         self.tag = tag
         self.points = []
+        self.scale = scale
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,7 +30,8 @@ class xiaDetail: NSObject {
     func createPoint(location: CGPoint, imageName: String) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
-        imageView.center = location
+        let scaledLocation = CGPointMake(location.x * scale, location.y * scale)
+        imageView.center = scaledLocation
         imageView.tag = tag
         points.append(imageView)
         
@@ -45,8 +48,8 @@ class xiaDetail: NSObject {
             
             var path: String = ""
             for point in points {
-                let x = point.center.x
-                let y = point.center.y
+                let x = point.center.x / scale
+                let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
             path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
