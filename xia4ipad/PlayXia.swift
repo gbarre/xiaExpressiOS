@@ -18,6 +18,13 @@ class PlayXia: UIViewController {
     var paths = [Int: UIBezierPath]()
     var shapeLayers = [Int: CAShapeLayer]()
     var croppedImages = UIImage()
+    var showDetail: Bool = false
+    var touchBegin = CGPoint(x: 0, y: 0)
+    
+    let screenWidth = UIScreen.mainScreen().bounds.width
+    let screenHeight = UIScreen.mainScreen().bounds.height
+    
+    let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 500.00, height: 300.00))
     
     @IBOutlet weak var bkgdImage: UIImageView!
     
@@ -73,80 +80,117 @@ class PlayXia: UIViewController {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.view)
-        
-        // Get tag of the touched detail
         touchedTag = 0
-        for detail in details {
-            let (detailTag, detailPoints) = detail
-            if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                
-                // Hide lot of things...
-                for subview in view.subviews {
-                    if (subview.tag > 99) {
-                        subview.hidden = true
-                    }
-                }
-                // Cropping image
-                let myMask = CAShapeLayer()
-                myMask.path = paths[touchedTag]!.CGPath
-                bkgdImage.layer.mask = myMask
-                
-                // Show the textview
-                let pathFrame = details["\(touchedTag)"]?.bezierFrame()
-                print(pathFrame)
-                let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 500.00, height: 300.00))
-                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
-                    for d in detail {
-                        //let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
-                        let detailTitle = d.attributes["title"]!
-                        let detailDescription = d.value!
-
-                        let titleWidth = detailTitle.characters.count
-                        let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
-                        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
-                        
-                        let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
-                        attributedText.appendAttributedString(attributedDescription)
-                        
-                        txtView.attributedText = attributedText
-                    }
-                }
-                txtView.backgroundColor = UIColor.redColor()
-                txtView.scrollEnabled = true
-                txtView.editable = false
-                txtView.selectable = true
-                txtView.tag = 666
-                txtView.center = CGPoint(x: 100, y: 300)
-                self.view.addSubview(txtView)
-                
-                break
-            }
-            else {
-                // show full image
-                let path = UIBezierPath()
-                path.moveToPoint(CGPoint(x: 0, y: 0))
-                path.addLineToPoint(CGPoint(x: UIScreen.mainScreen().bounds.width, y: 0))
-                path.addLineToPoint(CGPoint(x: UIScreen.mainScreen().bounds.width, y: UIScreen.mainScreen().bounds.height))
-                path.addLineToPoint(CGPoint(x: 0, y: UIScreen.mainScreen().bounds.height))
-                let myMask = CAShapeLayer()
-                myMask.path = path.CGPath
-                bkgdImage.layer.mask = myMask
-                
-                // hide the textview
-                
-                // Unhide lot of things...
-                for subview in view.subviews {
-                    if subview.tag > 99 {
-                        subview.hidden = false
-                        if subview.tag == 666 {
-                            subview.removeFromSuperview()
+        
+        switch showDetail {
+        case true:
+            touchBegin = location
+            break
+        default:
+            // Get tag of the touched detail
+            for detail in details {
+                let (detailTag, detailPoints) = detail
+                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                    
+                    // Hide lot of things...
+                    for subview in view.subviews {
+                        if (subview.tag > 99) {
+                            subview.hidden = true
                         }
                     }
+                    // Add new background image
+                    let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
+                    blurredBackground.contentMode = UIViewContentMode.ScaleAspectFill
+                    blurredBackground.image = bkgdImage.image
+                    blurredBackground.tag = 666
+                    self.view.addSubview(blurredBackground)
+                    let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+                    let blurView = UIVisualEffectView(effect: blurEffect)
+                    blurView.frame = blurredBackground.frame
+                    blurView.tag = 666
+                    self.view.addSubview(blurView)
+                    
+                    // Show the textview
+                    let pathFrameCorners = (details["\(touchedTag)"]?.bezierFrame())!
+                    
+                    // Cropping image
+                    let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
+                    cropDetail.contentMode = UIViewContentMode.ScaleAspectFill
+                    cropDetail.image = bkgdImage.image
+                    let myMask = CAShapeLayer()
+                    myMask.path = paths[touchedTag]!.CGPath
+                    cropDetail.layer.mask = myMask
+                    
+                    // Put it on top
+                    cropDetail.layer.zPosition = 2
+                    cropDetail.tag = 666
+                    /*for corner in pathFrameCorners {
+                        if (txtView.frame.contains(corner)) {
+                            cropDetail.center = CGPoint(x: screenWidth/2 + 260, y: screenHeight/2 + 150)
+                            break
+                        }
+                    }*/
+                    self.view.addSubview(cropDetail)
+                    
+                    var topLeft = pathFrameCorners.first!
+//                    let distanceX =
+                    
+                    while (txtView.frame.contains(topLeft)) {
+                        UIView.animateWithDuration(0.5, animations: {
+                            cropDetail.center = CGPoint(x: cropDetail.center.x+1, y: cropDetail.center.y+1)
+                        })
+                        topLeft = CGPoint(x: topLeft.x+1, y: topLeft.y+1)
+                        print("txtview frame : \(txtView.frame)")
+                        print(cropDetail.center)
+                        
+                    }
+                    
+                    if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
+                        for d in detail {
+                            //let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
+                            let detailTitle = d.attributes["title"]!
+                            let detailDescription = d.value!
+                            
+                            let titleWidth = detailTitle.characters.count
+                            let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
+                            attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
+                            
+                            let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
+                            attributedText.appendAttributedString(attributedDescription)
+                            
+                            txtView.attributedText = attributedText
+                        }
+                    }
+                    txtView.backgroundColor = UIColor.redColor()
+                    txtView.scrollEnabled = true
+                    txtView.editable = false
+                    txtView.selectable = true
+                    txtView.tag = 666
+                    self.view.addSubview(txtView)
+                    showDetail = true
+                    break
                 }
-
             }
         }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if (!txtView.frame.contains(touchBegin) && touchedTag == 0) {
+            print("touch end on background")
+            for subview in view.subviews {
+                if subview.tag == 666 {
+                    subview.removeFromSuperview()
+                }
+                if subview.tag > 99 {
+                    subview.hidden = false
+                }
+            }
+            showDetail = false
+        }
+        print("txtview frame : \(txtView.frame)")
+        print("touch begin at : \(touchBegin)")
+        print("touched tag : \(touchedTag)")
     }
     
     func buildShape(fill: Bool, color: UIColor, tag: Int) {
@@ -158,9 +202,9 @@ class PlayXia: UIViewController {
         default:
             shapeArg = 0
         }
-        var xMin: CGFloat = UIScreen.mainScreen().bounds.width
+        var xMin: CGFloat = screenWidth
         var xMax: CGFloat = 0
-        var yMin: CGFloat = UIScreen.mainScreen().bounds.height
+        var yMin: CGFloat = screenHeight
         var yMax: CGFloat = 0
         // Get dimensions of the shape
         for subview in view.subviews {

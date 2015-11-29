@@ -26,18 +26,16 @@ class ViewPhoto: UIViewController {
     var editDetail = -1
     var moveDetail = false
     
+    let screenWidth = UIScreen.mainScreen().bounds.width
+    let screenHeight = UIScreen.mainScreen().bounds.height
+    var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    
     @IBAction func btnCancel(sender: AnyObject) {
         print("Cancel")
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     @IBAction func btnPlay(sender: AnyObject) {
-        print("Play")
-        print(xml.xmlString)
-        for detail in self.details {
-            print(detail.0)
-            print(detail.1.points)
-        }
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
@@ -94,7 +92,7 @@ class ViewPhoto: UIViewController {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
             // remove point & polygon
-            for subview in view.subviews {
+            for subview in imgView.subviews {
                 if subview.tag == detailTag || subview.tag == (detailTag + 100) {
                     subview.removeFromSuperview()
                 }
@@ -126,12 +124,13 @@ class ViewPhoto: UIViewController {
     
     @IBOutlet weak var myToolbar: UIToolbar!
     
-    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var imgBackground: UIView!
+    //@IBOutlet weak var imgView2: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        // Do any additional setup after loading the view
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
         // Load xmlDetails from xml
@@ -152,7 +151,7 @@ class ViewPhoto: UIViewController {
                         let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) // convert String to CGFloat
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
                         newPoint?.layer.zPosition = 1
-                        view.addSubview(newPoint!)
+                        imgView.addSubview(newPoint!)
                     }
                     
                     self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
@@ -164,7 +163,7 @@ class ViewPhoto: UIViewController {
         btnInfos.enabled = false
         
         // Add gesture on right swipe
-        if let recognizers = view.gestureRecognizers {
+        /*if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
             }
@@ -178,7 +177,7 @@ class ViewPhoto: UIViewController {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
-        
+        */
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -188,7 +187,23 @@ class ViewPhoto: UIViewController {
         // Load image
         let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
+        
+        // Build  the imgView frame
+        let availableWidth: CGFloat = screenWidth
+        let availableHeight: CGFloat = screenHeight - (myToolbar.frame.origin.y + myToolbar.frame.height)
+        let scaleX: CGFloat = availableWidth / (img?.size.width)!
+        let scaleY: CGFloat = availableHeight / (img?.size.height)!
+        let scale: CGFloat = min(scaleX, scaleY)
+        let imageWidth: CGFloat = scale * (img?.size.width)!
+        let imageHeight: CGFloat = scale * (img?.size.height)!
+        let x: CGFloat = (availableWidth - imageWidth) / 2
+        let y: CGFloat = myToolbar.frame.origin.y + myToolbar.frame.height + (availableHeight - imageHeight) / 2
+        imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
+        imgView.contentMode = UIViewContentMode.ScaleAspectFill
         imgView.image = img
+        view.addSubview(imgView)
+        
+        print("imgview bounds : \(imgView.bounds) ; img scaled size : \(imageWidth) x \(imageHeight) ; image original size : \(imgView.image!.size)")
        
         var value: Int
         if ( img!.size.width > img!.size.height ) { // turn device to landscape
@@ -233,7 +248,24 @@ class ViewPhoto: UIViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
-        location = touch.locationInView(self.view)
+        location = touch.locationInView(self.imgView)
+        print(location)
+        /*print("subviews of view :")
+        for s in view.subviews {
+            print(s)
+        }
+        
+        print("subviews of imgView :")
+        for s in imgView.subviews {
+            print(s)
+        }*/
+        // Remove old (hidden) subviews
+        for subview in imgView.subviews {
+            if subview.tag > 299 {
+                print("remove this fucking subview !!!")
+                subview.removeFromSuperview()
+            }
+        }
         
         switch createDetail {
         case true:
@@ -280,10 +312,10 @@ class ViewPhoto: UIViewController {
                 // Add new point
                 let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
                 newPoint?.layer.zPosition = 1
-                view.addSubview(newPoint!)
+                imgView.addSubview(newPoint!)
                 
                 // Remove old polygon
-                for subview in view.subviews {
+                for subview in imgView.subviews {
                     if subview.tag == (detailTag + 100) {
                         subview.removeFromSuperview()
                     }
@@ -337,7 +369,7 @@ class ViewPhoto: UIViewController {
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
-        location = touch.locationInView(self.view)
+        location = touch.locationInView(self.imgView)
         let detailTag = self.currentDetailTag
         
         if ( movingPoint != -1 ) {
@@ -365,8 +397,8 @@ class ViewPhoto: UIViewController {
                     let deltaX = location.x - movingCoords.x
                     let deltaY = location.y - movingCoords.y
                     
-                    if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
-                        for subview in view.subviews {
+                    /*if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                        for subview in imgView.subviews {
                             if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                 let origin = subview.frame.origin
                                 let destination = CGPointMake(origin.x, origin.y + 55.5)
@@ -375,15 +407,15 @@ class ViewPhoto: UIViewController {
                         }
                         //editDetail = -1
                     }
-                    else {
-                        for subview in view.subviews {
+                    else {*/
+                        for subview in imgView.subviews {
                             if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                 let origin = subview.frame.origin
                                 let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
                                 subview.frame.origin = destination
                             }
                         }
-                    }
+                    //}
                     movingCoords = location
                 }
             }
@@ -400,8 +432,8 @@ class ViewPhoto: UIViewController {
                         let deltaX = location.x - movingCoords.x
                         let deltaY = location.y - movingCoords.y
                         
-                        if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
-                            for subview in view.subviews {
+                        /*if (details["\(detailTag)"]!.distanceToTop() < 55) { // Avoid to move over navbar
+                            for subview in imgView.subviews {
                                 if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x, origin.y + 55.5)
@@ -410,15 +442,15 @@ class ViewPhoto: UIViewController {
                             }
                             //editDetail = -1
                         }
-                        else {
-                            for subview in view.subviews {
+                        else {*/
+                            for subview in imgView.subviews {
                                 if ( subview.tag == detailTag || subview.tag == (detailTag + 100) ) {
                                     let origin = subview.frame.origin
                                     let destination = CGPointMake(origin.x + deltaX, origin.y + deltaY)
                                     subview.frame.origin = destination
                                 }
                             }
-                        }
+                        //}
                         movingCoords = location
                     }
                 }
@@ -431,7 +463,7 @@ class ViewPhoto: UIViewController {
         let detailPoints = details["\(detailTag)"]?.points.count
         if detailPoints > 2 {
             // rebuild points & shape
-            for subview in view.subviews {
+            for subview in imgView.subviews {
                 if subview.tag == (detailTag + 100) {
                     subview.removeFromSuperview()
                 }
@@ -468,15 +500,21 @@ class ViewPhoto: UIViewController {
             }
             else {
                 editDetail = -1
-                // Remove old (hidden) subviews
-                for subview in view.subviews {
-                    if subview.tag > 299 {
-                        subview.removeFromSuperview()
-                    }
-                }
+                
                 btnInfos.enabled = true
             }
+            /*print("touch end, imgView.subviews :")
+            for subview in imgView.subviews {
+                print(subview)
+            }
+            print("editDetail : \(editDetail) ; movingPoint : \(movingPoint)")*/
             break
+        }
+        // Remove old (hidden) subviews
+        for subview in imgView.subviews {
+            if subview.tag > 299 {
+                subview.removeFromSuperview()
+            }
         }
     }
     
@@ -539,7 +577,7 @@ class ViewPhoto: UIViewController {
         var yMin: CGFloat = UIScreen.mainScreen().bounds.height
         var yMax: CGFloat = 0
         // Get dimensions of the shape
-        for subview in view.subviews {
+        for subview in imgView.subviews {
             if subview.tag == tag {
                 let xMinSubview = subview.frame.origin.x
                 let yMinSubview = subview.frame.origin.y
@@ -566,7 +604,7 @@ class ViewPhoto: UIViewController {
         let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: details["\(tag)"]!.points, color: color)
         myView.backgroundColor = UIColor(white: 0, alpha: 0)
         myView.tag = shapeTag
-        view.addSubview(myView)
+        imgView.addSubview(myView)
     }
     
     func changeDetailColor(tag: Int, color: String) {
@@ -591,7 +629,7 @@ class ViewPhoto: UIViewController {
         for detail in details {
             let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
             // Remove and rebuild the shape to avoid the overlay on alpha channel
-            for subview in self.view.subviews {
+            for subview in imgView.subviews {
                 if subview.tag == (thisDetailTag! + 100) { // polygon
                     //subview.removeFromSuperview()
                     subview.tag = thisDetailTag! + 300
@@ -612,7 +650,7 @@ class ViewPhoto: UIViewController {
                         newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     }
                     newPoint.layer.zPosition = 1
-                    self.view.addSubview(newPoint)
+                    imgView.addSubview(newPoint)
                 }
             }
             if details["\(thisDetailTag!)"]?.points.count > 2 {
@@ -624,7 +662,7 @@ class ViewPhoto: UIViewController {
                 }
             }
             else { // only 1 or 2 points, remove them
-                for subview in self.view.subviews {
+                for subview in imgView.subviews {
                     if subview.tag == thisDetailTag! {
                         subview.removeFromSuperview()
                     }
@@ -640,6 +678,8 @@ class ViewPhoto: UIViewController {
     }
     
     func goForward() {
-        performSegueWithIdentifier("playXia", sender: self)
+        if currentDetailTag == 0 {
+            performSegueWithIdentifier("playXia", sender: self)
+        }
     }
 }
