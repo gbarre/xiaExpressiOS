@@ -175,22 +175,35 @@
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5c3-Xb-onC">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tpU-S5-bU5">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5c3-Xb-onC">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="7ow-Ux-EBN" appends="YES" id="k3B-DW-z3c"/>
+                                </connections>
                             </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="5c3-Xb-onC" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="44" id="0dg-I0-dEC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="tpU-S5-bU5" secondAttribute="trailing" constant="-20" id="9h3-3K-rxt"/>
+                            <constraint firstItem="tpU-S5-bU5" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="44" id="Eg8-Kv-6xD"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leading" id="Qzj-Qa-uKc"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="trailing" secondItem="5c3-Xb-onC" secondAttribute="trailing" id="SAt-z6-5l5"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="5c3-Xb-onC" secondAttribute="bottom" id="U3L-nS-Vjd"/>
                             <constraint firstItem="5c3-Xb-onC" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="atN-nD-d5K"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" id="cpf-7v-ZLl"/>
+                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="tpU-S5-bU5" secondAttribute="bottom" id="eFk-nu-sTA"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5c3-Xb-onC" secondAttribute="trailing" constant="-20" id="uLU-C9-ql5"/>
+                            <constraint firstItem="tpU-S5-bU5" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="xzW-IF-vKy"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -199,9 +212,15 @@
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
                         <outlet property="btnPlayIcon" destination="hA7-sU-myB" id="nDe-86-eFA"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
+                        <outlet property="pinchView" destination="5c3-Xb-onC" id="Yvx-Vb-eFm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="7ow-Ux-EBN">
+                    <connections>
+                        <action selector="handlePinch:" destination="fts-Lk-uqf" id="kXB-CB-uVT"/>
+                    </connections>
+                </pinchGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1840" y="429"/>
         </scene>

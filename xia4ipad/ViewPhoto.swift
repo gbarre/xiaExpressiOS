@@ -31,6 +31,8 @@ class ViewPhoto: UIViewController {
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     var img = UIImage()
     var scale: CGFloat = 1.0
+    let minScale: CGFloat = 1.0
+    let maxScale: CGFloat = 2.0
     
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -117,14 +119,33 @@ class ViewPhoto: UIViewController {
         dbg.pt(xml.xmlString)
     }
     
-    @IBOutlet weak var myToolbar: UIToolbar!
+    @IBOutlet weak var pinchView: UIView!
+    @IBAction func handlePinch(recognizer : UIPinchGestureRecognizer) {
+        if let view = recognizer.view {
+            let scaleX = pinchView.frame.size.width / imgView.frame.size.width
+            let scaleY = pinchView.frame.size.height / imgView.frame.size.height
+            let currentScale = max(scaleX, scaleY)
+            
+            if currentScale < minScale {
+                view.transform = CGAffineTransformScale(view.transform, 1/currentScale, 1/currentScale)
+            }
+            else if currentScale > maxScale {
+                view.transform = CGAffineTransformScale(view.transform, maxScale/currentScale, maxScale/currentScale)
+            }
+            else {
+                view.transform = CGAffineTransformScale(view.transform, recognizer.scale, recognizer.scale)
+            }
+            recognizer.scale = 1
+        }
+    }
     
-    @IBOutlet weak var imgBackground: UIView!
+    @IBOutlet weak var myToolbar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         UIApplication.sharedApplication().statusBarStyle = .LightContent
+        myToolbar.layer.zPosition = 999
         
         // Load image
         let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
@@ -189,7 +210,7 @@ class ViewPhoto: UIViewController {
         imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
         imgView.contentMode = UIViewContentMode.ScaleAspectFill
         imgView.image = img
-        view.addSubview(imgView)
+        pinchView.addSubview(imgView)
         
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
@@ -208,17 +229,19 @@ class ViewPhoto: UIViewController {
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    for var point in pointsArray {
-                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
-                        let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
-                        newPoint?.layer.zPosition = 1
-                        imgView.addSubview(newPoint!)
+                    if pointsArray.count > 2 {
+                        for var point in pointsArray {
+                            point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                            let coords = point.characters.split{$0 == ";"}.map(String.init)
+                            let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
+                            let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
+                            newPoint?.layer.zPosition = 1
+                            imgView.addSubview(newPoint!)
+                        }
+                        
+                        self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
                     }
-                    
-                    self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
                 }
             }
         }

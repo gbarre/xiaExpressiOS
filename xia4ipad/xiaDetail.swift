@@ -41,7 +41,7 @@ class xiaDetail: NSObject {
     
     func createPath() -> String {
         if (points.count < 2) {
-            return "Needs 2 points at least..."
+            return "0;0"
         }
         else {
             
