@@ -28,7 +28,7 @@ class debug: NSObject {
     
     func ptSubviews(view: AnyObject) {
         if self.enable {
-            print("Subviews of \(view.name) :")
+            print("Subviews of \(view.identifier) :")
             for subview in view.subviews {
                 print("\(subview)")
             }

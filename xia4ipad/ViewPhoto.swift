@@ -36,6 +36,7 @@ class ViewPhoto: UIViewController {
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
+    @IBOutlet weak var btnPlayIcon: UIBarButtonItem!
     @IBAction func btnPlay(sender: AnyObject) {
     }
     
@@ -64,18 +65,13 @@ class ViewPhoto: UIViewController {
                 "path" : "0;0"]
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
+            self.setBtnPlayIcon()
             self.changeDetailColor(self.currentDetailTag, color: "red")
-        })
-        let stopAction = UIAlertAction(title: "Stop", style: .Default, handler: { action in
-            self.createDetail = false
         })
         
         menu.addAction(growAction)
         menu.addAction(titleAction)
         menu.addAction(descriptionAction)
-        if self.createDetail == true {
-            menu.addAction(stopAction)
-        }
         
         if let ppc = menu.popoverPresentationController {
             ppc.barButtonItem = sender
@@ -172,6 +168,8 @@ class ViewPhoto: UIViewController {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
+        
+        setBtnPlayIcon()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -277,7 +275,7 @@ class ViewPhoto: UIViewController {
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
-                    if ( distance < 30 ) { // We are close to an exiting point, move it
+                    if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(detailTag)"]!.points[i]
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
@@ -335,7 +333,7 @@ class ViewPhoto: UIViewController {
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
-                    if ( distance < 40 ) { // We are close to an exiting point, move it
+                    if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
                         toMove.center = location
                         details["\(currentDetailTag)"]?.points[i] = toMove
@@ -372,7 +370,7 @@ class ViewPhoto: UIViewController {
             let yDist: CGFloat = (location.y - ploc!.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             
-            if ( distance < 30 ) {
+            if ( distance < 20 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                 toMove.center = location
                 details["\(detailTag)"]?.points[movingPoint] = toMove
@@ -462,7 +460,6 @@ class ViewPhoto: UIViewController {
             }
             break
         }
-        dbg.ptSubviews(imgView)
         
         // Add gesture on right swipe
         if let recognizers = view.gestureRecognizers {
@@ -643,6 +640,40 @@ class ViewPhoto: UIViewController {
         }
     }
     
+    func setBtnPlayIcon() {
+        var i = 0
+        var play = UIBarButtonItem()
+        var arrayItems = myToolbar.items!
+        for item in myToolbar.items! {
+            
+            if item.tag == 10 {
+                if createDetail {
+                    play = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: "stopCreation")
+                    play.tintColor = UIColor.redColor()
+                }
+                else {
+                    play = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
+                    play.tintColor = UIColor.whiteColor()
+                }
+                play.tag = 10
+            }
+            else {
+                play = item
+                play.tag = 0
+            }
+            arrayItems[i] = play
+            i++
+        }
+        myToolbar.setItems(arrayItems, animated: false)
+        
+    }
+    
+    func stopCreation() {
+        createDetail = false
+        btnInfos.enabled = true
+        setBtnPlayIcon()
+    }
+    
     func goBack() {
         if currentDetailTag == 0 {
             navigationController?.popToRootViewControllerAnimated(true)
@@ -650,8 +681,8 @@ class ViewPhoto: UIViewController {
     }
     
     func goForward() {
-        if currentDetailTag == 0 {
+        //if currentDetailTag == 0 {
             performSegueWithIdentifier("playXia", sender: self)
-        }
+        //}
     }
 }

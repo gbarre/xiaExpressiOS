@@ -141,7 +141,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="yRX-k2-J6P"/>
-                                    <barButtonItem systemItem="play" id="hA7-sU-myB">
+                                    <barButtonItem tag="10" systemItem="play" id="hA7-sU-myB">
                                         <connections>
                                             <action selector="btnPlay:" destination="fts-Lk-uqf" id="CMA-fg-arp"/>
                                             <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="g1C-J3-xmC"/>
@@ -197,7 +197,7 @@
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
                     <connections>
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
-                        <outlet property="imgBackground" destination="5c3-Xb-onC" id="ngi-CO-zTQ"/>
+                        <outlet property="btnPlayIcon" destination="hA7-sU-myB" id="nDe-86-eFA"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                     </connections>
                 </viewController>
