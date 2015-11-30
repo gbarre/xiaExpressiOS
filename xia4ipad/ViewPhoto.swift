@@ -10,6 +10,8 @@ import UIKit
 
 class ViewPhoto: UIViewController {
     
+    var dbg = debug(enable: true)
+    
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
     
@@ -40,10 +42,10 @@ class ViewPhoto: UIViewController {
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
         let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
         let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
-            print("Rectangle tool (ToDo)")
+            self.dbg.pt("Rectangle tool (ToDo)")
         })
         let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
-            print("Ellipse tool (ToDo)")
+            self.dbg.pt("Ellipse tool (ToDo)")
         })
         let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
             // Create new detail object
@@ -81,7 +83,6 @@ class ViewPhoto: UIViewController {
         }
         
         presentViewController(menu, animated: true, completion: nil)
-        
     }
     
     @IBOutlet weak var btnInfos: UIBarButtonItem!
@@ -117,7 +118,7 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnExport(sender: AnyObject) {
-        print(xml.xmlString)
+        dbg.pt(xml.xmlString)
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
@@ -198,6 +199,12 @@ class ViewPhoto: UIViewController {
                 if let path = detail.attributes["path"] {
                     // Add detail object
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                    // clean this tag
+                    for subview in imgView.subviews {
+                        if (subview.tag == detailTag || subview.tag == detailTag + 100) {
+                            subview.removeFromSuperview()
+                        }
+                    }
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
                     
@@ -312,12 +319,7 @@ class ViewPhoto: UIViewController {
                     movingCoords = location
                     moveDetail = true
                     changeDetailColor(editDetail, color: "red")
-                    // Remove old (hidden) subviews
-                    for subview in imgView.subviews {
-                        if subview.tag > 299 {
-                            subview.removeFromSuperview()
-                        }
-                    }
+                    //cleanOldViews()
                     break
                 }
             }
@@ -354,6 +356,15 @@ class ViewPhoto: UIViewController {
         location = touch.locationInView(self.imgView)
         let detailTag = self.currentDetailTag
         
+        if (moveDetail || movingPoint != -1) {
+            // Disable swipe gesture
+            if let recognizers = view.gestureRecognizers {
+                for recognizer in recognizers {
+                    view.removeGestureRecognizer(recognizer)
+                }
+            }
+        }
+        
         if ( movingPoint != -1 ) {
             let ploc = details["\(detailTag)"]?.points[movingPoint].center
             
@@ -365,15 +376,6 @@ class ViewPhoto: UIViewController {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                 toMove.center = location
                 details["\(detailTag)"]?.points[movingPoint] = toMove
-            }
-        }
-        
-        if moveDetail {
-            // Disable swipe gesture
-            if let recognizers = view.gestureRecognizers {
-                for recognizer in recognizers {
-                    view.removeGestureRecognizer(recognizer)
-                }
             }
         }
         
@@ -460,12 +462,7 @@ class ViewPhoto: UIViewController {
             }
             break
         }
-        // Remove old (hidden) subviews
-        for subview in imgView.subviews {
-            if subview.tag > 299 {
-                subview.removeFromSuperview()
-            }
-        }
+        dbg.ptSubviews(imgView)
         
         // Add gesture on right swipe
         if let recognizers = view.gestureRecognizers {
@@ -632,6 +629,16 @@ class ViewPhoto: UIViewController {
                         subview.removeFromSuperview()
                     }
                 }
+            }
+        }
+        cleanOldViews()
+    }
+    
+    func cleanOldViews() {
+        // Remove old (hidden) subviews
+        for subview in imgView.subviews {
+            if subview.tag > 299 {
+                subview.removeFromSuperview()
             }
         }
     }

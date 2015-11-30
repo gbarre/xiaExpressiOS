@@ -13,6 +13,7 @@
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
+		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 		F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfo.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
+		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
 		F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +78,7 @@
 				F0F15E741BB6FCDF00268F06 /* Info.plist */,
 				F0725E591BEA87D9007ACE9B /* AEXML.swift */,
 				F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */,
+				F0C97ACA1C0C386E0057D802 /* debug.swift */,
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
 				F098E28A1C06391000AB1185 /* PlayXia.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
@@ -169,6 +172,7 @@
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
 				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
+				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
 				F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */,

@@ -29,7 +29,7 @@ class PlayXia: UIViewController {
     
     @IBOutlet weak var bkgdImage: UIImageView!
     
-    override func viewDidLoad() {        
+    override func viewDidLoad() {
         // Add gestures on swipe
         let gbSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
@@ -131,25 +131,15 @@ class PlayXia: UIViewController {
                     // Put it on top
                     cropDetail.layer.zPosition = 2
                     cropDetail.tag = 666
-                    /*for corner in pathFrameCorners {
-                        if (txtView.frame.contains(corner)) {
-                            cropDetail.center = CGPoint(x: screenWidth/2 + 260, y: screenHeight/2 + 150)
-                            break
-                        }
-                    }*/
                     self.view.addSubview(cropDetail)
                     
+                    // moving detail out of the txtView
                     var topLeft = pathFrameCorners.first!
-//                    let distanceX =
-                    
-                    while (txtView.frame.contains(topLeft)) {
+                    while ( txtView.frame.contains(topLeft) || ( (topLeft.x < txtView.frame.origin.x + txtView.frame.width + 5) && (topLeft.y < txtView.frame.origin.y + txtView.frame.height + 5) ) ) {
                         UIView.animateWithDuration(0.5, animations: {
                             cropDetail.center = CGPoint(x: cropDetail.center.x+1, y: cropDetail.center.y+1)
                         })
                         topLeft = CGPoint(x: topLeft.x+1, y: topLeft.y+1)
-                        print("txtview frame : \(txtView.frame)")
-                        print(cropDetail.center)
-                        
                     }
                     
                     if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
@@ -168,7 +158,7 @@ class PlayXia: UIViewController {
                             txtView.attributedText = attributedText
                         }
                     }
-                    txtView.backgroundColor = UIColor.redColor()
+                    txtView.backgroundColor = UIColor.lightGrayColor()
                     txtView.scrollEnabled = true
                     txtView.editable = false
                     txtView.selectable = true
@@ -183,7 +173,6 @@ class PlayXia: UIViewController {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (!txtView.frame.contains(touchBegin) && touchedTag == 0) {
-            print("touch end on background")
             for subview in view.subviews {
                 if subview.tag == 666 {
                     subview.removeFromSuperview()
@@ -194,9 +183,6 @@ class PlayXia: UIViewController {
             }
             showDetail = false
         }
-        print("txtview frame : \(txtView.frame)")
-        print("touch begin at : \(touchBegin)")
-        print("touched tag : \(touchedTag)")
     }
     
     func buildShape(fill: Bool, color: UIColor, tag: Int) {

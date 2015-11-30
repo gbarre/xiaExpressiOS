@@ -197,7 +197,7 @@
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
                     <connections>
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
-                        <outlet property="imgBackground" destination="5c3-Xb-onC" id="kbl-Ek-YxY"/>
+                        <outlet property="imgBackground" destination="5c3-Xb-onC" id="ngi-CO-zTQ"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                     </connections>
                 </viewController>
