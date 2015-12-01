@@ -31,14 +31,11 @@ class ViewPhoto: UIViewController {
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     var img = UIImage()
     var scale: CGFloat = 1.0
-    let minScale: CGFloat = 1.0
-    let maxScale: CGFloat = 2.0
     
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
-    @IBOutlet weak var btnPlayIcon: UIBarButtonItem!
     @IBAction func btnPlay(sender: AnyObject) {
     }
     
@@ -119,26 +116,6 @@ class ViewPhoto: UIViewController {
         dbg.pt(xml.xmlString)
     }
     
-    @IBOutlet weak var pinchView: UIView!
-    @IBAction func handlePinch(recognizer : UIPinchGestureRecognizer) {
-        if let view = recognizer.view {
-            let scaleX = pinchView.frame.size.width / imgView.frame.size.width
-            let scaleY = pinchView.frame.size.height / imgView.frame.size.height
-            let currentScale = max(scaleX, scaleY)
-            
-            if currentScale < minScale {
-                view.transform = CGAffineTransformScale(view.transform, 1/currentScale, 1/currentScale)
-            }
-            else if currentScale > maxScale {
-                view.transform = CGAffineTransformScale(view.transform, maxScale/currentScale, maxScale/currentScale)
-            }
-            else {
-                view.transform = CGAffineTransformScale(view.transform, recognizer.scale, recognizer.scale)
-            }
-            recognizer.scale = 1
-        }
-    }
-    
     @IBOutlet weak var myToolbar: UIToolbar!
     
     override func viewDidLoad() {
@@ -210,7 +187,7 @@ class ViewPhoto: UIViewController {
         imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
         imgView.contentMode = UIViewContentMode.ScaleAspectFill
         imgView.image = img
-        pinchView.addSubview(imgView)
+        view.addSubview(imgView)
         
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
@@ -475,16 +452,16 @@ class ViewPhoto: UIViewController {
                 changeDetailColor(-1, color: "red")
                 currentDetailTag = 0
                 btnInfos.enabled = false
+                moveDetail = false
             }
             else {
                 editDetail = -1
-                
                 btnInfos.enabled = true
             }
             break
         }
         
-        // Add gesture on right swipe
+        // Add gesture on swipe
         if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
@@ -519,7 +496,6 @@ class ViewPhoto: UIViewController {
         }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                //controller.index = self.index
                 controller.fileName = arrayNames[self.index]
             }
         }
@@ -698,12 +674,14 @@ class ViewPhoto: UIViewController {
     }
     
     func goBack() {
+        dbg.pt("goBack")
         if currentDetailTag == 0 {
             navigationController?.popToRootViewControllerAnimated(true)
         }
     }
     
     func goForward() {
+        dbg.pt("goForward")
         //if currentDetailTag == 0 {
             performSegueWithIdentifier("playXia", sender: self)
         //}
