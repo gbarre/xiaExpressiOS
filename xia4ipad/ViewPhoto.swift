@@ -32,6 +32,9 @@ class ViewPhoto: UIViewController {
     var img = UIImage()
     var scale: CGFloat = 1.0
     
+    let editColor: UIColor = UIColor.cyanColor()
+    let noEditColor: UIColor = UIColor.magentaColor()
+    
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -65,7 +68,7 @@ class ViewPhoto: UIViewController {
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.setBtnPlayIcon()
-            self.changeDetailColor(self.currentDetailTag, color: "red")
+            self.changeDetailColor(self.currentDetailTag, color: "edit")
         })
         
         menu.addAction(growAction)
@@ -107,7 +110,7 @@ class ViewPhoto: UIViewController {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
-                print("\(error)")
+                dbg.pt("\(error)")
             }
         }
     }
@@ -212,12 +215,12 @@ class ViewPhoto: UIViewController {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
                             let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
                             let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
-                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
+                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                             newPoint?.layer.zPosition = 1
                             imgView.addSubview(newPoint!)
                         }
                         
-                        self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
+                        self.buildShape(true, color: noEditColor, tag: detailTag)
                     }
                 }
             }
@@ -291,7 +294,7 @@ class ViewPhoto: UIViewController {
             }
             if ( (addPoint || detailPoints == 0) && !moveDetail )  {
                 // Add new point
-                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
+                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner")
                 newPoint?.layer.zPosition = 1
                 imgView.addSubview(newPoint!)
                 
@@ -301,7 +304,7 @@ class ViewPhoto: UIViewController {
                         subview.removeFromSuperview()
                     }
                 }
-                self.buildShape(true, color: UIColor.redColor(), tag: detailTag)
+                self.buildShape(true, color: editColor, tag: detailTag)
             }
             
         default:
@@ -316,7 +319,7 @@ class ViewPhoto: UIViewController {
                     currentDetailTag = touchedTag
                     movingCoords = location
                     moveDetail = true
-                    changeDetailColor(editDetail, color: "red")
+                    changeDetailColor(editDetail, color: "edit")
                     //cleanOldViews()
                     break
                 }
@@ -426,7 +429,7 @@ class ViewPhoto: UIViewController {
                     subview.layer.zPosition = 1
                 }
             }
-            buildShape(true, color: UIColor.redColor(), tag: detailTag)
+            buildShape(true, color: editColor, tag: detailTag)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -438,7 +441,7 @@ class ViewPhoto: UIViewController {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
-                print("\(error)")
+                dbg.pt("\(error)")
             }
         }
         
@@ -449,7 +452,7 @@ class ViewPhoto: UIViewController {
             
         default:
             if (editDetail == -1 && movingPoint == -1) {
-                changeDetailColor(-1, color: "red")
+                changeDetailColor(-1, color: "edit")
                 currentDetailTag = 0
                 btnInfos.enabled = false
                 moveDetail = false
@@ -568,19 +571,14 @@ class ViewPhoto: UIViewController {
     func changeDetailColor(tag: Int, color: String) {
         var shapeColor: UIColor
         var altShapeColor: UIColor
-        var imgName: String
-        var altImgName: String
+        let imgName = "corner"
         switch color {
-        case "green":
-            shapeColor = UIColor.greenColor()
-            imgName = "corner-ok.png"
-            altShapeColor = UIColor.redColor()
-            altImgName = "corner-draggable.png"
+        case "edit":
+            shapeColor = editColor
+            altShapeColor = noEditColor
         default:
-            shapeColor = UIColor.redColor()
-            imgName = "corner-draggable.png"
-            altShapeColor = UIColor.greenColor()
-            altImgName = "corner-ok.png"
+            shapeColor = noEditColor
+            altShapeColor = editColor
         }
         
         // Change other details color
@@ -600,13 +598,14 @@ class ViewPhoto: UIViewController {
                     subview.tag = thisDetailTag! + 200
                     subview.layer.zPosition = -1
                     
-                    var newPoint: UIView
-                    if thisDetailTag != tag {
+                    /*var newPoint: UIView
+                    /if thisDetailTag != tag {
                         newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
                     }
                     else {
                         newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
-                    }
+                    }*/
+                    let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
                     imgView.addSubview(newPoint)
                 }
@@ -674,14 +673,12 @@ class ViewPhoto: UIViewController {
     }
     
     func goBack() {
-        dbg.pt("goBack")
-        if currentDetailTag == 0 {
+//        if currentDetailTag == 0 {
             navigationController?.popToRootViewControllerAnimated(true)
-        }
+//        }
     }
     
     func goForward() {
-        dbg.pt("goForward")
         //if currentDetailTag == 0 {
             performSegueWithIdentifier("playXia", sender: self)
         //}

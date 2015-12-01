@@ -10,6 +10,8 @@ import UIKit
 
 class PlayXia: UIViewController {
     
+    var dbg = debug(enable: true)
+    
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
     var details = [String: xiaDetail]()
@@ -52,7 +54,7 @@ class PlayXia: UIViewController {
             try xml = AEXMLDocument(xmlData: data!)
         }
         catch {
-            print("\(error)")
+            dbg.pt("\(error)")
         }
         
         // Load xmlDetails from xml
@@ -71,7 +73,7 @@ class PlayXia: UIViewController {
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
                         let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
                         let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
+                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
                     }
