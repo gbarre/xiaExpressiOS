@@ -161,21 +161,33 @@ class PlayXia: UIViewController {
                     showDetail = true
                     
                     // Calculate available space for detail view
-                    let txtViewBottom = txtView.bounds.maxY
+                    let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
                     let availableWidth = screenWidth
-                    let availableHeight = screenHeight - (txtViewBottom + 5)
-                    let availableRect = CGRect(x: 0, y: txtViewBottom + 5, width: availableWidth, height: availableHeight)
+                    let availableHeight = screenHeight - txtViewBottom - 15
+                    let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
                     
                     // Center detail in the available space
                     let distanceX = availableRect.midX - pathFrameCorners.midX
                     let distanceY = availableRect.midY - pathFrameCorners.midY
                     let newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
-                    UIView.animateWithDuration(0.5, animations: {
-                        cropDetail.center = newCropCenter
-                    })
                     
                     // Should we scale the detail to fit in available space ?
+                    var detailScale: CGFloat = 1.0
+                    if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
+                        let detailScaleX = availableWidth / pathFrameCorners.width
+                        let detailScaleY = availableHeight / pathFrameCorners.height
+                        detailScale = min(detailScaleX, detailScaleY)
+                        cropDetail.contentMode = UIViewContentMode.ScaleToFill
+                    }
+                    else { // looking for max zoom available if enabled on this detail...
+                        
+                    }
                     
+                    // let's rock & rolls
+                    UIView.animateWithDuration(0.5, animations: {
+                        cropDetail.center = newCropCenter
+                        cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
+                    })
                     
                     break
                 }
