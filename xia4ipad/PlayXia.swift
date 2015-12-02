@@ -102,7 +102,7 @@ class PlayXia: UIViewController {
         location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
         
-        if btnZoom.frame.contains(location) {
+        if (btnZoom.frame.contains(location) && btnZoom.enabled){
             if btnZoom.on {
                 btnZoom.on = false
                 if lastTouchedTag != 0 {
