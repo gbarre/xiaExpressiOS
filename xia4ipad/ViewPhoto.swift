@@ -32,8 +32,8 @@ class ViewPhoto: UIViewController {
     var img = UIImage()
     var scale: CGFloat = 1.0
     
-    let editColor: UIColor = UIColor.cyanColor()
-    let noEditColor: UIColor = UIColor.magentaColor()
+    let editColor: UIColor = UIColor.redColor()
+    let noEditColor: UIColor = UIColor.greenColor()
     
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -587,24 +587,15 @@ class ViewPhoto: UIViewController {
             // Remove and rebuild the shape to avoid the overlay on alpha channel
             for subview in imgView.subviews {
                 if subview.tag == (thisDetailTag! + 100) { // polygon
-                    //subview.removeFromSuperview()
                     subview.tag = thisDetailTag! + 300
                     subview.layer.zPosition = -1
                 }
                 if subview.tag == thisDetailTag! { // points
                     let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
                     details["\(thisDetailTag!)"]?.points.removeFirst()
-                    //subview.removeFromSuperview()
                     subview.tag = thisDetailTag! + 200
                     subview.layer.zPosition = -1
-                    
-                    /*var newPoint: UIView
-                    /if thisDetailTag != tag {
-                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
-                    }
-                    else {
-                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
-                    }*/
+
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
                     imgView.addSubview(newPoint)
@@ -673,14 +664,10 @@ class ViewPhoto: UIViewController {
     }
     
     func goBack() {
-//        if currentDetailTag == 0 {
-            navigationController?.popToRootViewControllerAnimated(true)
-//        }
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func goForward() {
-        //if currentDetailTag == 0 {
-            performSegueWithIdentifier("playXia", sender: self)
-        //}
+        performSegueWithIdentifier("playXia", sender: self)
     }
 }

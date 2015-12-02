@@ -27,7 +27,7 @@ class PlayXia: UIViewController {
     let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
     
-    let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 500.00, height: 300.00))
+    let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 0, height: 0))
     
     @IBOutlet weak var bkgdImage: UIImageView!
     
@@ -135,15 +135,6 @@ class PlayXia: UIViewController {
                     cropDetail.tag = 666
                     self.view.addSubview(cropDetail)
                     
-                    // moving detail out of the txtView
-                    var topLeft = pathFrameCorners.first!
-                    while ( txtView.frame.contains(topLeft) || ( (topLeft.x < txtView.frame.origin.x + txtView.frame.width + 5) && (topLeft.y < txtView.frame.origin.y + txtView.frame.height + 5) ) ) {
-                        UIView.animateWithDuration(0.5, animations: {
-                            cropDetail.center = CGPoint(x: cropDetail.center.x+1, y: cropDetail.center.y+1)
-                        })
-                        topLeft = CGPoint(x: topLeft.x+1, y: topLeft.y+1)
-                    }
-                    
                     if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
                         for d in detail {
                             //let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
@@ -160,6 +151,7 @@ class PlayXia: UIViewController {
                             txtView.attributedText = attributedText
                         }
                     }
+                    txtView.frame = CGRect(x: screenWidth / 7, y: 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
                     txtView.backgroundColor = UIColor.lightGrayColor()
                     txtView.scrollEnabled = true
                     txtView.editable = false
@@ -167,6 +159,24 @@ class PlayXia: UIViewController {
                     txtView.tag = 666
                     self.view.addSubview(txtView)
                     showDetail = true
+                    
+                    // Calculate available space for detail view
+                    let txtViewBottom = txtView.bounds.maxY
+                    let availableWidth = screenWidth
+                    let availableHeight = screenHeight - (txtViewBottom + 5)
+                    let availableRect = CGRect(x: 0, y: txtViewBottom + 5, width: availableWidth, height: availableHeight)
+                    
+                    // Center detail in the available space
+                    let distanceX = availableRect.midX - pathFrameCorners.midX
+                    let distanceY = availableRect.midY - pathFrameCorners.midY
+                    let newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
+                    UIView.animateWithDuration(0.5, animations: {
+                        cropDetail.center = newCropCenter
+                    })
+                    
+                    // Should we scale the detail to fit in available space ?
+                    
+                    
                     break
                 }
             }

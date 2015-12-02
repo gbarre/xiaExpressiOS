@@ -72,7 +72,7 @@ class xiaDetail: NSObject {
         return path
     }
     
-    func bezierFrame() -> [CGPoint] {
+    func bezierFrame() -> CGRect {
         var xMin: CGFloat = UIScreen.mainScreen().bounds.width
         var xMax: CGFloat = 0
         var yMin: CGFloat = UIScreen.mainScreen().bounds.height
@@ -94,8 +94,8 @@ class xiaDetail: NSObject {
                 yMax = yPoint
             }
         }
-        return [CGPoint(x: xMin, y: yMin), CGPoint(x: xMax, y: yMin), CGPoint(x: xMax, y: yMax), CGPoint(x: xMin, y: yMax)]
-        //return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
+        //return [CGPoint(x: xMin, y: yMin), CGPoint(x: xMax, y: yMin), CGPoint(x: xMax, y: yMax), CGPoint(x: xMin, y: yMax)]
+        return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
     }
     
     func distanceToTop() -> CGFloat {
