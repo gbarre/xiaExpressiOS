@@ -325,6 +325,13 @@
                                 <rect key="frame" x="0.0" y="-20" width="600" height="620"/>
                                 <animations/>
                             </imageView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="lvp-8K-r7k">
+                                <rect key="frame" x="531" y="20" width="51" height="31"/>
+                                <animations/>
+                                <connections>
+                                    <action selector="btnZoomAction:" destination="xod-8C-OKb" eventType="valueChanged" id="5zp-zf-X1U"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -332,6 +339,8 @@
                             <constraint firstAttribute="trailingMargin" secondItem="0Lw-CX-Jch" secondAttribute="trailing" constant="-20" id="DeB-wK-cJd"/>
                             <constraint firstItem="0Lw-CX-Jch" firstAttribute="top" secondItem="xr2-Gl-F3b" secondAttribute="bottom" constant="-20" id="OoM-42-TyD"/>
                             <constraint firstItem="iNn-t7-ycD" firstAttribute="top" secondItem="0Lw-CX-Jch" secondAttribute="bottom" id="UX4-mS-Rru"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lvp-8K-r7k" secondAttribute="trailing" id="eVj-Z1-3pM"/>
+                            <constraint firstItem="lvp-8K-r7k" firstAttribute="top" secondItem="xr2-Gl-F3b" secondAttribute="bottom" constant="20" id="hqV-Ke-8Al"/>
                             <constraint firstItem="0Lw-CX-Jch" firstAttribute="leading" secondItem="hBu-vw-FzK" secondAttribute="leadingMargin" constant="-20" id="wr5-KF-aTH"/>
                         </constraints>
                     </view>
@@ -340,6 +349,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bkgdImage" destination="0Lw-CX-Jch" id="izJ-qn-wVK"/>
+                        <outlet property="btnZoom" destination="lvp-8K-r7k" id="tdE-Ag-VZA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -17,11 +17,17 @@ class PlayXia: UIViewController {
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
+    var lastTouchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
     var shapeLayers = [Int: CAShapeLayer]()
     var croppedImages = UIImage()
     var showDetail: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
+    var zoomStatus: Bool = false
+    let maxZoomScale: CGFloat = 3.0
+    var zooming: Bool = false
+    var zoomCropCenter = CGPointMake(0, 0)
+    var zoomDetailScale: CGFloat = 1.0
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
@@ -30,6 +36,9 @@ class PlayXia: UIViewController {
     let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 0, height: 0))
     
     @IBOutlet weak var bkgdImage: UIImageView!
+    @IBOutlet weak var btnZoom: UISwitch!
+    @IBAction func btnZoomAction(sender: AnyObject) {
+    }
     
     override func viewDidLoad() {
         // Add gestures on swipe
@@ -42,6 +51,9 @@ class PlayXia: UIViewController {
         let filePath = "\(documentsDirectory)\(self.fileName).jpg"
         let img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
+        
+        // Hide btnZoom
+        btnZoom.layer.zPosition = -1
         
         // Get the scale...
         let scaleX: CGFloat = screenWidth / img!.size.width
@@ -87,9 +99,26 @@ class PlayXia: UIViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
-        location = touch.locationInView(self.view)
+        location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
         
+        if btnZoom.frame.contains(location) {
+            if btnZoom.on {
+                btnZoom.on = false
+                if lastTouchedTag != 0 {
+                    showMyDetail(lastTouchedTag, zoomDetail: false)
+                }
+            }
+            else {
+                btnZoom.on = true
+                if lastTouchedTag != 0 {
+                    showMyDetail(lastTouchedTag, zoomDetail: true)
+                }
+            }
+        }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         switch showDetail {
         case true:
             touchBegin = location
@@ -100,105 +129,16 @@ class PlayXia: UIViewController {
                 let (detailTag, detailPoints) = detail
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    
-                    // Hide lot of things...
-                    for subview in view.subviews {
-                        if (subview.tag > 99) {
-                            subview.hidden = true
-                        }
-                    }
-                    // Add new background image
-                    let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-                    blurredBackground.contentMode = UIViewContentMode.ScaleAspectFill
-                    blurredBackground.image = bkgdImage.image
-                    blurredBackground.tag = 666
-                    self.view.addSubview(blurredBackground)
-                    let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-                    let blurView = UIVisualEffectView(effect: blurEffect)
-                    blurView.frame = blurredBackground.frame
-                    blurView.tag = 666
-                    self.view.addSubview(blurView)
-                    
-                    // Show the textview
-                    let pathFrameCorners = (details["\(touchedTag)"]?.bezierFrame())!
-                    
-                    // Cropping image
-                    let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-                    cropDetail.contentMode = UIViewContentMode.ScaleAspectFill
-                    cropDetail.image = bkgdImage.image
-                    let myMask = CAShapeLayer()
-                    myMask.path = paths[touchedTag]!.CGPath
-                    cropDetail.layer.mask = myMask
-                    
-                    // Put it on top
-                    cropDetail.layer.zPosition = 2
-                    cropDetail.tag = 666
-                    self.view.addSubview(cropDetail)
-                    
-                    if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(touchedTag)"]) {
-                        for d in detail {
-                            //let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
-                            let detailTitle = d.attributes["title"]!
-                            let detailDescription = d.value!
-                            
-                            let titleWidth = detailTitle.characters.count
-                            let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
-                            attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
-                            
-                            let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
-                            attributedText.appendAttributedString(attributedDescription)
-                            
-                            txtView.attributedText = attributedText
-                        }
-                    }
-                    txtView.frame = CGRect(x: screenWidth / 7, y: 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
-                    txtView.backgroundColor = UIColor.lightGrayColor()
-                    txtView.scrollEnabled = true
-                    txtView.editable = false
-                    txtView.selectable = true
-                    txtView.tag = 666
-                    self.view.addSubview(txtView)
-                    showDetail = true
-                    
-                    // Calculate available space for detail view
-                    let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
-                    let availableWidth = screenWidth
-                    let availableHeight = screenHeight - txtViewBottom - 15
-                    let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
-                    
-                    // Center detail in the available space
-                    let distanceX = availableRect.midX - pathFrameCorners.midX
-                    let distanceY = availableRect.midY - pathFrameCorners.midY
-                    let newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
-                    
-                    // Should we scale the detail to fit in available space ?
-                    var detailScale: CGFloat = 1.0
-                    if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
-                        let detailScaleX = availableWidth / pathFrameCorners.width
-                        let detailScaleY = availableHeight / pathFrameCorners.height
-                        detailScale = min(detailScaleX, detailScaleY)
-                        cropDetail.contentMode = UIViewContentMode.ScaleToFill
-                    }
-                    else { // looking for max zoom available if enabled on this detail...
-                        
-                    }
-                    
-                    // let's rock & rolls
-                    UIView.animateWithDuration(0.5, animations: {
-                        cropDetail.center = newCropCenter
-                        cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
-                    })
-                    
+                    let zoom: Bool = btnZoom.on
+                    showMyDetail(touchedTag, zoomDetail: zoom)
+                    lastTouchedTag = touchedTag
                     break
                 }
             }
         }
-    }
-    
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if (!txtView.frame.contains(touchBegin) && touchedTag == 0) {
+        if (!txtView.frame.contains(touchBegin) && touchedTag == 0 && !btnZoom.frame.contains(touchBegin)) {
             for subview in view.subviews {
-                if subview.tag == 666 {
+                if subview.tag == 666 || subview.tag == 667 {
                     subview.removeFromSuperview()
                 }
                 if subview.tag > 99 {
@@ -206,7 +146,119 @@ class PlayXia: UIViewController {
                 }
             }
             showDetail = false
+            lastTouchedTag = 0
+            
+            btnZoom.layer.zPosition = -1
+            btnZoom.enabled = false
+            btnZoom.on = false
         }
+    }
+    
+    func showMyDetail(tag: Int, zoomDetail: Bool) {
+        // Hide lot of things...
+        for subview in view.subviews {
+            if (subview.tag > 99) {
+                subview.hidden = true
+            }
+            if (subview.tag == 667 && !zoomDetail) {
+                subview.hidden = false
+            }
+        }
+        // Add new background image
+        let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
+        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFill
+        blurredBackground.image = bkgdImage.image
+        blurredBackground.tag = 666
+        self.view.addSubview(blurredBackground)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = blurredBackground.frame
+        blurView.tag = 666
+        self.view.addSubview(blurView)
+        
+        // Show the textview
+        let pathFrameCorners = (details["\(tag)"]?.bezierFrame())!
+        
+        // Cropping image
+        let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
+        cropDetail.contentMode = UIViewContentMode.ScaleAspectFill
+        cropDetail.image = bkgdImage.image
+        let myMask = CAShapeLayer()
+        myMask.path = paths[tag]!.CGPath
+        cropDetail.layer.mask = myMask
+        
+        // Put it on top
+        cropDetail.layer.zPosition = 2
+        cropDetail.tag = 666
+        self.view.addSubview(cropDetail)
+        
+        if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+            for d in detail {
+                zoomStatus = (d.attributes["zoom"] == "true") ? true : false
+                let detailTitle = d.attributes["title"]!
+                let detailDescription = d.value!
+                
+                let titleWidth = detailTitle.characters.count
+                let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
+                attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
+                
+                let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
+                attributedText.appendAttributedString(attributedDescription)
+                
+                txtView.attributedText = attributedText
+            }
+        }
+        txtView.frame = CGRect(x: screenWidth / 7, y: 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
+        txtView.backgroundColor = UIColor.lightGrayColor()
+        txtView.scrollEnabled = true
+        txtView.editable = false
+        txtView.selectable = true
+        txtView.tag = 667
+        self.view.addSubview(txtView)
+        showDetail = true
+        
+        // Calculate available space for detail view
+        let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
+        let availableWidth = screenWidth
+        let availableHeight = screenHeight - txtViewBottom - 15
+        let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
+        
+        // Center detail in the available space
+        let distanceX = availableRect.midX - pathFrameCorners.midX
+        let distanceY = availableRect.midY - pathFrameCorners.midY
+        var newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
+        
+        // Should we scale the detail to fit in available space ?
+        var detailScale: CGFloat = 1.0
+        if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
+            let detailScaleX = availableWidth / pathFrameCorners.width
+            let detailScaleY = availableHeight / pathFrameCorners.height
+            detailScale = min(detailScaleX, detailScaleY)
+        }
+        else if zoomStatus { // looking for max zoom available if enabled on this detail...
+            // Show btnZoom
+            btnZoom.layer.zPosition = 2
+            btnZoom.enabled = true
+            let detailScaleX = availableWidth / pathFrameCorners.width
+            let detailScaleY = availableHeight / pathFrameCorners.height
+            zoomDetailScale = min(detailScaleX, detailScaleY, maxZoomScale)
+            zoomCropCenter = CGPointMake(cropDetail.center.x + distanceX * zoomDetailScale, cropDetail.center.y - txtViewBottom + distanceY * zoomDetailScale)
+            if zoomDetail {
+                detailScale = zoomDetailScale
+                newCropCenter = zoomCropCenter
+            }
+        }
+        else {
+        btnZoom.layer.zPosition = -1
+        btnZoom.enabled = false
+        btnZoom.on = false
+        }
+        
+        // let's rock & rolls
+        UIView.animateWithDuration(0.5, animations: {
+            cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
+            cropDetail.center = newCropCenter
+        })
     }
     
     func buildShape(fill: Bool, color: UIColor, tag: Int) {
