@@ -43,7 +43,8 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
             NSForegroundColorAttributeName : UIColor.blackColor()
             ])
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
@@ -95,30 +96,7 @@ class ViewPhoto: UIViewController {
     @IBAction func btnTrash(sender: AnyObject) {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
-            // remove point & polygon
-            for subview in imgView.subviews {
-                if subview.tag == detailTag || subview.tag == (detailTag + 100) {
-                    subview.removeFromSuperview()
-                }
-            }
-            
-            // remove detail object
-            details["\(detailTag)"] = nil
-            
-            // remove detail in xml
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
-                for d in detail {
-                    d.removeFromParent()
-                }
-            }
-            
-            // write xml
-            do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
+            performFullDetailRemove(detailTag, force: true)
         }
     }
     
@@ -664,9 +642,48 @@ class ViewPhoto: UIViewController {
         
     }
     
+    func cleaningDetails() {
+        for detail in details {
+            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
+            if ( detailTag != 0 && detail.1.points.count < 3 ) {
+                performFullDetailRemove(detailTag)
+            }
+        }
+    }
+    
+    func performFullDetailRemove(tag: Int, force: Bool = false) {
+        if (details["\(tag)"]?.points.count < 3 || force) {
+            // remove point & polygon
+            for subview in imgView.subviews {
+                if subview.tag == tag || subview.tag == (tag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            
+            // remove detail object
+            details["\(tag)"] = nil
+            
+            // remove detail in xml
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    d.removeFromParent()
+                }
+            }
+            
+            // write xml
+            do {
+                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                dbg.pt("\(error)")
+            }
+        }
+    }
+    
     func stopCreation() {
         createDetail = false
         btnInfos.enabled = true
+        performFullDetailRemove(currentDetailTag)
         setBtnPlayIcon()
     }
     
