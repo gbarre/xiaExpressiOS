@@ -97,6 +97,7 @@ class ViewPhoto: UIViewController {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
             performFullDetailRemove(detailTag, force: true)
+            setBtnPlayIcon()
         }
     }
     
@@ -210,7 +211,7 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
-        
+        cleaningDetails()
     }
     
     func rotated()
@@ -630,6 +631,18 @@ class ViewPhoto: UIViewController {
                     play.tintColor = UIColor.whiteColor()
                 }
                 play.tag = 10
+            }
+            else if item.tag == 11 {
+                if createDetail {
+                    play = item
+                    play.tag = 11
+                    play.enabled = false
+                }
+                else {
+                    play = item
+                    play.tag = 11
+                    play.enabled = true
+                }
             }
             else {
                 play = item

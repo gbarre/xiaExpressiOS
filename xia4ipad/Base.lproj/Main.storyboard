@@ -160,7 +160,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
-                                    <barButtonItem systemItem="trash" id="Q1P-YQ-emb">
+                                    <barButtonItem tag="11" systemItem="trash" id="Q1P-YQ-emb">
                                         <connections>
                                             <action selector="btnTrash:" destination="fts-Lk-uqf" id="jMX-Y8-cNe"/>
                                         </connections>
