@@ -95,6 +95,7 @@ class PlayXia: UIViewController {
                 }
             }
         }
+        hideDetails(true)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -116,9 +117,7 @@ class PlayXia: UIViewController {
                 }
             }
         }
-    }
-    
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
         switch showDetail {
         case true:
             touchBegin = location
@@ -135,7 +134,15 @@ class PlayXia: UIViewController {
                     break
                 }
             }
+            // Show details area if none is touched
+            if touchedTag == 0 {
+                hideDetails(false)
+            }
         }
+        
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (!txtView.frame.contains(touchBegin) && touchedTag == 0 && !btnZoom.frame.contains(touchBegin)) {
             for subview in view.subviews {
                 if subview.tag == 666 || subview.tag == 667 {
@@ -151,6 +158,8 @@ class PlayXia: UIViewController {
             btnZoom.layer.zPosition = -1
             btnZoom.enabled = false
             btnZoom.on = false
+            
+            hideDetails(true)
         }
     }
     
@@ -259,6 +268,14 @@ class PlayXia: UIViewController {
             cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
             cropDetail.center = newCropCenter
         })
+    }
+    
+    func hideDetails(hidden: Bool) {
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = hidden
+            }
+        }
     }
     
     func buildShape(fill: Bool, color: UIColor, tag: Int) {
