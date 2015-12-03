@@ -43,14 +43,18 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
-        let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
+        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+            NSForegroundColorAttributeName : UIColor.blackColor()
+            ])
+        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        menu.setValue(attributedTitle, forKey: "attributedTitle")
+        let rectangleAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
             self.dbg.pt("Rectangle tool (ToDo)")
         })
-        let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
+        let ellipseAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
             self.dbg.pt("Ellipse tool (ToDo)")
         })
-        let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
+        let polygonAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
             // Create new detail object
             let lastDetailTag = self.xml["xia"]["details"]["detail"].last
             if lastDetailTag != nil {
@@ -71,9 +75,12 @@ class ViewPhoto: UIViewController {
             self.changeDetailColor(self.currentDetailTag, color: "edit")
         })
         
-        menu.addAction(growAction)
-        menu.addAction(titleAction)
-        menu.addAction(descriptionAction)
+        rectangleAction.setValue(UIImage(named: "rectangle"), forKey: "image")
+        ellipseAction.setValue(UIImage(named: "ellipse"), forKey: "image")
+        polygonAction.setValue(UIImage(named: "polygon"), forKey: "image")
+        menu.addAction(rectangleAction)
+        menu.addAction(ellipseAction)
+        menu.addAction(polygonAction)
         
         if let ppc = menu.popoverPresentationController {
             ppc.barButtonItem = sender
