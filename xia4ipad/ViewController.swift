@@ -17,7 +17,7 @@ var index:Int = 0
 
 let reuseIdentifier = "PhotoCell"
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate {
     
     var dbg = debug(enable: true)
     
@@ -77,6 +77,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
     }
 
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var CollectionView: UICollectionView!
     
     @IBOutlet weak var mytoolBar: UIToolbar!
@@ -85,6 +87,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         super.viewDidLoad()
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+        
+        
+        // Wire up search bar delegate so that we can react to button selections
+        searchBar.delegate = self
         
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
@@ -172,7 +179,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
-
+        
+        // Resize size of collection view items in grid so that we achieve 3 boxes across
+        let cellWidth = ((UIScreen.mainScreen().bounds.width) - 32 - 30 ) / 3
+        let cellLayout = CollectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        cellLayout.itemSize = CGSize(width: cellWidth, height: cellWidth)
+        
         // Load image
         let filePath = "\(documentsDirectory)\(arrayNames[index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
