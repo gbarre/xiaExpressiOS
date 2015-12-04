@@ -23,7 +23,6 @@ class ViewDetailInfo: UIViewController {
     @IBOutlet weak var txtDesc: UITextView!
     
     @IBAction func btnCancel(sender: AnyObject) {
-        print("Cancel")
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

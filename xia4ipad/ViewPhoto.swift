@@ -10,6 +10,8 @@ import UIKit
 
 class ViewPhoto: UIViewController {
     
+    var dbg = debug(enable: true)
+    
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
     
@@ -30,6 +32,9 @@ class ViewPhoto: UIViewController {
     var img = UIImage()
     var scale: CGFloat = 1.0
     
+    let editColor: UIColor = UIColor.redColor()
+    let noEditColor: UIColor = UIColor.greenColor()
+    
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -38,14 +43,14 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        let menu = UIAlertController(title: "Create detail...", message: nil, preferredStyle: .ActionSheet)
-        let growAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
-            print("Rectangle tool (ToDo)")
+        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        let rectangleAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
+            self.dbg.pt("Rectangle tool (ToDo)")
         })
-        let titleAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
-            print("Ellipse tool (ToDo)")
+        let ellipseAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
+            self.dbg.pt("Ellipse tool (ToDo)")
         })
-        let descriptionAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
+        let polygonAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
             // Create new detail object
             let lastDetailTag = self.xml["xia"]["details"]["detail"].last
             if lastDetailTag != nil {
@@ -62,18 +67,21 @@ class ViewPhoto: UIViewController {
                 "path" : "0;0"]
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag, color: "red")
+            self.setBtnPlayIcon()
+            self.changeDetailColor(self.currentDetailTag, color: "edit")
         })
-        let stopAction = UIAlertAction(title: "Stop", style: .Default, handler: { action in
-            self.createDetail = false
-        })
+        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+            NSForegroundColorAttributeName : UIColor.blackColor()
+            ])
+        menu.setValue(attributedTitle, forKey: "attributedTitle")
         
-        menu.addAction(growAction)
-        menu.addAction(titleAction)
-        menu.addAction(descriptionAction)
-        if self.createDetail == true {
-            menu.addAction(stopAction)
-        }
+        rectangleAction.setValue(UIImage(named: "rectangle"), forKey: "image")
+        ellipseAction.setValue(UIImage(named: "ellipse"), forKey: "image")
+        polygonAction.setValue(UIImage(named: "polygon"), forKey: "image")
+        menu.addAction(rectangleAction)
+        menu.addAction(ellipseAction)
+        menu.addAction(polygonAction)
         
         if let ppc = menu.popoverPresentationController {
             ppc.barButtonItem = sender
@@ -81,7 +89,6 @@ class ViewPhoto: UIViewController {
         }
         
         presentViewController(menu, animated: true, completion: nil)
-        
     }
     
     @IBOutlet weak var btnInfos: UIBarButtonItem!
@@ -89,45 +96,22 @@ class ViewPhoto: UIViewController {
     @IBAction func btnTrash(sender: AnyObject) {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
-            // remove point & polygon
-            for subview in imgView.subviews {
-                if subview.tag == detailTag || subview.tag == (detailTag + 100) {
-                    subview.removeFromSuperview()
-                }
-            }
-            
-            // remove detail object
-            details["\(detailTag)"] = nil
-            
-            // remove detail in xml
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
-                for d in detail {
-                    d.removeFromParent()
-                }
-            }
-            
-            // write xml
-            do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                print("\(error)")
-            }
+            performFullDetailRemove(detailTag, force: true)
+            setBtnPlayIcon()
         }
     }
     
     @IBAction func btnExport(sender: AnyObject) {
-        print(xml.xmlString)
+        dbg.pt(xml.xmlString)
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
-    
-    @IBOutlet weak var imgBackground: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         UIApplication.sharedApplication().statusBarStyle = .LightContent
+        myToolbar.layer.zPosition = 999
         
         // Load image
         let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
@@ -171,6 +155,8 @@ class ViewPhoto: UIViewController {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
+        
+        setBtnPlayIcon()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -198,26 +184,34 @@ class ViewPhoto: UIViewController {
                 if let path = detail.attributes["path"] {
                     // Add detail object
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                    // clean this tag
+                    for subview in imgView.subviews {
+                        if (subview.tag == detailTag || subview.tag == detailTag + 100) {
+                            subview.removeFromSuperview()
+                        }
+                    }
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    for var point in pointsArray {
-                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
-                        let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner-ok")
-                        newPoint?.layer.zPosition = 1
-                        imgView.addSubview(newPoint!)
+                    if pointsArray.count > 2 {
+                        for var point in pointsArray {
+                            point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                            let coords = point.characters.split{$0 == ";"}.map(String.init)
+                            let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
+                            let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
+                            newPoint?.layer.zPosition = 1
+                            imgView.addSubview(newPoint!)
+                        }
+                        
+                        self.buildShape(true, color: noEditColor, tag: detailTag)
                     }
-                    
-                    self.buildShape(true, color: UIColor.greenColor(), tag: detailTag)
                 }
             }
         }
-        
+        cleaningDetails()
     }
     
     func rotated()
@@ -270,7 +264,7 @@ class ViewPhoto: UIViewController {
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
-                    if ( distance < 30 ) { // We are close to an exiting point, move it
+                    if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(detailTag)"]!.points[i]
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
@@ -286,7 +280,7 @@ class ViewPhoto: UIViewController {
             }
             if ( (addPoint || detailPoints == 0) && !moveDetail )  {
                 // Add new point
-                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner-draggable.png")
+                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner")
                 newPoint?.layer.zPosition = 1
                 imgView.addSubview(newPoint!)
                 
@@ -296,7 +290,7 @@ class ViewPhoto: UIViewController {
                         subview.removeFromSuperview()
                     }
                 }
-                self.buildShape(true, color: UIColor.redColor(), tag: detailTag)
+                self.buildShape(true, color: editColor, tag: detailTag)
             }
             
         default:
@@ -311,13 +305,8 @@ class ViewPhoto: UIViewController {
                     currentDetailTag = touchedTag
                     movingCoords = location
                     moveDetail = true
-                    changeDetailColor(editDetail, color: "red")
-                    // Remove old (hidden) subviews
-                    for subview in imgView.subviews {
-                        if subview.tag > 299 {
-                            subview.removeFromSuperview()
-                        }
-                    }
+                    changeDetailColor(editDetail, color: "edit")
+                    //cleanOldViews()
                     break
                 }
             }
@@ -333,7 +322,7 @@ class ViewPhoto: UIViewController {
                     let yDist: CGFloat = (location.y - ploc!.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
-                    if ( distance < 40 ) { // We are close to an exiting point, move it
+                    if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
                         toMove.center = location
                         details["\(currentDetailTag)"]?.points[i] = toMove
@@ -354,6 +343,15 @@ class ViewPhoto: UIViewController {
         location = touch.locationInView(self.imgView)
         let detailTag = self.currentDetailTag
         
+        if (moveDetail || movingPoint != -1) {
+            // Disable swipe gesture
+            if let recognizers = view.gestureRecognizers {
+                for recognizer in recognizers {
+                    view.removeGestureRecognizer(recognizer)
+                }
+            }
+        }
+        
         if ( movingPoint != -1 ) {
             let ploc = details["\(detailTag)"]?.points[movingPoint].center
             
@@ -361,19 +359,10 @@ class ViewPhoto: UIViewController {
             let yDist: CGFloat = (location.y - ploc!.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             
-            if ( distance < 30 ) {
+            if ( distance < 20 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                 toMove.center = location
                 details["\(detailTag)"]?.points[movingPoint] = toMove
-            }
-        }
-        
-        if moveDetail {
-            // Disable swipe gesture
-            if let recognizers = view.gestureRecognizers {
-                for recognizer in recognizers {
-                    view.removeGestureRecognizer(recognizer)
-                }
             }
         }
         
@@ -426,7 +415,7 @@ class ViewPhoto: UIViewController {
                     subview.layer.zPosition = 1
                 }
             }
-            buildShape(true, color: UIColor.redColor(), tag: detailTag)
+            buildShape(true, color: editColor, tag: detailTag)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -438,7 +427,7 @@ class ViewPhoto: UIViewController {
                 try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
-                print("\(error)")
+                dbg.pt("\(error)")
             }
         }
         
@@ -449,25 +438,19 @@ class ViewPhoto: UIViewController {
             
         default:
             if (editDetail == -1 && movingPoint == -1) {
-                changeDetailColor(-1, color: "red")
+                changeDetailColor(-1, color: "edit")
                 currentDetailTag = 0
                 btnInfos.enabled = false
+                moveDetail = false
             }
             else {
                 editDetail = -1
-                
                 btnInfos.enabled = true
             }
             break
         }
-        // Remove old (hidden) subviews
-        for subview in imgView.subviews {
-            if subview.tag > 299 {
-                subview.removeFromSuperview()
-            }
-        }
         
-        // Add gesture on right swipe
+        // Add gesture on swipe
         if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
@@ -502,7 +485,6 @@ class ViewPhoto: UIViewController {
         }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                //controller.index = self.index
                 controller.fileName = arrayNames[self.index]
             }
         }
@@ -575,19 +557,14 @@ class ViewPhoto: UIViewController {
     func changeDetailColor(tag: Int, color: String) {
         var shapeColor: UIColor
         var altShapeColor: UIColor
-        var imgName: String
-        var altImgName: String
+        let imgName = "corner"
         switch color {
-        case "green":
-            shapeColor = UIColor.greenColor()
-            imgName = "corner-ok.png"
-            altShapeColor = UIColor.redColor()
-            altImgName = "corner-draggable.png"
+        case "edit":
+            shapeColor = editColor
+            altShapeColor = noEditColor
         default:
-            shapeColor = UIColor.redColor()
-            imgName = "corner-draggable.png"
-            altShapeColor = UIColor.greenColor()
-            altImgName = "corner-ok.png"
+            shapeColor = noEditColor
+            altShapeColor = editColor
         }
         
         // Change other details color
@@ -596,24 +573,16 @@ class ViewPhoto: UIViewController {
             // Remove and rebuild the shape to avoid the overlay on alpha channel
             for subview in imgView.subviews {
                 if subview.tag == (thisDetailTag! + 100) { // polygon
-                    //subview.removeFromSuperview()
                     subview.tag = thisDetailTag! + 300
                     subview.layer.zPosition = -1
                 }
                 if subview.tag == thisDetailTag! { // points
                     let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
                     details["\(thisDetailTag!)"]?.points.removeFirst()
-                    //subview.removeFromSuperview()
                     subview.tag = thisDetailTag! + 200
                     subview.layer.zPosition = -1
-                    
-                    var newPoint: UIView
-                    if thisDetailTag != tag {
-                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: altImgName))!
-                    }
-                    else {
-                        newPoint = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
-                    }
+
+                    let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
                     imgView.addSubview(newPoint)
                 }
@@ -634,17 +603,108 @@ class ViewPhoto: UIViewController {
                 }
             }
         }
+        cleanOldViews()
+    }
+    
+    func cleanOldViews() {
+        // Remove old (hidden) subviews
+        for subview in imgView.subviews {
+            if subview.tag > 299 {
+                subview.removeFromSuperview()
+            }
+        }
+    }
+    
+    func setBtnPlayIcon() {
+        var i = 0
+        var play = UIBarButtonItem()
+        var arrayItems = myToolbar.items!
+        for item in myToolbar.items! {
+            
+            if item.tag == 10 {
+                if createDetail {
+                    play = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: "stopCreation")
+                    play.tintColor = UIColor.redColor()
+                }
+                else {
+                    play = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
+                    play.tintColor = UIColor.whiteColor()
+                }
+                play.tag = 10
+            }
+            else if item.tag == 11 {
+                if createDetail {
+                    play = item
+                    play.tag = 11
+                    play.enabled = false
+                }
+                else {
+                    play = item
+                    play.tag = 11
+                    play.enabled = true
+                }
+            }
+            else {
+                play = item
+                play.tag = 0
+            }
+            arrayItems[i] = play
+            i++
+        }
+        myToolbar.setItems(arrayItems, animated: false)
+        
+    }
+    
+    func cleaningDetails() {
+        for detail in details {
+            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
+            if ( detailTag != 0 && detail.1.points.count < 3 ) {
+                performFullDetailRemove(detailTag)
+            }
+        }
+    }
+    
+    func performFullDetailRemove(tag: Int, force: Bool = false) {
+        if (details["\(tag)"]?.points.count < 3 || force) {
+            // remove point & polygon
+            for subview in imgView.subviews {
+                if subview.tag == tag || subview.tag == (tag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            
+            // remove detail object
+            details["\(tag)"] = nil
+            
+            // remove detail in xml
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    d.removeFromParent()
+                }
+            }
+            
+            // write xml
+            do {
+                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                dbg.pt("\(error)")
+            }
+        }
+    }
+    
+    func stopCreation() {
+        createDetail = false
+        btnInfos.enabled = true
+        performFullDetailRemove(currentDetailTag)
+        setBtnPlayIcon()
     }
     
     func goBack() {
-        if currentDetailTag == 0 {
-            navigationController?.popToRootViewControllerAnimated(true)
-        }
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func goForward() {
-        if currentDetailTag == 0 {
-            performSegueWithIdentifier("playXia", sender: self)
-        }
+        performSegueWithIdentifier("playXia", sender: self)
     }
 }
