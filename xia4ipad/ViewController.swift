@@ -19,38 +19,62 @@ let reuseIdentifier = "PhotoCell"
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
+    var dbg = debug(enable: true)
+    
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
     var passName:Bool=false
-    var parser = NSXMLParser()
     
-    @IBAction func btnCamera(sender: AnyObject) {
-        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
-            //load the camera interface
+    @IBAction func btnCreate(sender: AnyObject) {
+        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        let cameraAction = UIAlertAction(title: "Take a photo", style: .Default, handler: { action in
+            if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
+                //load the camera interface
+                let picker : UIImagePickerController = UIImagePickerController()
+                picker.sourceType = UIImagePickerControllerSourceType.Camera
+                picker.delegate = self
+                picker.allowsEditing = false
+                self.presentViewController(picker, animated: true, completion: nil)
+            }
+            else{
+                //no camera available
+                let alert = UIAlertController(title: "Error", message: "There is no camera available", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: {(alertAction)in
+                    alert.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        })
+        let libraryAction = UIAlertAction(title: "Search in Photos", style: .Default, handler: { action in
             let picker : UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.Camera
+            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
             picker.delegate = self
             picker.allowsEditing = false
             self.presentViewController(picker, animated: true, completion: nil)
+        })
+        let attributedTitle = NSAttributedString(string: "Create new document", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+            NSForegroundColorAttributeName : UIColor.blackColor()
+            ])
+        menu.setValue(attributedTitle, forKey: "attributedTitle")
+        
+        cameraAction.setValue(UIImage(named: "camera"), forKey: "image")
+        libraryAction.setValue(UIImage(named: "photos"), forKey: "image")
+        menu.addAction(cameraAction)
+        menu.addAction(libraryAction)
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.barButtonItem = sender as? UIBarButtonItem
+            ppc.permittedArrowDirections = .Up
         }
-        else{
-            //no camera available
-            let alert = UIAlertController(title: "Error", message: "There is no camera available", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: {(alertAction)in
-                alert.dismissViewControllerAnimated(true, completion: nil)
-            }))
-            self.presentViewController(alert, animated: true, completion: nil)
-        }
+        
+        presentViewController(menu, animated: true, completion: nil)
     }
     
-    @IBAction func btnPhotoAlbum(sender: AnyObject) {
-        let picker : UIImagePickerController = UIImagePickerController()
-        picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
-        picker.delegate = self
-        picker.allowsEditing = false
-        self.presentViewController(picker, animated: true, completion: nil)
+    @IBAction func btnEdit(sender: AnyObject) {
+        
     }
 
     @IBOutlet weak var CollectionView: UICollectionView!

@@ -43,12 +43,7 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
-            NSForegroundColorAttributeName : UIColor.blackColor()
-            ])
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        menu.setValue(attributedTitle, forKey: "attributedTitle")
         let rectangleAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
             self.dbg.pt("Rectangle tool (ToDo)")
         })
@@ -75,6 +70,11 @@ class ViewPhoto: UIViewController {
             self.setBtnPlayIcon()
             self.changeDetailColor(self.currentDetailTag, color: "edit")
         })
+        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+            NSForegroundColorAttributeName : UIColor.blackColor()
+            ])
+        menu.setValue(attributedTitle, forKey: "attributedTitle")
         
         rectangleAction.setValue(UIImage(named: "rectangle"), forKey: "image")
         ellipseAction.setValue(UIImage(named: "ellipse"), forKey: "image")

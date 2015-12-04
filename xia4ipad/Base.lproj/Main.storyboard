@@ -18,8 +18,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kO4-Gr-RCm">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IfO-qU-IWf"/>
+                                    <barButtonItem width="7" style="plain" systemItem="fixedSpace" id="Z4f-gR-cFY"/>
+                                    <barButtonItem title="XIA" id="NdE-Wn-yec"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="31H-tP-TlM"/>
+                                    <barButtonItem systemItem="add" id="qM4-9i-cie">
+                                        <connections>
+                                            <action selector="btnCreate:" destination="BYZ-38-t0r" id="YS3-2E-1Sc"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="DLc-ka-LpH"/>
+                                    <barButtonItem enabled="NO" systemItem="action" id="U0P-NK-ZnO"/>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fzZ-2G-Vla"/>
+                                    <barButtonItem enabled="NO" image="help" id="fRb-WL-06e"/>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="eCj-kf-a9B"/>
+                                    <barButtonItem enabled="NO" title="Edit" id="LFL-AM-sdI">
+                                        <connections>
+                                            <action selector="btnEdit:" destination="BYZ-38-t0r" id="QYS-7U-kk0"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                            </toolbar>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="w0V-h1-JOa">
+                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
+                            </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8S7-Cb-jYU">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="108" width="600" height="492"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mtL-KF-J4F">
@@ -74,38 +111,21 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="8yH-BO-HxQ"/>
                                 </connections>
                             </collectionView>
-                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kO4-Gr-RCm">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <animations/>
-                                <items>
-                                    <barButtonItem systemItem="organize" id="0XH-x1-Og8">
-                                        <connections>
-                                            <action selector="btnPhotoAlbum:" destination="BYZ-38-t0r" id="CVk-CT-JVV"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IfO-qU-IWf"/>
-                                    <barButtonItem title="XIA" id="NdE-Wn-yec"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="31H-tP-TlM"/>
-                                    <barButtonItem systemItem="camera" id="Q3P-0P-qhC">
-                                        <connections>
-                                            <action selector="btnCamera:" destination="BYZ-38-t0r" id="SFh-hN-Yzw"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                            </toolbar>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="8S7-Cb-jYU" secondAttribute="trailing" constant="-20" id="6Zz-vK-gtl"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="AYe-ph-gyj"/>
+                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="w0V-h1-JOa" secondAttribute="trailing" constant="-600" id="8AK-KY-Vet"/>
                             <constraint firstAttribute="leadingMargin" secondItem="kO4-Gr-RCm" secondAttribute="leading" constant="20" id="LjB-1I-tmf"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="8S7-Cb-jYU" secondAttribute="leading" constant="20" id="TPa-GD-MAP"/>
-                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="cXM-m7-8nE"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="MIz-A4-9QF"/>
+                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="w0V-h1-JOa" secondAttribute="bottom" id="MNM-g5-oaQ"/>
+                            <constraint firstItem="w0V-h1-JOa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="ZNW-aN-bki"/>
+                            <constraint firstItem="w0V-h1-JOa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Ze5-K9-5RJ"/>
+                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="d5a-Em-0Jg"/>
                             <constraint firstItem="kO4-Gr-RCm" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="fh2-8g-yRY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="w0V-h1-JOa" secondAttribute="trailing" constant="-20" id="ifk-Gf-G4b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kO4-Gr-RCm" secondAttribute="trailing" constant="-20" id="lhL-V8-GhO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8S7-Cb-jYU" secondAttribute="trailing" constant="-20" id="yym-DZ-8Sr"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -383,6 +403,7 @@
     </scenes>
     <resources>
         <image name="Info" width="32" height="32"/>
+        <image name="help" width="25" height="25"/>
     </resources>
     <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
 </document>
