@@ -8,7 +8,7 @@
 
 import UIKit
 
-class xiaDetail: NSObject {
+public class xiaDetail: NSObject {
 
     var points = [UIImageView]()
     var tag: Int = 0
@@ -23,7 +23,7 @@ class xiaDetail: NSObject {
         self.scale = scale
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -39,7 +39,7 @@ class xiaDetail: NSObject {
         // view.addSubview(newPoint)
     }
     
-    func createPath() -> String {
+    public func createPath() -> String {
         if (points.count < 2) {
             return "0;0"
         }

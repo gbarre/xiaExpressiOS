@@ -23,7 +23,6 @@ class PhotoThumbnail: UICollectionViewCell {
         
         self.imgView.image = thumb
         self.imgLabel.text = thumbnailLabel
-        dbg.pt("\(thumbnailImage)")
     }
     
     func drawOutlie(image :UIImage, color:UIColor) -> UIImage

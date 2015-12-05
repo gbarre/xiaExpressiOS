@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MessageUI
 
-class ViewPhoto: UIViewController {
+class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -102,7 +103,28 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnExport(sender: AnyObject) {
-        dbg.pt(xml.xmlString)
+        let mailComposer = MFMailComposeViewController()
+        mailComposer.mailComposeDelegate = self
+        //Check to see the device can send email.
+        if( MFMailComposeViewController.canSendMail() ) {
+            //Set the subject and message of the email
+            mailComposer.setSubject("[xia iPad] debug sources")
+            mailComposer.setMessageBody("My bug : ", isHTML: false)
+            
+            //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
+            let filePathJPG = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+            if let fileData = NSData(contentsOfFile: filePathJPG) {
+                mailComposer.addAttachmentData(fileData, mimeType: "image/jpeg", fileName: "\(documentsDirectory)\(arrayNames[self.index])")
+            }
+            let filePathXML = "\(documentsDirectory)\(arrayNames[self.index]).xml"
+            if let fileData = NSData(contentsOfFile: filePathXML) {
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(documentsDirectory)\(arrayNames[self.index])")
+            }
+            self.presentViewController(mailComposer, animated: true, completion: nil)
+        }
+        else {
+            dbg.pt("Device cannot send mail")
+        }
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
@@ -706,5 +728,9 @@ class ViewPhoto: UIViewController {
     
     func goForward() {
         performSegueWithIdentifier("playXia", sender: self)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
