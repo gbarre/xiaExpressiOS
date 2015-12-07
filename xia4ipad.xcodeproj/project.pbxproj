@@ -11,6 +11,7 @@
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */; };
+		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
 		F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */; };
@@ -47,6 +48,7 @@
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfo.swift; sourceTree = "<group>"; };
+		F08B2BB01C15C662009EDB13 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
 		F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia4ipadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +132,7 @@
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
 				F098E28A1C06391000AB1185 /* PlayXia.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
+				F08B2BB01C15C662009EDB13 /* Util.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */,
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */,
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F08B2BB11C15C662009EDB13 /* Util.swift in Sources */,
 				F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */,
 				F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */,
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
@@ -512,6 +516,7 @@
 				F0BBA6E41C11CD3000173A3A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xia4ipadUITests" */ = {
 			isa = XCConfigurationList;
@@ -520,6 +525,7 @@
 				F0BBA6F31C11CD7400173A3A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia4ipad" */ = {
 			isa = XCConfigurationList;

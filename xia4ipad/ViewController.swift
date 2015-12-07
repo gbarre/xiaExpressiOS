@@ -116,7 +116,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
             }
             catch {
-                print("\(error)")
+                dbg.pt("\(error)")
             }
             
             arrayNames.append("\(now)")
@@ -164,7 +164,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                             try controller.xml = AEXMLDocument(xmlData: data!)
                         }
                         catch {
-                            print("\(error)")
+                            dbg.pt("\(error)")
                         }
                     }
                 }
@@ -209,7 +209,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
-            print("\(error)")
+            dbg.pt("\(error)")
         }
         arrayNames.append("\(now)")
         nbThumb = arrayNames.count
@@ -243,7 +243,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         try fileManager.removeItemAtPath(filePath)
                     }
                     catch let error as NSError {
-                        print(error.localizedDescription)
+                        self.dbg.pt(error.localizedDescription)
                     }
                     
                     // Update arrays
@@ -273,7 +273,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             presentViewController(controller, animated: true, completion: nil)
         }
         else {
-            print("Could not find index path")
+            dbg.pt("Could not find index path")
         }
         
     }

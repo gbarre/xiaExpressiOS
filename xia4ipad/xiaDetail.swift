@@ -53,7 +53,7 @@ class xiaDetail: NSObject {
             }
             path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
         
-            return path // return X1,xxx;Y1,yyy X2,xxx;Y2,yyy X3,xxx;Y3,yyy ...
+            return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }
     }
     
@@ -94,29 +94,6 @@ class xiaDetail: NSObject {
                 yMax = yPoint
             }
         }
-        //return [CGPoint(x: xMin, y: yMin), CGPoint(x: xMax, y: yMin), CGPoint(x: xMax, y: yMax), CGPoint(x: xMin, y: yMax)]
         return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
     }
-    
-    func distanceToTop() -> CGFloat {
-        var yDist = UIScreen.mainScreen().bounds.height
-        
-        if (points.count > 2) {
-            for point in points {
-                let y = point.frame.origin.y
-                if (y < yDist) {
-                    yDist = y
-                }
-            }
-        }
-        return yDist
-    }
-    
-    func test() {
-        print("This xia detail have \(self.points.count) points.")
-        for var i = 0; i < self.points.count; i++ {
-            print(points[i])
-        }
-    }
-
 }

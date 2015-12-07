@@ -93,7 +93,7 @@ class PlayXia: UIViewController {
                         view.addSubview(newPoint!)
                     }
                     
-                    buildShape(false, color: UIColor.blueColor(), tag: detailTag)
+                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }
             }
@@ -279,70 +279,6 @@ class PlayXia: UIViewController {
                 subview.hidden = hidden
             }
         }
-    }
-    
-    func buildShape(fill: Bool, color: UIColor, tag: Int) {
-        var shapeArg: Int = 0
-        let shapeTag = tag + 100
-        switch fill {
-        case true:
-            shapeArg = 1
-        default:
-            shapeArg = 0
-        }
-        var xMin: CGFloat = screenWidth
-        var xMax: CGFloat = 0
-        var yMin: CGFloat = screenHeight
-        var yMax: CGFloat = 0
-        // Get dimensions of the shape
-        for subview in view.subviews {
-            if subview.tag == tag {
-                let xMinSubview = subview.frame.origin.x
-                let yMinSubview = subview.frame.origin.y
-                let xMaxSubview = subview.frame.origin.x + 29
-                let yMaxSubview = subview.frame.origin.y + 29
-                if ( xMinSubview < xMin ) {
-                    xMin = xMinSubview
-                }
-                if ( yMinSubview < yMin ) {
-                    yMin = yMinSubview
-                }
-                if ( xMaxSubview > xMax ) {
-                    xMax = xMaxSubview
-                }
-                if ( yMaxSubview > yMax ) {
-                    yMax = yMaxSubview
-                }
-            }
-        }
-        let shapeWidth = xMax - xMin
-        let shapeHeight = yMax - yMin
-        
-        // Build the shape
-        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: details["\(tag)"]!.points, color: color)
-        myView.backgroundColor = UIColor(white: 0, alpha: 0)
-        myView.tag = shapeTag
-        view.addSubview(myView)
-    }
-    
-    func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
-        // translate from C : http://alienryderflex.com/polygon/
-        let polyCorners = points.count
-        var j = polyCorners - 1
-        var oddNodes:Bool = false
-        
-        for var i=0; i<polyCorners; i++ {
-            if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
-                || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
-                && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {
-                    if ( points[i].center.x + (touchPoint.y - points[i].center.y) / (points[j].center.y - points[i].center.y) * (points[j].center.x - points[i].center.x) < touchPoint.x ) {
-                        oddNodes = !oddNodes
-                    }
-            }
-            j=i
-        }
-        
-        return oddNodes
     }
     
     func goBack() {
