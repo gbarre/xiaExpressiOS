@@ -59,6 +59,8 @@ class PlayXia: UIViewController {
         let scaleX: CGFloat = screenWidth / img!.size.width
         let scaleY: CGFloat = screenHeight / img!.size.height
         scale = min(scaleX, scaleY)
+        let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
+        let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
         let xmlPath = "\(documentsDirectory)/\(self.fileName).xml"
         let data = NSData(contentsOfFile: xmlPath)
@@ -83,8 +85,8 @@ class PlayXia: UIViewController {
                     for var point in pointsArray {
                         point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale + xSpace // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale + ySpace // convert String to CGFloat
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
@@ -175,7 +177,7 @@ class PlayXia: UIViewController {
         }
         // Add new background image
         let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFill
+        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFit
         blurredBackground.image = bkgdImage.image
         blurredBackground.tag = 666
         self.view.addSubview(blurredBackground)
@@ -190,7 +192,7 @@ class PlayXia: UIViewController {
         
         // Cropping image
         let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        cropDetail.contentMode = UIViewContentMode.ScaleAspectFill
+        cropDetail.contentMode = UIViewContentMode.ScaleAspectFit
         cropDetail.image = bkgdImage.image
         let myMask = CAShapeLayer()
         myMask.path = paths[tag]!.CGPath

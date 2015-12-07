@@ -114,11 +114,11 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
             let filePathJPG = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
             if let fileData = NSData(contentsOfFile: filePathJPG) {
-                mailComposer.addAttachmentData(fileData, mimeType: "image/jpeg", fileName: "\(documentsDirectory)\(arrayNames[self.index])")
+                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(arrayNames[self.index])")
             }
             let filePathXML = "\(documentsDirectory)\(arrayNames[self.index]).xml"
             if let fileData = NSData(contentsOfFile: filePathXML) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(documentsDirectory)\(arrayNames[self.index])")
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(arrayNames[self.index])")
             }
             self.presentViewController(mailComposer, animated: true, completion: nil)
         }
