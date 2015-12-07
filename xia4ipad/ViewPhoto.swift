@@ -15,7 +15,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
-    
+    var fileName: String = ""
+    var filePath: String = ""
+
     var location = CGPoint(x: 0, y: 0)
     var moving = false
     var movingPoint = -1 // Id of point
@@ -112,13 +114,13 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             mailComposer.setMessageBody("My bug : ", isHTML: false)
             
             //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
-            let filePathJPG = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+            let filePathJPG = "\(filePath).jpg"
             if let fileData = NSData(contentsOfFile: filePathJPG) {
-                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(arrayNames[self.index])")
+                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(fileName)")
             }
-            let filePathXML = "\(documentsDirectory)\(arrayNames[self.index]).xml"
+            let filePathXML = "\(filePath).xml"
             if let fileData = NSData(contentsOfFile: filePathXML) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(arrayNames[self.index])")
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(fileName)")
             }
             self.presentViewController(mailComposer, animated: true, completion: nil)
         }
@@ -136,7 +138,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         myToolbar.layer.zPosition = 999
         
         // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+        let filePath = "\(self.filePath).jpg"
         img = UIImage(contentsOfFile: filePath)!
         
         var value: Int
@@ -446,7 +448,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+                try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
                 dbg.pt("\(error)")
@@ -507,7 +509,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                controller.fileName = arrayNames[self.index]
+                controller.fileName = fileName
+                controller.filePath = filePath
             }
         }
     }
@@ -707,7 +710,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             
             // write xml
             do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+                try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
             }
             catch {
                 dbg.pt("\(error)")

@@ -14,6 +14,7 @@ class PlayXia: UIViewController {
     
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
+    var filePath: String = ""
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
@@ -48,7 +49,7 @@ class PlayXia: UIViewController {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let filePath = "\(documentsDirectory)\(self.fileName).jpg"
+        let filePath = "\(self.filePath).jpg"
         let img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
         
@@ -62,7 +63,7 @@ class PlayXia: UIViewController {
         let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
         let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
-        let xmlPath = "\(documentsDirectory)/\(self.fileName).xml"
+        let xmlPath = "\(self.filePath).xml"
         let data = NSData(contentsOfFile: xmlPath)
         do {
             try xml = AEXMLDocument(xmlData: data!)

@@ -8,23 +8,20 @@
 
 import UIKit
 
-let home = NSHomeDirectory()
-let documentsDirectory = home + "/Documents/"
-
-var arrayNames = [String]()
-var nbThumb:Int = 0
-var index:Int = 0
-
-let reuseIdentifier = "PhotoCell"
-
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate {
     
     var dbg = debug(enable: true)
     
+    let documentsDirectory = NSHomeDirectory() + "/Documents/"
+    var nbThumb:Int = 0
+    var arrayNames = [String]()
+
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
     var passName:Bool=false
+    let reuseIdentifier = "PhotoCell"
+
     
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
@@ -135,7 +132,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
         
-        index = 0
+        //index = 0
         
         self.CollectionView.reloadData()
     }
@@ -158,6 +155,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 if let cell = sender as? UICollectionViewCell {
                     if let indexPath: NSIndexPath = self.CollectionView.indexPathForCell(cell) {
                         controller.index = indexPath.item
+                        controller.fileName = "\(arrayNames[indexPath.item])"
+                        controller.filePath = "\(documentsDirectory)/\(arrayNames[indexPath.item])"
                         
                         let xmlPath = "\(documentsDirectory)/\(arrayNames[indexPath.item]).xml"
                         let data = NSData(contentsOfFile: xmlPath)
@@ -180,16 +179,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
-        // Resize size of collection view items in grid so that we achieve 3 boxes across
-        let cellWidth = ((UIScreen.mainScreen().bounds.width) - 32 - 30 ) / 3
-        let cellLayout = CollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        cellLayout.itemSize = CGSize(width: cellWidth, height: cellWidth)
-        
+        let index = indexPath.item
         // Load image
         let filePath = "\(documentsDirectory)\(arrayNames[index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
         cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
-        index++
         
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
@@ -243,9 +237,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     // Delete the file
                     let fileManager = NSFileManager()
                     do {
-                        var filePath = "\(documentsDirectory)/\(fileName).jpg"
+                        var filePath = "\(self.documentsDirectory)/\(fileName).jpg"
                         try fileManager.removeItemAtPath(filePath)
-                        filePath = "\(documentsDirectory)/\(fileName).xml"
+                        filePath = "\(self.documentsDirectory)/\(fileName).xml"
                         try fileManager.removeItemAtPath(filePath)
                     }
                     catch let error as NSError {
@@ -253,10 +247,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     }
                     
                     // Update arrays
-                    arrayNames.removeAtIndex(deleteIndex)
+                    self.arrayNames.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
-                    nbThumb--
+                    self.nbThumb--
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information

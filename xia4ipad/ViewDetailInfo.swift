@@ -16,6 +16,8 @@ class ViewDetailInfo: UIViewController {
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
+    var fileName: String = ""
+    var filePath: String = ""
 
     @IBOutlet weak var navbar: UINavigationItem!
     @IBOutlet weak var btnZoom: UISwitch!
@@ -36,7 +38,7 @@ class ViewDetailInfo: UIViewController {
             }
         }
         do {
-            try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
+            try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
         }
         catch {
             print("\(error)")
