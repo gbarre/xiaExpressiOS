@@ -16,6 +16,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var nbThumb:Int = 0
     var arrayNames = [String]()
     let cache = NSCache()
+    var segueIndex: Int = -1
+    var editingMode: Bool = false
 
     var b64IMG:String = ""
     var currentElement:String = ""
@@ -71,8 +73,20 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         presentViewController(menu, animated: true, completion: nil)
     }
     
+    @IBOutlet weak var editMode: UIBarButtonItem!
     @IBAction func btnEdit(sender: AnyObject) {
-        
+        dbg.pt(self.editMode.title!)
+        dbg.pt(editingMode)
+        if editingMode {
+            dbg.pt("change title to Edit and make cell moving...")
+            editingMode = false
+            self.editMode.title = "Edit"
+        }
+        else {
+            dbg.pt("change title to Done and stop cell moving...")
+            editingMode = true
+            self.editMode.title = "Done"
+        }
     }
     
     @IBOutlet weak var CollectionView: UICollectionView!
@@ -126,6 +140,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
         
+        editingMode = false
+        
         self.CollectionView.reloadData()
     }
     
@@ -135,31 +151,42 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
         
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "viewLargePhoto") {
             if let controller:ViewPhoto = segue.destinationViewController as? ViewPhoto {
-                if let cell = sender as? UICollectionViewCell {
-                    if let indexPath: NSIndexPath = self.CollectionView.indexPathForCell(cell) {
-                        controller.index = indexPath.item
-                        controller.fileName = "\(arrayNames[indexPath.item])"
-                        controller.filePath = "\(documentsDirectory)/\(arrayNames[indexPath.item])"
-                        
-                        let xmlPath = "\(documentsDirectory)/\(arrayNames[indexPath.item]).xml"
-                        let data = NSData(contentsOfFile: xmlPath)
-                        do {
-                            try controller.xml = AEXMLDocument(xmlData: data!)
-                        }
-                        catch {
-                            dbg.pt("\(error)")
-                        }
-                    }
+                controller.fileName = "\(arrayNames[segueIndex])"
+                controller.filePath = "\(documentsDirectory)/\(arrayNames[segueIndex])"
+                
+                let xmlPath = "\(documentsDirectory)/\(arrayNames[segueIndex]).xml"
+                let data = NSData(contentsOfFile: xmlPath)
+                do {
+                    try controller.xml = AEXMLDocument(xmlData: data!)
                 }
+                catch {
+                    dbg.pt("\(error)")
+                }
+            }
+        }
+        if (segue.identifier == "ViewImageInfos") {
+            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
+                let xmlPath = "\(documentsDirectory)/\(arrayNames[segueIndex]).xml"
+                let data = NSData(contentsOfFile: xmlPath)
+                var xml: AEXMLDocument!
+                do {
+                    try xml = AEXMLDocument(xmlData: data!)
+                }
+                catch {
+                    dbg.pt("\(error)")
+                }
+                
+                controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
+                controller.imageAuthor = (xml["xia"]["author"].value == nil) ? "" : xml["xia"]["author"].value!
+                controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
+                controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
+                controller.filePath = "\(documentsDirectory)/\(arrayNames[segueIndex])"
+                controller.fileName = "\(arrayNames[segueIndex])"
+                controller.xml = xml
             }
         }
     }
@@ -194,6 +221,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         cell.addGestureRecognizer(leftSwipe)
         
+        let tap = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        tap.delegate = self
+        cell.addGestureRecognizer(tap)
+        
         return cell
     }
     
@@ -219,7 +250,26 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         nbThumb = arrayNames.count
     }
     
-    func deleteFiles(gestureReconizer: UILongPressGestureRecognizer) {
+    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
+        }
+        
+        let p = gestureReconizer.locationInView(CollectionView)
+        let indexPath = CollectionView.indexPathForItemAtPoint(p)
+        
+        if let path = indexPath {
+            segueIndex = path.row
+            if editingMode {
+                performSegueWithIdentifier("ViewImageInfos", sender: self)
+            }
+            else {
+                performSegueWithIdentifier("viewLargePhoto", sender: self)
+            }
+        }
+    }
+    
+    func deleteFiles(gestureReconizer: UISwipeGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
         }

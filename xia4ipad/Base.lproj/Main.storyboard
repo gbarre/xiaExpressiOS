@@ -36,7 +36,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fzZ-2G-Vla"/>
                                     <barButtonItem enabled="NO" image="help" id="fRb-WL-06e"/>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="eCj-kf-a9B"/>
-                                    <barButtonItem enabled="NO" title="Edit" id="LFL-AM-sdI">
+                                    <barButtonItem title="Edit" id="LFL-AM-sdI">
                                         <connections>
                                             <action selector="btnEdit:" destination="BYZ-38-t0r" id="QYS-7U-kk0"/>
                                         </connections>
@@ -92,7 +92,6 @@
                                         <connections>
                                             <outlet property="imgLabel" destination="qNg-bF-MbM" id="Lj4-s2-gak"/>
                                             <outlet property="imgView" destination="ZgJ-fg-FiW" id="D17-2x-rAJ"/>
-                                            <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="lUz-hm-A8d"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -118,19 +117,13 @@
                     <navigationItem key="navigationItem" title="Photo Album" id="TDA-2G-8Io"/>
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
+                        <outlet property="editMode" destination="LFL-AM-sdI" id="1LR-77-L7M"/>
                         <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
-                        <outlet property="searchDisplayController" destination="vHR-mF-94H" id="ga0-ha-7cp"/>
+                        <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
+                        <segue destination="Vet-iN-BdV" kind="presentation" identifier="ViewImageInfos" modalPresentationStyle="formSheet" id="uKj-nk-TQb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="vHR-mF-94H">
-                    <connections>
-                        <outlet property="delegate" destination="BYZ-38-t0r" id="See-JC-24J"/>
-                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="Mzr-4F-CPE"/>
-                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="DeJ-7D-9Wj"/>
-                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="Ppg-UI-baf"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1152" y="429"/>
         </scene>
@@ -224,7 +217,7 @@
         <!--Detail Info-->
         <scene sceneID="Ulb-4K-ajy">
             <objects>
-                <viewController title="Detail Info" modalPresentationStyle="formSheet" id="cwz-uV-RB1" customClass="ViewDetailInfo" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Detail Info" modalPresentationStyle="formSheet" id="cwz-uV-RB1" customClass="ViewDetailInfos" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="q4g-8a-b4I"/>
                         <viewControllerLayoutGuide type="bottom" id="TuQ-Xo-tq5"/>
@@ -397,6 +390,106 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85K-7O-qWd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="492" y="429"/>
+        </scene>
+        <!--Image Info-->
+        <scene sceneID="aWw-A3-wyk">
+            <objects>
+                <viewController title="Image Info" modalPresentationStyle="formSheet" id="Vet-iN-BdV" customClass="ViewImageInfos" customModule="xia4ipad" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="njH-BP-HXc"/>
+                        <viewControllerLayoutGuide type="bottom" id="vNg-uH-NIt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0f8-i3-ulY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oYD-hI-QQn">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <navigationItem title="Title" id="lEm-X9-cR3">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="cuA-CH-12m">
+                                            <connections>
+                                                <action selector="btnCancel:" destination="Vet-iN-BdV" id="eKB-yr-tnh"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="DC7-Iu-LuC">
+                                            <connections>
+                                                <action selector="btnDone:" destination="Vet-iN-BdV" id="qtV-dT-7Rq"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Image title..." textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="pHe-t8-WHL">
+                                <rect key="frame" x="20" y="44" width="560" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Author..." textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="iIn-Tq-Ao5">
+                                <rect key="frame" x="20" y="82" width="560" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Rights..." textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="L0M-Wi-eID">
+                                <rect key="frame" x="20" y="120" width="560" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" text="Image description..." translatesAutoresizingMaskIntoConstraints="NO" id="tBe-e1-TLy">
+                                <rect key="frame" x="20" y="164" width="560" height="271"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="271" id="Wc2-Fr-NTY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" secureTextEntry="YES"/>
+                            </textView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="L0M-Wi-eID" secondAttribute="trailing" id="3ka-MH-5yk"/>
+                            <constraint firstItem="L0M-Wi-eID" firstAttribute="top" secondItem="njH-BP-HXc" secondAttribute="bottom" constant="120" id="78Y-lM-yhT"/>
+                            <constraint firstItem="oYD-hI-QQn" firstAttribute="leading" secondItem="0f8-i3-ulY" secondAttribute="leadingMargin" constant="-20" id="7qO-Qd-RSV"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="iIn-Tq-Ao5" secondAttribute="leading" id="Ew4-3w-noj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="pHe-t8-WHL" secondAttribute="trailing" id="Fxf-rT-Flh"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="L0M-Wi-eID" secondAttribute="leading" id="HGR-04-qXr"/>
+                            <constraint firstItem="vNg-uH-NIt" firstAttribute="top" secondItem="tBe-e1-TLy" secondAttribute="bottom" constant="165" id="N8H-vb-FzV"/>
+                            <constraint firstItem="oYD-hI-QQn" firstAttribute="centerX" secondItem="0f8-i3-ulY" secondAttribute="centerX" id="SjX-VM-m6p"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="iIn-Tq-Ao5" secondAttribute="trailing" id="ZY4-90-gwQ"/>
+                            <constraint firstItem="oYD-hI-QQn" firstAttribute="top" secondItem="njH-BP-HXc" secondAttribute="bottom" id="c4h-xL-8l6"/>
+                            <constraint firstItem="tBe-e1-TLy" firstAttribute="top" secondItem="pHe-t8-WHL" secondAttribute="bottom" constant="90" id="gcP-Lh-Nl5"/>
+                            <constraint firstItem="L0M-Wi-eID" firstAttribute="top" secondItem="iIn-Tq-Ao5" secondAttribute="bottom" constant="8" id="ho5-MN-LPO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="tBe-e1-TLy" secondAttribute="trailing" id="mqi-1x-NQg"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="pHe-t8-WHL" secondAttribute="leading" id="nHL-8Q-dJE"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="tBe-e1-TLy" secondAttribute="leading" id="nHy-aU-AOn"/>
+                            <constraint firstItem="iIn-Tq-Ao5" firstAttribute="top" secondItem="pHe-t8-WHL" secondAttribute="bottom" constant="8" id="y9v-Ry-B8M"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="800" height="600"/>
+                    <connections>
+                        <outlet property="navbar" destination="lEm-X9-cR3" id="wfa-8k-mee"/>
+                        <outlet property="txtAuthor" destination="iIn-Tq-Ao5" id="c6k-WT-bCz"/>
+                        <outlet property="txtDesc" destination="tBe-e1-TLy" id="Okl-0q-hhs"/>
+                        <outlet property="txtRights" destination="L0M-Wi-eID" id="4ZQ-CU-SJc"/>
+                        <outlet property="txtTitle" destination="pHe-t8-WHL" id="e5h-hx-76N"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F5d-D1-XcH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1152" y="-336"/>
         </scene>
     </scenes>
     <resources>

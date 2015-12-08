@@ -493,13 +493,13 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "viewDetailInfos") {
-            if let controller:ViewDetailInfo = segue.destinationViewController as? ViewDetailInfo {
+            if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
                     for d in detail {
                         let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
                         controller.zoom = zoomStatus
-                        controller.detailTitle = d.attributes["title"]!
-                        controller.detailDescription = d.value!
+                        controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
+                        controller.detailDescription = (d.value == nil) ? "" : d.value!
                         controller.tag = self.currentDetailTag
                         controller.xml = self.xml
                         controller.index = self.index

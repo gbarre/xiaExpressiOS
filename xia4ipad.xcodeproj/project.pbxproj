@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
+		F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */; };
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
-		F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */; };
+		F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
 		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
@@ -45,9 +46,10 @@
 
 /* Begin PBXFileReference section */
 		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
+		F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewImageInfos.swift; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
-		F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfo.swift; sourceTree = "<group>"; };
+		F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfos.swift; sourceTree = "<group>"; };
 		F08B2BB01C15C662009EDB13 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
@@ -134,7 +136,8 @@
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
 				F08B2BB01C15C662009EDB13 /* Util.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */,
-				F084335D1BFCB48000D4FF5B /* ViewDetailInfo.swift */,
+				F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */,
+				F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
@@ -296,12 +299,13 @@
 			files = (
 				F08B2BB11C15C662009EDB13 /* Util.swift in Sources */,
 				F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */,
-				F084335E1BFCB48000D4FF5B /* ViewDetailInfo.swift in Sources */,
+				F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */,
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
 				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
 				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
+				F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
 				F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */,
 				F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */,
