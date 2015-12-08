@@ -19,7 +19,6 @@ class PhotoThumbnail: UICollectionViewCell {
     
     func setThumbnailImage(thumbnailImage: UIImage, thumbnailLabel: String) {
         
-        //let thumb = drawBorder(thumbnailImage, color: blueColor)
         let thumb = cropToBounds(thumbnailImage, width: 200, height: 200)
         let borderTumb = drawBorder(thumb, color: blueColor, border: 2)
         

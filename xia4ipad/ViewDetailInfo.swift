@@ -10,6 +10,8 @@ import UIKit
 
 class ViewDetailInfo: UIViewController {
     
+    var dbg = debug(enable: true)
+    
     var tag: Int = 0
     var zoom: Bool = false
     var detailTitle: String = ""
@@ -37,11 +39,12 @@ class ViewDetailInfo: UIViewController {
                 d.value = txtDesc.text
             }
         }
+        dbg.pt(filePath)
         do {
             try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
         }
         catch {
-            print("\(error)")
+            dbg.pt("\(error)")
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -59,7 +62,6 @@ class ViewDetailInfo: UIViewController {
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
         navbar.title = txtTitle.text
-        
     }
     
 }

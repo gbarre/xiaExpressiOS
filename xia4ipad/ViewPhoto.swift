@@ -503,6 +503,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.tag = self.currentDetailTag
                         controller.xml = self.xml
                         controller.index = self.index
+                        controller.filePath = filePath
                     }
                 }
             }

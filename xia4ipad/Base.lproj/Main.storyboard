@@ -45,18 +45,8 @@
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="w0V-h1-JOa">
-                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
-                                <scopeButtonTitles>
-                                    <string>Title</string>
-                                    <string>Title</string>
-                                </scopeButtonTitles>
-                            </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8S7-Cb-jYU">
-                                <rect key="frame" x="0.0" y="108" width="600" height="492"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mtL-KF-J4F">
@@ -115,14 +105,11 @@
                         <animations/>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="6Cm-XX-eoM"/>
                             <constraint firstAttribute="leadingMargin" secondItem="kO4-Gr-RCm" secondAttribute="leading" constant="20" id="LjB-1I-tmf"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="MIz-A4-9QF"/>
-                            <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="w0V-h1-JOa" secondAttribute="bottom" id="MNM-g5-oaQ"/>
-                            <constraint firstItem="w0V-h1-JOa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="ZNW-aN-bki"/>
-                            <constraint firstItem="w0V-h1-JOa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Ze5-K9-5RJ"/>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="d5a-Em-0Jg"/>
                             <constraint firstItem="kO4-Gr-RCm" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="fh2-8g-yRY"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="w0V-h1-JOa" secondAttribute="trailing" constant="-20" id="ifk-Gf-G4b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kO4-Gr-RCm" secondAttribute="trailing" constant="-20" id="lhL-V8-GhO"/>
                             <constraint firstAttribute="trailingMargin" secondItem="8S7-Cb-jYU" secondAttribute="trailing" constant="-20" id="yym-DZ-8Sr"/>
                         </constraints>
@@ -132,10 +119,18 @@
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
                         <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
-                        <outlet property="searchBar" destination="w0V-h1-JOa" id="swd-LM-oY6"/>
+                        <outlet property="searchDisplayController" destination="vHR-mF-94H" id="ga0-ha-7cp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="vHR-mF-94H">
+                    <connections>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="See-JC-24J"/>
+                        <outlet property="searchContentsController" destination="BYZ-38-t0r" id="Mzr-4F-CPE"/>
+                        <outlet property="searchResultsDataSource" destination="BYZ-38-t0r" id="DeJ-7D-9Wj"/>
+                        <outlet property="searchResultsDelegate" destination="BYZ-38-t0r" id="Ppg-UI-baf"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1152" y="429"/>
         </scene>
@@ -215,6 +210,8 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Full-Size Image" id="tex-5h-mAS"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
@@ -286,7 +283,7 @@
                                 <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" text="Detail description..." translatesAutoresizingMaskIntoConstraints="NO" id="pK2-BQ-1RC">
                                 <rect key="frame" x="20" y="132" width="560" height="385"/>
@@ -296,7 +293,7 @@
                                     <constraint firstAttribute="height" constant="385" id="Ohk-CR-uH3"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" secureTextEntry="YES"/>
                             </textView>
                         </subviews>
                         <animations/>

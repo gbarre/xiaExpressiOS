@@ -8,11 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
-    let documentsDirectory = NSHomeDirectory() + "/Documents/"
+    let documentsDirectory = NSHomeDirectory() + "/Documents"
     var nbThumb:Int = 0
     var arrayNames = [String]()
 
@@ -73,8 +73,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBAction func btnEdit(sender: AnyObject) {
         
     }
-
-    @IBOutlet weak var searchBar: UISearchBar!
     
     @IBOutlet weak var CollectionView: UICollectionView!
     
@@ -84,9 +82,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         super.viewDidLoad()
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
-        
-        // Wire up search bar delegate so that we can react to button selections
-        searchBar.delegate = self
         
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
@@ -105,13 +100,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
             let img = UIImage(contentsOfFile: filePath!)
             let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
+            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
             
             // Create associated xml
             let xml = AEXMLDocument()
             let xmlString = xml.createXML("\(now)")
             do {
-                try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
             }
             catch {
                 dbg.pt("\(error)")
@@ -179,7 +174,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let index = indexPath.item
         // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[index]).jpg"
+        let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
         let img = UIImage(contentsOfFile: filePath)
         cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
         
@@ -198,13 +193,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Let's store the image
         let now:Int = Int(NSDate().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
+        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
         
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
             dbg.pt("\(error)")
