@@ -85,8 +85,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        
-        
         // Wire up search bar delegate so that we can react to button selections
         searchBar.delegate = self
         
@@ -96,8 +94,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
             let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
-            if (ext == "jpg") {
-                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
+            if (ext != "xml") {
+                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
                 arrayNames.append(file)
             }
         }

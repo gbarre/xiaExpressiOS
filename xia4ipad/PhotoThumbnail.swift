@@ -19,27 +19,27 @@ class PhotoThumbnail: UICollectionViewCell {
     
     func setThumbnailImage(thumbnailImage: UIImage, thumbnailLabel: String) {
         
-        let thumb = drawOutlie(thumbnailImage, color: blueColor)
+        //let thumb = drawBorder(thumbnailImage, color: blueColor)
+        let thumb = cropToBounds(thumbnailImage, width: 200, height: 200)
+        let borderTumb = drawBorder(thumb, color: blueColor, border: 2)
         
-        self.imgView.image = thumb
+        self.imgView.image = borderTumb
         self.imgLabel.text = thumbnailLabel
     }
     
-    func drawOutlie(image :UIImage, color:UIColor) -> UIImage
-    {
-        let border:CGFloat = 16
+    func drawBorder(image: UIImage, color: UIColor, border: CGFloat) -> UIImage {
+        let outlineX: CGFloat = imgView.bounds.width
+        let outlineY: CGFloat = imgView.bounds.width
+        let outlinedImageRect = CGRect(x: 0.0, y: 0.0, width: outlineX, height: outlineY)
+        let scaleX = outlineX / image.size.width
+        let scaleY = outlineY / image.size.height
+        let scale = max(scaleX, scaleY)
+        let imageRect = CGRect(x: border, y: border, width: (image.size.width) * scale - 2 * border, height: (image.size.height) * scale - 2 * border)
         
-        let outlinedImageRect = CGRect(x: 0.0, y: 0.0, width: image.size.width + 2 * border, height: image.size.height + 2 * border)
-        
-        let imageRect = CGRect(x: border, y: border, width: image.size.width, height: image.size.height)
-        
-        UIGraphicsBeginImageContextWithOptions(outlinedImageRect.size, false, 1)
-        
+        UIGraphicsBeginImageContextWithOptions(outlinedImageRect.size, false, 0)
         image.drawInRect(outlinedImageRect)
         
         let context = UIGraphicsGetCurrentContext()
-        //CGContextSetBlendMode(context, kCGBlendModeSourceIn)
-        
         CGContextSetFillColorWithColor(context, color.CGColor)
         CGContextFillRect(context, outlinedImageRect)
         image.drawInRect(imageRect)
@@ -48,7 +48,40 @@ class PhotoThumbnail: UICollectionViewCell {
         UIGraphicsEndImageContext()
         
         return newImage
-        
     }
     
+    func cropToBounds(image: UIImage, width: Double, height: Double) -> UIImage {
+        
+        let contextImage: UIImage = UIImage(CGImage: image.CGImage!)
+        
+        let contextSize: CGSize = contextImage.size
+        
+        var posX: CGFloat = 0.0
+        var posY: CGFloat = 0.0
+        var cgwidth: CGFloat = CGFloat(width)
+        var cgheight: CGFloat = CGFloat(height)
+        
+        // See what size is longer and create the center off of that
+        if contextSize.width > contextSize.height {
+            posX = ((contextSize.width - contextSize.height) / 2)
+            posY = 0
+            cgwidth = contextSize.height
+            cgheight = contextSize.height
+        } else {
+            posX = 0
+            posY = ((contextSize.height - contextSize.width) / 2)
+            cgwidth = contextSize.width
+            cgheight = contextSize.width
+        }
+        
+        let rect: CGRect = CGRectMake(posX, posY, cgwidth, cgheight)
+        
+        // Create bitmap image from context using the rect
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)!
+        
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        let image: UIImage = UIImage(CGImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
+        
+        return image
+    }
 }
