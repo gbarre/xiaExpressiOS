@@ -17,13 +17,22 @@ class PhotoThumbnail: UICollectionViewCell {
     
     @IBOutlet weak var imgLabel: UILabel!
     
-    func setThumbnailImage(thumbnailImage: UIImage, thumbnailLabel: String) {
+    func setLabel(text: String) {
+        self.imgLabel.text = text
+    }
+    
+    func setCachedThumbnailImage(thumbnailImage: UIImage) {
+        
+        self.imgView.image = thumbnailImage
+    }
+    
+    func setThumbnailImage(thumbnailImage: UIImage) -> UIImage {
         
         let thumb = cropToBounds(thumbnailImage, width: 200, height: 200)
-        let borderTumb = drawBorder(thumb, color: blueColor, border: 2)
+        let borderedThumb = drawBorder(thumb, color: blueColor, border: 2)
         
-        self.imgView.image = borderTumb
-        self.imgLabel.text = thumbnailLabel
+        self.imgView.image = borderedThumb
+        return borderedThumb
     }
     
     func drawBorder(image: UIImage, color: UIColor, border: CGFloat) -> UIImage {

@@ -15,6 +15,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let documentsDirectory = NSHomeDirectory() + "/Documents"
     var nbThumb:Int = 0
     var arrayNames = [String]()
+    let cache = NSCache()
 
     var b64IMG:String = ""
     var currentElement:String = ""
@@ -125,8 +126,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
         
-        //index = 0
-        
         self.CollectionView.reloadData()
     }
     
@@ -173,10 +172,22 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
         let index = indexPath.item
+      
         // Load image
-        let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
-        let img = UIImage(contentsOfFile: filePath)
-        cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
+        if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
+            // Use cached version
+            cell.setCachedThumbnailImage(cachedImage)
+        }
+        else {
+            // Create image from scratch then store in the cache
+            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+            let img = UIImage(contentsOfFile: filePath)
+            let cachedImage = cell.setThumbnailImage(img!)
+            cache.setObject(cachedImage, forKey: arrayNames[index])
+        }
+        
+        // Load label
+        cell.setLabel(arrayNames[index])
         
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
