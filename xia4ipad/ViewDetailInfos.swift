@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ViewDetailInfo: UIViewController {
+class ViewDetailInfos: UIViewController {
+    
+    var dbg = debug(enable: true)
     
     var tag: Int = 0
     var zoom: Bool = false
@@ -16,6 +18,8 @@ class ViewDetailInfo: UIViewController {
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
+    var fileName: String = ""
+    var filePath: String = ""
 
     @IBOutlet weak var navbar: UINavigationItem!
     @IBOutlet weak var btnZoom: UISwitch!
@@ -35,12 +39,7 @@ class ViewDetailInfo: UIViewController {
                 d.value = txtDesc.text
             }
         }
-        do {
-            try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            print("\(error)")
-        }
+        let _ = writeXML(xml, path: "\(filePath).xml")
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -57,7 +56,6 @@ class ViewDetailInfo: UIViewController {
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
         navbar.title = txtTitle.text
-        
     }
     
 }

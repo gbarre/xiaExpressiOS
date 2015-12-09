@@ -7,13 +7,16 @@
 //
 
 import UIKit
+import MessageUI
 
-class ViewPhoto: UIViewController {
+class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     var dbg = debug(enable: true)
     
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
+    var fileName: String = ""
+    var filePath: String = ""
     
     var location = CGPoint(x: 0, y: 0)
     var moving = false
@@ -43,32 +46,100 @@ class ViewPhoto: UIViewController {
     }
     
     @IBAction func btnAddDetail(sender: UIBarButtonItem) {
+        // Prepare new detail
+        let lastDetailTag = self.xml["xia"]["details"]["detail"].last
+        if lastDetailTag != nil {
+            self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
+        }
+        else {
+            self.currentDetailTag = 100
+        }
+        let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
+        let attributes = ["tag" : "\(self.currentDetailTag)",
+            "zoom" : "false",
+            "title" : "detail \(self.currentDetailTag)",
+            "path" : "0;0"]
+        
+        // Build menu
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let rectangleAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
-            self.dbg.pt("Rectangle tool (ToDo)")
-        })
-        let ellipseAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
-            self.dbg.pt("Ellipse tool (ToDo)")
-        })
-        let polygonAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
-            // Create new detail object
-            let lastDetailTag = self.xml["xia"]["details"]["detail"].last
-            if lastDetailTag != nil {
-                self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
-            }
-            else {
-                self.currentDetailTag = 100
-            }
-            let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
+        let rectangleAction = UIAlertAction(title: "Rectangle", style: .Default, handler: { action in
+            // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
-            let attributes = ["tag" : "\(self.currentDetailTag)",
-                "zoom" : "false",
-                "title" : "detail \(self.currentDetailTag)",
-                "path" : "0;0"]
+            
+            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            
+            // Now build the rectangle
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
+            newPoint1?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint1!)
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
+            newPoint2?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint2!)
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
+            newPoint3?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint3!)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView)
+            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
+            
+            self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+        })
+        let ellipseAction = UIAlertAction(title: "Ellipse", style: .Default, handler: { action in
+            // Create new detail
+            self.details["\(self.currentDetailTag)"] = newDetail
+            
+            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            
+            // Now build the rectangle
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner")
+            newPoint1?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint1!)
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner")
+            newPoint2?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint2!)
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
+            newPoint3?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint3!)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true)
+            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
+            
+            self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+        })
+        let polygonAction = UIAlertAction(title: "Polygon", style: .Default, handler: { action in
+            // Create new detail object
+            self.details["\(self.currentDetailTag)"] = newDetail
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.setBtnPlayIcon()
             self.changeDetailColor(self.currentDetailTag, color: "edit")
+            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
         })
         let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
@@ -101,8 +172,36 @@ class ViewPhoto: UIViewController {
         }
     }
     
-    @IBAction func btnExport(sender: AnyObject) {
+    @IBAction func debugXML(sender: AnyObject) {
         dbg.pt(xml.xmlString)
+        for detail in details {
+            dbg.pt("\(detail.0) : \(detail.1.constraint)")
+        }
+    }
+    
+    @IBAction func btnExport(sender: AnyObject) {
+        let mailComposer = MFMailComposeViewController()
+        mailComposer.mailComposeDelegate = self
+        //Check to see the device can send email.
+        if( MFMailComposeViewController.canSendMail() ) {
+            //Set the subject and message of the email
+            mailComposer.setSubject("[xia iPad] debug sources")
+            mailComposer.setMessageBody("My bug : ", isHTML: false)
+            
+            //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
+            let filePathJPG = "\(filePath).jpg"
+            if let fileData = NSData(contentsOfFile: filePathJPG) {
+                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(fileName)")
+            }
+            let filePathXML = "\(filePath).xml"
+            if let fileData = NSData(contentsOfFile: filePathXML) {
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(fileName)")
+            }
+            self.presentViewController(mailComposer, animated: true, completion: nil)
+        }
+        else {
+            dbg.pt("Device cannot send mail")
+        }
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
@@ -114,7 +213,7 @@ class ViewPhoto: UIViewController {
         myToolbar.layer.zPosition = 999
         
         // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[self.index]).jpg"
+        let filePath = "\(self.filePath).jpg"
         img = UIImage(contentsOfFile: filePath)!
         
         var value: Int
@@ -205,32 +304,19 @@ class ViewPhoto: UIViewController {
                             newPoint?.layer.zPosition = 1
                             imgView.addSubview(newPoint!)
                         }
-                        
-                        self.buildShape(true, color: noEditColor, tag: detailTag)
+                        if let constraint = detail.attributes["constraint"] {
+                            details["\(detailTag)"]?.constraint = constraint
+                        }
+                        else {
+                            details["\(detailTag)"]?.constraint = "polygon"
+                        }
+                        let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                     }
                 }
             }
         }
         cleaningDetails()
-    }
-    
-    func rotated()
-    {
-        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
-        {
-            if ( !landscape ) {
-                let value = UIInterfaceOrientation.Portrait.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
-            }
-        }
-        
-        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
-        {
-            if ( landscape ) {
-                let value = UIInterfaceOrientation.LandscapeRight.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
-            }
-        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -290,7 +376,7 @@ class ViewPhoto: UIViewController {
                         subview.removeFromSuperview()
                     }
                 }
-                self.buildShape(true, color: editColor, tag: detailTag)
+                buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView)
             }
             
         default:
@@ -306,7 +392,6 @@ class ViewPhoto: UIViewController {
                     movingCoords = location
                     moveDetail = true
                     changeDetailColor(editDetail, color: "edit")
-                    //cleanOldViews()
                     break
                 }
             }
@@ -324,7 +409,14 @@ class ViewPhoto: UIViewController {
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
-                        toMove.center = location
+                        switch details["\(currentDetailTag)"]!.constraint {
+                        case "ellipse":
+                            toMove.center = ploc!
+                            break
+                        default:
+                            toMove.center = location
+                            break
+                        }
                         details["\(currentDetailTag)"]?.points[i] = toMove
                         movingPoint = i
                         moveDetail = false
@@ -361,8 +453,47 @@ class ViewPhoto: UIViewController {
             
             if ( distance < 20 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
-                toMove.center = location
-                details["\(detailTag)"]?.points[movingPoint] = toMove
+                let previousPoint: Int = (movingPoint + 3) % 4
+                let nextPoint: Int = (movingPoint + 1) % 4
+                let oppositePoint: Int = (movingPoint + 2) % 4
+                
+                // Are there any constraint ?
+                switch details["\(detailTag)"]!.constraint {
+                case "rectangle":
+                    //let previousPoint: Int = (movingPoint == 0) ? 3 : movingPoint - 1
+                    //let nextPoint: Int = (movingPoint == 3) ? 0 : movingPoint + 1
+                    if (movingPoint % 2 == 0) {
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint].center.y)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, location.y)
+                    }
+                    else {
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, location.y)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[nextPoint].center.y)
+                    }
+                    toMove.center = location
+                    details["\(detailTag)"]?.points[movingPoint] = toMove
+                    break
+                case "ellipse":
+                    if (movingPoint % 2 == 0) {
+                        let middleHeight = (details["\(detailTag)"]!.points[oppositePoint].center.y - location.y)/2 + location.y
+                        toMove.center = CGPointMake(ploc!.x, location.y)
+                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(ploc!.x, details["\(detailTag)"]!.points[movingPoint].center.y)
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, middleHeight)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, middleHeight)
+                    }
+                    else {
+                        let middleWidth = (details["\(detailTag)"]!.points[oppositePoint].center.x - location.x)/2 + location.x
+                        toMove.center = CGPointMake(location.x, ploc!.y)
+                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(details["\(detailTag)"]!.points[movingPoint].center.x, ploc!.y)
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[previousPoint].center.y)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[nextPoint].center.y)
+                    }
+                    break
+                default:
+                    toMove.center = location
+                    details["\(detailTag)"]?.points[movingPoint] = toMove
+                    break
+                }
             }
         }
         
@@ -415,20 +546,17 @@ class ViewPhoto: UIViewController {
                     subview.layer.zPosition = 1
                 }
             }
-            buildShape(true, color: editColor, tag: detailTag)
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
                 for d in detail {
                     d.attributes["path"] = (details["\(detailTag)"]?.createPath())!
+                    d.attributes["constraint"] = details["\(detailTag)"]?.constraint
                 }
             }
-            do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
+            let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
         switch createDetail {
@@ -469,89 +597,28 @@ class ViewPhoto: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "viewDetailInfos") {
-            if let controller:ViewDetailInfo = segue.destinationViewController as? ViewDetailInfo {
+            if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
                     for d in detail {
                         let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
                         controller.zoom = zoomStatus
-                        controller.detailTitle = d.attributes["title"]!
-                        controller.detailDescription = d.value!
+                        controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
+                        controller.detailDescription = (d.value == nil) ? "" : d.value!
                         controller.tag = self.currentDetailTag
                         controller.xml = self.xml
                         controller.index = self.index
+                        controller.filePath = filePath
                     }
                 }
             }
         }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                controller.fileName = arrayNames[self.index]
+                controller.fileName = fileName
+                controller.filePath = filePath
+                controller.xml = self.xml
             }
         }
-    }
-    
-    func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
-        // translate from C : http://alienryderflex.com/polygon/
-        let polyCorners = points.count
-        var j = polyCorners - 1
-        var oddNodes:Bool = false
-        
-        for var i=0; i<polyCorners; i++ {
-            if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
-                || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
-                && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {
-                    if ( points[i].center.x + (touchPoint.y - points[i].center.y) / (points[j].center.y - points[i].center.y) * (points[j].center.x - points[i].center.x) < touchPoint.x ) {
-                        oddNodes = !oddNodes
-                    }
-            }
-            j=i
-        }
-        
-        return oddNodes
-    }
-    
-    func buildShape(fill: Bool, color: UIColor, tag: Int) {
-        var shapeArg: Int = 0
-        let shapeTag = tag + 100
-        switch fill {
-        case true:
-            shapeArg = 1
-        default:
-            shapeArg = 0
-        }
-        var xMin: CGFloat = UIScreen.mainScreen().bounds.width
-        var xMax: CGFloat = 0
-        var yMin: CGFloat = UIScreen.mainScreen().bounds.height
-        var yMax: CGFloat = 0
-        // Get dimensions of the shape
-        for subview in imgView.subviews {
-            if subview.tag == tag {
-                let xMinSubview = subview.frame.origin.x
-                let yMinSubview = subview.frame.origin.y
-                let xMaxSubview = subview.frame.origin.x + 29
-                let yMaxSubview = subview.frame.origin.y + 29
-                if ( xMinSubview < xMin ) {
-                    xMin = xMinSubview
-                }
-                if ( yMinSubview < yMin ) {
-                    yMin = yMinSubview
-                }
-                if ( xMaxSubview > xMax ) {
-                    xMax = xMaxSubview
-                }
-                if ( yMaxSubview > yMax ) {
-                    yMax = yMaxSubview
-                }
-            }
-        }
-        let shapeWidth = xMax - xMin
-        let shapeHeight = yMax - yMin
-        
-        // Build the shape
-        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: details["\(tag)"]!.points, color: color)
-        myView.backgroundColor = UIColor(white: 0, alpha: 0)
-        myView.tag = shapeTag
-        imgView.addSubview(myView)
     }
     
     func changeDetailColor(tag: Int, color: String) {
@@ -581,18 +648,19 @@ class ViewPhoto: UIViewController {
                     details["\(thisDetailTag!)"]?.points.removeFirst()
                     subview.tag = thisDetailTag! + 200
                     subview.layer.zPosition = -1
-
+                    
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
                     imgView.addSubview(newPoint)
                 }
             }
-            if details["\(thisDetailTag!)"]?.points.count > 2 {
+            if detail.1.points.count > 2 {
+                let drawEllipse: Bool = (detail.1.constraint == "ellipse") ? true : false
                 if thisDetailTag != tag {
-                    self.buildShape(true, color: altShapeColor, tag: thisDetailTag!)
+                    buildShape(true, color: altShapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
                 else {
-                    self.buildShape(true, color: shapeColor, tag: thisDetailTag!)
+                    buildShape(true, color: shapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
             }
             else { // only 1 or 2 points, remove them
@@ -606,11 +674,72 @@ class ViewPhoto: UIViewController {
         cleanOldViews()
     }
     
+    func cleaningDetails() {
+        for detail in details {
+            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
+            if ( detailTag != 0 && detail.1.points.count < 3 ) {
+                performFullDetailRemove(detailTag)
+            }
+        }
+    }
+    
     func cleanOldViews() {
         // Remove old (hidden) subviews
         for subview in imgView.subviews {
             if subview.tag > 299 {
                 subview.removeFromSuperview()
+            }
+        }
+    }
+    
+    func goBack() {
+        navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
+    func goForward() {
+        performSegueWithIdentifier("playXia", sender: self)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func performFullDetailRemove(tag: Int, force: Bool = false) {
+        if (details["\(tag)"]?.points.count < 3 || force) {
+            // remove point & polygon
+            for subview in imgView.subviews {
+                if subview.tag == tag || subview.tag == (tag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            
+            // remove detail object
+            details["\(tag)"] = nil
+            
+            // remove detail in xml
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    d.removeFromParent()
+                }
+            }
+            let _ = writeXML(xml, path: "\(filePath).xml")
+        }
+    }
+    
+    func rotated() {
+        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
+        {
+            if ( !landscape ) {
+                let value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
+        
+        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
+        {
+            if ( landscape ) {
+                let value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
         }
     }
@@ -655,56 +784,10 @@ class ViewPhoto: UIViewController {
         
     }
     
-    func cleaningDetails() {
-        for detail in details {
-            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
-            if ( detailTag != 0 && detail.1.points.count < 3 ) {
-                performFullDetailRemove(detailTag)
-            }
-        }
-    }
-    
-    func performFullDetailRemove(tag: Int, force: Bool = false) {
-        if (details["\(tag)"]?.points.count < 3 || force) {
-            // remove point & polygon
-            for subview in imgView.subviews {
-                if subview.tag == tag || subview.tag == (tag + 100) {
-                    subview.removeFromSuperview()
-                }
-            }
-            
-            // remove detail object
-            details["\(tag)"] = nil
-            
-            // remove detail in xml
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
-                for d in detail {
-                    d.removeFromParent()
-                }
-            }
-            
-            // write xml
-            do {
-                try xml.xmlString.writeToFile(documentsDirectory + "\(arrayNames[index]).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
-        }
-    }
-    
     func stopCreation() {
         createDetail = false
         btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
         setBtnPlayIcon()
-    }
-    
-    func goBack() {
-        navigationController?.popToRootViewControllerAnimated(true)
-    }
-    
-    func goForward() {
-        performSegueWithIdentifier("playXia", sender: self)
     }
 }

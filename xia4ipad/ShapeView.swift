@@ -31,8 +31,9 @@ class ShapeView: UIView {
         switch currentShapeType {
         case 0: drawLines()
         case 1: drawPolygon()
-        case 2: drawRectangle()
-        case 3: drawCircle()
+        case 2: drawEllipse()
+        case 3: drawEllipseFilled()
+        case 4: drawCircle()
         default: print("default")
         }
     }
@@ -85,23 +86,27 @@ class ShapeView: UIView {
         CGContextFillPath(ctx)
     }
     
-    func drawRectangle() {
-        let center = CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0)
-        let rectangleWidth:CGFloat = 100.0
-        let rectangleHeight:CGFloat = 100.0
+    func drawEllipse() {
         let ctx = UIGraphicsGetCurrentContext()
         
-        //4
-        CGContextAddRect(ctx, CGRectMake(center.x - (0.5 * rectangleWidth), center.y - (0.5 * rectangleHeight), rectangleWidth, rectangleHeight))
-        CGContextSetLineWidth(ctx, 10)
-        CGContextSetStrokeColorWithColor(ctx, UIColor.grayColor().CGColor)
+        CGContextSetLineDash(ctx, 0, [5], 1)
+        let alphaColor = CGColorCreateCopyWithAlpha(color.CGColor, 0.8)
+        CGContextSetStrokeColorWithColor(ctx, alphaColor)
+        CGContextSetLineWidth(ctx, 2.5)
+        
+        let size = CGSize(width: arrayPoints[1].center.x - arrayPoints[3].center.x, height: arrayPoints[2].center.y - arrayPoints[0].center.y)
+        
+        let rectangle = CGRectMake(5, 5, abs(size.width), abs(size.height))
+        CGContextAddEllipseInRect(ctx, rectangle)
         CGContextStrokePath(ctx)
+    }
+    
+    func drawEllipseFilled() {
+        let size = CGSize(width: arrayPoints[1].center.x - arrayPoints[3].center.x, height: arrayPoints[2].center.y - arrayPoints[0].center.y)
         
-        //5
-        CGContextSetFillColorWithColor(ctx, UIColor.greenColor().CGColor)
-        CGContextAddRect(ctx, CGRectMake(center.x - (0.5 * rectangleWidth), center.y - (0.5 * rectangleHeight), rectangleWidth, rectangleHeight))
-        
-        CGContextFillPath(ctx)
+        let ovalPath = UIBezierPath(ovalInRect: CGRectMake(5, 5, abs(size.width), abs(size.height)))
+        color.colorWithAlphaComponent(0.5).setFill()
+        ovalPath.fill()
     }
     
     func drawCircle() {

@@ -8,24 +8,25 @@
 
 import UIKit
 
-let home = NSHomeDirectory()
-let documentsDirectory = home + "/Documents/"
-
-var arrayNames = [String]()
-var nbThumb:Int = 0
-var index:Int = 0
-
-let reuseIdentifier = "PhotoCell"
-
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
+    let documentsDirectory = NSHomeDirectory() + "/Documents"
+    var nbThumb:Int = 0
+    var arrayNames = [String]()
+    let cache = NSCache()
+    var segueIndex: Int = -1
+    var editingMode: Bool = false
+    var showHelp = false
+
     var b64IMG:String = ""
     var currentElement:String = ""
     var passData:Bool=false
     var passName:Bool=false
+    let reuseIdentifier = "PhotoCell"
     
+    @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
         let cameraAction = UIAlertAction(title: "Take a photo", style: .Default, handler: { action in
@@ -73,11 +74,40 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         presentViewController(menu, animated: true, completion: nil)
     }
     
-    @IBAction func btnEdit(sender: AnyObject) {
-        
+    @IBAction func btnHelp(sender: AnyObject) {
+        for subview in view.subviews {
+            if subview.tag > 49 {
+                subview.hidden = showHelp
+                subview.layer.zPosition = 1
+            }
+        }
+        showHelp = !showHelp
     }
-
-    @IBOutlet weak var searchBar: UISearchBar!
+    
+    @IBOutlet weak var imgHelp: UIImageView!
+    
+    @IBOutlet weak var editMode: UIBarButtonItem!
+    @IBAction func btnEdit(sender: AnyObject) {
+        if editingMode {
+            editingMode = false
+            self.editMode.title = "Edit"
+            for cell in CollectionView.visibleCells() {
+                let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+                customCell.wobble(false)
+            }
+            self.CollectionView.reloadData()
+            btnCreateState.enabled = true
+        }
+        else {
+            editingMode = true
+            self.editMode.title = "Done"
+            for cell in CollectionView.visibleCells() {
+                let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+                customCell.wobble(true)
+            }
+            btnCreateState.enabled = false
+        }
+    }
     
     @IBOutlet weak var CollectionView: UICollectionView!
     
@@ -88,19 +118,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        
-        
-        // Wire up search bar delegate so that we can react to button selections
-        searchBar.delegate = self
-        
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
         let files = fileManager.enumeratorAtPath(documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
             let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
-            if (ext == "jpg") {
-                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .jpg
+            if (ext != "xml") {
+                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
                 arrayNames.append(file)
             }
         }
@@ -110,16 +135,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
             let img = UIImage(contentsOfFile: filePath!)
             let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
+            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
             
             // Create associated xml
             let xml = AEXMLDocument()
             let xmlString = xml.createXML("\(now)")
             do {
-                try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
             }
             catch {
-                print("\(error)")
+                dbg.pt("\(error)")
             }
             
             arrayNames.append("\(now)")
@@ -135,9 +160,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.navigationController!.hidesBarsOnTap = false
         mytoolBar.clipsToBounds = true
         
-        index = 0
-        
+        editingMode = false
         self.CollectionView.reloadData()
+        
+        imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -146,29 +172,27 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
         
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+        let nameToSegue = "\(arrayNames[segueIndex])"
+        let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
             if let controller:ViewPhoto = segue.destinationViewController as? ViewPhoto {
-                if let cell = sender as? UICollectionViewCell {
-                    if let indexPath: NSIndexPath = self.CollectionView.indexPathForCell(cell) {
-                        controller.index = indexPath.item
-                        
-                        let xmlPath = "\(documentsDirectory)/\(arrayNames[indexPath.item]).xml"
-                        let data = NSData(contentsOfFile: xmlPath)
-                        do {
-                            try controller.xml = AEXMLDocument(xmlData: data!)
-                        }
-                        catch {
-                            print("\(error)")
-                        }
-                    }
-                }
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
+            }
+        }
+        if (segue.identifier == "ViewImageInfos") {
+            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
+                controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
+                controller.imageAuthor = (xmlToSegue["xia"]["author"].value == nil) ? "" : xmlToSegue["xia"]["author"].value!
+                controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
+                controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
             }
         }
     }
@@ -180,48 +204,39 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
-        // Resize size of collection view items in grid so that we achieve 3 boxes across
-        let cellWidth = ((UIScreen.mainScreen().bounds.width) - 32 - 30 ) / 3
-        let cellLayout = CollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        cellLayout.itemSize = CGSize(width: cellWidth, height: cellWidth)
-        
+        let index = indexPath.item
+      
         // Load image
-        let filePath = "\(documentsDirectory)\(arrayNames[index]).jpg"
-        let img = UIImage(contentsOfFile: filePath)
-        cell.setThumbnailImage(img!, thumbnailLabel : arrayNames[index])
-        index++
+        if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
+            // Use cached version
+            cell.setCachedThumbnailImage(cachedImage)
+        }
+        else {
+            // Create image from scratch then store in the cache
+            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+            let img = UIImage(contentsOfFile: filePath)
+            let cachedImage = cell.setThumbnailImage(img!)
+            cache.setObject(cachedImage, forKey: arrayNames[index])
+        }
+        
+        // Load label
+        let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
+        let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
+        cell.setLabel(label)
         
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         cell.addGestureRecognizer(leftSwipe)
         
+        let tap = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        tap.delegate = self
+        cell.addGestureRecognizer(tap)
+        
         return cell
     }
     
-    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
-        self.dismissViewControllerAnimated(true, completion: { () -> Void in
-        })
-        
-        // Let's store the image
-        let now:Int = Int(NSDate().timeIntervalSince1970)
-        let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(documentsDirectory + "\(now).jpg", atomically: true)
-        
-        // Create associated xml
-        let xml = AEXMLDocument()
-        let xmlString = xml.createXML("\(now)")
-        do {
-            try xmlString.writeToFile(documentsDirectory + "\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            print("\(error)")
-        }
-        arrayNames.append("\(now)")
-        nbThumb = arrayNames.count
-    }
-    
-    func deleteFiles(gestureReconizer: UILongPressGestureRecognizer) {
+    func deleteFiles(gestureReconizer: UISwipeGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
         }
@@ -243,20 +258,20 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     // Delete the file
                     let fileManager = NSFileManager()
                     do {
-                        var filePath = "\(documentsDirectory)/\(fileName).jpg"
+                        var filePath = "\(self.documentsDirectory)/\(fileName).jpg"
                         try fileManager.removeItemAtPath(filePath)
-                        filePath = "\(documentsDirectory)/\(fileName).xml"
+                        filePath = "\(self.documentsDirectory)/\(fileName).xml"
                         try fileManager.removeItemAtPath(filePath)
                     }
                     catch let error as NSError {
-                        print(error.localizedDescription)
+                        self.dbg.pt(error.localizedDescription)
                     }
                     
                     // Update arrays
-                    arrayNames.removeAtIndex(deleteIndex)
+                    self.arrayNames.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
-                    nbThumb--
+                    self.nbThumb--
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information
@@ -279,9 +294,86 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             presentViewController(controller, animated: true, completion: nil)
         }
         else {
-            print("Could not find index path")
+            dbg.pt("Could not find index path")
+        }
+    }
+    
+    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
         }
         
+        let p = gestureReconizer.locationInView(CollectionView)
+        let indexPath = CollectionView.indexPathForItemAtPoint(p)
+        
+        if let path = indexPath {
+            segueIndex = path.row
+            if editingMode {
+                performSegueWithIdentifier("ViewImageInfos", sender: self)
+            }
+            else {
+                performSegueWithIdentifier("viewLargePhoto", sender: self)
+            }
+        }
     }
+    
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+        })
+        
+        // Let's store the image
+        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let imageData = UIImageJPEGRepresentation(image, 85)
+        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
+        
+        // Create associated xml
+        let xml = AEXMLDocument()
+        let xmlString = xml.createXML("\(now)")
+        do {
+            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch {
+            dbg.pt("\(error)")
+        }
+        arrayNames.append("\(now)")
+        nbThumb = arrayNames.count
+    }
+    
+    func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
+        
+        // Setup the font specific variables
+        let textColor: UIColor = UIColor.blackColor()
+        let textFont: UIFont = UIFont.systemFontOfSize(14.0)
+
+        
+        //Setup the image context using the passed image.
+        UIGraphicsBeginImageContext(inImage.size)
+        
+        //Setups up the font attributes that will be later used to dictate how the text should be drawn
+        let textFontAttributes = [
+            NSFontAttributeName: textFont,
+            NSForegroundColorAttributeName: textColor,
+        ]
+        
+        //Put the image into a rectangle as large as the original image.
+        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
+        
+        // Creating a point within the space that is as bit as the image.
+        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
+        
+        //Now Draw the text into an image.
+        drawText.drawInRect(rect, withAttributes: textFontAttributes)
+        
+        // Create a new image out of the images we have created
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // End the context now that we have the image we need
+        UIGraphicsEndImageContext()
+        
+        //And pass it back up to the caller.
+        return newImage
+        
+    }
+    
 }
 

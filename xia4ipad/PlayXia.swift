@@ -14,6 +14,7 @@ class PlayXia: UIViewController {
     
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
+    var filePath: String = ""
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
@@ -48,7 +49,7 @@ class PlayXia: UIViewController {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let filePath = "\(documentsDirectory)\(self.fileName).jpg"
+        let filePath = "\(self.filePath).jpg"
         let img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
         
@@ -59,15 +60,8 @@ class PlayXia: UIViewController {
         let scaleX: CGFloat = screenWidth / img!.size.width
         let scaleY: CGFloat = screenHeight / img!.size.height
         scale = min(scaleX, scaleY)
-        
-        let xmlPath = "\(documentsDirectory)/\(self.fileName).xml"
-        let data = NSData(contentsOfFile: xmlPath)
-        do {
-            try xml = AEXMLDocument(xmlData: data!)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
+        let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
+        let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
@@ -77,20 +71,21 @@ class PlayXia: UIViewController {
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
+                    details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     for var point in pointsArray {
                         point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale + xSpace // convert String to CGFloat
+                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale + ySpace // convert String to CGFloat
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
                     }
-                    
-                    buildShape(false, color: UIColor.blueColor(), tag: detailTag)
+                    let drawEllipse: Bool = (detail.attributes["constraint"] == "ellipse") ? true : false
+                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }
             }
@@ -163,6 +158,18 @@ class PlayXia: UIViewController {
         }
     }
     
+    func goBack() {
+        navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func hideDetails(hidden: Bool) {
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = hidden
+            }
+        }
+    }
+    
     func showMyDetail(tag: Int, zoomDetail: Bool) {
         // Hide lot of things...
         for subview in view.subviews {
@@ -175,7 +182,7 @@ class PlayXia: UIViewController {
         }
         // Add new background image
         let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFill
+        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFit
         blurredBackground.image = bkgdImage.image
         blurredBackground.tag = 666
         self.view.addSubview(blurredBackground)
@@ -190,7 +197,7 @@ class PlayXia: UIViewController {
         
         // Cropping image
         let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        cropDetail.contentMode = UIViewContentMode.ScaleAspectFill
+        cropDetail.contentMode = UIViewContentMode.ScaleAspectFit
         cropDetail.image = bkgdImage.image
         let myMask = CAShapeLayer()
         myMask.path = paths[tag]!.CGPath
@@ -258,9 +265,9 @@ class PlayXia: UIViewController {
             }
         }
         else {
-        btnZoom.layer.zPosition = -1
-        btnZoom.enabled = false
-        btnZoom.on = false
+            btnZoom.layer.zPosition = -1
+            btnZoom.enabled = false
+            btnZoom.on = false
         }
         
         // let's rock & rolls
@@ -268,81 +275,5 @@ class PlayXia: UIViewController {
             cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
             cropDetail.center = newCropCenter
         })
-    }
-    
-    func hideDetails(hidden: Bool) {
-        for subview in view.subviews {
-            if subview.tag > 199 {
-                subview.hidden = hidden
-            }
-        }
-    }
-    
-    func buildShape(fill: Bool, color: UIColor, tag: Int) {
-        var shapeArg: Int = 0
-        let shapeTag = tag + 100
-        switch fill {
-        case true:
-            shapeArg = 1
-        default:
-            shapeArg = 0
-        }
-        var xMin: CGFloat = screenWidth
-        var xMax: CGFloat = 0
-        var yMin: CGFloat = screenHeight
-        var yMax: CGFloat = 0
-        // Get dimensions of the shape
-        for subview in view.subviews {
-            if subview.tag == tag {
-                let xMinSubview = subview.frame.origin.x
-                let yMinSubview = subview.frame.origin.y
-                let xMaxSubview = subview.frame.origin.x + 29
-                let yMaxSubview = subview.frame.origin.y + 29
-                if ( xMinSubview < xMin ) {
-                    xMin = xMinSubview
-                }
-                if ( yMinSubview < yMin ) {
-                    yMin = yMinSubview
-                }
-                if ( xMaxSubview > xMax ) {
-                    xMax = xMaxSubview
-                }
-                if ( yMaxSubview > yMax ) {
-                    yMax = yMaxSubview
-                }
-            }
-        }
-        let shapeWidth = xMax - xMin
-        let shapeHeight = yMax - yMin
-        
-        // Build the shape
-        let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: details["\(tag)"]!.points, color: color)
-        myView.backgroundColor = UIColor(white: 0, alpha: 0)
-        myView.tag = shapeTag
-        view.addSubview(myView)
-    }
-    
-    func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
-        // translate from C : http://alienryderflex.com/polygon/
-        let polyCorners = points.count
-        var j = polyCorners - 1
-        var oddNodes:Bool = false
-        
-        for var i=0; i<polyCorners; i++ {
-            if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
-                || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
-                && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {
-                    if ( points[i].center.x + (touchPoint.y - points[i].center.y) / (points[j].center.y - points[i].center.y) * (points[j].center.x - points[i].center.x) < touchPoint.x ) {
-                        oddNodes = !oddNodes
-                    }
-            }
-            j=i
-        }
-        
-        return oddNodes
-    }
-    
-    func goBack() {
-        navigationController?.popViewControllerAnimated(true)
     }
 }
