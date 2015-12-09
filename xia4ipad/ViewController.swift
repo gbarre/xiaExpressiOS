@@ -24,7 +24,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passData:Bool=false
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
-
     
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
@@ -75,17 +74,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     @IBOutlet weak var editMode: UIBarButtonItem!
     @IBAction func btnEdit(sender: AnyObject) {
-        dbg.pt(self.editMode.title!)
-        dbg.pt(editingMode)
         if editingMode {
-            dbg.pt("change title to Edit and make cell moving...")
             editingMode = false
             self.editMode.title = "Edit"
+            for cell in CollectionView.visibleCells() {
+                let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+                customCell.wobble(false)
+            }
         }
         else {
-            dbg.pt("change title to Done and stop cell moving...")
             editingMode = true
             self.editMode.title = "Done"
+            for cell in CollectionView.visibleCells() {
+                let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+                customCell.wobble(true)
+            }
         }
     }
     
@@ -329,7 +332,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         else {
             dbg.pt("Could not find index path")
         }
-        
     }
 }
 

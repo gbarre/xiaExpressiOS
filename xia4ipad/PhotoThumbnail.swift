@@ -13,6 +13,11 @@ class PhotoThumbnail: UICollectionViewCell {
     let dbg = debug(enable: true)
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
+    let animationRotateDegres: CGFloat = 0.5
+    let animationTranslateX: CGFloat = 1.0
+    let animationTranslateY: CGFloat = 1.0
+    let count: Int = 1
+
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var imgLabel: UILabel!
@@ -91,5 +96,30 @@ class PhotoThumbnail: UICollectionViewCell {
         let image: UIImage = UIImage(CGImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
         
         return image
+    }
+    
+    func wobble(enable: Bool) {
+        let leftOrRight: CGFloat = (count % 2 == 0 ? 1 : -1)
+        let rightOrLeft: CGFloat = (count % 2 == 0 ? -1 : 1)
+        let leftWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * leftOrRight))
+        let rightWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * rightOrLeft))
+        let moveTransform: CGAffineTransform = CGAffineTransformTranslate(leftWobble, -animationTranslateX, -animationTranslateY)
+        let conCatTransform: CGAffineTransform = CGAffineTransformConcat(leftWobble, moveTransform)
+        
+        transform = rightWobble // starting point
+        
+        if enable {
+            UIView.animateWithDuration(0.1, delay: 0.08, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
+                self.transform = conCatTransform
+                }, completion: nil)
+        }
+        else {
+            self.layer.removeAllAnimations()
+            self.transform = CGAffineTransformMakeRotation(0)// reset to original state
+        }
+    }
+    
+    func degreesToRadians(x: CGFloat) -> CGFloat {
+        return CGFloat(M_PI) * x / 180.0
     }
 }
