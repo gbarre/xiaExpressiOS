@@ -51,17 +51,21 @@ class xiaDetail: NSObject {
     }
     
     func bezierPath() -> UIBezierPath {
-        let path = UIBezierPath()
-        for point in points {
-            if (point == points.first) {
-                path.moveToPoint(point.center)
-            }
-            else {
-                path.addLineToPoint(point.center)
-            }
+        var path = UIBezierPath()
+        if constraint == "ellipse" {
+            path = UIBezierPath(ovalInRect: self.bezierFrame())
         }
-        path.closePath()
-        
+        else {
+            for point in points {
+                if (point == points.first) {
+                    path.moveToPoint(point.center)
+                }
+                else {
+                    path.addLineToPoint(point.center)
+                }
+            }
+            path.closePath()
+        }
         return path
     }
     

@@ -17,7 +17,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
     var filePath: String = ""
-
+    
     var location = CGPoint(x: 0, y: 0)
     var moving = false
     var movingPoint = -1 // Id of point
@@ -62,37 +62,77 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Build menu
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let rectangleAction = UIAlertAction(title: "Rectangle (ToDo)", style: .Default, handler: { action in
+        let rectangleAction = UIAlertAction(title: "Rectangle", style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            //self.setBtnPlayIcon()
             self.changeDetailColor(self.currentDetailTag, color: "edit")
             
             // Now build the rectangle
-            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
             newPoint1?.layer.zPosition = 1
             self.imgView.addSubview(newPoint1!)
-            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
             newPoint2?.layer.zPosition = 1
             self.imgView.addSubview(newPoint2!)
-            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
-            let newPoint4 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
-            newPoint4?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint4!)
             buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView)
             self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
             self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
         })
-        let ellipseAction = UIAlertAction(title: "Ellipse (ToDo)", style: .Default, handler: { action in
-            self.dbg.pt("Ellipse tool (ToDo)")
+        let ellipseAction = UIAlertAction(title: "Ellipse", style: .Default, handler: { action in
+            // Create new detail
+            self.details["\(self.currentDetailTag)"] = newDetail
+            
+            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            
+            // Now build the rectangle
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner")
+            newPoint1?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint1!)
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner")
+            newPoint2?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint2!)
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
+            newPoint3?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint3!)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true)
+            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
+            
+            self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
         })
-        let polygonAction = UIAlertAction(title: "Free form", style: .Default, handler: { action in
+        let polygonAction = UIAlertAction(title: "Polygon", style: .Default, handler: { action in
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
@@ -138,6 +178,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             dbg.pt("\(detail.0) : \(detail.1.constraint)")
         }
     }
+    
     @IBAction func btnExport(sender: AnyObject) {
         let mailComposer = MFMailComposeViewController()
         mailComposer.mailComposeDelegate = self
@@ -263,14 +304,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             newPoint?.layer.zPosition = 1
                             imgView.addSubview(newPoint!)
                         }
-                        
-                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView)
-                    }
-                    if let constraint = detail.attributes["constraint"] {
-                        details["\(detailTag)"]?.constraint = constraint
-                    }
-                    else {
-                        details["\(detailTag)"]?.constraint = "polygon"
+                        if let constraint = detail.attributes["constraint"] {
+                            details["\(detailTag)"]?.constraint = constraint
+                        }
+                        else {
+                            details["\(detailTag)"]?.constraint = "polygon"
+                        }
+                        let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                     }
                 }
             }
@@ -368,7 +409,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
-                        toMove.center = location
+                        switch details["\(currentDetailTag)"]!.constraint {
+                        case "ellipse":
+                            toMove.center = ploc!
+                            break
+                        default:
+                            toMove.center = location
+                            break
+                        }
                         details["\(currentDetailTag)"]?.points[i] = toMove
                         movingPoint = i
                         moveDetail = false
@@ -405,14 +453,15 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             
             if ( distance < 20 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
-                toMove.center = location
-                details["\(detailTag)"]?.points[movingPoint] = toMove
+                let previousPoint: Int = (movingPoint + 3) % 4
+                let nextPoint: Int = (movingPoint + 1) % 4
+                let oppositePoint: Int = (movingPoint + 2) % 4
                 
                 // Are there any constraint ?
                 switch details["\(detailTag)"]!.constraint {
                 case "rectangle":
-                    let previousPoint: Int = (movingPoint == 0) ? 3 : movingPoint - 1
-                    let nextPoint: Int = (movingPoint == 3) ? 0 : movingPoint + 1
+                    //let previousPoint: Int = (movingPoint == 0) ? 3 : movingPoint - 1
+                    //let nextPoint: Int = (movingPoint == 3) ? 0 : movingPoint + 1
                     if (movingPoint % 2 == 0) {
                         details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint].center.y)
                         details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, location.y)
@@ -421,11 +470,28 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, location.y)
                         details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[nextPoint].center.y)
                     }
+                    toMove.center = location
+                    details["\(detailTag)"]?.points[movingPoint] = toMove
                     break
                 case "ellipse":
-                        
+                    if (movingPoint % 2 == 0) {
+                        let middleHeight = (details["\(detailTag)"]!.points[oppositePoint].center.y - location.y)/2 + location.y
+                        toMove.center = CGPointMake(ploc!.x, location.y)
+                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(ploc!.x, details["\(detailTag)"]!.points[movingPoint].center.y)
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, middleHeight)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, middleHeight)
+                    }
+                    else {
+                        let middleWidth = (details["\(detailTag)"]!.points[oppositePoint].center.x - location.x)/2 + location.x
+                        toMove.center = CGPointMake(location.x, ploc!.y)
+                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(details["\(detailTag)"]!.points[movingPoint].center.x, ploc!.y)
+                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[previousPoint].center.y)
+                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[nextPoint].center.y)
+                    }
                     break
                 default:
+                    toMove.center = location
+                    details["\(detailTag)"]?.points[movingPoint] = toMove
                     break
                 }
             }
@@ -480,7 +546,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     subview.layer.zPosition = 1
                 }
             }
-            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView)
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -553,7 +620,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
         }
     }
-     
+    
     func changeDetailColor(tag: Int, color: String) {
         var shapeColor: UIColor
         var altShapeColor: UIColor
@@ -581,18 +648,19 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     details["\(thisDetailTag!)"]?.points.removeFirst()
                     subview.tag = thisDetailTag! + 200
                     subview.layer.zPosition = -1
-
+                    
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
                     imgView.addSubview(newPoint)
                 }
             }
-            if details["\(thisDetailTag!)"]?.points.count > 2 {
+            if detail.1.points.count > 2 {
+                let drawEllipse: Bool = (detail.1.constraint == "ellipse") ? true : false
                 if thisDetailTag != tag {
-                    buildShape(true, color: altShapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView)
+                    buildShape(true, color: altShapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
                 else {
-                    buildShape(true, color: shapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView)
+                    buildShape(true, color: shapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
             }
             else { // only 1 or 2 points, remove them

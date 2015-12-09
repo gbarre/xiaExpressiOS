@@ -71,6 +71,7 @@ class PlayXia: UIViewController {
                     let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
+                    details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
@@ -83,8 +84,8 @@ class PlayXia: UIViewController {
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
                     }
-                    
-                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view)
+                    let drawEllipse: Bool = (detail.attributes["constraint"] == "ellipse") ? true : false
+                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }
             }

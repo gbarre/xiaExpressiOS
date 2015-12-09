@@ -10,14 +10,14 @@ import UIKit
 
 
 
-func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject) {
+func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
     switch fill {
     case true:
-        shapeArg = 1
+        shapeArg = (ellipse) ? 3 : 1
     default:
-        shapeArg = 0
+        shapeArg = (ellipse) ? 2 : 0
     }
     var xMin: CGFloat = UIScreen.mainScreen().bounds.width
     var xMax: CGFloat = 0
@@ -28,8 +28,8 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
         if subview.tag == tag {
             let xMinSubview = subview.frame.origin.x
             let yMinSubview = subview.frame.origin.y
-            let xMaxSubview = subview.frame.origin.x + 29
-            let yMaxSubview = subview.frame.origin.y + 29
+            let xMaxSubview = subview.frame.origin.x + 10
+            let yMaxSubview = subview.frame.origin.y + 10
             if ( xMinSubview < xMin ) {
                 xMin = xMinSubview
             }
