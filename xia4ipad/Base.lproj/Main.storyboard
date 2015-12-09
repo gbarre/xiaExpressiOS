@@ -193,7 +193,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="2ha-T4-l71"/>
-                                    <barButtonItem title="xml" id="vyQ-fq-BLf">
+                                    <barButtonItem enabled="NO" title="xml" id="vyQ-fq-BLf">
                                         <connections>
                                             <action selector="debugXML:" destination="fts-Lk-uqf" id="9Zo-za-nFo"/>
                                         </connections>
