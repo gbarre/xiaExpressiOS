@@ -18,6 +18,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view userInteractionEnabled="NO" tag="50" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L6f-Y4-ikl" userLabel="HelpView">
+                                <rect key="frame" x="42" y="21" width="51" height="70"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" tag="51" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bubble" translatesAutoresizingMaskIntoConstraints="NO" id="EHx-LZ-bVD">
+                                        <rect key="frame" x="430" y="80" width="100" height="100"/>
+                                        <animations/>
+                                        <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                </subviews>
+                                <animations/>
+                            </view>
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kO4-Gr-RCm">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <animations/>
@@ -34,7 +45,11 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="DLc-ka-LpH"/>
                                     <barButtonItem enabled="NO" systemItem="action" id="U0P-NK-ZnO"/>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fzZ-2G-Vla"/>
-                                    <barButtonItem enabled="NO" image="help" id="fRb-WL-06e"/>
+                                    <barButtonItem enabled="NO" image="help" id="fRb-WL-06e">
+                                        <connections>
+                                            <action selector="btnHelp:" destination="BYZ-38-t0r" id="9Yj-MQ-dsa"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="eCj-kf-a9B"/>
                                     <barButtonItem title="Edit" id="LFL-AM-sdI">
                                         <connections>
@@ -105,6 +120,8 @@
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="6Cm-XX-eoM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="EHx-LZ-bVD" secondAttribute="trailing" constant="50" id="CkN-ew-djD"/>
+                            <constraint firstItem="EHx-LZ-bVD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="60" id="LKQ-Hy-Ku7"/>
                             <constraint firstAttribute="leadingMargin" secondItem="kO4-Gr-RCm" secondAttribute="leading" constant="20" id="LjB-1I-tmf"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="MIz-A4-9QF"/>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="d5a-Em-0Jg"/>
@@ -119,6 +136,7 @@
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
                         <outlet property="btnCreateState" destination="qM4-9i-cie" id="JKn-cy-Wkm"/>
                         <outlet property="editMode" destination="LFL-AM-sdI" id="1LR-77-L7M"/>
+                        <outlet property="imgHelp" destination="EHx-LZ-bVD" id="eVl-MV-nbq"/>
                         <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
                         <segue destination="Vet-iN-BdV" kind="presentation" identifier="ViewImageInfos" modalPresentationStyle="formSheet" id="uKj-nk-TQb"/>
@@ -504,6 +522,7 @@
     </scenes>
     <resources>
         <image name="Info" width="32" height="32"/>
+        <image name="bubble" width="100" height="100"/>
         <image name="help" width="25" height="25"/>
     </resources>
     <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>

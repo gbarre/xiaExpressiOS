@@ -18,6 +18,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let cache = NSCache()
     var segueIndex: Int = -1
     var editingMode: Bool = false
+    var showHelp = false
 
     var b64IMG:String = ""
     var currentElement:String = ""
@@ -72,6 +73,18 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         presentViewController(menu, animated: true, completion: nil)
     }
+    
+    @IBAction func btnHelp(sender: AnyObject) {
+        for subview in view.subviews {
+            if subview.tag > 49 {
+                subview.hidden = showHelp
+                subview.layer.zPosition = 1
+            }
+        }
+        showHelp = !showHelp
+    }
+    
+    @IBOutlet weak var imgHelp: UIImageView!
     
     @IBOutlet weak var editMode: UIBarButtonItem!
     @IBAction func btnEdit(sender: AnyObject) {
@@ -149,6 +162,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         editingMode = false
         self.CollectionView.reloadData()
+        
+        imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -324,7 +339,41 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         nbThumb = arrayNames.count
     }
     
-    
+    func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
+        
+        // Setup the font specific variables
+        let textColor: UIColor = UIColor.blackColor()
+        let textFont: UIFont = UIFont.systemFontOfSize(14.0)
+
+        
+        //Setup the image context using the passed image.
+        UIGraphicsBeginImageContext(inImage.size)
+        
+        //Setups up the font attributes that will be later used to dictate how the text should be drawn
+        let textFontAttributes = [
+            NSFontAttributeName: textFont,
+            NSForegroundColorAttributeName: textColor,
+        ]
+        
+        //Put the image into a rectangle as large as the original image.
+        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
+        
+        // Creating a point within the space that is as bit as the image.
+        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
+        
+        //Now Draw the text into an image.
+        drawText.drawInRect(rect, withAttributes: textFontAttributes)
+        
+        // Create a new image out of the images we have created
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // End the context now that we have the image we need
+        UIGraphicsEndImageContext()
+        
+        //And pass it back up to the caller.
+        return newImage
+        
+    }
     
 }
 
