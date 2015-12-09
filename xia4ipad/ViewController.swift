@@ -156,40 +156,25 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+        let nameToSegue = "\(arrayNames[segueIndex])"
+        let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
             if let controller:ViewPhoto = segue.destinationViewController as? ViewPhoto {
-                controller.fileName = "\(arrayNames[segueIndex])"
-                controller.filePath = "\(documentsDirectory)/\(arrayNames[segueIndex])"
-                
-                let xmlPath = "\(documentsDirectory)/\(arrayNames[segueIndex]).xml"
-                let data = NSData(contentsOfFile: xmlPath)
-                do {
-                    try controller.xml = AEXMLDocument(xmlData: data!)
-                }
-                catch {
-                    dbg.pt("\(error)")
-                }
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
             }
         }
         if (segue.identifier == "ViewImageInfos") {
             if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
-                let xmlPath = "\(documentsDirectory)/\(arrayNames[segueIndex]).xml"
-                let data = NSData(contentsOfFile: xmlPath)
-                var xml: AEXMLDocument!
-                do {
-                    try xml = AEXMLDocument(xmlData: data!)
-                }
-                catch {
-                    dbg.pt("\(error)")
-                }
-                
-                controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
-                controller.imageAuthor = (xml["xia"]["author"].value == nil) ? "" : xml["xia"]["author"].value!
-                controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
-                controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
-                controller.filePath = "\(documentsDirectory)/\(arrayNames[segueIndex])"
-                controller.fileName = "\(arrayNames[segueIndex])"
-                controller.xml = xml
+                controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
+                controller.imageAuthor = (xmlToSegue["xia"]["author"].value == nil) ? "" : xmlToSegue["xia"]["author"].value!
+                controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
+                controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
             }
         }
     }
@@ -229,47 +214,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.addGestureRecognizer(tap)
         
         return cell
-    }
-    
-    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
-        self.dismissViewControllerAnimated(true, completion: { () -> Void in
-        })
-        
-        // Let's store the image
-        let now:Int = Int(NSDate().timeIntervalSince1970)
-        let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
-        
-        // Create associated xml
-        let xml = AEXMLDocument()
-        let xmlString = xml.createXML("\(now)")
-        do {
-            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
-        arrayNames.append("\(now)")
-        nbThumb = arrayNames.count
-    }
-    
-    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
-        if gestureReconizer.state != UIGestureRecognizerState.Ended {
-            return
-        }
-        
-        let p = gestureReconizer.locationInView(CollectionView)
-        let indexPath = CollectionView.indexPathForItemAtPoint(p)
-        
-        if let path = indexPath {
-            segueIndex = path.row
-            if editingMode {
-                performSegueWithIdentifier("ViewImageInfos", sender: self)
-            }
-            else {
-                performSegueWithIdentifier("viewLargePhoto", sender: self)
-            }
-        }
     }
     
     func deleteFiles(gestureReconizer: UISwipeGestureRecognizer) {
@@ -333,5 +277,49 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             dbg.pt("Could not find index path")
         }
     }
+    
+    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+            return
+        }
+        
+        let p = gestureReconizer.locationInView(CollectionView)
+        let indexPath = CollectionView.indexPathForItemAtPoint(p)
+        
+        if let path = indexPath {
+            segueIndex = path.row
+            if editingMode {
+                performSegueWithIdentifier("ViewImageInfos", sender: self)
+            }
+            else {
+                performSegueWithIdentifier("viewLargePhoto", sender: self)
+            }
+        }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+        })
+        
+        // Let's store the image
+        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let imageData = UIImageJPEGRepresentation(image, 85)
+        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
+        
+        // Create associated xml
+        let xml = AEXMLDocument()
+        let xmlString = xml.createXML("\(now)")
+        do {
+            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch {
+            dbg.pt("\(error)")
+        }
+        arrayNames.append("\(now)")
+        nbThumb = arrayNames.count
+    }
+    
+    
+    
 }
 

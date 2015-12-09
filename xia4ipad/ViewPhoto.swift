@@ -238,25 +238,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         cleaningDetails()
     }
     
-    func rotated()
-    {
-        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
-        {
-            if ( !landscape ) {
-                let value = UIInterfaceOrientation.Portrait.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
-            }
-        }
-        
-        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
-        {
-            if ( landscape ) {
-                let value = UIInterfaceOrientation.LandscapeRight.rawValue
-                UIDevice.currentDevice().setValue(value, forKey: "orientation")
-            }
-        }
-    }
-    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.imgView)
@@ -447,12 +428,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["path"] = (details["\(detailTag)"]?.createPath())!
                 }
             }
-            do {
-                try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
+            let _ = writeXML(xml, path: filePath)
         }
         
         switch createDetail {
@@ -512,6 +488,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
                 controller.fileName = fileName
                 controller.filePath = filePath
+                controller.xml = self.xml
             }
         }
     }
@@ -568,11 +545,72 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         cleanOldViews()
     }
     
+    func cleaningDetails() {
+        for detail in details {
+            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
+            if ( detailTag != 0 && detail.1.points.count < 3 ) {
+                performFullDetailRemove(detailTag)
+            }
+        }
+    }
+    
     func cleanOldViews() {
         // Remove old (hidden) subviews
         for subview in imgView.subviews {
             if subview.tag > 299 {
                 subview.removeFromSuperview()
+            }
+        }
+    }
+    
+    func goBack() {
+        navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
+    func goForward() {
+        performSegueWithIdentifier("playXia", sender: self)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func performFullDetailRemove(tag: Int, force: Bool = false) {
+        if (details["\(tag)"]?.points.count < 3 || force) {
+            // remove point & polygon
+            for subview in imgView.subviews {
+                if subview.tag == tag || subview.tag == (tag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            
+            // remove detail object
+            details["\(tag)"] = nil
+            
+            // remove detail in xml
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    d.removeFromParent()
+                }
+            }
+            let _ = writeXML(xml, path: filePath)
+        }
+    }
+    
+    func rotated() {
+        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
+        {
+            if ( !landscape ) {
+                let value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
+        
+        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
+        {
+            if ( landscape ) {
+                let value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
         }
     }
@@ -617,60 +655,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
     }
     
-    func cleaningDetails() {
-        for detail in details {
-            let detailTag = NSNumberFormatter().numberFromString(detail.0)!.integerValue
-            if ( detailTag != 0 && detail.1.points.count < 3 ) {
-                performFullDetailRemove(detailTag)
-            }
-        }
-    }
-    
-    func performFullDetailRemove(tag: Int, force: Bool = false) {
-        if (details["\(tag)"]?.points.count < 3 || force) {
-            // remove point & polygon
-            for subview in imgView.subviews {
-                if subview.tag == tag || subview.tag == (tag + 100) {
-                    subview.removeFromSuperview()
-                }
-            }
-            
-            // remove detail object
-            details["\(tag)"] = nil
-            
-            // remove detail in xml
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
-                for d in detail {
-                    d.removeFromParent()
-                }
-            }
-            
-            // write xml
-            do {
-                try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
-        }
-    }
-    
     func stopCreation() {
         createDetail = false
         btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
         setBtnPlayIcon()
-    }
-    
-    func goBack() {
-        navigationController?.popToRootViewControllerAnimated(true)
-    }
-    
-    func goForward() {
-        performSegueWithIdentifier("playXia", sender: self)
-    }
-    
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }

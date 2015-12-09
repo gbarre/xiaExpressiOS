@@ -39,12 +39,7 @@ class ViewDetailInfos: UIViewController {
                 d.value = txtDesc.text
             }
         }
-        do {
-            try xml.xmlString.writeToFile("\(filePath).xml", atomically: true, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
+        let _ = writeXML(xml, path: filePath)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

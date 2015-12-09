@@ -54,6 +54,18 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
     parentView.addSubview(myView)
 }
 
+func getXML(path: String) -> AEXMLDocument {
+    let data = NSData(contentsOfFile: path)
+    var xml: AEXMLDocument!
+    do {
+        try xml = AEXMLDocument(xmlData: data!)
+    }
+    catch {
+        print("\(error)")
+    }
+    return xml
+}
+
 func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
     // translate from C : http://alienryderflex.com/polygon/
     let polyCorners = points.count
@@ -73,3 +85,17 @@ func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
     
     return oddNodes
 }
+
+func writeXML(xml: AEXMLDocument, path: String) -> Bool {
+    var error = true
+    do {
+        try xml.xmlString.writeToFile("\(path).xml", atomically: true, encoding: NSUTF8StringEncoding)
+        error = false
+    }
+    catch {
+        print("\(error)")
+    }
+    return error
+}
+
+

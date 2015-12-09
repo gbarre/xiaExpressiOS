@@ -27,51 +27,6 @@ class xiaDetail: NSObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createPoint(location: CGPoint, imageName: String) -> UIImageView {
-        let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image!)
-        imageView.center = location
-        imageView.tag = tag
-        points.append(imageView)
-        
-        return imageView
-        // remember to add this point to the view afte calling this method :
-        // view.addSubview(newPoint)
-    }
-    
-    func createPath() -> String {
-        if (points.count < 2) {
-            return "0;0"
-        }
-        else {
-            
-            var path: String = ""
-            for point in points {
-                let x = point.center.x / scale
-                let y = point.center.y / scale
-                path += "\(x);\(y) "
-            }
-            path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
-        
-            return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
-        }
-    }
-    
-    func bezierPath() -> UIBezierPath {
-        let path = UIBezierPath()
-        for point in points {
-            if (point == points.first) {
-                path.moveToPoint(point.center)
-            }
-            else {
-                path.addLineToPoint(point.center)
-            }
-        }
-        path.closePath()
-        
-        return path
-    }
-    
     func bezierFrame() -> CGRect {
         var xMin: CGFloat = UIScreen.mainScreen().bounds.width
         var xMax: CGFloat = 0
@@ -95,5 +50,50 @@ class xiaDetail: NSObject {
             }
         }
         return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
+    }
+    
+    func bezierPath() -> UIBezierPath {
+        let path = UIBezierPath()
+        for point in points {
+            if (point == points.first) {
+                path.moveToPoint(point.center)
+            }
+            else {
+                path.addLineToPoint(point.center)
+            }
+        }
+        path.closePath()
+        
+        return path
+    }
+    
+    func createPath() -> String {
+        if (points.count < 2) {
+            return "0;0"
+        }
+        else {
+            
+            var path: String = ""
+            for point in points {
+                let x = point.center.x / scale
+                let y = point.center.y / scale
+                path += "\(x);\(y) "
+            }
+            path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
+            
+            return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
+        }
+    }
+    
+    func createPoint(location: CGPoint, imageName: String) -> UIImageView {
+        let image = UIImage(named: imageName)
+        let imageView = UIImageView(image: image!)
+        imageView.center = location
+        imageView.tag = tag
+        points.append(imageView)
+        
+        return imageView
+        // remember to add this point to the view afte calling this method :
+        // view.addSubview(newPoint)
     }
 }

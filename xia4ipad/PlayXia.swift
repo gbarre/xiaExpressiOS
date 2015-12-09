@@ -63,15 +63,6 @@ class PlayXia: UIViewController {
         let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
         let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
-        let xmlPath = "\(self.filePath).xml"
-        let data = NSData(contentsOfFile: xmlPath)
-        do {
-            try xml = AEXMLDocument(xmlData: data!)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
-        
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
             for detail in xmlDetails {
@@ -163,6 +154,18 @@ class PlayXia: UIViewController {
             btnZoom.on = false
             
             hideDetails(true)
+        }
+    }
+    
+    func goBack() {
+        navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func hideDetails(hidden: Bool) {
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = hidden
+            }
         }
     }
     
@@ -261,9 +264,9 @@ class PlayXia: UIViewController {
             }
         }
         else {
-        btnZoom.layer.zPosition = -1
-        btnZoom.enabled = false
-        btnZoom.on = false
+            btnZoom.layer.zPosition = -1
+            btnZoom.enabled = false
+            btnZoom.on = false
         }
         
         // let's rock & rolls
@@ -271,17 +274,5 @@ class PlayXia: UIViewController {
             cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
             cropDetail.center = newCropCenter
         })
-    }
-    
-    func hideDetails(hidden: Bool) {
-        for subview in view.subviews {
-            if subview.tag > 199 {
-                subview.hidden = hidden
-            }
-        }
-    }
-    
-    func goBack() {
-        navigationController?.popViewControllerAnimated(true)
     }
 }
