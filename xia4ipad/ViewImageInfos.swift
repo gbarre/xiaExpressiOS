@@ -37,7 +37,7 @@ class ViewImageInfos: UIViewController {
         xml["xia"]["author"].value = txtAuthor.text
         xml["xia"]["rights"].value = txtRights.text
         xml["xia"]["description"].value = txtDesc.text
-        let _ = writeXML(xml, path: filePath)
+        let _ = writeXML(xml, path: "\(filePath).xml")
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

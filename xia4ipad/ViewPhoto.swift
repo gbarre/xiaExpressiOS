@@ -428,7 +428,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["path"] = (details["\(detailTag)"]?.createPath())!
                 }
             }
-            let _ = writeXML(xml, path: filePath)
+            let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
         switch createDetail {
@@ -593,7 +593,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     d.removeFromParent()
                 }
             }
-            let _ = writeXML(xml, path: filePath)
+            let _ = writeXML(xml, path: "\(filePath).xml")
         }
     }
     

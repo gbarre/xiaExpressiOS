@@ -89,7 +89,7 @@ func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
 func writeXML(xml: AEXMLDocument, path: String) -> Bool {
     var error = true
     do {
-        try xml.xmlString.writeToFile("\(path).xml", atomically: true, encoding: NSUTF8StringEncoding)
+        try xml.xmlString.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding)
         error = false
     }
     catch {

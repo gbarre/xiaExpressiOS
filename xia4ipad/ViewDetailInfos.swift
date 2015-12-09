@@ -39,7 +39,7 @@ class ViewDetailInfos: UIViewController {
                 d.value = txtDesc.text
             }
         }
-        let _ = writeXML(xml, path: filePath)
+        let _ = writeXML(xml, path: "\(filePath).xml")
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

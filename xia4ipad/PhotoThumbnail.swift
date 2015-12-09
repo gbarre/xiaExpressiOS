@@ -98,6 +98,10 @@ class PhotoThumbnail: UICollectionViewCell {
         return image
     }
     
+    func degreesToRadians(x: CGFloat) -> CGFloat {
+        return CGFloat(M_PI) * x / 180.0
+    }
+    
     func wobble(enable: Bool) {
         let leftOrRight: CGFloat = (count % 2 == 0 ? 1 : -1)
         let rightOrLeft: CGFloat = (count % 2 == 0 ? -1 : 1)
@@ -117,9 +121,5 @@ class PhotoThumbnail: UICollectionViewCell {
             self.layer.removeAllAnimations()
             self.transform = CGAffineTransformMakeRotation(0)// reset to original state
         }
-    }
-    
-    func degreesToRadians(x: CGFloat) -> CGFloat {
-        return CGFloat(M_PI) * x / 180.0
     }
 }

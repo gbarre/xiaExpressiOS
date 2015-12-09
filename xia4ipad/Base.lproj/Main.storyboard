@@ -117,6 +117,7 @@
                     <navigationItem key="navigationItem" title="Photo Album" id="TDA-2G-8Io"/>
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
+                        <outlet property="btnCreateState" destination="qM4-9i-cie" id="JKn-cy-Wkm"/>
                         <outlet property="editMode" destination="LFL-AM-sdI" id="1LR-77-L7M"/>
                         <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
@@ -425,6 +426,9 @@
                                 <rect key="frame" x="20" y="44" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ALa-K5-u3Y"/>
+                                </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
@@ -433,6 +437,9 @@
                                 <rect key="frame" x="20" y="82" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Z6F-qb-ORX"/>
+                                </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>
@@ -441,6 +448,9 @@
                                 <rect key="frame" x="20" y="120" width="560" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Q0I-Li-ssa"/>
+                                </constraints>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" enablesReturnKeyAutomatically="YES"/>

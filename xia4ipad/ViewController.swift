@@ -25,6 +25,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
     
+    @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
         let cameraAction = UIAlertAction(title: "Take a photo", style: .Default, handler: { action in
@@ -81,6 +82,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(false)
             }
+            self.CollectionView.reloadData()
+            btnCreateState.enabled = true
         }
         else {
             editingMode = true
@@ -89,6 +92,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
             }
+            btnCreateState.enabled = false
         }
     }
     
@@ -144,7 +148,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         mytoolBar.clipsToBounds = true
         
         editingMode = false
-        
         self.CollectionView.reloadData()
     }
     
@@ -202,7 +205,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         
         // Load label
-        cell.setLabel(arrayNames[index])
+        let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
+        let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
+        cell.setLabel(label)
         
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
