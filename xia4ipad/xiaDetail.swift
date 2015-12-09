@@ -12,10 +12,8 @@ class xiaDetail: NSObject {
 
     var points = [UIImageView]()
     var tag: Int = 0
-    var title: String = ""
-    var desc: String = ""
-    var zoom: Bool = false
     var scale: CGFloat = 1.0
+    var constraint: String = ""
     
     init(tag: Int, scale: CGFloat){
         self.tag = tag
