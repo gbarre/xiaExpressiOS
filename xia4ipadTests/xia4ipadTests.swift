@@ -66,13 +66,22 @@ class xia4ipadTests: XCTestCase {
     }
     
     func testXiaDetailBezierPath() {
-        let output = multiplePointsDetail.bezierPath()
-        let expectedOutput = UIBezierPath()
-        expectedOutput.moveToPoint(CGPointMake(10, 10))
-        expectedOutput.addLineToPoint(CGPointMake(200.5, 150))
-        expectedOutput.addLineToPoint(CGPointMake(120, 150.5))
-        expectedOutput.closePath()
-        XCTAssertEqual(output, expectedOutput)
+        // test ellipse path
+        multiplePointsDetail.constraint = "ellipse"
+        let outputEllipse = multiplePointsDetail.bezierPath()
+        let frame = CGRect(x: 10, y: 10, width: 190.5, height: 140.5)
+        let expectedOutputEllipse = UIBezierPath(ovalInRect: frame)
+        XCTAssertEqual(outputEllipse, expectedOutputEllipse)
+        
+        // test polygon path (include rectangle)
+        multiplePointsDetail.constraint = "polygon"
+        let outputPolygon = multiplePointsDetail.bezierPath()
+        let expectedOutputPolygon = UIBezierPath()
+        expectedOutputPolygon.moveToPoint(CGPointMake(10, 10))
+        expectedOutputPolygon.addLineToPoint(CGPointMake(200.5, 150))
+        expectedOutputPolygon.addLineToPoint(CGPointMake(120, 150.5))
+        expectedOutputPolygon.closePath()
+        XCTAssertEqual(outputPolygon, expectedOutputPolygon)
     }
     
     func testXiaDetailBezierFrame() {

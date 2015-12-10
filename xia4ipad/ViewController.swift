@@ -15,6 +15,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let documentsDirectory = NSHomeDirectory() + "/Documents"
     var nbThumb:Int = 0
     var arrayNames = [String]()
+    var arraySortedNames = [String: String]() // Label : FileName
     let cache = NSCache()
     var segueIndex: Int = -1
     var editingMode: Bool = false
@@ -153,6 +154,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         else {
             nbThumb = arrayNames.count
         }
+        
+        //self.CollectionView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -161,9 +164,23 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         mytoolBar.clipsToBounds = true
         
         editingMode = false
-        self.CollectionView.reloadData()
-        
         imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        arraySortedNames = [:]
+        for name in arrayNames {
+            let xml = getXML("\(documentsDirectory)/\(name).xml")
+            let title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
+            arraySortedNames[title!] = name
+        }
+        let orderedTitles = arraySortedNames.keys.sort()
+        arrayNames = []
+        for title in orderedTitles {
+            //dbg.pt(title)
+            arrayNames.append(arraySortedNames[title]!)
+        }
+        self.CollectionView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -223,7 +240,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
         let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
         cell.setLabel(label)
-        
+        //self.arrayLabels.append(label)
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
@@ -269,6 +286,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     
                     // Update arrays
                     self.arrayNames.removeAtIndex(deleteIndex)
+                    //self.arrayLabels.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
                     self.nbThumb--
