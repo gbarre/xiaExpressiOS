@@ -301,6 +301,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             let y = convertStringToCGFloat(coords[1]) * scale
                             let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                             newPoint?.layer.zPosition = 1
+                            newPoint?.hidden = true
                             imgView.addSubview(newPoint!)
                         }
                         if let constraint = detail.attributes["constraint"] {
@@ -450,7 +451,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let yDist: CGFloat = (location.y - ploc!.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             
-            if ( distance < 20 ) {
+            if ( distance < 200 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                 let previousPoint: Int = (movingPoint + 3) % 4
                 let nextPoint: Int = (movingPoint + 1) % 4
@@ -459,8 +460,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 // Are there any constraint ?
                 switch details["\(detailTag)"]!.constraint {
                 case "rectangle":
-                    //let previousPoint: Int = (movingPoint == 0) ? 3 : movingPoint - 1
-                    //let nextPoint: Int = (movingPoint == 3) ? 0 : movingPoint + 1
                     if (movingPoint % 2 == 0) {
                         details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint].center.y)
                         details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, location.y)
@@ -650,7 +649,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
-                    if tag == -1 {
+                    if thisDetailTag != tag {
                         newPoint.hidden = true
                     }
                     imgView.addSubview(newPoint)
