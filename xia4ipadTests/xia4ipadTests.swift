@@ -32,6 +32,15 @@ class xia4ipadTests: XCTestCase {
         super.tearDown()
     }
     
+    func testUtilConvertStringToCGFloat() {
+        let output1 = convertStringToCGFloat("3.14")
+        let expectedOutput: CGFloat = 3.14
+        XCTAssertEqual(output1, expectedOutput)
+        
+        let output2 = convertStringToCGFloat("3,14")
+        XCTAssertEqual(output2, expectedOutput)
+    }
+    
     func testUtilPointInPolygon() {
         // point in
         let outputIn = pointInPolygon(multiplePointsDetail.points, touchPoint: CGPointMake(130, 140))

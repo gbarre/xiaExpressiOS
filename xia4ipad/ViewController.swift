@@ -240,7 +240,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
         let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
         cell.setLabel(label)
-        //self.arrayLabels.append(label)
+        
         let cSelector = Selector("deleteFiles:")
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
@@ -286,7 +286,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     
                     // Update arrays
                     self.arrayNames.removeAtIndex(deleteIndex)
-                    //self.arrayLabels.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
                     self.nbThumb--

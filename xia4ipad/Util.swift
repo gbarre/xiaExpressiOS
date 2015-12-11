@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
@@ -52,6 +50,18 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
     myView.backgroundColor = UIColor(white: 0, alpha: 0)
     myView.tag = shapeTag
     parentView.addSubview(myView)
+}
+
+func convertStringToCGFloat(txt: String) -> CGFloat {
+    let cgFloat: CGFloat?
+    if let double = Double("\(txt)") {
+        cgFloat = CGFloat(double)
+    }
+    else {
+        let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
+        cgFloat = CGFloat(Double("\(d)")!)
+    }
+    return cgFloat!
 }
 
 func getXML(path: String) -> AEXMLDocument {

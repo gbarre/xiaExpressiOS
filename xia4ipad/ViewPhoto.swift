@@ -295,11 +295,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     if pointsArray.count > 2 {
-                        for var point in pointsArray {
-                            point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                        for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
-                            let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                            let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                            let x = convertStringToCGFloat(coords[0]) * scale
+                            let y = convertStringToCGFloat(coords[1]) * scale
                             let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                             newPoint?.layer.zPosition = 1
                             imgView.addSubview(newPoint!)
@@ -651,6 +650,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
+                    if tag == -1 {
+                        newPoint.hidden = true
+                    }
                     imgView.addSubview(newPoint)
                 }
             }

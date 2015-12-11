@@ -75,11 +75,10 @@ class PlayXia: UIViewController {
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    for var point in pointsArray {
-                        point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                    for point in pointsArray {
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale + xSpace // convert String to CGFloat
-                        let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale + ySpace // convert String to CGFloat
+                        let x = convertStringToCGFloat(coords[0]) * scale + xSpace
+                        let y = convertStringToCGFloat(coords[1]) * scale + ySpace
                         let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
