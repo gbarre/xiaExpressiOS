@@ -529,6 +529,20 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
         }
+        
+        if details["\(detailTag)"]?.points.count > 2 {
+            // rebuild points & shape
+            for subview in imgView.subviews {
+                if subview.tag == (detailTag + 100) {
+                    subview.removeFromSuperview()
+                }
+                if subview.tag == detailTag {
+                    subview.layer.zPosition = 1
+                }
+            }
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+        }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
