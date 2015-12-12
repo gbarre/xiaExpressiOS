@@ -174,6 +174,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
             arraySortedNames[title!] = name
         }
+        
         let orderedTitles = arraySortedNames.keys.sort()
         arrayNames = []
         for title in orderedTitles {
@@ -191,7 +192,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+        let xml = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+        let xmlToSegue = checkXML(xml)
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
@@ -207,6 +209,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 controller.imageAuthor = (xmlToSegue["xia"]["author"].value == nil) ? "" : xmlToSegue["xia"]["author"].value!
                 controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
                 controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
+                let readonlyStatus: Bool = (xmlToSegue["xia"]["readonly"].value == "true" ) ? true : false
+                controller.readOnlyState = readonlyStatus
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue

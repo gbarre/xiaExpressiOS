@@ -383,6 +383,7 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "description" , value: "\(name) description", attributes: nil)
         xml.addChild(name: "author", value: "", attributes: nil)
         xml.addChild(name: "rights", value: "", attributes: nil)
+        xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
         // Create details
         xml.addChild(name: "details")

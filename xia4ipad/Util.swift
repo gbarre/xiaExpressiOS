@@ -52,6 +52,16 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
     parentView.addSubview(myView)
 }
 
+func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
+    for child in xml["xia"].all! {
+        let readonly = child["readonly"].value
+        if (readonly != "true" && readonly != "false") {
+            xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+        }
+    }
+    return xml
+}
+
 func convertStringToCGFloat(txt: String) -> CGFloat {
     let cgFloat: CGFloat?
     if let double = Double("\(txt)") {
