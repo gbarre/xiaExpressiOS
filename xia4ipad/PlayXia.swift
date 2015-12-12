@@ -48,6 +48,11 @@ class PlayXia: UIViewController {
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
+        let metasSelector = Selector("goMetas")
+        let downSwipe = UISwipeGestureRecognizer(target: self, action: metasSelector )
+        downSwipe.direction = UISwipeGestureRecognizerDirection.Down
+        view.addGestureRecognizer(downSwipe)
+        
         // Load image
         let filePath = "\(self.filePath).jpg"
         let img = UIImage(contentsOfFile: filePath)
@@ -157,8 +162,20 @@ class PlayXia: UIViewController {
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "playMetas") {
+            if let controller:PlayImageMetadatas = segue.destinationViewController as? PlayImageMetadatas {
+                controller.xml = self.xml
+            }
+        }
+    }
+    
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func goMetas() {
+        performSegueWithIdentifier("playMetas", sender: self)
     }
     
     func hideDetails(hidden: Bool) {
@@ -223,12 +240,21 @@ class PlayXia: UIViewController {
                 txtView.attributedText = attributedText
             }
         }
-        txtView.frame = CGRect(x: screenWidth / 7, y: 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
+        txtView.frame = CGRect(x: screenWidth / 7, y: -screenWidth / 3.5 - 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
         txtView.backgroundColor = UIColor.lightGrayColor()
+        txtView.userInteractionEnabled = true
         txtView.scrollEnabled = true
         txtView.editable = false
         txtView.selectable = true
+        txtView.dataDetectorTypes = UIDataDetectorTypes.Link
         txtView.tag = 667
+        txtView.layer.cornerRadius = 5
+        self.view.addSubview(txtView)
+        
+        // Let's show it baby !
+        UIView.animateWithDuration(1.0, animations: { () -> Void in
+            self.txtView.frame.origin = CGPointMake(self.screenWidth / 7, 30)
+        })
         self.view.addSubview(txtView)
         showDetail = true
         

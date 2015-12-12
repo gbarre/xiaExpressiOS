@@ -293,6 +293,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" secureTextEntry="YES"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -363,11 +364,57 @@
                     <connections>
                         <outlet property="bkgdImage" destination="0Lw-CX-Jch" id="izJ-qn-wVK"/>
                         <outlet property="btnZoom" destination="lvp-8K-r7k" id="tdE-Ag-VZA"/>
+                        <segue destination="qPI-AN-OzC" kind="presentation" identifier="playMetas" modalPresentationStyle="formSheet" id="sHY-m5-oAp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2554" y="830"/>
+        </scene>
+        <!--Play Image Metadatas-->
+        <scene sceneID="PeB-Zl-vO5">
+            <objects>
+                <viewController id="qPI-AN-OzC" customClass="PlayImageMetadatas" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="O36-Uy-ulJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ojb-BF-zQZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="npe-DL-JEH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vcV-ky-zXs">
+                                <rect key="frame" x="20" y="44" width="560" height="536"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sXL-1t-FzG">
+                                <rect key="frame" x="550" y="0.0" width="30" height="30"/>
+                                <state key="normal" title="OK"/>
+                                <connections>
+                                    <action selector="Hide:" destination="qPI-AN-OzC" eventType="touchUpInside" id="EFc-Rj-8U4"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="vcV-ky-zXs" secondAttribute="leading" id="6VA-cm-vAo"/>
+                            <constraint firstItem="Ojb-BF-zQZ" firstAttribute="top" secondItem="vcV-ky-zXs" secondAttribute="bottom" constant="20" id="FAy-Fy-k9i"/>
+                            <constraint firstItem="vcV-ky-zXs" firstAttribute="top" secondItem="O36-Uy-ulJ" secondAttribute="bottom" constant="44" id="SCS-C9-5yt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="vcV-ky-zXs" secondAttribute="trailing" id="UHG-JO-lWE"/>
+                            <constraint firstItem="sXL-1t-FzG" firstAttribute="top" secondItem="O36-Uy-ulJ" secondAttribute="bottom" id="kkh-8d-7nb"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="sXL-1t-FzG" secondAttribute="trailing" id="wqf-fc-AtL"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="content" destination="vcV-ky-zXs" id="XLZ-ei-7N1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CMD-SV-YNm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3258" y="830"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
