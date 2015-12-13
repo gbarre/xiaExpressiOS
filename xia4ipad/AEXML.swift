@@ -242,7 +242,12 @@ public class AEXMLElement: NSObject {
         if attributes.count > 0 {
             // insert attributes
             for (key, value) in attributes {
-                xml += " \(key)=\"\(value)\""
+                var escapedValue = value.stringByReplacingOccurrencesOfString("&", withString: "&amp;", options: .LiteralSearch)
+                let escapeChars = ["<" : "&lt;", ">" : "&gt;", "'" : "&apos;", "\"" : "&quot;"]
+                for (char, echar) in escapeChars {
+                    escapedValue = escapedValue.stringByReplacingOccurrencesOfString(char, withString: echar, options: .LiteralSearch)
+                }
+                xml += " \(key)=\"\(escapedValue)\""
             }
         }
         
