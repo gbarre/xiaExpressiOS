@@ -295,6 +295,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     if pointsArray.count > 2 {
+                        var attainablePoints: Int = 0
                         for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
                             let x = convertStringToCGFloat(coords[0]) * scale
@@ -303,6 +304,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             newPoint?.layer.zPosition = 1
                             newPoint?.hidden = true
                             imgView.addSubview(newPoint!)
+                            if imgView.frame.contains((newPoint?.center)!) {
+                                attainablePoints++
+                            }
                         }
                         if let constraint = detail.attributes["constraint"] {
                             details["\(detailTag)"]?.constraint = constraint
@@ -312,6 +316,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         }
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
                         buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                        
+                        if attainablePoints < 2 {
+                            performFullDetailRemove(detailTag, force: true)
+                        }
                     }
                 }
             }
