@@ -196,7 +196,8 @@ class PlayXia: UIViewController {
                 subview.hidden = false
             }
         }
-        // Add new background image
+
+        // Add new background image (with blurred effect)
         let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
         blurredBackground.contentMode = UIViewContentMode.ScaleAspectFit
         blurredBackground.image = bkgdImage.image
@@ -224,6 +225,7 @@ class PlayXia: UIViewController {
         cropDetail.tag = 666
         self.view.addSubview(cropDetail)
         
+        // Show the text...
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
                 zoomStatus = (d.attributes["zoom"] == "true") ? true : false
@@ -258,41 +260,53 @@ class PlayXia: UIViewController {
         self.view.addSubview(txtView)
         showDetail = true
         
-        // Calculate available space for detail view
-        let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
-        let availableWidth = screenWidth
-        let availableHeight = screenHeight - txtViewBottom - 15
-        let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
-        
-        // Center detail in the available space
-        let distanceX = availableRect.midX - pathFrameCorners.midX
-        let distanceY = availableRect.midY - pathFrameCorners.midY
-        var newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
-        
-        // Should we scale the detail to fit in available space ?
+        var newCropCenter = CGPointMake(cropDetail.center.x, cropDetail.center.y)
         var detailScale: CGFloat = 1.0
-        if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
-            let detailScaleX = availableWidth / pathFrameCorners.width
-            let detailScaleY = availableHeight / pathFrameCorners.height
-            detailScale = min(detailScaleX, detailScaleY)
-        }
-        else if zoomStatus { // looking for max zoom available if enabled on this detail...
+        
+        // Show the detail zoomed
+        if zoomDetail {
             // Show btnZoom
             btnZoom.layer.zPosition = 2
             btnZoom.enabled = true
-            let detailScaleX = availableWidth / pathFrameCorners.width
-            let detailScaleY = availableHeight / pathFrameCorners.height
-            zoomDetailScale = min(detailScaleX, detailScaleY, maxZoomScale)
-            zoomCropCenter = CGPointMake(cropDetail.center.x + distanceX * zoomDetailScale, cropDetail.center.y - txtViewBottom + distanceY * zoomDetailScale)
-            if zoomDetail {
-                detailScale = zoomDetailScale
-                newCropCenter = zoomCropCenter
-            }
-        }
+            let detailScaleX = (screenWidth - 10) / pathFrameCorners.width
+            let detailScaleY = (screenHeight - 50) / pathFrameCorners.height
+            detailScale = min(detailScaleX, detailScaleY, maxZoomScale)
+            let distanceX = screenWidth/2 - pathFrameCorners.midX
+            let distanceY = screenHeight/2 - pathFrameCorners.midY
+            //zoomCropCenter = CGPointMake(cropDetail.center.x + distanceX * zoomDetailScale, cropDetail.center.y - txtViewBottom + distanceY * zoomDetailScale)
+            newCropCenter = CGPointMake(cropDetail.center.x + distanceX * detailScale, cropDetail.center.y + distanceY * detailScale)
+            
+        } // no zoom
         else {
-            btnZoom.layer.zPosition = -1
-            btnZoom.enabled = false
-            btnZoom.on = false
+            // Calculate available space for detail view
+            let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
+            let availableWidth = screenWidth
+            let availableHeight = screenHeight - txtViewBottom - 15
+            let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
+            
+            // Center detail in the available space
+            var distanceX = availableRect.midX - pathFrameCorners.midX
+            var distanceY = availableRect.midY - pathFrameCorners.midY
+            
+            // Should we scale the detail to fit in available space ?
+            if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
+                let detailScaleX = (availableWidth - 10) / pathFrameCorners.width
+                let detailScaleY = (availableHeight - 30) / pathFrameCorners.height
+                detailScale = min(detailScaleX, detailScaleY)
+                distanceX = availableRect.midX - pathFrameCorners.midX
+                distanceY = availableRect.midY - pathFrameCorners.midY - 10
+                
+                newCropCenter = CGPointMake(cropDetail.center.x + distanceX * detailScale, cropDetail.center.y + distanceY)
+            }
+            else {
+                newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
+                
+            }
+            // Show btnZoom
+            if zoomStatus {
+                btnZoom.layer.zPosition = 2
+                btnZoom.enabled = true
+            }
         }
         
         // let's rock & rolls
@@ -300,5 +314,6 @@ class PlayXia: UIViewController {
             cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
             cropDetail.center = newCropCenter
         })
+        
     }
 }

@@ -291,7 +291,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
-                    
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     if pointsArray.count > 2 {
@@ -304,6 +303,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             newPoint?.layer.zPosition = 1
                             newPoint?.hidden = true
                             imgView.addSubview(newPoint!)
+                            dbg.pt("\(newPoint?.center)")
                             if imgView.frame.contains((newPoint?.center)!) {
                                 attainablePoints++
                             }
@@ -318,7 +318,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                         
                         if attainablePoints < 2 {
-                            performFullDetailRemove(detailTag, force: true)
+                            //performFullDetailRemove(detailTag, force: true)
                         }
                     }
                 }
