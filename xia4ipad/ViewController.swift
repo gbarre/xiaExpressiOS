@@ -125,11 +125,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
             let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
-            if (ext != "xml") {
+            if (ext != "xml" && file != "Inbox") {
                 file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
                 arrayNames.append(file)
             }
         }
+        
         // Create default image if the is no image in Documents directory
         if ( arrayNames.count == 0 ) {
             let now:Int = Int(NSDate().timeIntervalSince1970)

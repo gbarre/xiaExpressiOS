@@ -332,7 +332,7 @@
                         <viewControllerLayoutGuide type="top" id="xr2-Gl-F3b"/>
                         <viewControllerLayoutGuide type="bottom" id="iNn-t7-ycD"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hBu-vw-FzK">
+                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="hBu-vw-FzK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -342,9 +342,10 @@
                                     <action selector="btnZoomAction:" destination="xod-8C-OKb" eventType="valueChanged" id="5zp-zf-X1U"/>
                                 </connections>
                             </switch>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Lw-CX-Jch">
+                            <imageView multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Lw-CX-Jch">
                                 <rect key="frame" x="0.0" y="-20" width="600" height="620"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

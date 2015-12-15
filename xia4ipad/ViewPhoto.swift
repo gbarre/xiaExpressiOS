@@ -174,29 +174,50 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     @IBAction func debugXML(sender: AnyObject) {
-        dbg.pt(xml.xmlString)
-        /*for detail in details {
+        //dbg.pt(xml.xmlString)
+        for detail in details {
             dbg.pt("\(detail.0) : \(detail.1.constraint)")
-        }*/
+        }
     }
     
     @IBAction func btnExport(sender: AnyObject) {
+        // encode image to base64
+        let imageData = UIImageJPEGRepresentation(imgView.image!, 85)
+        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
+        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
+        
+        // prepare xml
+        let xiaXML = AEXMLDocument()
+        xiaXML.addChild(name: "XiaiPad")
+        xiaXML["XiaiPad"].addChild(xml["xia"])
+        xiaXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String, attributes: nil)
+        
+        // write xml to temp directory
+        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let tempFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
+        do {
+            try xiaXML.xmlString.writeToFile(tempFilePath, atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch {
+            print("\(error)")
+        }
+        
         let mailComposer = MFMailComposeViewController()
         mailComposer.mailComposeDelegate = self
         //Check to see the device can send email.
         if( MFMailComposeViewController.canSendMail() ) {
             //Set the subject and message of the email
-            mailComposer.setSubject("[xia iPad] debug sources")
-            mailComposer.setMessageBody("My bug : ", isHTML: false)
+            let xiaTitle = (xml["xia"]["title"].value == nil) ? "\(now)" : xml["xia"]["title"].value!
+            mailComposer.setSubject("[xia iPad] export \"\(xiaTitle)\"")
+            mailComposer.setMessageBody("", isHTML: false)
             
-            //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
-            let filePathJPG = "\(filePath).jpg"
-            if let fileData = NSData(contentsOfFile: filePathJPG) {
-                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(fileName)")
+            if let fileData = NSData(contentsOfFile: tempFilePath) {
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(now).xml")
             }
-            let filePathXML = "\(filePath).xml"
-            if let fileData = NSData(contentsOfFile: filePathXML) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(fileName)")
+            else {
+                let alert = UIAlertController(title: "Export issue", message: "Sorry, we are unable to export your resource...", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
             }
             self.presentViewController(mailComposer, animated: true, completion: nil)
         }
@@ -303,7 +324,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             newPoint?.layer.zPosition = 1
                             newPoint?.hidden = true
                             imgView.addSubview(newPoint!)
-                            dbg.pt("\(newPoint?.center)")
                             if imgView.frame.contains((newPoint?.center)!) {
                                 attainablePoints++
                             }
@@ -323,6 +343,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
+            
             readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
         }
         cleaningDetails()

@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var dbg = debug(enable: true)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -40,7 +40,71 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
+    
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        let url = url.standardizedURL
+        var errorAtImageImport = true
+        var errorAtXMLImport = true
+        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let documentRoot = NSHomeDirectory() + "/Documents"
+        
+        if url != nil {
+            // read file to extract image
+            var path = url!.path!
+            path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
+            let xml = getXML(path)
+            if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+                // convert base64 to image
+                let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
+                let image = UIImage(data: imageDataB64!)
+                // store new image to document directory
+                let imageData = UIImageJPEGRepresentation(image!, 85)
+                if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                    errorAtImageImport = false
+                }
+            }
+            
+            // store the xia xml
+            if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+                let xmlXIA = AEXMLDocument()
+                xmlXIA.addChild(xml["XiaiPad"]["xia"])
+                let xmlString = xmlXIA.xmlString
+                dbg.pt(xmlString)
+                do {
+                    try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                    errorAtXMLImport = false
+                }
+                catch {
+                    dbg.pt("\(error)")
+                }
+            }
+        }
+        // purge Inbox
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath("\(documentRoot)/Inbox")
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            do {
+                let filePath = "\(documentRoot)/Inbox/\(file)"
+                try fileManager.removeItemAtPath(filePath)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        // something was wrong
+        if errorAtXMLImport {
+            do {
+                try fileManager.removeItemAtPath("\(documentRoot)/\(now).jpg")
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        return true
+    }
 
 }
 
