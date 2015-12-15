@@ -30,6 +30,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     var beginTouchLocation = CGPoint(x: 0, y: 0)
     var editDetail = -1
     var moveDetail = false
+    var readOnly: Bool = false
     
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     var img = UIImage()
@@ -137,7 +138,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            self.setBtnPlayIcon()
+            self.setBtnsIcons()
             self.changeDetailColor(self.currentDetailTag, color: "edit")
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
         })
@@ -168,39 +169,68 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
             performFullDetailRemove(detailTag, force: true)
-            setBtnPlayIcon()
+            setBtnsIcons()
         }
     }
     
     @IBAction func debugXML(sender: AnyObject) {
-        dbg.pt(xml.xmlString)
+        //dbg.pt(xml.xmlString)
         for detail in details {
             dbg.pt("\(detail.0) : \(detail.1.constraint)")
         }
     }
     
     @IBAction func btnExport(sender: AnyObject) {
+        // encode image to base64
+        let imageData = UIImageJPEGRepresentation(imgView.image!, 85)
+        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
+        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
+        
+        // prepare xml
+        let xiaXML = AEXMLDocument()
+        xiaXML.addChild(name: "XiaiPad")
+        xiaXML["XiaiPad"].addChild(xml["xia"])
+        xiaXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String, attributes: nil)
+        
+        // write xml to temp directory
+        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let tempFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
+        do {
+            try xiaXML.xmlString.writeToFile(tempFilePath, atomically: false, encoding: NSUTF8StringEncoding)
+        }
+        catch {
+            print("\(error)")
+        }
+        
         let mailComposer = MFMailComposeViewController()
         mailComposer.mailComposeDelegate = self
         //Check to see the device can send email.
         if( MFMailComposeViewController.canSendMail() ) {
             //Set the subject and message of the email
-            mailComposer.setSubject("[xia iPad] debug sources")
-            mailComposer.setMessageBody("My bug : ", isHTML: false)
+            let xiaTitle = (xml["xia"]["title"].value == nil) ? "\(now)" : xml["xia"]["title"].value!
+            mailComposer.setSubject("[xia iPad] export \"\(xiaTitle)\"")
+            mailComposer.setMessageBody("", isHTML: false)
             
-            //if let filePath = NSBundle.mainBundle().pathForResource("swifts", ofType: "wav") {
-            let filePathJPG = "\(filePath).jpg"
-            if let fileData = NSData(contentsOfFile: filePathJPG) {
-                mailComposer.addAttachmentData(fileData, mimeType: "image/jpg", fileName: "\(fileName)")
+            if let fileData = NSData(contentsOfFile: tempFilePath) {
+                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(now).xml")
             }
-            let filePathXML = "\(filePath).xml"
-            if let fileData = NSData(contentsOfFile: filePathXML) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(fileName)")
+            else {
+                let alert = UIAlertController(title: "Export issue", message: "Sorry, we are unable to export your resource...", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
             }
             self.presentViewController(mailComposer, animated: true, completion: nil)
         }
         else {
             dbg.pt("Device cannot send mail")
+        }
+        
+        // remove tmp file
+        do {
+            try NSFileManager().removeItemAtPath(tempFilePath)
+        }
+        catch let error as NSError {
+            dbg.pt(error.localizedDescription)
         }
     }
     
@@ -255,7 +285,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
         
-        setBtnPlayIcon()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -291,18 +320,21 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                     let newDetail = xiaDetail(tag: detailTag, scale: scale)
                     details["\(detailTag)"] = newDetail
-                    
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     if pointsArray.count > 2 {
-                        for var point in pointsArray {
-                            point = point.stringByReplacingOccurrencesOfString(".", withString: ",")
+                        var attainablePoints: Int = 0
+                        for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
-                            let x = CGFloat(NSNumberFormatter().numberFromString(coords[0])!) * scale // convert String to CGFloat
-                            let y = CGFloat(NSNumberFormatter().numberFromString(coords[1])!) * scale // convert String to CGFloat
+                            let x = convertStringToCGFloat(coords[0]) * scale
+                            let y = convertStringToCGFloat(coords[1]) * scale
                             let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
                             newPoint?.layer.zPosition = 1
+                            newPoint?.hidden = true
                             imgView.addSubview(newPoint!)
+                            if imgView.frame.contains((newPoint?.center)!) {
+                                attainablePoints++
+                            }
                         }
                         if let constraint = detail.attributes["constraint"] {
                             details["\(detailTag)"]?.constraint = constraint
@@ -312,11 +344,18 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         }
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
                         buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                        
+                        if attainablePoints < 2 {
+                            //performFullDetailRemove(detailTag, force: true)
+                        }
                     }
                 }
             }
+            
+            readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
         }
         cleaningDetails()
+        setBtnsIcons()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -380,50 +419,51 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
             
         default:
-            // Get tag of the touched detail
-            var touchedTag: Int = 0
-            for detail in details {
-                let (detailTag, detailPoints) = detail
-                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    beginTouchLocation = location
-                    editDetail = touchedTag
-                    currentDetailTag = touchedTag
-                    movingCoords = location
-                    moveDetail = true
-                    changeDetailColor(editDetail, color: "edit")
-                    break
-                }
-            }
-            
-            // Should we move an existing point ?
-            if (currentDetailTag != -1) {
-                movingPoint = -1
-                let detailPoints = details["\(currentDetailTag)"]?.points.count
-                for var i=0; i<detailPoints; i++ {
-                    let ploc = details["\(currentDetailTag)"]?.points[i].center
-                    
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
-                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                    
-                    if ( distance < 20 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
-                        switch details["\(currentDetailTag)"]!.constraint {
-                        case "ellipse":
-                            toMove.center = ploc!
-                            break
-                        default:
-                            toMove.center = location
-                            break
-                        }
-                        details["\(currentDetailTag)"]?.points[i] = toMove
-                        movingPoint = i
-                        moveDetail = false
+            if !readOnly {// Get tag of the touched detail
+                var touchedTag: Int = 0
+                for detail in details {
+                    let (detailTag, detailPoints) = detail
+                    if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                        touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                        beginTouchLocation = location
+                        editDetail = touchedTag
+                        currentDetailTag = touchedTag
+                        movingCoords = location
+                        moveDetail = true
+                        changeDetailColor(editDetail, color: "edit")
                         break
                     }
-                    else { // No point here, just move the detail
-                        moveDetail = true
+                }
+                
+                // Should we move an existing point ?
+                if (currentDetailTag != -1) {
+                    movingPoint = -1
+                    let detailPoints = details["\(currentDetailTag)"]?.points.count
+                    for var i=0; i<detailPoints; i++ {
+                        let ploc = details["\(currentDetailTag)"]?.points[i].center
+                        
+                        let xDist: CGFloat = (location.x - ploc!.x)
+                        let yDist: CGFloat = (location.y - ploc!.y)
+                        let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                        
+                        if ( distance < 20 ) { // We are close to an exiting point, move it
+                            let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
+                            switch details["\(currentDetailTag)"]!.constraint {
+                            case "ellipse":
+                                toMove.center = ploc!
+                                break
+                            default:
+                                toMove.center = location
+                                break
+                            }
+                            details["\(currentDetailTag)"]?.points[i] = toMove
+                            movingPoint = i
+                            moveDetail = false
+                            break
+                        }
+                        else { // No point here, just move the detail
+                            moveDetail = true
+                        }
                     }
                 }
             }
@@ -451,7 +491,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let yDist: CGFloat = (location.y - ploc!.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             
-            if ( distance < 20 ) {
+            if ( distance < 200 ) {
                 let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
                 let previousPoint: Int = (movingPoint + 3) % 4
                 let nextPoint: Int = (movingPoint + 1) % 4
@@ -460,8 +500,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 // Are there any constraint ?
                 switch details["\(detailTag)"]!.constraint {
                 case "rectangle":
-                    //let previousPoint: Int = (movingPoint == 0) ? 3 : movingPoint - 1
-                    //let nextPoint: Int = (movingPoint == 3) ? 0 : movingPoint + 1
                     if (movingPoint % 2 == 0) {
                         details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint].center.y)
                         details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, location.y)
@@ -530,6 +568,20 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     movingCoords = location
                 }
             }
+        }
+        
+        if details["\(detailTag)"]?.points.count > 2 {
+            // rebuild points & shape
+            for subview in imgView.subviews {
+                if subview.tag == (detailTag + 100) {
+                    subview.removeFromSuperview()
+                }
+                if subview.tag == detailTag {
+                    subview.layer.zPosition = 1
+                }
+            }
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
         }
     }
     
@@ -651,6 +703,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     
                     let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
                     newPoint.layer.zPosition = 1
+                    if thisDetailTag != tag {
+                        newPoint.hidden = true
+                    }
                     imgView.addSubview(newPoint)
                 }
             }
@@ -744,40 +799,67 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func setBtnPlayIcon() {
+    func setBtnsIcons() {
         var i = 0
-        var play = UIBarButtonItem()
+        var btn = UIBarButtonItem()
         var arrayItems = myToolbar.items!
         for item in myToolbar.items! {
-            
             if item.tag == 10 {
                 if createDetail {
-                    play = UIBarButtonItem(barButtonSystemItem: .Stop, target: self, action: "stopCreation")
-                    play.tintColor = UIColor.redColor()
+                    //btn = UIBarButtonItem(barButtonSystemItem: ., target: self, action: "stopCreation")
+                    btn = UIBarButtonItem(title: "STOP", style: .Done, target: self, action: "stopCreation")
+                    btn.tintColor = UIColor.redColor()
                 }
                 else {
-                    play = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
-                    play.tintColor = UIColor.whiteColor()
+                    btn = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
+                    btn.tintColor = UIColor.whiteColor()
                 }
-                play.tag = 10
             }
             else if item.tag == 11 {
-                if createDetail {
-                    play = item
-                    play.tag = 11
-                    play.enabled = false
+                if readOnly {
+                    btn = item
+                    btn.enabled = false
                 }
                 else {
-                    play = item
-                    play.tag = 11
-                    play.enabled = true
+                    btn = item
+                    btn.enabled = true
+                }
+            }
+            else if item.tag == 12 {
+                if createDetail || readOnly {
+                    btn = item
+                    btn.enabled = false
+                }
+                else {
+                    btn = item
+                    btn.enabled = true
+                }
+            }
+            else if item.tag == 13 {
+                if readOnly {
+                    btn = item
+                    btn.enabled = false
+                }
+                else {
+                    btn = item
+                    btn.enabled = true
+                }
+            }
+            else if item.tag == 20 {
+                if readOnly {
+                    btn = item
+                    btn.enabled = false
+                }
+                else {
+                    btn = item
+                    btn.enabled = true
                 }
             }
             else {
-                play = item
-                play.tag = 0
+                btn = item
             }
-            arrayItems[i] = play
+            btn.tag = item.tag
+            arrayItems[i] = btn
             i++
         }
         myToolbar.setItems(arrayItems, animated: false)
@@ -788,6 +870,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         createDetail = false
         btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
-        setBtnPlayIcon()
+        setBtnsIcons()
     }
 }

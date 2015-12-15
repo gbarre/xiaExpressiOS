@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
@@ -52,6 +50,37 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
     myView.backgroundColor = UIColor(white: 0, alpha: 0)
     myView.tag = shapeTag
     parentView.addSubview(myView)
+}
+
+func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
+    for child in xml["xia"].all! {
+        let readonly = child["readonly"].value
+        if (readonly != "true" && readonly != "false") {
+            xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+        }
+    }
+    return xml
+}
+
+func convertStringToCGFloat(txt: String) -> CGFloat {
+    let cgFloat: CGFloat?
+    if let double = Double("\(txt)") {
+        cgFloat = CGFloat(double)
+    }
+    else {
+        let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
+        cgFloat = CGFloat(Double("\(d)")!)
+    }
+    return cgFloat!
+}
+
+func delay(delay:Double, closure:()->()) {
+    dispatch_after(
+        dispatch_time(
+            DISPATCH_TIME_NOW,
+            Int64(delay * Double(NSEC_PER_SEC))
+        ),
+        dispatch_get_main_queue(), closure)
 }
 
 func getXML(path: String) -> AEXMLDocument {

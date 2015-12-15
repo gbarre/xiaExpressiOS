@@ -242,7 +242,12 @@ public class AEXMLElement: NSObject {
         if attributes.count > 0 {
             // insert attributes
             for (key, value) in attributes {
-                xml += " \(key)=\"\(value)\""
+                var escapedValue = value.stringByReplacingOccurrencesOfString("&", withString: "&amp;", options: .LiteralSearch)
+                let escapeChars = ["<" : "&lt;", ">" : "&gt;", "'" : "&apos;", "\"" : "&quot;"]
+                for (char, echar) in escapeChars {
+                    escapedValue = escapedValue.stringByReplacingOccurrencesOfString(char, withString: echar, options: .LiteralSearch)
+                }
+                xml += " \(key)=\"\(escapedValue)\""
             }
         }
         
@@ -383,6 +388,7 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "description" , value: "\(name) description", attributes: nil)
         xml.addChild(name: "author", value: "", attributes: nil)
         xml.addChild(name: "rights", value: "", attributes: nil)
+        xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
         // Create details
         xml.addChild(name: "details")
