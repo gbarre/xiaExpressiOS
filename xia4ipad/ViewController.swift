@@ -145,7 +145,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.CollectionView.reloadData()
         }*/
         self.CollectionView.reloadData()
-        dbg.pt("view did appear")
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -183,9 +182,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        dbg.pt("arrayNames.count : \(arrayNames.count)")
-        self.dbg.pt("Count thumb")
-        self.arrayNames = []
+       self.arrayNames = []
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
         let files = fileManager.enumeratorAtPath(self.documentsDirectory)
@@ -222,18 +219,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.arraySortedNames = [:]
         for name in self.arrayNames {
             let xml = getXML("\(self.documentsDirectory)/\(name).xml")
-            let title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
+            var title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
+            title = "\(title)-\(name)"
             self.arraySortedNames[title!] = name
         }
         
         let orderedTitles = self.arraySortedNames.keys.sort()
-        self.dbg.pt("orederd titles : \(orderedTitles)")
         self.arrayNames = []
         for title in orderedTitles {
-            self.dbg.pt(title)
             self.arrayNames.append(self.arraySortedNames[title]!)
         }
-        self.dbg.pt("ordered arraynames \(self.arrayNames)")
         
         self.CollectionView.reloadData()
         
@@ -244,7 +239,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
         let index = indexPath.item
-        dbg.pt("fichier : \(arrayNames[index])")
         // Load image
         if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
             // Use cached version
