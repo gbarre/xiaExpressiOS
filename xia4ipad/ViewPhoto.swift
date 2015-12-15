@@ -224,6 +224,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         else {
             dbg.pt("Device cannot send mail")
         }
+        
+        // remove tmp file
+        do {
+            try NSFileManager().removeItemAtPath(tempFilePath)
+        }
+        catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!

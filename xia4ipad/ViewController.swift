@@ -13,7 +13,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var dbg = debug(enable: true)
     
     let documentsDirectory = NSHomeDirectory() + "/Documents"
-    var nbThumb:Int = 0
     var arrayNames = [String]()
     var arraySortedNames = [String: String]() // Label : FileName
     let cache = NSCache()
@@ -119,44 +118,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
-        // Load all images names
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath(documentsDirectory)
-        while let fileObject = files?.nextObject() {
-            var file = fileObject as! String
-            let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
-            if (ext != "xml" && file != "Inbox") {
-                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
-                arrayNames.append(file)
-            }
-        }
-        
-        // Create default image if the is no image in Documents directory
-        if ( arrayNames.count == 0 ) {
-            let now:Int = Int(NSDate().timeIntervalSince1970)
-            let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
-            let img = UIImage(contentsOfFile: filePath!)
-            let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
-            
-            // Create associated xml
-            let xml = AEXMLDocument()
-            let xmlString = xml.createXML("\(now)")
-            do {
-                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
-            
-            arrayNames.append("\(now)")
-            nbThumb = arrayNames.count
-        }
-        else {
-            nbThumb = arrayNames.count
-        }
-        
-        //self.CollectionView.reloadData()
+        // add observer to detect enter foreground and rebuild collection
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func applicationWillEnterForeground(notification: NSNotification) {
+        self.CollectionView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -169,20 +140,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func viewDidAppear(animated: Bool) {
-        arraySortedNames = [:]
-        for name in arrayNames {
-            let xml = getXML("\(documentsDirectory)/\(name).xml")
-            let title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
-            arraySortedNames[title!] = name
-        }
-        
-        let orderedTitles = arraySortedNames.keys.sort()
-        arrayNames = []
-        for title in orderedTitles {
-            //dbg.pt(title)
-            arrayNames.append(arraySortedNames[title]!)
-        }
+        /*delay(0.4) {
+            self.dbg.pt("view did appear")
+            self.CollectionView.reloadData()
+        }*/
         self.CollectionView.reloadData()
+        dbg.pt("view did appear")
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -220,14 +183,68 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        return nbThumb;
+        dbg.pt("arrayNames.count : \(arrayNames.count)")
+        self.dbg.pt("Count thumb")
+        self.arrayNames = []
+        // Load all images names
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath(self.documentsDirectory)
+        while let fileObject = files?.nextObject() {
+            var file = fileObject as! String
+            let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
+            if (ext != "xml" && file != "Inbox") {
+                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
+                self.arrayNames.append(file)
+            }
+        }
+        // Create default image if the is no image in Documents directory
+        if ( self.arrayNames.count == 0 ) {
+            let now:Int = Int(NSDate().timeIntervalSince1970)
+            let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
+            let img = UIImage(contentsOfFile: filePath!)
+            let imageData = UIImageJPEGRepresentation(img!, 85)
+            imageData?.writeToFile(self.documentsDirectory + "/\(now).jpg", atomically: true)
+            
+            // Create associated xml
+            let xml = AEXMLDocument()
+            let xmlString = xml.createXML("\(now)")
+            do {
+                try xmlString.writeToFile(self.documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+            }
+            catch {
+                self.dbg.pt("\(error)")
+            }
+            
+            self.arrayNames.append("\(now)")
+        }
+        
+        // order thumb by title
+        self.arraySortedNames = [:]
+        for name in self.arrayNames {
+            let xml = getXML("\(self.documentsDirectory)/\(name).xml")
+            let title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
+            self.arraySortedNames[title!] = name
+        }
+        
+        let orderedTitles = self.arraySortedNames.keys.sort()
+        self.dbg.pt("orederd titles : \(orderedTitles)")
+        self.arrayNames = []
+        for title in orderedTitles {
+            self.dbg.pt(title)
+            self.arrayNames.append(self.arraySortedNames[title]!)
+        }
+        self.dbg.pt("ordered arraynames \(self.arrayNames)")
+        
+        self.CollectionView.reloadData()
+        
+        return arrayNames.count;
     }
-    
+
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
         let index = indexPath.item
-      
+        dbg.pt("fichier : \(arrayNames[index])")
         // Load image
         if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
             // Use cached version
@@ -293,7 +310,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     self.arrayNames.removeAtIndex(deleteIndex)
                     
                     // Delete cell in CollectionView
-                    self.nbThumb--
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information
@@ -358,7 +374,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             dbg.pt("\(error)")
         }
         arrayNames.append("\(now)")
-        nbThumb = arrayNames.count
     }
     
     func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{

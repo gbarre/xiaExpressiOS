@@ -69,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let xmlXIA = AEXMLDocument()
                 xmlXIA.addChild(xml["XiaiPad"]["xia"])
                 let xmlString = xmlXIA.xmlString
-                dbg.pt(xmlString)
                 do {
                     try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
                     errorAtXMLImport = false
