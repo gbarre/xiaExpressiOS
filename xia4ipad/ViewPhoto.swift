@@ -242,12 +242,15 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     @IBOutlet weak var myToolbar: UIToolbar!
+    @IBOutlet weak var imgTopBarBkgd: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         myToolbar.layer.zPosition = 999
+        imgTopBarBkgd.layer.zPosition=998
+        imgTopBarBkgd.hidden = false
         
         // Load image
         let filePath = "\(self.filePath).jpg"
