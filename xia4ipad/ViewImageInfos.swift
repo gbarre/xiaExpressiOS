@@ -21,8 +21,8 @@ class ViewImageInfos: UIViewController {
     var fileName: String = ""
     var filePath: String = ""
     var pass: String = ""
+    weak var viewPhotoController: ViewPhoto?
     
-    @IBOutlet weak var navbar: UINavigationItem!
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtAuthor: UITextField!
     @IBOutlet weak var txtRights: UITextField!
@@ -108,6 +108,8 @@ class ViewImageInfos: UIViewController {
         xml["xia"]["readonly"].value = "\(readOnly.on)"
         xml["xia"]["readonly"].attributes["code"] = pass
         let _ = writeXML(xml, path: "\(filePath).xml")
+        viewPhotoController?.btnTitleLabel.title = txtTitle.text
+        txtTitle.resignFirstResponder()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -125,10 +127,10 @@ class ViewImageInfos: UIViewController {
         txtRights.text = self.imageRights
         txtDesc.text = self.imageDesc
         readOnly.setOn(readOnlyState, animated: true)
-        navbar.title = txtTitle.text
         
         // autofocus
         txtTitle.becomeFirstResponder()
+        txtTitle.backgroundColor = UIColor.clearColor()
         
         // Avoid keyboard to mask bottom
         let width: CGFloat = UIScreen.mainScreen().bounds.width - 100

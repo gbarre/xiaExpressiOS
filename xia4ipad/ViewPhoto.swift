@@ -705,6 +705,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.fileName = self.fileName
                 controller.filePath = self.filePath
                 controller.xml = xml
+                controller.viewPhotoController = self
             }
         }
         if (segue.identifier == "playXia") {

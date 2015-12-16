@@ -9,10 +9,22 @@
 /* Begin PBXBuildFile section */
 		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
 		F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */; };
+		F051038B1C21C01700E6C25C /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
+		F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
+		F051038D1C21C01700E6C25C /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
+		F051038E1C21C01700E6C25C /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
+		F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */; };
+		F05103901C21C01700E6C25C /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
+		F05103911C21C01700E6C25C /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
+		F05103921C21C01700E6C25C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
+		F05103931C21C01700E6C25C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */; };
+		F05103941C21C01700E6C25C /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
+		F05103951C21C01700E6C25C /* ViewImageInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */; };
+		F05103961C21C01700E6C25C /* ViewPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */; };
+		F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F077D90E1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */; };
-		F077D90F1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */; };
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
 		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
@@ -286,8 +298,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F077D90F1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */,
+				F05103931C21C01700E6C25C /* ViewController.swift in Sources */,
+				F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */,
+				F05103921C21C01700E6C25C /* Util.swift in Sources */,
+				F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */,
+				F05103941C21C01700E6C25C /* ViewDetailInfos.swift in Sources */,
+				F051038E1C21C01700E6C25C /* PhotoThumbnail.swift in Sources */,
+				F051038D1C21C01700E6C25C /* debug.swift in Sources */,
+				F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */,
+				F05103901C21C01700E6C25C /* PlayXia.swift in Sources */,
+				F05103951C21C01700E6C25C /* ViewImageInfos.swift in Sources */,
+				F05103961C21C01700E6C25C /* ViewPhoto.swift in Sources */,
 				F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */,
+				F05103911C21C01700E6C25C /* ShapeView.swift in Sources */,
+				F051038B1C21C01700E6C25C /* AEXML.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
