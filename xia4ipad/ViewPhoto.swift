@@ -372,6 +372,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
                         buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                         
+                        details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
+                        
                         if attainablePoints < 2 {
                             //performFullDetailRemove(detailTag, force: true)
                         }
@@ -459,14 +461,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         editDetail = touchedTag
                         currentDetailTag = touchedTag
                         movingCoords = location
-                        moveDetail = true
+                        moveDetail = (detailPoints.locked) ? false : true
                         changeDetailColor(editDetail)
                         break
                     }
                 }
                 
                 // Should we move an existing point ?
-                if (currentDetailTag != -1) {
+                if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
                     movingPoint = -1
                     let detailPoints = details["\(currentDetailTag)"]?.points.count
                     for var i=0; i<detailPoints; i++ {
@@ -492,7 +494,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             break
                         }
                         else { // No point here, just move the detail
-                            moveDetail = true
+                            moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
                         }
                     }
                 }
@@ -692,6 +694,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.xml = self.xml
                         controller.index = self.index
                         controller.filePath = filePath
+                        controller.viewPhotoController = self
                     }
                 }
             }

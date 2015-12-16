@@ -21,6 +21,7 @@ class ViewDetailInfos: UIViewController {
     var index: Int = 0
     var fileName: String = ""
     var filePath: String = ""
+    weak var viewPhotoController: ViewPhoto?
 
     @IBOutlet weak var btnZoom: UISwitch!
     @IBOutlet weak var btnLock: UISwitch!
@@ -42,6 +43,8 @@ class ViewDetailInfos: UIViewController {
             }
         }
         let _ = writeXML(xml, path: "\(filePath).xml")
+        viewPhotoController?.details["\(tag)"]?.locked = btnLock.on
+        btnLock.resignFirstResponder()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

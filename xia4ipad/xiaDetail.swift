@@ -14,6 +14,7 @@ class xiaDetail: NSObject {
     var tag: Int = 0
     var scale: CGFloat = 1.0
     var constraint: String = ""
+    var locked: Bool = false
     
     init(tag: Int, scale: CGFloat){
         self.tag = tag
