@@ -38,6 +38,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     let editColor: UIColor = UIColor.redColor()
     let noEditColor: UIColor = UIColor.greenColor()
+    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBAction func btnCancel(sender: AnyObject) {
         self.navigationController?.popToRootViewControllerAnimated(true)
@@ -75,7 +76,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            self.changeDetailColor(self.currentDetailTag)
             
             // Now build the rectangle
             let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
@@ -110,7 +111,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            self.changeDetailColor(self.currentDetailTag)
             
             // Now build the rectangle
             let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
@@ -145,7 +146,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.setBtnsIcons()
-            self.changeDetailColor(self.currentDetailTag, color: "edit")
+            self.changeDetailColor(self.currentDetailTag)
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
         })
         let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
@@ -442,7 +443,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         currentDetailTag = touchedTag
                         movingCoords = location
                         moveDetail = true
-                        changeDetailColor(editDetail, color: "edit")
+                        changeDetailColor(editDetail)
                         break
                     }
                 }
@@ -630,7 +631,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             
         default:
             if (editDetail == -1 && movingPoint == -1) {
-                changeDetailColor(-1, color: "edit")
+                changeDetailColor(-1)
                 currentDetailTag = 0
                 moveDetail = false
             }
@@ -698,19 +699,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func changeDetailColor(tag: Int, color: String) {
-        var shapeColor: UIColor
-        var altShapeColor: UIColor
+    func changeDetailColor(tag: Int) {
         let imgName = "corner"
-        switch color {
-        case "edit":
-            shapeColor = editColor
-            altShapeColor = noEditColor
-        default:
-            shapeColor = noEditColor
-            altShapeColor = editColor
-        }
-        
         // Change other details color
         for detail in details {
             let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
@@ -737,10 +727,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if detail.1.points.count > 2 {
                 let drawEllipse: Bool = (detail.1.constraint == "ellipse") ? true : false
                 if thisDetailTag != tag {
-                    buildShape(true, color: altShapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                    buildShape(true, color: noEditColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
                 else {
-                    buildShape(true, color: shapeColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                    buildShape(true, color: editColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
                 }
             }
             else { // only 1 or 2 points, remove them
@@ -750,6 +740,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
+        }
+        if tag != -1 {
+            imgTopBarBkgd.backgroundColor = editColor
+        }
+        else {
+            imgTopBarBkgd.backgroundColor = blueColor
         }
         cleanOldViews()
     }
@@ -897,7 +893,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         performFullDetailRemove(currentDetailTag)
         if details["\(currentDetailTag)"]?.constraint == "polygon" {
             currentDetailTag = 0
-            changeDetailColor(-1, color: "edit")
+            changeDetailColor(-1)
         }
         setBtnsIcons()
     }
