@@ -162,8 +162,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let xml = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
-        let xmlToSegue = checkXML(xml)
+        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
@@ -358,8 +357,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 performSegueWithIdentifier("ViewImageInfos", sender: self)
             }
             else {
-                let xml = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
-                let xmlToSegue = checkXML(xml)
+                let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
                 if xmlToSegue["xia"]["readonly"].value! == "true" {
                     performSegueWithIdentifier("playXia", sender: self)
                 }

@@ -59,6 +59,13 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
             xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         }
     }
+    if let xmlDetails = xml["xia"]["details"]["detail"].all {
+        for detail in xmlDetails {
+            if detail.attributes["locked"] == nil {
+                detail.attributes["locked"] = "false"
+            }
+        }
+    }
     return xml
 }
 
@@ -83,7 +90,7 @@ func delay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
-func getXML(path: String) -> AEXMLDocument {
+func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     let data = NSData(contentsOfFile: path)
     var xml: AEXMLDocument!
     do {
@@ -92,7 +99,8 @@ func getXML(path: String) -> AEXMLDocument {
     catch {
         print("\(error)")
     }
-    return xml
+    let checkedXML = checkXML(xml)
+    return checkedXML
 }
 
 func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {

@@ -14,6 +14,7 @@ class ViewDetailInfos: UIViewController {
     
     var tag: Int = 0
     var zoom: Bool = false
+    var lock: Bool = false
     var detailTitle: String = ""
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
@@ -22,6 +23,7 @@ class ViewDetailInfos: UIViewController {
     var filePath: String = ""
 
     @IBOutlet weak var btnZoom: UISwitch!
+    @IBOutlet weak var btnLock: UISwitch!
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
@@ -34,6 +36,7 @@ class ViewDetailInfos: UIViewController {
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
                 d.attributes["zoom"] = "\(btnZoom.on)"
+                d.attributes["locked"] = "\(btnLock.on)"
                 d.attributes["title"] = txtTitle.text
                 d.value = txtDesc.text
             }
@@ -52,6 +55,7 @@ class ViewDetailInfos: UIViewController {
         txtDesc.layer.borderColor = UIColor.grayColor().CGColor
         
         btnZoom.setOn(self.zoom, animated: true)
+        btnLock.setOn(self.lock, animated: true)
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
         

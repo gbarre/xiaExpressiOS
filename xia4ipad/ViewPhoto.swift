@@ -684,6 +684,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     for d in detail {
                         let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
                         controller.zoom = zoomStatus
+                        let lockStatus: Bool = (d.attributes["locked"] == "true") ? true : false
+                        controller.lock = lockStatus
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
                         controller.tag = self.currentDetailTag

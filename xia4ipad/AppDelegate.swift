@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // read file to extract image
             var path = url!.path!
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
-            let xml = getXML(path)
+            let xml = getXML(path, check: false)
             if (xml["XiaiPad"]["image"].value != "element <image> not found") {
                 // convert base64 to image
                 let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)

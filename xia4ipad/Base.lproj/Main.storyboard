@@ -159,7 +159,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="yRX-k2-J6P"/>
-                                    <barButtonItem title="Debug" id="vyQ-fq-BLf">
+                                    <barButtonItem enabled="NO" title="Debug" id="vyQ-fq-BLf">
                                         <connections>
                                             <action selector="debugXML:" destination="fts-Lk-uqf" id="9Zo-za-nFo"/>
                                         </connections>
@@ -374,6 +374,7 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <value key="contentSizeForViewInPopover" type="size" width="800" height="600"/>
                     <connections>
+                        <outlet property="btnLock" destination="sWh-KP-1Y7" id="1e0-Ug-BRV"/>
                         <outlet property="btnZoom" destination="TKS-5y-mBF" id="efq-Sh-TZZ"/>
                         <outlet property="txtDesc" destination="pK2-BQ-1RC" id="DHa-qM-VVU"/>
                         <outlet property="txtTitle" destination="i3A-TS-Y6z" id="8t5-lA-kJz"/>
@@ -649,7 +650,7 @@
         <image name="help" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="g1C-J3-xmC"/>
         <segue reference="JTz-kQ-gaK"/>
-        <segue reference="J54-6x-Hse"/>
     </inferredMetricsTieBreakers>
 </document>
