@@ -145,9 +145,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
-            self.setBtnsIcons()
             self.changeDetailColor(self.currentDetailTag)
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
+            self.setBtnsIcons()
         })
         let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
@@ -242,6 +242,22 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    @IBAction func btnUndo(sender: AnyObject) {
+        if details["\(currentDetailTag)"]?.points.count > 3 {
+            // remove last point
+            details["\(currentDetailTag)"]?.points.last?.removeFromSuperview()
+            details["\(currentDetailTag)"]?.points.removeLast()
+            
+            // Remove old polygon
+            for subview in imgView.subviews {
+                if subview.tag == (currentDetailTag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(currentDetailTag)"]!.points, parentView: imgView)
+        }
+    }
+    
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
     
@@ -282,9 +298,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
-            for recognizer in recognizers {
-                view.removeGestureRecognizer(recognizer)
-            }
+        for recognizer in recognizers {
+        view.removeGestureRecognizer(recognizer)
+        }
         }
         let gbSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
@@ -387,6 +403,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         beginTouchLocation = location
                         movingCoords = location
                         moveDetail = true
+                        movingPoint = -1
                     }
                     else {
                         addPoint = true
@@ -489,12 +506,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let detailTag = self.currentDetailTag
         
         /*if (moveDetail || movingPoint != -1) {
-            // Disable swipe gesture
-            if let recognizers = view.gestureRecognizers {
-                for recognizer in recognizers {
-                    view.removeGestureRecognizer(recognizer)
-                }
-            }
+        // Disable swipe gesture
+        if let recognizers = view.gestureRecognizers {
+        for recognizer in recognizers {
+        view.removeGestureRecognizer(recognizer)
+        }
+        }
         }*/
         
         if ( movingPoint != -1 ) {
@@ -644,9 +661,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
-            for recognizer in recognizers {
-                view.removeGestureRecognizer(recognizer)
-            }
+        for recognizer in recognizers {
+        view.removeGestureRecognizer(recognizer)
+        }
         }
         let gbSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
@@ -657,7 +674,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
-*/
+        */
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -837,44 +854,24 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             else if item.tag == 11 {
-                if readOnly {
-                    btn = item
-                    btn.enabled = false
-                }
-                else {
-                    btn = item
-                    btn.enabled = true
-                }
+                btn = item
+                btn.enabled = (readOnly) ? false : true
             }
             else if item.tag == 12 {
-                if createDetail || readOnly || currentDetailTag == 0 {
-                    btn = item
-                    btn.enabled = false
-                }
-                else {
-                    btn = item
-                    btn.enabled = true
-                }
+                btn = item
+                btn.enabled = (createDetail || readOnly || currentDetailTag == 0) ? false : true
             }
             else if item.tag == 13 {
-                if readOnly || currentDetailTag == 0 {
-                    btn = item
-                    btn.enabled = false
-                }
-                else {
-                    btn = item
-                    btn.enabled = true
-                }
+                btn = item
+                btn.enabled = (readOnly || currentDetailTag == 0) ? false : true
+            }
+            else if item.tag == 14 {
+                btn = item
+                btn.enabled = (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon") ? true : false
             }
             else if item.tag == 20 {
-                if readOnly {
-                    btn = item
-                    btn.enabled = false
-                }
-                else {
-                    btn = item
-                    btn.enabled = true
-                }
+                btn = item
+                btn.enabled = (readOnly) ? false : true
             }
             else {
                 btn = item
@@ -884,7 +881,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             i++
         }
         myToolbar.setItems(arrayItems, animated: false)
-        
     }
     
     func stopCreation() {
