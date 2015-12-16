@@ -849,7 +849,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         var btn = UIBarButtonItem()
         var arrayItems = myToolbar.items!
         for item in myToolbar.items! {
-            if item.tag == 10 {
+            if item.tag == 10 { // play/STOP btn
                 if createDetail {
                     btn = UIBarButtonItem(title: "STOP", style: .Done, target: self, action: "stopCreation")
                     btn.tintColor = UIColor.redColor()
@@ -859,23 +859,23 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     btn.tintColor = UIColor.whiteColor()
                 }
             }
-            else if item.tag == 11 {
+            else if item.tag == 11 { // add detail btn
                 btn = item
                 btn.enabled = (readOnly) ? false : true
             }
-            else if item.tag == 12 {
+            else if item.tag == 12 { // info detail btn
                 btn = item
                 btn.enabled = (createDetail || readOnly || currentDetailTag == 0) ? false : true
             }
-            else if item.tag == 13 {
+            else if item.tag == 13 { // trash btn
                 btn = item
-                btn.enabled = (readOnly || currentDetailTag == 0) ? false : true
+                btn.enabled = (readOnly || currentDetailTag == 0 || details["\(currentDetailTag)"]!.locked ) ? false : true
             }
-            else if item.tag == 14 {
+            else if item.tag == 14 { // undo btn (remove last point of polygon)
                 btn = item
                 btn.enabled = (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon") ? true : false
             }
-            else if item.tag == 20 {
+            else if item.tag == 20 { // export btn
                 btn = item
                 btn.enabled = (readOnly) ? false : true
             }
