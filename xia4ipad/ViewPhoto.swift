@@ -277,7 +277,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         btnInfos.enabled = false
         
         // Add gesture on swipe
-        if let recognizers = view.gestureRecognizers {
+        /*if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
             }
@@ -291,7 +291,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
-        
+        */
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -416,6 +416,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 newPoint?.layer.zPosition = 1
                 imgView.addSubview(newPoint!)
                 
+                movingPoint = (details["\(detailTag)"]?.points.count)! - 1
+                
                 // Remove old polygon
                 for subview in imgView.subviews {
                     if subview.tag == (detailTag + 100) {
@@ -482,14 +484,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         location = touch.locationInView(self.imgView)
         let detailTag = self.currentDetailTag
         
-        if (moveDetail || movingPoint != -1) {
+        /*if (moveDetail || movingPoint != -1) {
             // Disable swipe gesture
             if let recognizers = view.gestureRecognizers {
                 for recognizer in recognizers {
                     view.removeGestureRecognizer(recognizer)
                 }
             }
-        }
+        }*/
         
         if ( movingPoint != -1 ) {
             let ploc = details["\(detailTag)"]?.points[movingPoint].center
@@ -637,7 +639,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
         
         // Add gesture on swipe
-        if let recognizers = view.gestureRecognizers {
+        /*if let recognizers = view.gestureRecognizers {
             for recognizer in recognizers {
                 view.removeGestureRecognizer(recognizer)
             }
@@ -651,6 +653,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
+*/
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -889,6 +892,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         createDetail = false
         btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
+        if details["\(currentDetailTag)"]?.constraint == "polygon" {
+            currentDetailTag = 0
+            changeDetailColor(-1, color: "edit")
+        }
         setBtnsIcons()
     }
 }

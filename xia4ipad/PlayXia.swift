@@ -35,6 +35,7 @@ class PlayXia: UIViewController {
     var scale: CGFloat = 1.0
     
     let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 0, height: 0))
+    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet weak var btnZoom: UISwitch!
@@ -89,7 +90,7 @@ class PlayXia: UIViewController {
                         view.addSubview(newPoint!)
                     }
                     let drawEllipse: Bool = (detail.attributes["constraint"] == "ellipse") ? true : false
-                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
+                    buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }
             }
