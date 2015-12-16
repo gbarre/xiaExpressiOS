@@ -59,6 +59,14 @@ class ViewDetailInfos: UIViewController {
         
         // autofocus
         txtTitle.becomeFirstResponder()
+        
+        // Avoid keyboard to mask bottom
+
+        let width: CGFloat = UIScreen.mainScreen().bounds.width - 100
+        var height: CGFloat = UIScreen.mainScreen().bounds.height / 2
+        height -= (UIDevice.currentDevice().orientation.rawValue < 2) ? 100 : 20
+        self.preferredContentSize = CGSizeMake(width, height)
+        
     }
     
 }

@@ -230,15 +230,19 @@ class PlayXia: UIViewController {
         // Show the text...
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
+                dbg.pt(d.xmlString)
                 zoomStatus = (d.attributes["zoom"] == "true") ? true : false
-                let detailTitle = d.attributes["title"]!
-                let detailDescription = d.value!
+                let detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
+                let detailDescription = (d.value == nil) ? "" : d.value!
                 
                 let titleWidth = detailTitle.characters.count
                 let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
                 attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
                 
-                let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
+                if titleWidth > 0 {
+                    attributedText.appendAttributedString(NSMutableAttributedString(string: "\n\n"))
+                }
+                let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\(detailDescription)")
                 attributedText.appendAttributedString(attributedDescription)
                 
                 txtView.attributedText = attributedText
