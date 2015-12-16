@@ -256,7 +256,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         if ( img.size.width > img.size.height ) { // turn device to landscape
             if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
             {
-                value = UIInterfaceOrientation.LandscapeRight.rawValue
+                value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : 3
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
             landscape = true
@@ -264,7 +264,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         else { // turn device to portrait
             if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
             {
-                value = UIInterfaceOrientation.Portrait.rawValue
+                value = (UIDevice.currentDevice().orientation.rawValue == 2) ? 2 : 1
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
             landscape = false
