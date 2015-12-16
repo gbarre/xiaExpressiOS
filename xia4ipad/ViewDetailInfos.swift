@@ -21,7 +21,6 @@ class ViewDetailInfos: UIViewController {
     var fileName: String = ""
     var filePath: String = ""
 
-    @IBOutlet weak var navbar: UINavigationItem!
     @IBOutlet weak var btnZoom: UISwitch!
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
@@ -55,10 +54,10 @@ class ViewDetailInfos: UIViewController {
         btnZoom.setOn(self.zoom, animated: true)
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
-        navbar.title = txtTitle.text
         
         // autofocus
         txtTitle.becomeFirstResponder()
+        txtTitle.backgroundColor = UIColor.clearColor()
         
         // Avoid keyboard to mask bottom
 

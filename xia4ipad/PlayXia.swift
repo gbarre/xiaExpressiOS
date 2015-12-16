@@ -230,7 +230,6 @@ class PlayXia: UIViewController {
         // Show the text...
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
-                dbg.pt(d.xmlString)
                 zoomStatus = (d.attributes["zoom"] == "true") ? true : false
                 let detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
                 let detailDescription = (d.value == nil) ? "" : d.value!
