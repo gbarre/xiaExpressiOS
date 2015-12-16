@@ -186,6 +186,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 controller.xml = xmlToSegue
             }
         }
+        if (segue.identifier == "playXia") {
+            if let controller:PlayXia = segue.destinationViewController as? PlayXia {
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
+            }
+        }
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
@@ -351,7 +358,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 performSegueWithIdentifier("ViewImageInfos", sender: self)
             }
             else {
-                performSegueWithIdentifier("viewLargePhoto", sender: self)
+                let xml = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+                let xmlToSegue = checkXML(xml)
+                if xmlToSegue["xia"]["readonly"].value! == "true" {
+                    performSegueWithIdentifier("playXia", sender: self)
+                }
+                else {
+                    performSegueWithIdentifier("viewLargePhoto", sender: self)
+                }
             }
         }
     }

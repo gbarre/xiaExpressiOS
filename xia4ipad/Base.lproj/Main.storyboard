@@ -99,6 +99,7 @@
                                         <connections>
                                             <outlet property="imgLabel" destination="qNg-bF-MbM" id="Lj4-s2-gak"/>
                                             <outlet property="imgView" destination="ZgJ-fg-FiW" id="D17-2x-rAJ"/>
+                                            <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="J54-6x-Hse"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -135,7 +136,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1152" y="429"/>
+            <point key="canvasLocation" x="1220" y="-79"/>
         </scene>
         <!--Full-Size Image-->
         <scene sceneID="ffb-Ng-4sP">
@@ -249,7 +250,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1840" y="429"/>
+            <point key="canvasLocation" x="2104" y="209"/>
         </scene>
         <!--Detail Info-->
         <scene sceneID="Ulb-4K-ajy">
@@ -347,7 +348,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2554" y="41"/>
+            <point key="canvasLocation" x="2974" y="661"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">
@@ -395,7 +396,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2554" y="830"/>
+            <point key="canvasLocation" x="1482" y="1110"/>
         </scene>
         <!--Play Image Metadatas-->
         <scene sceneID="PeB-Zl-vO5">
@@ -440,7 +441,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CMD-SV-YNm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3258" y="830"/>
+            <point key="canvasLocation" x="2230" y="1110"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
@@ -462,7 +463,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85K-7O-qWd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="492" y="429"/>
+            <point key="canvasLocation" x="452" y="-79"/>
         </scene>
         <!--Image Info-->
         <scene sceneID="aWw-A3-wyk">
@@ -582,7 +583,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F5d-D1-XcH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1152" y="-336"/>
+            <point key="canvasLocation" x="2832" y="-532"/>
         </scene>
     </scenes>
     <resources>
@@ -592,5 +593,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="JTz-kQ-gaK"/>
+        <segue reference="J54-6x-Hse"/>
     </inferredMetricsTieBreakers>
 </document>
