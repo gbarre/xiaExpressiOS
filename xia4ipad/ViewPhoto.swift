@@ -174,13 +174,15 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     @IBAction func btnTrash(sender: AnyObject) {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
+            stopCreation()
             performFullDetailRemove(detailTag, force: true)
+            self.currentDetailTag = 0
             setBtnsIcons()
         }
     }
     
     @IBAction func debugXML(sender: AnyObject) {
-        //dbg.pt(xml.xmlString)
+        dbg.pt(xml.xmlString)
         for detail in details {
             dbg.pt("\(detail.0) : \(detail.1.constraint)")
         }
@@ -626,13 +628,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1, color: "edit")
                 currentDetailTag = 0
-                btnInfos.enabled = false
                 moveDetail = false
             }
             else {
                 editDetail = -1
-                btnInfos.enabled = true
             }
+            setBtnsIcons()
             break
         }
         
@@ -845,7 +846,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             else if item.tag == 12 {
-                if createDetail || readOnly {
+                if createDetail || readOnly || currentDetailTag == 0 {
                     btn = item
                     btn.enabled = false
                 }
@@ -855,7 +856,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             else if item.tag == 13 {
-                if readOnly {
+                if readOnly || currentDetailTag == 0 {
                     btn = item
                     btn.enabled = false
                 }
