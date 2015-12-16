@@ -176,7 +176,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         if ( detailTag != 0 ) {
             stopCreation()
             performFullDetailRemove(detailTag, force: true)
-            self.currentDetailTag = 0
             setBtnsIcons()
         }
     }
@@ -798,6 +797,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             let _ = writeXML(xml, path: "\(filePath).xml")
+            currentDetailTag = 0
         }
     }
     
@@ -826,7 +826,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         for item in myToolbar.items! {
             if item.tag == 10 {
                 if createDetail {
-                    //btn = UIBarButtonItem(barButtonSystemItem: ., target: self, action: "stopCreation")
                     btn = UIBarButtonItem(title: "STOP", style: .Done, target: self, action: "stopCreation")
                     btn.tintColor = UIColor.redColor()
                 }
