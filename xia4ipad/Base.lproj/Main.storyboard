@@ -152,16 +152,21 @@
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8Q-UV-Vxn">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items>
-                                    <barButtonItem title="&lt; Collection" id="LBo-27-0LP">
+                                    <barButtonItem title="Collection" id="LBo-27-0LP">
                                         <connections>
                                             <action selector="btnCancel:" destination="fts-Lk-uqf" id="VA3-Ae-3hf"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="yRX-k2-J6P"/>
-                                    <barButtonItem tag="10" systemItem="play" id="hA7-sU-myB">
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="yRX-k2-J6P"/>
+                                    <barButtonItem title="Debug" id="vyQ-fq-BLf">
                                         <connections>
-                                            <action selector="btnPlay:" destination="fts-Lk-uqf" id="CMA-fg-arp"/>
-                                            <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="g1C-J3-xmC"/>
+                                            <action selector="debugXML:" destination="fts-Lk-uqf" id="9Zo-za-nFo"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Oym-il-7hb"/>
+                                    <barButtonItem title="Title" id="x4L-95-X7o">
+                                        <connections>
+                                            <action selector="btnTitle:" destination="fts-Lk-uqf" id="d0r-zv-5eX"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="WCH-Vo-MIe"/>
@@ -170,24 +175,26 @@
                                             <action selector="btnAddDetail:" destination="fts-Lk-uqf" id="gPN-ca-xjH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="Xuz-3G-eji"/>
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="Xuz-3G-eji"/>
                                     <barButtonItem tag="12" image="Info" id="g81-gt-cZy">
                                         <connections>
                                             <segue destination="cwz-uV-RB1" kind="presentation" identifier="viewDetailInfos" modalPresentationStyle="formSheet" id="zI0-qU-CeA"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
                                     <barButtonItem tag="13" systemItem="trash" id="Q1P-YQ-emb">
                                         <connections>
                                             <action selector="btnTrash:" destination="fts-Lk-uqf" id="jMX-Y8-cNe"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="2ha-T4-l71"/>
-                                    <barButtonItem title="xml" id="vyQ-fq-BLf">
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="ivs-hT-OcT"/>
+                                    <barButtonItem tag="10" systemItem="play" id="hA7-sU-myB">
                                         <connections>
-                                            <action selector="debugXML:" destination="fts-Lk-uqf" id="9Zo-za-nFo"/>
+                                            <action selector="btnPlay:" destination="fts-Lk-uqf" id="CMA-fg-arp"/>
+                                            <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="g1C-J3-xmC"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem width="20" style="plain" systemItem="fixedSpace" id="PEK-ud-PdQ"/>
                                     <barButtonItem tag="20" systemItem="action" id="03J-iV-A5A">
                                         <connections>
                                             <action selector="btnExport:" destination="fts-Lk-uqf" id="gaC-Zu-0kV"/>
@@ -201,6 +208,10 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MEg-me-yeE">
+                                <rect key="frame" x="10" y="74" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -219,7 +230,9 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
+                        <outlet property="btnTitleLabel" destination="x4L-95-X7o" id="lBd-Qt-aCU"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
+                        <segue destination="Vet-iN-BdV" kind="presentation" identifier="ViewImageInfos" modalPresentationStyle="formSheet" id="JTz-kQ-gaK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -564,5 +577,8 @@
         <image name="bubble" width="100" height="100"/>
         <image name="help" width="25" height="25"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="JTz-kQ-gaK"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
 </document>

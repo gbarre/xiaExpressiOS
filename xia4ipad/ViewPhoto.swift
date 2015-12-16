@@ -43,6 +43,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
+    @IBOutlet weak var btnTitleLabel: UIBarButtonItem!
+    @IBAction func btnTitle(sender: AnyObject) {
+        performSegueWithIdentifier("ViewImageInfos", sender: self)
+    }
+    
+    
     @IBAction func btnPlay(sender: AnyObject) {
     }
     
@@ -351,7 +357,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
-            
+            btnTitleLabel.title = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
             readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
         }
         cleaningDetails()
@@ -662,6 +668,19 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.filePath = filePath
                     }
                 }
+            }
+        }
+        if (segue.identifier == "ViewImageInfos") {
+            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
+                controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
+                controller.imageAuthor = (xml["xia"]["author"].value == nil) ? "" : xml["xia"]["author"].value!
+                controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
+                controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
+                let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
+                controller.readOnlyState = readonlyStatus
+                controller.fileName = self.fileName
+                controller.filePath = self.filePath
+                controller.xml = xml
             }
         }
         if (segue.identifier == "playXia") {

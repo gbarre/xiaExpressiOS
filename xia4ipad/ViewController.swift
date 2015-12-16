@@ -25,6 +25,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passData:Bool=false
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
+    var newMedia: Bool?
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
@@ -37,6 +38,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 picker.delegate = self
                 picker.allowsEditing = false
                 self.presentViewController(picker, animated: true, completion: nil)
+                self.newMedia = true
             }
             else{
                 //no camera available
@@ -53,7 +55,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
             picker.delegate = self
             picker.allowsEditing = false
+            picker.modalPresentationStyle = .Popover
             self.presentViewController(picker, animated: true, completion: nil)
+            self.newMedia = false
+            
+            picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
+            picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
         })
         let attributedTitle = NSAttributedString(string: "Create new document", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
@@ -349,6 +356,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
+    func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer, contextInfo:UnsafePointer<Void>) {
+        if error != nil {
+            let alert = UIAlertController(title: "Save Failed", message: "Failed to save image", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+            
+            alert.addAction(cancelAction)
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
         })
@@ -368,6 +386,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             dbg.pt("\(error)")
         }
         arrayNames.append("\(now)")
+        
+        // copy the image in the library
+        if (newMedia == true) {
+            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
+            newMedia = false
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
