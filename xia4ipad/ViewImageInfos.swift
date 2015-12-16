@@ -126,6 +126,9 @@ class ViewImageInfos: UIViewController {
         txtDesc.text = self.imageDesc
         readOnly.setOn(readOnlyState, animated: true)
         navbar.title = txtTitle.text
+        
+        // autofocus
+        txtTitle.becomeFirstResponder()
     }
     
 }

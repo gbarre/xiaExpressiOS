@@ -206,6 +206,7 @@ class PlayXia: UIViewController {
         self.view.addSubview(blurredBackground)
         let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.alpha = 0.5
         blurView.frame = blurredBackground.frame
         blurView.tag = 666
         self.view.addSubview(blurView)

@@ -56,6 +56,9 @@ class ViewDetailInfos: UIViewController {
         txtTitle.text = self.detailTitle
         txtDesc.text = self.detailDescription
         navbar.title = txtTitle.text
+        
+        // autofocus
+        txtTitle.becomeFirstResponder()
     }
     
 }
