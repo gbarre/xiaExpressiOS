@@ -73,6 +73,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let rectangleAction = UIAlertAction(title: "Rectangle", style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
@@ -92,7 +93,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
             buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView)
-            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
             self.stopCreation()
             
@@ -108,6 +108,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let ellipseAction = UIAlertAction(title: "Ellipse", style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
@@ -127,7 +128,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
             buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true)
-            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
             self.stopCreation()
             
@@ -143,10 +143,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let polygonAction = UIAlertAction(title: "Polygon", style: .Default, handler: { action in
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
             self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
-            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
             self.setBtnsIcons()
         })
         let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
@@ -764,7 +764,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
         }
-        if tag != -1 {
+        if createDetail && details["\(tag)"]?.constraint == "polygon" {
             imgTopBarBkgd.backgroundColor = editColor
         }
         else {
@@ -851,12 +851,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         for item in myToolbar.items! {
             if item.tag == 10 { // play/STOP btn
                 if createDetail {
-                    btn = UIBarButtonItem(title: "STOP", style: .Done, target: self, action: "stopCreation")
-                    btn.tintColor = UIColor.redColor()
+                    btn = UIBarButtonItem(title: "OK", style: .Done, target: self, action: "stopCreation")
+//                    btn.tintColor = UIColor.redColor()
                 }
                 else {
                     btn = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
-                    btn.tintColor = UIColor.whiteColor()
+//                    btn.tintColor = UIColor.whiteColor()
                 }
             }
             else if item.tag == 11 { // add detail btn
