@@ -264,11 +264,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" text="Detail description..." translatesAutoresizingMaskIntoConstraints="NO" id="pK2-BQ-1RC">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pK2-BQ-1RC">
                                 <rect key="frame" x="20" y="81" width="560" height="499"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" secureTextEntry="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Detail description...">
+                                        <attributes>
+                                            <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnu-0w-hMV">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="35"/>
@@ -304,6 +311,15 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UJS-iz-lqz">
+                                        <rect key="frame" x="483" y="3" width="46" height="30"/>
+                                        <state key="normal" title="DBG">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnDBG:" destination="cwz-uV-RB1" eventType="touchUpInside" id="YmE-t1-gr3"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -311,9 +327,12 @@
                                     <constraint firstItem="Hbd-TM-LeS" firstAttribute="baseline" secondItem="i3A-TS-Y6z" secondAttribute="baseline" id="7PQ-44-Eab"/>
                                     <constraint firstItem="i3A-TS-Y6z" firstAttribute="leading" secondItem="Hbd-TM-LeS" secondAttribute="trailing" constant="57" id="Jmt-YI-2Dn"/>
                                     <constraint firstItem="t34-KE-U8g" firstAttribute="top" secondItem="wnu-0w-hMV" secondAttribute="top" constant="3" id="Ldu-6X-Dho"/>
+                                    <constraint firstItem="t34-KE-U8g" firstAttribute="leading" secondItem="UJS-iz-lqz" secondAttribute="trailing" constant="13" id="TX8-Sr-dID"/>
                                     <constraint firstItem="i3A-TS-Y6z" firstAttribute="centerX" secondItem="wnu-0w-hMV" secondAttribute="centerX" id="ZCM-2T-jyr"/>
                                     <constraint firstItem="Hbd-TM-LeS" firstAttribute="leading" secondItem="wnu-0w-hMV" secondAttribute="leading" constant="8" id="aMI-VX-e2o"/>
+                                    <constraint firstItem="UJS-iz-lqz" firstAttribute="leading" secondItem="i3A-TS-Y6z" secondAttribute="trailing" constant="8" symbolic="YES" id="eG4-aj-CrU"/>
                                     <constraint firstItem="i3A-TS-Y6z" firstAttribute="centerY" secondItem="wnu-0w-hMV" secondAttribute="centerY" id="nn6-fY-5cS"/>
+                                    <constraint firstItem="UJS-iz-lqz" firstAttribute="baseline" secondItem="t34-KE-U8g" secondAttribute="baseline" id="r1N-mt-eTX"/>
                                     <constraint firstAttribute="trailing" secondItem="t34-KE-U8g" secondAttribute="trailing" constant="8" id="sGQ-zj-8dO"/>
                                     <constraint firstItem="t34-KE-U8g" firstAttribute="leading" secondItem="i3A-TS-Y6z" secondAttribute="trailing" constant="67" id="yp0-wy-6dQ"/>
                                 </constraints>
@@ -520,7 +539,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Read only :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5EO-6l-Dfn">
                                 <rect key="frame" x="20" y="554" width="85" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lkH-5B-JZm">
@@ -575,14 +594,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jlf-cn-mPm">
                                 <rect key="frame" x="20" y="43" width="560" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Author..." textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="iIn-Tq-Ao5">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Author..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="iIn-Tq-Ao5">
                                         <rect key="frame" x="8" y="5" width="260" height="30"/>
                                         <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Rights..." textAlignment="center" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="L0M-Wi-eID">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Rights..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="L0M-Wi-eID">
                                         <rect key="frame" x="292" y="5" width="260" height="30"/>
                                         <color key="backgroundColor" red="0.17254901959999999" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -604,11 +623,11 @@
                                     <constraint firstItem="iIn-Tq-Ao5" firstAttribute="leading" secondItem="Jlf-cn-mPm" secondAttribute="leading" constant="8" id="sOG-Ew-0Od"/>
                                 </constraints>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" text="Image description..." translatesAutoresizingMaskIntoConstraints="NO" id="tBe-e1-TLy">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Image description..." translatesAutoresizingMaskIntoConstraints="NO" id="tBe-e1-TLy">
                                 <rect key="frame" x="20" y="91" width="560" height="450"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" secureTextEntry="YES"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

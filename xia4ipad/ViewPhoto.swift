@@ -207,7 +207,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             try xiaXML.xmlString.writeToFile(tempFilePath, atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
-            print("\(error)")
+            dbg.pt("\(error)")
         }
         
         let mailComposer = MFMailComposeViewController()
