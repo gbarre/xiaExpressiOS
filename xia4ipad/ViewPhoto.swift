@@ -19,7 +19,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     var filePath: String = ""
     
     var location = CGPoint(x: 0, y: 0)
-    var moving = false
     var movingPoint = -1 // Id of point
     var movingCoords = CGPointMake(0, 0)
     var landscape = false
@@ -618,6 +617,22 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch: UITouch = touches.first!
+        location = touch.locationInView(self.imgView)
+        
+        dbg.pt("touch end")
+        // did we move after touches began ?
+        if (moveDetail || details["\(currentDetailTag)"]!.locked) {
+            dbg.pt("we moved...")
+            let xDist: CGFloat = (location.x - beginTouchLocation.x)
+            let yDist: CGFloat = (location.y - beginTouchLocation.y)
+            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+            if distance < 1 {
+                dbg.pt("just tap, open modal")
+                performSegueWithIdentifier("viewDetail", sender: self)
+            }
+        }
+        
         let detailTag = self.currentDetailTag
         let detailPoints = details["\(detailTag)"]?.points.count
         if detailPoints > 2 {

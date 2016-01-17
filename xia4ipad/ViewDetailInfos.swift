@@ -44,7 +44,8 @@ class ViewDetailInfos: UIViewController {
                 d.attributes["zoom"] = "\(btnZoom.on)"
                 d.attributes["locked"] = "\(btnLock.on)"
                 d.attributes["title"] = txtTitle.text
-                d.value = attributedString2pikipiki(txtDesc.attributedText)
+                //d.value = attributedString2pikipiki(txtDesc.attributedText)
+                d.value = txtDesc.text
             }
         }
         let _ = writeXML(xml, path: "\(filePath).xml")
@@ -66,11 +67,11 @@ class ViewDetailInfos: UIViewController {
         txtTitle.text = self.detailTitle
         
         
-        //txtDesc.text = self.detailDescription
-        txtDesc.attributedText = pikipiki2AttributedString(self.detailDescription)
+        txtDesc.text = self.detailDescription
+        //txtDesc.attributedText = pikipiki2AttributedString(self.detailDescription)
         
         
-        txtDesc.allowsEditingTextAttributes = true
+        //txtDesc.allowsEditingTextAttributes = true
         
         // autofocus
         txtTitle.becomeFirstResponder()
