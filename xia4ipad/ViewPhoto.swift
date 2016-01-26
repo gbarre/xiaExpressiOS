@@ -620,15 +620,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.imgView)
         
-        dbg.pt("touch end")
         // did we move after touches began ?
         if (moveDetail || details["\(currentDetailTag)"]!.locked) {
-            dbg.pt("we moved...")
             let xDist: CGFloat = (location.x - beginTouchLocation.x)
             let yDist: CGFloat = (location.y - beginTouchLocation.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             if distance < 1 {
-                dbg.pt("just tap, open modal")
                 performSegueWithIdentifier("viewDetail", sender: self)
             }
         }

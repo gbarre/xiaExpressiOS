@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BubbleTransition
 
 class PlayXia: UIViewController {
     
@@ -103,6 +104,7 @@ class PlayXia: UIViewController {
         location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
         
+        // detect touch on btnZoom
         if (btnZoom.frame.contains(location) && btnZoom.enabled){
             if btnZoom.on {
                 btnZoom.on = false
@@ -129,7 +131,8 @@ class PlayXia: UIViewController {
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
                     let zoom: Bool = btnZoom.on
-                    showMyDetail(touchedTag, zoomDetail: zoom)
+                    performSegueWithIdentifier("openDetail", sender: self)
+//                    showMyDetail(touchedTag, zoomDetail: zoom)
                     lastTouchedTag = touchedTag
                     break
                 }
@@ -167,6 +170,12 @@ class PlayXia: UIViewController {
         if (segue.identifier == "playMetas") {
             if let controller:PlayImageMetadatas = segue.destinationViewController as? PlayImageMetadatas {
                 controller.xml = self.xml
+            }
+        }
+        if (segue.identifier == "openDetail") {
+            if let controller:ViewDetail = segue.destinationViewController as? ViewDetail {
+                controller.xml = self.xml
+                controller.tag = touchedTag
             }
         }
     }
