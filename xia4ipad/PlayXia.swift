@@ -7,13 +7,15 @@
 //
 
 import UIKit
-import BubbleTransition
+//import BubbleTransition
 
-class PlayXia: UIViewController {
+class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     var dbg = debug(enable: true)
     
     var xml: AEXMLDocument = AEXMLDocument()
+    let transition = BubbleTransition()
+    
     var fileName: String = ""
     var filePath: String = ""
     var details = [String: xiaDetail]()
@@ -174,11 +176,27 @@ class PlayXia: UIViewController {
         }
         if (segue.identifier == "openDetail") {
             if let controller:ViewDetail = segue.destinationViewController as? ViewDetail {
+                controller.transitioningDelegate = self
+                controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
             }
         }
     }
+    
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Present
+        transition.startingPoint = location
+        transition.bubbleColor = blueColor
+        return transition
+    }
+    
+    /*func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Dismiss
+        transition.startingPoint = transitionButton.center
+        transition.bubbleColor = transitionButton.backgroundColor!
+        return transition
+    }*/
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)

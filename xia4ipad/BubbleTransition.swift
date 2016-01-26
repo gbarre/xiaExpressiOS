@@ -125,6 +125,9 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
+            UIView.animateWithDuration(0, delay: 0.5, options: .ShowHideTransitionViews, animations: { () -> Void in
+                self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                }, completion: nil)
         } else {
             let key = (transitionMode == .Pop) ? UITransitionContextToViewKey : UITransitionContextFromViewKey
             let returningControllerView = transitionContext.viewForKey(key)!

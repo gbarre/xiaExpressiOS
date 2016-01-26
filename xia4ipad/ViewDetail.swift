@@ -21,16 +21,21 @@ class ViewDetail: UIViewController {
     }
     
     @IBOutlet var imgArea: UIView!
-    @IBOutlet var detailTitle: UITextView!
+    @IBOutlet var detailTitle: UILabel!
+    @IBOutlet var detailSubTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
                 detailTitle.text = d.attributes["title"]
+                detailTitle.sizeToFit()
+                detailTitle.numberOfLines = 0
+                detailSubTitle.text = "Sub Title..."
                 txtDesc.text = d.value
             }
         }
