@@ -404,6 +404,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
             newMedia = false
         }
+        self.CollectionView.reloadData()
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
