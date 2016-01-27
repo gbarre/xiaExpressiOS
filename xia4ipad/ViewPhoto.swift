@@ -621,12 +621,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         location = touch.locationInView(self.imgView)
         
         // did we move after touches began ?
-        if (moveDetail || details["\(currentDetailTag)"]!.locked) {
+        if ( currentDetailTag != 0 && (moveDetail || details["\(currentDetailTag)"]!.locked) ) {
             let xDist: CGFloat = (location.x - beginTouchLocation.x)
             let yDist: CGFloat = (location.y - beginTouchLocation.y)
             let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
             if distance < 1 {
-                performSegueWithIdentifier("viewDetail", sender: self)
+                //performSegueWithIdentifier("viewDetail", sender: self)
             }
         }
         

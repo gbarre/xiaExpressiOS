@@ -132,7 +132,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let (detailTag, detailPoints) = detail
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    let zoom: Bool = btnZoom.on
+                    //let zoom: Bool = btnZoom.on
                     performSegueWithIdentifier("openDetail", sender: self)
 //                    showMyDetail(touchedTag, zoomDetail: zoom)
                     lastTouchedTag = touchedTag
@@ -180,6 +180,9 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
+                controller.detail = details["\(touchedTag)"]
+                controller.path = paths[touchedTag]
+                controller.bkgdImage = bkgdImage
             }
         }
     }
@@ -190,13 +193,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.bubbleColor = blueColor
         return transition
     }
-    
-    /*func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.transitionMode = .Dismiss
-        transition.startingPoint = transitionButton.center
-        transition.bubbleColor = transitionButton.backgroundColor!
-        return transition
-    }*/
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
@@ -216,14 +212,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func showMyDetail(tag: Int, zoomDetail: Bool) {
         // Hide lot of things...
-        for subview in view.subviews {
+        /*for subview in view.subviews {
             if (subview.tag > 99) {
                 subview.hidden = true
             }
             if (subview.tag == 667 && !zoomDetail) {
                 subview.hidden = false
             }
-        }
+        }*/
 
         // Add new background image (with blurred effect)
         let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))

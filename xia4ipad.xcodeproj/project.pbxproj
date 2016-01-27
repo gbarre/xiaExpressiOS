@@ -42,7 +42,6 @@
 		F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */; };
 		F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */; };
 		F0F15E7B1BB7097B00268F06 /* ViewPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */; };
-		F0F798461C4FCBA700E2746A /* ViewDetailMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F798451C4FCBA700E2746A /* ViewDetailMenu.swift */; };
 		F0F798481C4FCC7800E2746A /* ViewDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F798471C4FCC7800E2746A /* ViewDetailController.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,7 +90,6 @@
 		F0F15E721BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F0F15E741BB6FCDF00268F06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPhoto.swift; sourceTree = "<group>"; };
-		F0F798451C4FCBA700E2746A /* ViewDetailMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailMenu.swift; sourceTree = "<group>"; };
 		F0F798471C4FCC7800E2746A /* ViewDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,9 +164,8 @@
 				F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */,
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */,
 				F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */,
-				F0F798451C4FCBA700E2746A /* ViewDetailMenu.swift */,
-				F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */,
 				F0F798471C4FCC7800E2746A /* ViewDetailController.swift */,
+				F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
@@ -352,7 +349,6 @@
 				F0E4343A1C563B09007CD7CE /* CustomSegue.swift in Sources */,
 				F0F798481C4FCC7800E2746A /* ViewDetailController.swift in Sources */,
 				F07BACB81C4BC6DB0037CF13 /* ViewDetail.swift in Sources */,
-				F0F798461C4FCBA700E2746A /* ViewDetailMenu.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
 				F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
