@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewDetail: UIViewController {
+class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
     
     var dbg = debug(enable: true)
     
@@ -18,6 +18,8 @@ class ViewDetail: UIViewController {
     var path: UIBezierPath!
     var bkgdImage: UIImageView!
     var zoomDisable: Bool = true
+    
+    let transition = BubbleTransition()
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
@@ -34,7 +36,7 @@ class ViewDetail: UIViewController {
     @IBOutlet var btnZoom: UIButton!
     
     @IBAction func btnZoomAction(sender: AnyObject) {
-        
+        performSegueWithIdentifier("zoomDetail", sender: self)
     }
     
     
@@ -91,6 +93,33 @@ class ViewDetail: UIViewController {
         super.viewWillLayoutSubviews()
         self.view.superview!.layer.cornerRadius  = 0.0
         self.view.superview!.layer.masksToBounds = false
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "zoomDetail") {
+            if let controller:ZoomDetail = segue.destinationViewController as? ZoomDetail {
+                controller.transitioningDelegate = self
+                controller.modalPresentationStyle = .FullScreen
+            }
+        }
+    }
+    
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Present
+        transition.startingPoint = getCenter()
+        transition.bubbleColor = UIColor.blackColor()
+        transition.detailFrame = detail.bezierFrame()
+        transition.path = path
+        transition.bkgdImage = bkgdImage
+        transition.zoom = true
+        return transition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Dismiss
+        transition.startingPoint = getCenter()
+        transition.bubbleColor = UIColor.blackColor()
+        return transition
     }
     
 }

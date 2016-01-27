@@ -90,6 +90,22 @@ func delay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
+func getCenter() -> CGPoint{
+    var point = CGPointMake(0, 0)
+    let screenWidth = UIScreen.mainScreen().bounds.width
+    let screenHeight = UIScreen.mainScreen().bounds.height
+
+    if ( screenHeight == 1024 && screenWidth != 1366 ) { // device is portrait and not iPad Pro
+        point.x = (screenWidth - 540) / 2 + 100
+        point.y = (screenHeight - 620) / 2 + 100
+    }
+    else {
+        point.x = (screenWidth - 800) / 2 + 100
+        point.y = (screenHeight - 600) / 2 + 100
+    }
+    return point
+}
+
 func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     let data = NSData(contentsOfFile: path)
     var xml: AEXMLDocument!

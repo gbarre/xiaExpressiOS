@@ -809,7 +809,6 @@
                                         <state key="normal" image="search"/>
                                         <connections>
                                             <action selector="btnZoomAction:" destination="W9K-wb-Ida" eventType="touchUpInside" id="ahM-gY-kFB"/>
-                                            <segue destination="gsK-Xf-aSt" kind="show" id="m5w-7D-jnA"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -900,6 +899,7 @@
                         <outlet property="imgArea" destination="66N-t8-hgQ" id="nk9-Mv-5cW"/>
                         <outlet property="popup" destination="3TI-sM-3RZ" id="q8U-f1-hnA"/>
                         <outlet property="txtDesc" destination="ZcZ-BS-hKZ" id="8xx-ft-Cv5"/>
+                        <segue destination="gsK-Xf-aSt" kind="show" identifier="zoomDetail" id="yYA-Ln-fWs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zTQ-xZ-Me9" userLabel="First Responder" sceneMemberID="firstResponder"/>

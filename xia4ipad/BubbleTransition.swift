@@ -79,10 +79,11 @@ public class BubbleTransition: NSObject {
         case Present, Dismiss, Pop
     }
     
-    // Test GB
+    // Modifs GB
     public var detailFrame: CGRect!
     public var path: UIBezierPath!
     public var bkgdImage: UIImageView!
+    public var zoom = false
     
     private var detail = UIImageView()
     
@@ -131,7 +132,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 presentedControllerView.transform = CGAffineTransformIdentity
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
-                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, path: self.path, pathFrameCorners: self.detailFrame)
+                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom)
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
@@ -140,7 +141,9 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 self.bubble.alpha = 0
                 }, completion: nil)
             UIView.animateWithDuration(0, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
-                self.detail.alpha = 0
+                if !self.zoom {
+                    self.detail.alpha = 0
+                }
                 }, completion: nil)
         } else {
             let key = (transitionMode == .Pop) ? UITransitionContextToViewKey : UITransitionContextFromViewKey
@@ -157,6 +160,10 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 returningControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
                 returningControllerView.center = self.startingPoint
                 returningControllerView.alpha = 0
+                if self.zoom {
+                    self.detail.center = getCenter()
+                    self.detail.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                }
 
                 if self.transitionMode == .Pop {
                     containerView.insertSubview(returningControllerView, belowSubview: returningControllerView)
@@ -170,7 +177,9 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect) -> UIImageView {
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect, zoom: Bool) -> UIImageView {
+        let screenWidth = UIScreen.mainScreen().bounds.width
+        let screenHeight = UIScreen.mainScreen().bounds.height
         let imgThumb: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: fullImage.frame.width, height: fullImage.frame.height))
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = fullImage.image
@@ -185,24 +194,31 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         imgThumb.layer.mask = myMask
         containerView.addSubview(imgThumb)
         
-        // Scaling cropped image to fit in the 200 x 200 square
-        let detailScaleX = 190 / pathFrameCorners.width
-        let detailScaleY = 190 / pathFrameCorners.height
-        let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+        var detailScale: CGFloat = 1.0
+        if zoom {
+            let detailScaleX = (screenWidth - 10) / pathFrameCorners.width
+            let detailScaleY = (screenHeight - 50) / pathFrameCorners.height
+            detailScale = min(detailScaleX, detailScaleY, 3) // 3 is maximum zoom
+        }
+        else { // Scaling cropped image to fit in the 200 x 200 square
+            let detailScaleX = 190 / pathFrameCorners.width
+            let detailScaleY = 190 / pathFrameCorners.height
+            detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+        }
         imgThumb.transform = CGAffineTransformScale(imgThumb.transform, detailScale, detailScale)
         
-        var distX: CGFloat = 0.0
-        var distY: CGFloat = 0.0
-        if ( UIScreen.mainScreen().bounds.height == 1024 && UIScreen.mainScreen().bounds.width != 1366 ) { // device is portrait and not iPad Pro
-            distX = (UIScreen.mainScreen().bounds.width - 540) / 2 + 100
-            distY = (UIScreen.mainScreen().bounds.height - 620) / 2 + 100
+        var newCenter = CGPointMake(0, 0)
+        if zoom {
+            let distanceX = screenWidth/2 - pathFrameCorners.midX
+            let distanceY = screenHeight/2 - pathFrameCorners.midY
+            
+            newCenter = CGPointMake(imgThumb.center.x + distanceX * detailScale, imgThumb.center.y + distanceY * detailScale)
         }
         else {
-            distX = (UIScreen.mainScreen().bounds.width - 800) / 2 + 100
-            distY = (UIScreen.mainScreen().bounds.height - 600) / 2 + 100
+            let centerTarget = getCenter()
+            let pathCenter = CGPointMake(pathFrameCorners.midX * detailScale, pathFrameCorners.midY * detailScale)
+            newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + centerTarget.x, imgThumb.center.y * detailScale - pathCenter.y + centerTarget.y)
         }
-        let pathCenter = CGPointMake(pathFrameCorners.midX * detailScale, pathFrameCorners.midY * detailScale)
-        let newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + distX, imgThumb.center.y * detailScale - pathCenter.y + distY)
         imgThumb.center = newCenter
         
         return imgThumb
