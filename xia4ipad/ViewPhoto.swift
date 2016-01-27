@@ -906,6 +906,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         if details["\(currentDetailTag)"]?.constraint == "polygon" {
             currentDetailTag = 0
             changeDetailColor(-1)
+            imgTopBarBkgd.backgroundColor = blueColor
         }
         setBtnsIcons()
     }
