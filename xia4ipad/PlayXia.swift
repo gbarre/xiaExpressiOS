@@ -190,6 +190,15 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .Present
         transition.startingPoint = location
         transition.bubbleColor = blueColor
+        transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
+        transition.path = paths[touchedTag]
+        transition.bkgdImage = bkgdImage
+        return transition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Dismiss
+        transition.startingPoint = location
         return transition
     }
     

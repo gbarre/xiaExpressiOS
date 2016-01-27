@@ -53,7 +53,7 @@ public class BubbleTransition: NSObject {
     The transition duration. The same value is used in both the Present or Dismiss actions
     Defaults to `0.5`
     */
-    public var duration = 0.5
+    public var duration = 1.0
     
     /**
     The transition direction. Possible values `.Present`, `.Dismiss` or `.Pop`
@@ -78,6 +78,14 @@ public class BubbleTransition: NSObject {
     @objc public enum BubbleTransitionMode: Int {
         case Present, Dismiss, Pop
     }
+    
+    // Test GB
+    public var detailFrame: CGRect!
+    public var path: UIBezierPath!
+    public var bkgdImage: UIImageView!
+    
+    private var detail = UIImageView()
+    
 }
 
 extension BubbleTransition: UIViewControllerAnimatedTransitioning {
@@ -111,22 +119,28 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
             bubble.backgroundColor = bubbleColor
             containerView.addSubview(bubble)
+            
 
             presentedControllerView.center = startingPoint
             presentedControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
             presentedControllerView.alpha = 0
             containerView.addSubview(presentedControllerView)
-
+            
             UIView.animateWithDuration(duration, animations: {
                 self.bubble.transform = CGAffineTransformIdentity
                 presentedControllerView.transform = CGAffineTransformIdentity
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
+                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, path: self.path, pathFrameCorners: self.detailFrame)
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
-            UIView.animateWithDuration(0, delay: 0.5, options: .ShowHideTransitionViews, animations: { () -> Void in
-                self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
+            UIView.animateWithDuration(0.5, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
+                //self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                self.bubble.alpha = 0
+                }, completion: nil)
+            UIView.animateWithDuration(0, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
+                self.detail.alpha = 0
                 }, completion: nil)
         } else {
             let key = (transitionMode == .Pop) ? UITransitionContextToViewKey : UITransitionContextFromViewKey
@@ -154,6 +168,44 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                     transitionContext.completeTransition(true)
             }
         }
+    }
+    
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect) -> UIImageView {
+        let imgThumb: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: fullImage.frame.width, height: fullImage.frame.height))
+        imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
+        imgThumb.image = fullImage.image
+        
+        guard let containerView = transitionContext.containerView() else {
+            return imgThumb
+        }
+        
+        // Cropping image
+        let myMask = CAShapeLayer()
+        myMask.path = path.CGPath
+        imgThumb.layer.mask = myMask
+        containerView.addSubview(imgThumb)
+        
+        // Scaling cropped image to fit in the 200 x 200 square
+        let detailScaleX = 190 / pathFrameCorners.width
+        let detailScaleY = 190 / pathFrameCorners.height
+        let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+        imgThumb.transform = CGAffineTransformScale(imgThumb.transform, detailScale, detailScale)
+        
+        var distX: CGFloat = 0.0
+        var distY: CGFloat = 0.0
+        if ( UIScreen.mainScreen().bounds.height == 1024 && UIScreen.mainScreen().bounds.width != 1366 ) { // device is portrait and not iPad Pro
+            distX = (UIScreen.mainScreen().bounds.width - 540) / 2 + 100
+            distY = (UIScreen.mainScreen().bounds.height - 620) / 2 + 100
+        }
+        else {
+            distX = (UIScreen.mainScreen().bounds.width - 800) / 2 + 100
+            distY = (UIScreen.mainScreen().bounds.height - 600) / 2 + 100
+        }
+        let pathCenter = CGPointMake(pathFrameCorners.midX * detailScale, pathFrameCorners.midY * detailScale)
+        let newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + distX, imgThumb.center.y * detailScale - pathCenter.y + distY)
+        imgThumb.center = newCenter
+        
+        return imgThumb
     }
 }
 

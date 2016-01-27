@@ -809,6 +809,7 @@
                                         <state key="normal" image="search"/>
                                         <connections>
                                             <action selector="btnZoomAction:" destination="W9K-wb-Ida" eventType="touchUpInside" id="ahM-gY-kFB"/>
+                                            <segue destination="gsK-Xf-aSt" kind="show" id="m5w-7D-jnA"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -897,12 +898,40 @@
                         <outlet property="detailSubTitle" destination="o2a-Cq-mW0" id="iry-qf-ZDc"/>
                         <outlet property="detailTitle" destination="VlB-Ig-h1b" id="V2z-h8-cTy"/>
                         <outlet property="imgArea" destination="66N-t8-hgQ" id="nk9-Mv-5cW"/>
+                        <outlet property="popup" destination="3TI-sM-3RZ" id="q8U-f1-hnA"/>
                         <outlet property="txtDesc" destination="ZcZ-BS-hKZ" id="8xx-ft-Cv5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zTQ-xZ-Me9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1482" y="1837"/>
+        </scene>
+        <!--Zoom Detail-->
+        <scene sceneID="Pnn-zl-uNy">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" id="gsK-Xf-aSt" customClass="ZoomDetail" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oIO-5R-Uwm"/>
+                        <viewControllerLayoutGuide type="bottom" id="bRk-sK-fXv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ubt-aO-B4W">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="hcf-xL-UkM" appends="YES" id="wAZ-Vb-ajY"/>
+                        </connections>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mbo-cq-b2H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="hcf-xL-UkM">
+                    <connections>
+                        <action selector="handlePinch:" destination="gsK-Xf-aSt" id="ThG-0R-qhB"/>
+                    </connections>
+                </pinchGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2230" y="1837"/>
         </scene>
     </scenes>
     <resources>

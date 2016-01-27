@@ -26,6 +26,7 @@ class ViewDetail: UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBOutlet var popup: UIView!
     @IBOutlet var imgArea: UIView!
     @IBOutlet var detailTitle: UILabel!
     @IBOutlet var detailSubTitle: UILabel!
@@ -39,7 +40,8 @@ class ViewDetail: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+ 
+        
         let imgThumb: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = bkgdImage.image
@@ -49,6 +51,7 @@ class ViewDetail: UIViewController {
         myMask.path = path.CGPath
         imgThumb.layer.mask = myMask
         self.imgArea.addSubview(imgThumb)
+        imgThumb.hidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
         let pathFrameCorners = detail.bezierFrame()
@@ -62,6 +65,11 @@ class ViewDetail: UIViewController {
         let newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + imgArea.center.x, imgThumb.center.y * detailScale - pathCenter.y + imgArea.center.y)
         imgThumb.center = newCenter
         
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 900))
+        dispatch_after(delayTime, dispatch_get_main_queue()){
+            imgThumb.hidden = false
+        }
+        
         // Show text
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
@@ -72,6 +80,8 @@ class ViewDetail: UIViewController {
                 txtDesc.text = d.value
                 zoomDisable = (d.attributes["zoom"] == "true") ? false : true
                 btnZoom.hidden = zoomDisable
+                btnZoom.enabled = !zoomDisable
+                btnZoom.layer.zPosition = 3
             }
         }
     }
