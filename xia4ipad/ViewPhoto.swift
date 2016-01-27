@@ -180,13 +180,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    @IBAction func debugXML(sender: AnyObject) {
-        dbg.pt(xml.xmlString)
-        for detail in details {
-            dbg.pt("\(detail.0) : \(detail.1.constraint)")
-        }
-    }
-    
     @IBAction func btnExport(sender: AnyObject) {
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(imgView.image!, 85)
@@ -334,6 +327,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
+            readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
             for detail in xmlDetails {
                 if let path = detail.attributes["path"] {
                     // Add detail object
@@ -369,7 +363,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             details["\(detailTag)"]?.constraint = "polygon"
                         }
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                        if !readOnly {
+                            buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                        }
                         
                         details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
                         
@@ -380,7 +376,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             btnTitleLabel.title = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
-            readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
+            btnTitleLabel.enabled = !readOnly
         }
         cleaningDetails()
         setBtnsIcons()
@@ -643,7 +639,9 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+            if !readOnly {
+                buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+            }
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -661,7 +659,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             break
             
         default:
-            if (editDetail == -1 && movingPoint == -1) {
+            if (editDetail == -1 && movingPoint == -1 && !readOnly) {
                 changeDetailColor(-1)
                 currentDetailTag = 0
                 moveDetail = false

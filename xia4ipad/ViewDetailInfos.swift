@@ -32,10 +32,6 @@ class ViewDetailInfos: UIViewController {
     @IBAction func btnCancel(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    @IBAction func btnDBG(sender: AnyObject) {
-        let _ = attributedString2pikipiki(txtDesc.attributedText)
-        print(txtDesc.attributedText)
-    }
     
     @IBAction func btnDone(sender: AnyObject) {
         // Save the detail in xml

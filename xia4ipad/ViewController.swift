@@ -357,13 +357,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 performSegueWithIdentifier("ViewImageInfos", sender: self)
             }
             else {
-                let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+                /*let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
                 if xmlToSegue["xia"]["readonly"].value! == "true" {
                     performSegueWithIdentifier("playXia", sender: self)
                 }
-                else {
+                else {*/
                     performSegueWithIdentifier("viewLargePhoto", sender: self)
-                }
+                //}
             }
         }
     }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import BubbleTransition
 
 class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
@@ -21,31 +20,23 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
-    var lastTouchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
-    var shapeLayers = [Int: CAShapeLayer]()
-    var croppedImages = UIImage()
     var showDetail: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
-    var zoomStatus: Bool = false
-    let maxZoomScale: CGFloat = 3.0
-    var zooming: Bool = false
-    var zoomCropCenter = CGPointMake(0, 0)
-    var zoomDetailScale: CGFloat = 1.0
+    var img: UIImage!
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
+    var landscape = false
     
-    let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 0, height: 0))
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
-    @IBOutlet weak var btnZoom: UISwitch!
-    @IBAction func btnZoomAction(sender: AnyObject) {
-    }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         // Add gestures on swipe
         let gbSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
@@ -53,17 +44,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         view.addGestureRecognizer(rightSwipe)
         
         let metasSelector = Selector("goMetas")
-        let downSwipe = UISwipeGestureRecognizer(target: self, action: metasSelector )
-        downSwipe.direction = UISwipeGestureRecognizerDirection.Down
-        view.addGestureRecognizer(downSwipe)
+        let upSwipe = UISwipeGestureRecognizer(target: self, action: metasSelector )
+        upSwipe.direction = UISwipeGestureRecognizerDirection.Up
+        view.addGestureRecognizer(upSwipe)
         
         // Load image
         let filePath = "\(self.filePath).jpg"
-        let img = UIImage(contentsOfFile: filePath)
+        img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
-        
-        // Hide btnZoom
-        btnZoom.layer.zPosition = -1
         
         // Get the scale...
         let scaleX: CGFloat = screenWidth / img!.size.width
@@ -106,22 +94,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
         
-        // detect touch on btnZoom
-        if (btnZoom.frame.contains(location) && btnZoom.enabled){
-            if btnZoom.on {
-                btnZoom.on = false
-                if lastTouchedTag != 0 {
-                    //showMyDetail(lastTouchedTag, zoomDetail: false)
-                }
-            }
-            else {
-                btnZoom.on = true
-                if lastTouchedTag != 0 {
-                    //showMyDetail(lastTouchedTag, zoomDetail: true)
-                }
-            }
-        }
-        
         switch showDetail {
         case true:
             touchBegin = location
@@ -134,7 +106,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
                     //let zoom: Bool = btnZoom.on
                     performSegueWithIdentifier("openDetail", sender: self)
-                    lastTouchedTag = touchedTag
                     break
                 }
             }
@@ -147,7 +118,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if (!txtView.frame.contains(touchBegin) && touchedTag == 0 && !btnZoom.frame.contains(touchBegin)) {
+        if touchedTag == 0 {
             for subview in view.subviews {
                 if subview.tag == 666 || subview.tag == 667 {
                     subview.removeFromSuperview()
@@ -157,12 +128,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
             }
             showDetail = false
-            lastTouchedTag = 0
-            
-            btnZoom.layer.zPosition = -1
-            btnZoom.enabled = false
-            btnZoom.on = false
-            
             hideDetails(true)
         }
     }
@@ -214,6 +179,24 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         for subview in view.subviews {
             if subview.tag > 199 {
                 subview.hidden = hidden
+            }
+        }
+    }
+    
+    func rotated() {
+        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
+        {
+            if ( !landscape ) {
+                let value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
+        
+        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
+        {
+            if ( landscape ) {
+                let value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
         }
     }
