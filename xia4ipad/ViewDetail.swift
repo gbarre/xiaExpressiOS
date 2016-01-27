@@ -17,6 +17,7 @@ class ViewDetail: UIViewController {
     var detail: xiaDetail!
     var path: UIBezierPath!
     var bkgdImage: UIImageView!
+    var zoomDisable: Bool = true
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
@@ -29,6 +30,12 @@ class ViewDetail: UIViewController {
     @IBOutlet var detailTitle: UILabel!
     @IBOutlet var detailSubTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
+    @IBOutlet var btnZoom: UIButton!
+    
+    @IBAction func btnZoomAction(sender: AnyObject) {
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +70,8 @@ class ViewDetail: UIViewController {
                 detailTitle.numberOfLines = 0
                 detailSubTitle.text = "Sub Title..."
                 txtDesc.text = d.value
+                zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+                btnZoom.hidden = zoomDisable
             }
         }
     }

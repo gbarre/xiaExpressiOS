@@ -803,6 +803,15 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="66N-t8-hgQ">
                                 <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E6v-FG-LsC">
+                                        <rect key="frame" x="150" y="150" width="50" height="50"/>
+                                        <state key="normal" image="search"/>
+                                        <connections>
+                                            <action selector="btnZoomAction:" destination="W9K-wb-Ida" eventType="touchUpInside" id="ahM-gY-kFB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="7eG-UF-okU"/>
@@ -884,6 +893,7 @@
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="800" height="600"/>
                     <connections>
+                        <outlet property="btnZoom" destination="E6v-FG-LsC" id="lzW-v0-MUR"/>
                         <outlet property="detailSubTitle" destination="o2a-Cq-mW0" id="iry-qf-ZDc"/>
                         <outlet property="detailTitle" destination="VlB-Ig-h1b" id="V2z-h8-cTy"/>
                         <outlet property="imgArea" destination="66N-t8-hgQ" id="nk9-Mv-5cW"/>
@@ -900,6 +910,7 @@
         <image name="bubble" width="100" height="100"/>
         <image name="delete" width="50" height="50"/>
         <image name="help" width="25" height="25"/>
+        <image name="search" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="J54-6x-Hse"/>
