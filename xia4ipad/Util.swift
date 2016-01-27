@@ -115,8 +115,7 @@ func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     catch {
         print("\(error)")
     }
-    let checkedXML = checkXML(xml)
-    return checkedXML
+    return (check) ? checkXML(xml) : xml
 }
 
 func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
