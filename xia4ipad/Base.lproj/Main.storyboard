@@ -789,10 +789,14 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="7eG-UF-okU"/>
                                     <constraint firstAttribute="height" constant="200" id="mIV-L0-Qe6"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="cjf-Hz-xTd" appends="YES" id="b00-CP-BRr"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89n-Xj-Ogm">
                                 <rect key="frame" x="200" y="0.0" width="600" height="200"/>
@@ -880,6 +884,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zTQ-xZ-Me9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="cjf-Hz-xTd">
+                    <connections>
+                        <action selector="btnZoomAction:" destination="W9K-wb-Ida" id="9oB-Vk-Wxp"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1482" y="1837"/>
         </scene>
