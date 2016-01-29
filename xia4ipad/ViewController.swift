@@ -128,8 +128,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         // add observer to detect enter foreground and rebuild collection
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
-        
-        dbg.ptSubviews(self.CollectionView)
     }
     
     deinit {

@@ -898,6 +898,7 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="hcf-xL-UkM" appends="YES" id="wAZ-Vb-ajY"/>
+                            <outletCollection property="gestureRecognizers" destination="GhS-Gm-C0V" appends="YES" id="ESR-yM-T1g"/>
                         </connections>
                     </view>
                 </viewController>
@@ -907,6 +908,11 @@
                         <action selector="handlePinch:" destination="gsK-Xf-aSt" id="ThG-0R-qhB"/>
                     </connections>
                 </pinchGestureRecognizer>
+                <tapGestureRecognizer id="GhS-Gm-C0V">
+                    <connections>
+                        <action selector="handleTap:" destination="gsK-Xf-aSt" id="3wh-wE-AJ1"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1482" y="2617"/>
         </scene>

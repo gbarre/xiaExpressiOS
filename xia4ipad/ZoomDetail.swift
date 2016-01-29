@@ -14,4 +14,8 @@ class ZoomDetail: UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func handleTap(sender: UITapGestureRecognizer) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 }
