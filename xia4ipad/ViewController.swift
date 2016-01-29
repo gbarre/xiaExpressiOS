@@ -176,7 +176,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if (segue.identifier == "ViewImageInfos") {
             if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
                 controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
-                controller.imageAuthor = (xmlToSegue["xia"]["author"].value == nil) ? "" : xmlToSegue["xia"]["author"].value!
+                controller.imageCreator = (xmlToSegue["xia"]["creator"].value == nil) ? "" : xmlToSegue["xia"]["creator"].value!
                 controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
                 controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
                 let readonlyStatus: Bool = (xmlToSegue["xia"]["readonly"].value == "true" ) ? true : false

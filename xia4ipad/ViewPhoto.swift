@@ -712,7 +712,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         if (segue.identifier == "ViewImageInfos") {
             if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
                 controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
-                controller.imageAuthor = (xml["xia"]["author"].value == nil) ? "" : xml["xia"]["author"].value!
+                controller.imageCreator = (xml["xia"]["creator"].value == nil) ? "" : xml["xia"]["creator"].value!
                 controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
                 controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
                 let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false

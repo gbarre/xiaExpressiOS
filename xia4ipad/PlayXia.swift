@@ -33,6 +33,9 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
+    @IBAction func showMetas(sender: AnyObject) {
+        performSegueWithIdentifier("playMetas", sender: self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,11 +45,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
-        
-        let metasSelector = Selector("goMetas")
-        let upSwipe = UISwipeGestureRecognizer(target: self, action: metasSelector )
-        upSwipe.direction = UISwipeGestureRecognizerDirection.Up
-        view.addGestureRecognizer(upSwipe)
         
         // Load image
         let filePath = "\(self.filePath).jpg"
@@ -169,10 +167,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
-    }
-    
-    func goMetas() {
-        performSegueWithIdentifier("playMetas", sender: self)
     }
     
     func hideDetails(hidden: Bool) {

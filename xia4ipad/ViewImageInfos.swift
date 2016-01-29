@@ -13,7 +13,7 @@ class ViewImageInfos: UIViewController {
     var dbg = debug(enable: true)
     
     var imageTitle: String = ""
-    var imageAuthor: String = ""
+    var imageCreator: String = ""
     var imageRights: String = ""
     var imageDesc: String = ""
     var readOnlyState: Bool = false
@@ -24,7 +24,7 @@ class ViewImageInfos: UIViewController {
     weak var viewPhotoController: ViewPhoto?
     
     @IBOutlet weak var txtTitle: UITextField!
-    @IBOutlet weak var txtAuthor: UITextField!
+    @IBOutlet weak var txtCreator: UITextField!
     @IBOutlet weak var txtRights: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     @IBOutlet weak var readOnly: UISwitch!
@@ -102,7 +102,7 @@ class ViewImageInfos: UIViewController {
         // Save the image infos in xml
         
         xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["author"].value = txtAuthor.text
+        xml["xia"]["creator"].value = txtCreator.text
         xml["xia"]["rights"].value = txtRights.text
         xml["xia"]["description"].value = txtDesc.text
         xml["xia"]["readonly"].value = "\(readOnly.on)"
@@ -123,7 +123,7 @@ class ViewImageInfos: UIViewController {
         txtDesc.layer.borderColor = UIColor.grayColor().CGColor
         
         txtTitle.text = self.imageTitle
-        txtAuthor.text = self.imageAuthor
+        txtCreator.text = self.imageCreator
         txtRights.text = self.imageRights
         txtDesc.text = self.imageDesc
         readOnly.setOn(readOnlyState, animated: true)

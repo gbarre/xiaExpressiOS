@@ -140,7 +140,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 //self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
                 self.bubble.alpha = 0
                 }, completion: nil)
-            UIView.animateWithDuration(0, delay: duration + 0.2, options: .ShowHideTransitionViews, animations: { () -> Void in
+            UIView.animateWithDuration(0, delay: duration * 2, options: .ShowHideTransitionViews, animations: { () -> Void in
                 if !self.zoom {
                     self.detail.alpha = 0
                 }
