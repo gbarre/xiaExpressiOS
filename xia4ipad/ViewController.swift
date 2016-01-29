@@ -26,6 +26,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
+    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
@@ -127,6 +128,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         // add observer to detect enter foreground and rebuild collection
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        dbg.ptSubviews(self.CollectionView)
     }
     
     deinit {
@@ -242,7 +245,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         for title in orderedTitles {
             self.arrayNames.append(self.arraySortedNames[title]!)
         }
-        
         self.CollectionView.reloadData()
         
         return arrayNames.count;
@@ -253,17 +255,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let index = indexPath.item
         // Load image
-        if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
-            // Use cached version
-            cell.setCachedThumbnailImage(cachedImage)
-        }
-        else {
-            // Create image from scratch then store in the cache
-            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
-            let img = UIImage(contentsOfFile: filePath)
-            let cachedImage = cell.setThumbnailImage(img!)
-            cache.setObject(cachedImage, forKey: arrayNames[index])
-        }
+        let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+        let img = UIImage(contentsOfFile: filePath)
+        cell.setThumbnail(img!)
         
         // Load label
         let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")

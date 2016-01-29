@@ -67,7 +67,7 @@
                                     <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" reuseIdentifier="PhotoCell" id="Wwi-7K-K0l" customClass="PhotoThumbnail" customModule="xia4ipad" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" preservesSuperviewLayoutMargins="YES" reuseIdentifier="PhotoCell" id="Wwi-7K-K0l" customClass="PhotoThumbnail" customModule="xia4ipad" customModuleProvider="target">
                                         <rect key="frame" x="10" y="10" width="200" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -76,9 +76,12 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZgJ-fg-FiW">
                                                     <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="200" id="hvh-bj-oSX"/>
+                                                    </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qNg-bF-MbM">
-                                                    <rect key="frame" x="8" y="221" width="184" height="21"/>
+                                                    <rect key="frame" x="8" y="210" width="184" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -89,16 +92,16 @@
                                         <constraints>
                                             <constraint firstAttribute="trailingMargin" secondItem="qNg-bF-MbM" secondAttribute="trailing" id="2TC-6a-LgP"/>
                                             <constraint firstAttribute="leadingMargin" secondItem="qNg-bF-MbM" secondAttribute="leading" id="51x-Dr-Vzl"/>
-                                            <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leading" id="cWu-Ae-goA"/>
-                                            <constraint firstItem="ZgJ-fg-FiW" firstAttribute="top" secondItem="Wwi-7K-K0l" secondAttribute="top" id="iId-Jn-IzE"/>
-                                            <constraint firstAttribute="bottom" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="50" id="mwJ-8z-fti"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="qNg-bF-MbM" secondAttribute="bottom" id="y7S-x3-T5p"/>
-                                            <constraint firstAttribute="trailing" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" id="ybs-UG-ip6"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="42" id="Ak4-9U-1jQ"/>
+                                            <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leadingMargin" constant="-8" id="WfD-Dc-SBL"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" constant="-8" id="wZM-hj-2vW"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="qNg-bF-MbM" secondAttribute="bottom" constant="11" id="y7S-x3-T5p"/>
                                         </constraints>
                                         <size key="customSize" width="200" height="250"/>
                                         <connections>
                                             <outlet property="imgLabel" destination="qNg-bF-MbM" id="Lj4-s2-gak"/>
                                             <outlet property="imgView" destination="ZgJ-fg-FiW" id="D17-2x-rAJ"/>
+                                            <outlet property="imgViewHeight" destination="hvh-bj-oSX" id="AfG-tk-Zqh"/>
                                             <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="J54-6x-Hse"/>
                                         </connections>
                                     </collectionViewCell>
@@ -916,7 +919,7 @@
         <image name="search" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="g1C-J3-xmC"/>
-        <segue reference="JTz-kQ-gaK"/>
+        <segue reference="uKj-nk-TQb"/>
+        <segue reference="J54-6x-Hse"/>
     </inferredMetricsTieBreakers>
 </document>
