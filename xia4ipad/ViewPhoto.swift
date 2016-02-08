@@ -643,6 +643,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
+        setBtnsIcons()
+        
         switch createDetail {
         case true:
             moveDetail = false
@@ -657,7 +659,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             else {
                 editDetail = -1
             }
-            setBtnsIcons()
             break
         }
         
@@ -870,7 +871,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
             else if item.tag == 14 { // undo btn (remove last point of polygon)
                 btn = item
-                btn.enabled = (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon") ? true : false
+                btn.enabled = (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) ? true : false
             }
             else if item.tag == 20 { // export btn
                 btn = item
