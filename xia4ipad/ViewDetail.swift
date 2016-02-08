@@ -67,11 +67,6 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         let newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + imgArea.center.x, imgThumb.center.y * detailScale - pathCenter.y + imgArea.center.y)
         imgThumb.center = newCenter
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 900))
-        dispatch_after(delayTime, dispatch_get_main_queue()){
-            imgThumb.hidden = false
-        }
-        
         // Show text
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
@@ -86,6 +81,12 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 btnZoom.layer.zPosition = 3
             }
         }
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 1100))
+        dispatch_after(delayTime, dispatch_get_main_queue()){
+            imgThumb.hidden = false
+            self.btnZoom.hidden = false
+        }
     }
     
     // Disable round corners on modal view
@@ -93,6 +94,7 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         super.viewWillLayoutSubviews()
         self.view.superview!.layer.cornerRadius  = 0.0
         self.view.superview!.layer.masksToBounds = false
+        self.btnZoom.hidden = true
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

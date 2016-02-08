@@ -36,6 +36,9 @@
 		F0E4343C1C575C8D007CD7CE /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
 		F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
+		F0EC29B31C678ECA009AE0BA /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
+		F0EC29B41C678ED1009AE0BA /* ViewDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */; };
+		F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewController.swift */; };
 		F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */; };
@@ -310,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0EC29B31C678ECA009AE0BA /* BubbleTransition.swift in Sources */,
 				F05103931C21C01700E6C25C /* ViewController.swift in Sources */,
 				F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */,
 				F05103921C21C01700E6C25C /* Util.swift in Sources */,
@@ -318,7 +322,9 @@
 				F051038E1C21C01700E6C25C /* PhotoThumbnail.swift in Sources */,
 				F051038D1C21C01700E6C25C /* debug.swift in Sources */,
 				F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */,
+				F0EC29B41C678ED1009AE0BA /* ViewDetail.swift in Sources */,
 				F05103901C21C01700E6C25C /* PlayXia.swift in Sources */,
+				F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */,
 				F05103951C21C01700E6C25C /* ViewImageInfos.swift in Sources */,
 				F05103961C21C01700E6C25C /* ViewPhoto.swift in Sources */,
 				F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */,
