@@ -29,7 +29,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     var beginTouchLocation = CGPoint(x: 0, y: 0)
     var editDetail = -1
     var moveDetail = false
-    var readOnly: Bool = false
     
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     var img = UIImage()
@@ -327,7 +326,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Load xmlDetails from xml
         if let xmlDetails = xml.root["details"]["detail"].all {
-            readOnly = (xml["xia"]["readonly"].value == "true") ? true : false
             for detail in xmlDetails {
                 if let path = detail.attributes["path"] {
                     // Add detail object
@@ -363,10 +361,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             details["\(detailTag)"]?.constraint = "polygon"
                         }
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-                        if !readOnly {
-                            buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
-                        }
-                        
+                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                         details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
                         
                         if attainablePoints < 2 {
@@ -376,7 +371,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             btnTitleLabel.title = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
-            btnTitleLabel.enabled = !readOnly
         }
         cleaningDetails()
         setBtnsIcons()
@@ -446,51 +440,49 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
             
         default:
-            if !readOnly {// Get tag of the touched detail
-                var touchedTag: Int = 0
-                for detail in details {
-                    let (detailTag, detailPoints) = detail
-                    if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                        touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                        beginTouchLocation = location
-                        editDetail = touchedTag
-                        currentDetailTag = touchedTag
-                        movingCoords = location
-                        moveDetail = (detailPoints.locked) ? false : true
-                        changeDetailColor(editDetail)
-                        break
-                    }
+            var touchedTag: Int = 0
+            for detail in details {
+                let (detailTag, detailPoints) = detail
+                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                    beginTouchLocation = location
+                    editDetail = touchedTag
+                    currentDetailTag = touchedTag
+                    movingCoords = location
+                    moveDetail = (detailPoints.locked) ? false : true
+                    changeDetailColor(editDetail)
+                    break
                 }
-                
-                // Should we move an existing point ?
-                if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
-                    movingPoint = -1
-                    let detailPoints = details["\(currentDetailTag)"]?.points.count
-                    for var i=0; i<detailPoints; i++ {
-                        let ploc = details["\(currentDetailTag)"]?.points[i].center
-                        
-                        let xDist: CGFloat = (location.x - ploc!.x)
-                        let yDist: CGFloat = (location.y - ploc!.y)
-                        let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                        
-                        if ( distance < 20 ) { // We are close to an exiting point, move it
-                            let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
-                            switch details["\(currentDetailTag)"]!.constraint {
-                            case "ellipse":
-                                toMove.center = ploc!
-                                break
-                            default:
-                                toMove.center = location
-                                break
-                            }
-                            details["\(currentDetailTag)"]?.points[i] = toMove
-                            movingPoint = i
-                            moveDetail = false
+            }
+            
+            // Should we move an existing point ?
+            if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
+                movingPoint = -1
+                let detailPoints = details["\(currentDetailTag)"]?.points.count
+                for var i=0; i<detailPoints; i++ {
+                    let ploc = details["\(currentDetailTag)"]?.points[i].center
+                    
+                    let xDist: CGFloat = (location.x - ploc!.x)
+                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
+                    
+                    if ( distance < 20 ) { // We are close to an exiting point, move it
+                        let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
+                        switch details["\(currentDetailTag)"]!.constraint {
+                        case "ellipse":
+                            toMove.center = ploc!
+                            break
+                        default:
+                            toMove.center = location
                             break
                         }
-                        else { // No point here, just move the detail
-                            moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
-                        }
+                        details["\(currentDetailTag)"]?.points[i] = toMove
+                        movingPoint = i
+                        moveDetail = false
+                        break
+                    }
+                    else { // No point here, just move the detail
+                        moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
                     }
                 }
             }
@@ -511,7 +503,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
         }*/
         
-        if ( movingPoint != -1 ) {
+        if ( movingPoint != -1 && detailTag != 0 && !details["\(detailTag)"]!.locked ) {
             let ploc = details["\(detailTag)"]?.points[movingPoint].center
             
             let xDist: CGFloat = (location.x - ploc!.x)
@@ -580,7 +572,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             break
             
         default:
-            if ( editDetail != -1 ) {
+            if ( editDetail != -1) {
                 if (moveDetail) {
                     movingPoint = -1
                     let deltaX = location.x - movingCoords.x
@@ -639,9 +631,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-            if !readOnly {
-                buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
-            }
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -659,7 +649,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             break
             
         default:
-            if (editDetail == -1 && movingPoint == -1 && !readOnly) {
+            if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1)
                 currentDetailTag = 0
                 moveDetail = false
@@ -862,24 +852,21 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if item.tag == 10 { // play/STOP btn
                 if createDetail {
                     btn = UIBarButtonItem(title: "OK", style: .Done, target: self, action: "stopCreation")
-//                    btn.tintColor = UIColor.redColor()
                 }
                 else {
                     btn = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
-//                    btn.tintColor = UIColor.whiteColor()
                 }
             }
             else if item.tag == 11 { // add detail btn
                 btn = item
-                btn.enabled = (readOnly) ? false : true
             }
             else if item.tag == 12 { // info detail btn
                 btn = item
-                btn.enabled = (createDetail || readOnly || currentDetailTag == 0) ? false : true
+                btn.enabled = (createDetail || currentDetailTag == 0) ? false : true
             }
             else if item.tag == 13 { // trash btn
                 btn = item
-                btn.enabled = (readOnly || currentDetailTag == 0 || details["\(currentDetailTag)"]!.locked ) ? false : true
+                btn.enabled = (currentDetailTag == 0 || details["\(currentDetailTag)"]!.locked ) ? false : true
             }
             else if item.tag == 14 { // undo btn (remove last point of polygon)
                 btn = item
@@ -887,7 +874,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
             else if item.tag == 20 { // export btn
                 btn = item
-                btn.enabled = (readOnly) ? false : true
             }
             else {
                 btn = item
