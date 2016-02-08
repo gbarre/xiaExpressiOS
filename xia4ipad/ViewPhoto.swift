@@ -303,6 +303,11 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(leftSwipe)
         */
+        
+        let dSelector : Selector = "detailInfos"
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
+        doubleTapGesture.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTapGesture)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -789,6 +794,15 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if subview.tag > 299 {
                 subview.removeFromSuperview()
             }
+        }
+    }
+    
+    func detailInfos() {
+        if currentDetailTag == 0 {
+            performSegueWithIdentifier("ViewImageInfos", sender: self)
+        }
+        else {
+            performSegueWithIdentifier("viewDetailInfos", sender: self)
         }
     }
     
