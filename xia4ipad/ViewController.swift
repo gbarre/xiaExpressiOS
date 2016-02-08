@@ -27,6 +27,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
+    var landscape = false
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
@@ -148,11 +149,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func viewDidAppear(animated: Bool) {
-        /*delay(0.4) {
-            self.dbg.pt("view did appear")
-            self.CollectionView.reloadData()
-        }*/
-        self.CollectionView.reloadData()
+       self.CollectionView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -191,6 +188,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
+                controller.landscape = self.landscape
             }
         }
     }
@@ -349,13 +347,35 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 performSegueWithIdentifier("ViewImageInfos", sender: self)
             }
             else {
-                /*let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+                let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
                 if xmlToSegue["xia"]["readonly"].value! == "true" {
+                    // look for orientation before segue
+                    let filePath = "\(documentsDirectory)/\(arrayNames[segueIndex]).jpg"
+                    let img = UIImage(contentsOfFile: filePath)!
+                    
+                    var value: Int
+                    if ( img.size.width > img.size.height ) { // turn device to landscape
+                        if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
+                        {
+                            value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : 3
+                            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+                        }
+                        landscape = true
+                    }
+                    else { // turn device to portrait
+                        if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
+                        {
+                            value = (UIDevice.currentDevice().orientation.rawValue == 2) ? 2 : 1
+                            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+                        }
+                        landscape = false
+                    }
+                    
                     performSegueWithIdentifier("playXia", sender: self)
                 }
-                else {*/
+                else {
                     performSegueWithIdentifier("viewLargePhoto", sender: self)
-                //}
+                }
             }
         }
     }
