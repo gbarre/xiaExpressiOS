@@ -216,6 +216,25 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                 <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="disque-4" translatesAutoresizingMaskIntoConstraints="NO" id="uml-rI-VS4">
+                                <rect key="frame" x="525" y="525" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="64g-dH-Jyn"/>
+                                    <constraint firstAttribute="height" constant="75" id="f4s-Xr-XGB"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fI0-A2-zBP">
+                                <rect key="frame" x="540" y="540" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="IWN-HI-m19"/>
+                                    <constraint firstAttribute="height" constant="60" id="ct5-Lh-WdR"/>
+                                </constraints>
+                                <state key="normal" image="Info"/>
+                                <connections>
+                                    <action selector="btnMetas:" destination="fts-Lk-uqf" eventType="touchUpInside" id="urY-9Y-eRy"/>
+                                    <action selector="showMetas:" destination="xod-8C-OKb" eventType="touchUpInside" id="uNw-xh-Ueb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -225,10 +244,14 @@
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Fwa-cM-DUY"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="T8v-I8-egC"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Zsa-lD-UhT"/>
+                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="fI0-A2-zBP" secondAttribute="bottom" id="ckF-Yb-Y9O"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" id="cpf-7v-ZLl"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="der-pQ-9E6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vTl-S5-lKu" secondAttribute="trailing" constant="-20" id="lHR-UU-Tup"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fI0-A2-zBP" secondAttribute="trailing" constant="-20" id="p9b-73-GhD"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="44" id="tHm-Vg-EYu"/>
+                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="uml-rI-VS4" secondAttribute="bottom" id="ukj-FU-Wss"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="uml-rI-VS4" secondAttribute="trailing" constant="-20" id="vEo-v8-PuS"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="vTl-S5-lKu" secondAttribute="bottom" constant="44" id="wNX-tq-TnE"/>
                         </constraints>
                     </view>
@@ -241,6 +264,8 @@
                         <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
                         <outlet property="btnTitleLabel" destination="x4L-95-X7o" id="lBd-Qt-aCU"/>
                         <outlet property="imgTopBarBkgd" destination="vTl-S5-lKu" id="jbs-Lk-RAS"/>
+                        <outlet property="infoBkgd" destination="uml-rI-VS4" id="atj-df-tp5"/>
+                        <outlet property="infoBtn" destination="fI0-A2-zBP" id="GAm-TW-5lW"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                         <segue destination="Vet-iN-BdV" kind="presentation" identifier="ViewImageInfos" modalPresentationStyle="formSheet" id="JTz-kQ-gaK"/>
                         <segue destination="sQ2-dz-HWJ" kind="presentation" identifier="viewDetail" modalPresentationStyle="formSheet" id="4pf-iL-bkX"/>

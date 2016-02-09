@@ -250,16 +250,23 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    @IBAction func btnMetas(sender: AnyObject) {
+        performSegueWithIdentifier("ViewImageInfos", sender: self)
+    }
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
+    @IBOutlet var infoBkgd: UIImageView!
+    @IBOutlet var infoBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         myToolbar.layer.zPosition = 999
-        imgTopBarBkgd.layer.zPosition=998
+        imgTopBarBkgd.layer.zPosition = 100
         imgTopBarBkgd.hidden = false
+        infoBkgd.layer.zPosition = 101
+        infoBtn.layer.zPosition = 102
         
         // Load image
         let filePath = "\(self.filePath).jpg"
