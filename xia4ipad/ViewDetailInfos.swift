@@ -47,6 +47,7 @@ class ViewDetailInfos: UIViewController {
         let _ = writeXML(xml, path: "\(filePath).xml")
         viewPhotoController?.details["\(tag)"]?.locked = btnLock.on
         btnLock.resignFirstResponder()
+        viewPhotoController!.changeDetailColor(tag)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
