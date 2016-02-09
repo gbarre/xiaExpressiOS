@@ -176,7 +176,7 @@
                                     <barButtonItem tag="11" width="20" style="plain" systemItem="fixedSpace" id="3tg-un-NlM"/>
                                     <barButtonItem tag="12" image="Info" id="g81-gt-cZy">
                                         <connections>
-                                            <segue destination="cwz-uV-RB1" kind="presentation" identifier="viewDetailInfos" modalPresentationStyle="formSheet" id="zI0-qU-CeA"/>
+                                            <action selector="btnDetailInfos:" destination="fts-Lk-uqf" id="7kn-8Z-mRX"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem tag="12" width="20" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
@@ -269,6 +269,7 @@
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                         <segue destination="Vet-iN-BdV" kind="presentation" identifier="ViewImageInfos" modalPresentationStyle="formSheet" id="JTz-kQ-gaK"/>
                         <segue destination="sQ2-dz-HWJ" kind="presentation" identifier="viewDetail" modalPresentationStyle="formSheet" id="4pf-iL-bkX"/>
+                        <segue destination="cwz-uV-RB1" kind="presentation" identifier="ViewDetailInfos" modalPresentationStyle="formSheet" id="1Zu-E8-fy3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -537,7 +538,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2946" y="1110"/>
+            <point key="canvasLocation" x="2832" y="1110"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">

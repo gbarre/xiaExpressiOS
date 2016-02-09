@@ -8,7 +8,7 @@
 
 import UIKit
 
-func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false) {
+func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
     switch fill {
@@ -42,14 +42,24 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
             }
         }
     }
-    let shapeWidth = xMax - xMin
-    let shapeHeight = yMax - yMin
+    let shapeFrame = CGRectMake(xMin, yMin, xMax - xMin, yMax - yMin)
     
     // Build the shape
-    let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: points, color: color)
+    let myView = ShapeView(frame: shapeFrame, shape: shapeArg, points: points, color: color)
     myView.backgroundColor = UIColor(white: 0, alpha: 0)
     myView.tag = shapeTag
     parentView.addSubview(myView)
+    
+    // Shape is locked ?
+    if locked {
+        let lock = UIImage(named: "lock")
+        let lockView = UIImageView(image: lock!)
+        lockView.center = CGPointMake(shapeFrame.midX, shapeFrame.midY)
+        lockView.tag = shapeTag
+        lockView.layer.zPosition = 105
+        lockView.alpha = 0.5
+        parentView.addSubview(lockView)
+    }
 }
 
 func checkXML (xml: AEXMLDocument) -> AEXMLDocument {

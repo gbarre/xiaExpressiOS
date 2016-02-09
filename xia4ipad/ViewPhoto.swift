@@ -91,7 +91,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
             
             self.stopCreation()
             
@@ -126,7 +126,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
             
             self.stopCreation()
             
@@ -170,6 +170,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     @IBOutlet weak var btnInfos: UIBarButtonItem!
+    @IBAction func btnDetailInfos(sender: AnyObject) {
+        detailToSegue = currentDetailTag
+        performSegueWithIdentifier("ViewDetailInfos", sender: self)
+    }
     
     @IBAction func btnTrash(sender: AnyObject) {
         let detailTag = self.currentDetailTag
@@ -246,7 +250,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     subview.removeFromSuperview()
                 }
             }
-            buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(currentDetailTag)"]!.points, parentView: imgView)
+            buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(currentDetailTag)"]!.points, parentView: imgView, locked: details["\(currentDetailTag)"]!.locked)
         }
     }
     
@@ -374,8 +378,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                             details["\(detailTag)"]?.constraint = "polygon"
                         }
                         let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
                         details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
+                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
                         
                         if attainablePoints < 2 {
                             //performFullDetailRemove(detailTag, force: true)
@@ -449,7 +453,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         subview.removeFromSuperview()
                     }
                 }
-                buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView)
+                buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, locked: details["\(detailTag)"]!.locked)
             }
             
         default:
@@ -613,7 +617,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
         }
     }
     
@@ -644,7 +648,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
-            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse)
+            buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -694,7 +698,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "viewDetailInfos") {
+        if (segue.identifier == "ViewDetailInfos") {
             if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
@@ -764,10 +768,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if detail.1.points.count > 2 {
                 let drawEllipse: Bool = (detail.1.constraint == "ellipse") ? true : false
                 if thisDetailTag != tag {
-                    buildShape(true, color: noEditColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                    buildShape(true, color: noEditColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(thisDetailTag!)"]!.locked)
                 }
                 else {
-                    buildShape(true, color: editColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse)
+                    buildShape(true, color: editColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(thisDetailTag!)"]!.locked)
                 }
             }
             else { // only 1 or 2 points, remove them
@@ -814,7 +818,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         else {
             detailToSegue = currentDetailTag
             currentDetailTag = 0
-            performSegueWithIdentifier("viewDetailInfos", sender: self)
+            performSegueWithIdentifier("ViewDetailInfos", sender: self)
         }
     }
     
