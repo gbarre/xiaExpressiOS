@@ -25,6 +25,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     var details = [String: xiaDetail]()
     var currentDetailTag: Int = 0
+    var detailToSegue: Int = 0
     var createDetail: Bool = false
     var beginTouchLocation = CGPoint(x: 0, y: 0)
     var editDetail = -1
@@ -688,7 +689,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "viewDetailInfos") {
             if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
-                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
                         let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
                         controller.zoom = zoomStatus
@@ -696,7 +697,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.lock = lockStatus
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
-                        controller.tag = self.currentDetailTag
+                        controller.tag = self.detailToSegue
                         controller.xml = self.xml
                         controller.index = self.index
                         controller.filePath = filePath
@@ -798,10 +799,14 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func detailInfos() {
+        moveDetail = false
+        movingPoint = -1
         if currentDetailTag == 0 {
             performSegueWithIdentifier("ViewImageInfos", sender: self)
         }
         else {
+            detailToSegue = currentDetailTag
+            currentDetailTag = 0
             performSegueWithIdentifier("viewDetailInfos", sender: self)
         }
     }
