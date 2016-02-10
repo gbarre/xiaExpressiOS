@@ -731,6 +731,12 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.viewPhotoController = self
             }
         }
+        if (segue.identifier == "viewMetas") {
+            if let controller:ViewMetasContainer = segue.destinationViewController as? ViewMetasContainer {
+                controller.xml = xml
+                controller.filePath = self.filePath
+            }
+        }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
                 controller.fileName = fileName
@@ -813,7 +819,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         moveDetail = false
         movingPoint = -1
         if currentDetailTag == 0 {
-            performSegueWithIdentifier("ViewImageInfos", sender: self)
+            performSegueWithIdentifier("viewMetas", sender: self)
         }
         else {
             detailToSegue = currentDetailTag

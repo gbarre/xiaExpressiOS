@@ -64,6 +64,7 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
 
 func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
     for child in xml["xia"].all! {
+        // Look for readonly child
         if let readonly = child["readonly"].value {
             if (readonly != "true" && readonly != "false") {
                 xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
