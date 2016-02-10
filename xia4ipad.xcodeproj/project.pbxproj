@@ -36,6 +36,8 @@
 		F0D1FCE01C6B3F3100C8CB38 /* ViewMetasContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */; };
 		F0D1FCE51C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */; };
 		F0D1FCE61C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */; };
+		F0D1FCE81C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */; };
+		F0D1FCE91C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E4343C1C575C8D007CD7CE /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
 		F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
@@ -87,6 +89,7 @@
 		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
 		F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasContainer.swift; sourceTree = "<group>"; };
 		F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabB.swift; sourceTree = "<group>"; };
+		F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabC.swift; sourceTree = "<group>"; };
 		F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTransition.swift; sourceTree = "<group>"; };
 		F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDetail.swift; sourceTree = "<group>"; };
@@ -175,6 +178,7 @@
 				F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */,
 				F0F798471C4FCC7800E2746A /* ViewMetasTabA.swift */,
 				F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */,
+				F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */,
 				F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewPhoto.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
@@ -326,6 +330,7 @@
 				F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */,
 				F05103921C21C01700E6C25C /* Util.swift in Sources */,
 				F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */,
+				F0D1FCE91C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */,
 				F05103941C21C01700E6C25C /* ViewDetailInfos.swift in Sources */,
 				F051038E1C21C01700E6C25C /* PhotoThumbnail.swift in Sources */,
 				F051038D1C21C01700E6C25C /* debug.swift in Sources */,
@@ -359,6 +364,7 @@
 				F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */,
 				F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */,
 				F0F15E6B1BB6FCDF00268F06 /* ViewController.swift in Sources */,
+				F0D1FCE81C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */,
 				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
 				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,

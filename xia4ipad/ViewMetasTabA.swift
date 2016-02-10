@@ -20,6 +20,7 @@ class ViewMetasTabA: UIViewController {
     @IBOutlet var txtTitle: UITextField!
     @IBOutlet var txtCreator: UITextField!
     @IBOutlet var date: UIDatePicker!
+    @IBOutlet var txtRights: UITextField!
     
     @IBAction func btnCancel(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -35,6 +36,8 @@ class ViewMetasTabA: UIViewController {
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         xml["xia"]["date"].value = dateFormatter.stringFromDate(date.date)
         
+        xml["xia"]["rights"].value = txtRights.text
+        
         let _ = writeXML(xml, path: "\(filePath).xml")
         self.dismissViewControllerAnimated(true, completion: nil)
         
@@ -47,12 +50,7 @@ class ViewMetasTabA: UIViewController {
         filePath = globalFilePath
         
         txtTitle.becomeFirstResponder()
-        if (xml["xia"]["title"].value != nil) {
-            txtTitle.text = xml["xia"]["title"].value
-        }
-        else {
-            txtTitle.placeholder = "Title"
-        }
+        txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
         
         txtCreator.text = (xml["xia"]["creator"].value != nil) ? xml["xia"]["creator"].value : ""
         
@@ -63,5 +61,7 @@ class ViewMetasTabA: UIViewController {
             detailDate = mydateFormatter.dateFromString(xml["xia"]["date"].value!)!
         }
         date.setDate(detailDate, animated: false)
+        
+        txtRights.text = (xml["xia"]["rights"].value != nil) ? xml["xia"]["rights"].value : ""
     }
 }

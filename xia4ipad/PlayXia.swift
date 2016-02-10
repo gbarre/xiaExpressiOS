@@ -85,7 +85,10 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         hideDetails(true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        
+        if xml["xia"]["readonly"].value! == "true" {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

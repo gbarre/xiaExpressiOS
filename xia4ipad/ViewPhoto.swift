@@ -45,7 +45,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var btnTitleLabel: UIBarButtonItem!
     @IBAction func btnTitle(sender: AnyObject) {
-        performSegueWithIdentifier("ViewImageInfos", sender: self)
+        performSegueWithIdentifier("viewMetas", sender: self)
     }
     
     
@@ -255,7 +255,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     @IBAction func btnMetas(sender: AnyObject) {
-        performSegueWithIdentifier("ViewImageInfos", sender: self)
+        performSegueWithIdentifier("viewMetas", sender: self)
     }
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
@@ -717,7 +717,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
         }
-        if (segue.identifier == "ViewImageInfos") {
+        /*if (segue.identifier == "ViewImageInfos") {
             if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
                 controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
                 controller.imageCreator = (xml["xia"]["creator"].value == nil) ? "" : xml["xia"]["creator"].value!
@@ -730,7 +730,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = xml
                 controller.viewPhotoController = self
             }
-        }
+        }*/
         if (segue.identifier == "viewMetas") {
             if let controller:ViewMetasContainer = segue.destinationViewController as? ViewMetasContainer {
                 controller.xml = xml

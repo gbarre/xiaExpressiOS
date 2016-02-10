@@ -78,6 +78,24 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
             }
         }
     }
+    
+    let xmlElements: [String] = ["license", "title", "date", "creator",
+        "rights", "publisher", "identifier", "source", "relation", "language",
+        "keywords", "coverage", "contributors", "description"
+    ]
+    
+    for element in xmlElements {
+        if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
+            xml["xia"].addChild(name: element)
+            if (element == "creator" && xml["xia"]["author"].value != nil) {
+                xml["xia"][element].value = xml["xia"]["author"].value!
+                if xml["xia"]["author"].value! != "element <author> not found" {
+                    xml["xia"]["author"].removeFromParent()
+                }
+            }            
+        }
+    }
+    
     return xml
 }
 

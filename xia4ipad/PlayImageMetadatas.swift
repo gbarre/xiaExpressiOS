@@ -64,7 +64,7 @@ class PlayImageMetadatas: UIViewController {
         documentKeywords.attributedText = getElementValue("keywords")
         documentCoverage.attributedText = getElementValue("coverage")
         documentContributors.attributedText = getElementValue("contributors")
-        documentDescription.attributedText = getElementValue("description")
+        documentDescription.attributedText = getDescriptionValue()
     }
     
     // Disable round corners on modal view
@@ -84,6 +84,23 @@ class PlayImageMetadatas: UIViewController {
         if (xml["xia"][element].value != nil && xml["xia"][element].value != "element <\(element)> not found") {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"][element].value!)
             attributedText.appendAttributedString(attributedValue)
+        }
+        
+        return attributedText
+    }
+    
+    func getDescriptionValue() -> NSAttributedString! {
+        let key = xmlElements["description"]
+        let keyWidth = key?.characters.count
+        let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
+        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(18)], range: NSRange(location: 0, length: keyWidth!))
+        
+        if (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") {
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"]["description"].value!)
+            attributedText.appendAttributedString(attributedValue)
+            let descWidth = xml["xia"]["description"].value!.characters.count
+            attributedText.addAttributes([NSFontAttributeName: UIFont.systemFontOfSize(16)], range: NSRange(location: keyWidth!, length: descWidth))
+
         }
         
         return attributedText
