@@ -85,7 +85,6 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 1100))
         dispatch_after(delayTime, dispatch_get_main_queue()){
             imgThumb.hidden = false
-            self.btnZoom.hidden = false
         }
     }
     
@@ -94,7 +93,11 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         super.viewWillLayoutSubviews()
         self.view.superview!.layer.cornerRadius  = 0.0
         self.view.superview!.layer.masksToBounds = false
-        self.btnZoom.hidden = true
+        self.btnZoom.alpha = 0
+        
+        UIView.animateWithDuration(0.5, delay: 1.1, options: .ShowHideTransitionViews, animations: { () -> Void in
+            self.btnZoom.alpha = 1
+            }, completion: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
