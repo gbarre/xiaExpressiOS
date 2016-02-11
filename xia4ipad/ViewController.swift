@@ -25,6 +25,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var passData:Bool=false
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
+    var newMedia: Bool?
+    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
+    var landscape = false
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
@@ -37,6 +40,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 picker.delegate = self
                 picker.allowsEditing = false
                 self.presentViewController(picker, animated: true, completion: nil)
+                self.newMedia = true
             }
             else{
                 //no camera available
@@ -53,7 +57,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
             picker.delegate = self
             picker.allowsEditing = false
+            picker.modalPresentationStyle = .Popover
             self.presentViewController(picker, animated: true, completion: nil)
+            self.newMedia = false
+            
+            picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
+            picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
         })
         let attributedTitle = NSAttributedString(string: "Create new document", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
@@ -140,11 +149,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func viewDidAppear(animated: Bool) {
-        /*delay(0.4) {
-            self.dbg.pt("view did appear")
-            self.CollectionView.reloadData()
-        }*/
-        self.CollectionView.reloadData()
+       self.CollectionView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -155,8 +160,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let xml = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
-        let xmlToSegue = checkXML(xml)
+        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
@@ -169,7 +173,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if (segue.identifier == "ViewImageInfos") {
             if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
                 controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
-                controller.imageAuthor = (xmlToSegue["xia"]["author"].value == nil) ? "" : xmlToSegue["xia"]["author"].value!
+                controller.imageCreator = (xmlToSegue["xia"]["creator"].value == nil) ? "" : xmlToSegue["xia"]["creator"].value!
                 controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
                 controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
                 let readonlyStatus: Bool = (xmlToSegue["xia"]["readonly"].value == "true" ) ? true : false
@@ -177,6 +181,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
+            }
+        }
+        if (segue.identifier == "playXia") {
+            if let controller:PlayXia = segue.destinationViewController as? PlayXia {
+                controller.fileName = nameToSegue
+                controller.filePath = pathToSegue
+                controller.xml = xmlToSegue
+                controller.landscape = self.landscape
             }
         }
     }
@@ -229,7 +241,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         for title in orderedTitles {
             self.arrayNames.append(self.arraySortedNames[title]!)
         }
-        
         self.CollectionView.reloadData()
         
         return arrayNames.count;
@@ -240,17 +251,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let index = indexPath.item
         // Load image
-        if let cachedImage = cache.objectForKey(arrayNames[index]) as? UIImage {
-            // Use cached version
-            cell.setCachedThumbnailImage(cachedImage)
-        }
-        else {
-            // Create image from scratch then store in the cache
-            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
-            let img = UIImage(contentsOfFile: filePath)
-            let cachedImage = cell.setThumbnailImage(img!)
-            cache.setObject(cachedImage, forKey: arrayNames[index])
-        }
+        let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+        let img = UIImage(contentsOfFile: filePath)
+        cell.setThumbnail(img!)
         
         // Load label
         let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
@@ -344,8 +347,47 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 performSegueWithIdentifier("ViewImageInfos", sender: self)
             }
             else {
-                performSegueWithIdentifier("viewLargePhoto", sender: self)
+                let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+                if xmlToSegue["xia"]["readonly"].value! == "true" {
+                    // look for orientation before segue
+                    let filePath = "\(documentsDirectory)/\(arrayNames[segueIndex]).jpg"
+                    let img = UIImage(contentsOfFile: filePath)!
+                    
+                    var value: Int
+                    if ( img.size.width > img.size.height ) { // turn device to landscape
+                        if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
+                        {
+                            value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : 3
+                            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+                        }
+                        landscape = true
+                    }
+                    else { // turn device to portrait
+                        if( !UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) )
+                        {
+                            value = (UIDevice.currentDevice().orientation.rawValue == 2) ? 2 : 1
+                            UIDevice.currentDevice().setValue(value, forKey: "orientation")
+                        }
+                        landscape = false
+                    }
+                    
+                    performSegueWithIdentifier("playXia", sender: self)
+                }
+                else {
+                    performSegueWithIdentifier("viewLargePhoto", sender: self)
+                }
             }
+        }
+    }
+    
+    func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer, contextInfo:UnsafePointer<Void>) {
+        if error != nil {
+            let alert = UIAlertController(title: "Save Failed", message: "Failed to save image", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+            
+            alert.addAction(cancelAction)
+            self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
@@ -368,6 +410,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             dbg.pt("\(error)")
         }
         arrayNames.append("\(now)")
+        
+        // copy the image in the library
+        if (newMedia == true) {
+            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
+            newMedia = false
+        }
+        self.CollectionView.reloadData()
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{

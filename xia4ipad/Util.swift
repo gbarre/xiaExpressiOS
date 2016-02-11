@@ -8,7 +8,7 @@
 
 import UIKit
 
-func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false) {
+func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
     switch fill {
@@ -42,23 +42,60 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, 
             }
         }
     }
-    let shapeWidth = xMax - xMin
-    let shapeHeight = yMax - yMin
+    let shapeFrame = CGRectMake(xMin, yMin, xMax - xMin, yMax - yMin)
     
     // Build the shape
-    let myView = ShapeView(frame: CGRectMake(xMin, yMin, shapeWidth, shapeHeight), shape: shapeArg, points: points, color: color)
+    let myView = ShapeView(frame: shapeFrame, shape: shapeArg, points: points, color: color)
     myView.backgroundColor = UIColor(white: 0, alpha: 0)
     myView.tag = shapeTag
     parentView.addSubview(myView)
+    
+    // Shape is locked ?
+    if locked {
+        let lock = UIImage(named: "lock")
+        let lockView = UIImageView(image: lock!)
+        lockView.center = CGPointMake(shapeFrame.midX, shapeFrame.midY)
+        lockView.tag = shapeTag
+        lockView.layer.zPosition = 105
+        lockView.alpha = 0.5
+        parentView.addSubview(lockView)
+    }
 }
 
 func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
     for child in xml["xia"].all! {
-        let readonly = child["readonly"].value
-        if (readonly != "true" && readonly != "false") {
-            xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+        // Look for readonly child
+        if let readonly = child["readonly"].value {
+            if (readonly != "true" && readonly != "false") {
+                xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+            }
         }
     }
+    if let xmlDetails = xml["xia"]["details"]["detail"].all {
+        for detail in xmlDetails {
+            if detail.attributes["locked"] == nil {
+                detail.attributes["locked"] = "false"
+            }
+        }
+    }
+    
+    let xmlElements: [String] = ["license", "title", "date", "creator",
+        "rights", "publisher", "identifier", "source", "relation", "language",
+        "keywords", "coverage", "contributors", "description"
+    ]
+    
+    for element in xmlElements {
+        if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
+            xml["xia"].addChild(name: element)
+            if (element == "creator" && xml["xia"]["author"].value != nil) {
+                xml["xia"][element].value = xml["xia"]["author"].value!
+                if xml["xia"]["author"].value! != "element <author> not found" {
+                    xml["xia"]["author"].removeFromParent()
+                }
+            }            
+        }
+    }
+    
     return xml
 }
 
@@ -83,7 +120,23 @@ func delay(delay:Double, closure:()->()) {
         dispatch_get_main_queue(), closure)
 }
 
-func getXML(path: String) -> AEXMLDocument {
+func getCenter() -> CGPoint{
+    var point = CGPointMake(0, 0)
+    let screenWidth = UIScreen.mainScreen().bounds.width
+    let screenHeight = UIScreen.mainScreen().bounds.height
+
+    if ( screenHeight == 1024 && screenWidth != 1366 ) { // device is portrait and not iPad Pro
+        point.x = (screenWidth - 540) / 2 + 100
+        point.y = (screenHeight - 620) / 2 + 100
+    }
+    else {
+        point.x = (screenWidth - 800) / 2 + 100
+        point.y = (screenHeight - 600) / 2 + 100
+    }
+    return point
+}
+
+func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     let data = NSData(contentsOfFile: path)
     var xml: AEXMLDocument!
     do {
@@ -92,7 +145,7 @@ func getXML(path: String) -> AEXMLDocument {
     catch {
         print("\(error)")
     }
-    return xml
+    return (check) ? checkXML(xml) : xml
 }
 
 func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {

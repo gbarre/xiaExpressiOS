@@ -8,58 +8,48 @@
 
 import UIKit
 
-class PlayXia: UIViewController {
+class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     var dbg = debug(enable: true)
     
     var xml: AEXMLDocument = AEXMLDocument()
+    let transition = BubbleTransition()
+    
     var fileName: String = ""
     var filePath: String = ""
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
-    var lastTouchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
-    var shapeLayers = [Int: CAShapeLayer]()
-    var croppedImages = UIImage()
     var showDetail: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
-    var zoomStatus: Bool = false
-    let maxZoomScale: CGFloat = 3.0
-    var zooming: Bool = false
-    var zoomCropCenter = CGPointMake(0, 0)
-    var zoomDetailScale: CGFloat = 1.0
+    var img: UIImage!
     
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
+    var landscape = false
     
-    let txtView: UITextView = UITextView(frame: CGRect(x: 30, y: 30, width: 0, height: 0))
+    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
-    @IBOutlet weak var btnZoom: UISwitch!
-    @IBAction func btnZoomAction(sender: AnyObject) {
+    @IBAction func showMetas(sender: AnyObject) {
+        performSegueWithIdentifier("playMetas", sender: self)
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         // Add gestures on swipe
         let gbSelector = Selector("goBack")
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
-        let metasSelector = Selector("goMetas")
-        let downSwipe = UISwipeGestureRecognizer(target: self, action: metasSelector )
-        downSwipe.direction = UISwipeGestureRecognizerDirection.Down
-        view.addGestureRecognizer(downSwipe)
-        
         // Load image
         let filePath = "\(self.filePath).jpg"
-        let img = UIImage(contentsOfFile: filePath)
+        img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
-        
-        // Hide btnZoom
-        btnZoom.layer.zPosition = -1
         
         // Get the scale...
         let scaleX: CGFloat = screenWidth / img!.size.width
@@ -89,33 +79,22 @@ class PlayXia: UIViewController {
                         view.addSubview(newPoint!)
                     }
                     let drawEllipse: Bool = (detail.attributes["constraint"] == "ellipse") ? true : false
-                    buildShape(false, color: UIColor.blueColor(), tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
+                    buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }
             }
         }
         hideDetails(true)
+        
+        if xml["xia"]["readonly"].value! == "true" {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
-        
-        if (btnZoom.frame.contains(location) && btnZoom.enabled){
-            if btnZoom.on {
-                btnZoom.on = false
-                if lastTouchedTag != 0 {
-                    showMyDetail(lastTouchedTag, zoomDetail: false)
-                }
-            }
-            else {
-                btnZoom.on = true
-                if lastTouchedTag != 0 {
-                    showMyDetail(lastTouchedTag, zoomDetail: true)
-                }
-            }
-        }
         
         switch showDetail {
         case true:
@@ -127,9 +106,8 @@ class PlayXia: UIViewController {
                 let (detailTag, detailPoints) = detail
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                     touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    let zoom: Bool = btnZoom.on
-                    showMyDetail(touchedTag, zoomDetail: zoom)
-                    lastTouchedTag = touchedTag
+                    //let zoom: Bool = btnZoom.on
+                    performSegueWithIdentifier("openDetail", sender: self)
                     break
                 }
             }
@@ -142,7 +120,7 @@ class PlayXia: UIViewController {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if (!txtView.frame.contains(touchBegin) && touchedTag == 0 && !btnZoom.frame.contains(touchBegin)) {
+        if touchedTag == 0 {
             for subview in view.subviews {
                 if subview.tag == 666 || subview.tag == 667 {
                     subview.removeFromSuperview()
@@ -152,12 +130,6 @@ class PlayXia: UIViewController {
                 }
             }
             showDetail = false
-            lastTouchedTag = 0
-            
-            btnZoom.layer.zPosition = -1
-            btnZoom.enabled = false
-            btnZoom.on = false
-            
             hideDetails(true)
         }
     }
@@ -168,14 +140,37 @@ class PlayXia: UIViewController {
                 controller.xml = self.xml
             }
         }
+        if (segue.identifier == "openDetail") {
+            if let controller:ViewDetail = segue.destinationViewController as? ViewDetail {
+                controller.transitioningDelegate = self
+                controller.modalPresentationStyle = .FormSheet
+                controller.xml = self.xml
+                controller.tag = touchedTag
+                controller.detail = details["\(touchedTag)"]
+                controller.path = paths[touchedTag]
+                controller.bkgdImage = bkgdImage
+            }
+        }
+    }
+    
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Present
+        transition.startingPoint = location
+        transition.bubbleColor = blueColor
+        transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
+        transition.path = paths[touchedTag]
+        transition.bkgdImage = bkgdImage
+        return transition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Dismiss
+        transition.startingPoint = location
+        return transition
     }
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
-    }
-    
-    func goMetas() {
-        performSegueWithIdentifier("playMetas", sender: self)
     }
     
     func hideDetails(hidden: Bool) {
@@ -186,134 +181,21 @@ class PlayXia: UIViewController {
         }
     }
     
-    func showMyDetail(tag: Int, zoomDetail: Bool) {
-        // Hide lot of things...
-        for subview in view.subviews {
-            if (subview.tag > 99) {
-                subview.hidden = true
-            }
-            if (subview.tag == 667 && !zoomDetail) {
-                subview.hidden = false
-            }
-        }
-
-        // Add new background image (with blurred effect)
-        let blurredBackground: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        blurredBackground.contentMode = UIViewContentMode.ScaleAspectFit
-        blurredBackground.image = bkgdImage.image
-        blurredBackground.tag = 666
-        self.view.addSubview(blurredBackground)
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.frame = blurredBackground.frame
-        blurView.tag = 666
-        self.view.addSubview(blurView)
-        
-        // Show the textview
-        let pathFrameCorners = (details["\(tag)"]?.bezierFrame())!
-        
-        // Cropping image
-        let cropDetail: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: screenHeight))
-        cropDetail.contentMode = UIViewContentMode.ScaleAspectFit
-        cropDetail.image = bkgdImage.image
-        let myMask = CAShapeLayer()
-        myMask.path = paths[tag]!.CGPath
-        cropDetail.layer.mask = myMask
-        
-        // Put it on top
-        cropDetail.layer.zPosition = 2
-        cropDetail.tag = 666
-        self.view.addSubview(cropDetail)
-        
-        // Show the text...
-        if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
-            for d in detail {
-                zoomStatus = (d.attributes["zoom"] == "true") ? true : false
-                let detailTitle = d.attributes["title"]!
-                let detailDescription = d.value!
-                
-                let titleWidth = detailTitle.characters.count
-                let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: detailTitle)
-                attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: titleWidth))
-                
-                let attributedDescription: NSMutableAttributedString = NSMutableAttributedString(string: "\n\n\(detailDescription)")
-                attributedText.appendAttributedString(attributedDescription)
-                
-                txtView.attributedText = attributedText
-            }
-        }
-        txtView.frame = CGRect(x: screenWidth / 7, y: -screenWidth / 3.5 - 30, width: 5 * screenWidth / 7, height: screenWidth / 3.5)
-        txtView.backgroundColor = UIColor.lightGrayColor()
-        txtView.userInteractionEnabled = true
-        txtView.scrollEnabled = true
-        txtView.editable = false
-        txtView.selectable = true
-        txtView.dataDetectorTypes = UIDataDetectorTypes.Link
-        txtView.tag = 667
-        txtView.layer.cornerRadius = 5
-        self.view.addSubview(txtView)
-        
-        // Let's show it baby !
-        UIView.animateWithDuration(1.0, animations: { () -> Void in
-            self.txtView.frame.origin = CGPointMake(self.screenWidth / 7, 30)
-        })
-        self.view.addSubview(txtView)
-        showDetail = true
-        
-        var newCropCenter = CGPointMake(cropDetail.center.x, cropDetail.center.y)
-        var detailScale: CGFloat = 1.0
-        
-        // Show the detail zoomed
-        if zoomDetail {
-            // Show btnZoom
-            btnZoom.layer.zPosition = 2
-            btnZoom.enabled = true
-            let detailScaleX = (screenWidth - 10) / pathFrameCorners.width
-            let detailScaleY = (screenHeight - 50) / pathFrameCorners.height
-            detailScale = min(detailScaleX, detailScaleY, maxZoomScale)
-            let distanceX = screenWidth/2 - pathFrameCorners.midX
-            let distanceY = screenHeight/2 - pathFrameCorners.midY
-            //zoomCropCenter = CGPointMake(cropDetail.center.x + distanceX * zoomDetailScale, cropDetail.center.y - txtViewBottom + distanceY * zoomDetailScale)
-            newCropCenter = CGPointMake(cropDetail.center.x + distanceX * detailScale, cropDetail.center.y + distanceY * detailScale)
-            
-        } // no zoom
-        else {
-            // Calculate available space for detail view
-            let txtViewBottom = txtView.frame.origin.y + txtView.frame.height
-            let availableWidth = screenWidth
-            let availableHeight = screenHeight - txtViewBottom - 15
-            let availableRect = CGRect(x: 0, y: txtViewBottom + 15, width: availableWidth, height: availableHeight)
-            
-            // Center detail in the available space
-            var distanceX = availableRect.midX - pathFrameCorners.midX
-            var distanceY = availableRect.midY - pathFrameCorners.midY
-            
-            // Should we scale the detail to fit in available space ?
-            if (pathFrameCorners.width > availableWidth || pathFrameCorners.height > availableHeight) {
-                let detailScaleX = (availableWidth - 10) / pathFrameCorners.width
-                let detailScaleY = (availableHeight - 30) / pathFrameCorners.height
-                detailScale = min(detailScaleX, detailScaleY)
-                distanceX = availableRect.midX - pathFrameCorners.midX
-                distanceY = availableRect.midY - pathFrameCorners.midY - 10
-                
-                newCropCenter = CGPointMake(cropDetail.center.x + distanceX * detailScale, cropDetail.center.y + distanceY)
-            }
-            else {
-                newCropCenter = CGPointMake(cropDetail.center.x + distanceX, cropDetail.center.y + distanceY)
-                
-            }
-            // Show btnZoom
-            if zoomStatus {
-                btnZoom.layer.zPosition = 2
-                btnZoom.enabled = true
+    func rotated() {
+        if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
+        {
+            if ( !landscape ) {
+                let value = UIInterfaceOrientation.Portrait.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
         }
         
-        // let's rock & rolls
-        UIView.animateWithDuration(0.5, animations: {
-            cropDetail.transform = CGAffineTransformScale(cropDetail.transform, detailScale, detailScale)
-            cropDetail.center = newCropCenter
-        })
-        
+        if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
+        {
+            if ( landscape ) {
+                let value = UIInterfaceOrientation.LandscapeRight.rawValue
+                UIDevice.currentDevice().setValue(value, forKey: "orientation")
+            }
+        }
     }
 }
