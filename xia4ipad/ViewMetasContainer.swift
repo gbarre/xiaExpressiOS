@@ -19,4 +19,12 @@ class ViewMetasContainer: UIViewController {
         globalXML = xml
         globalFilePath = filePath
     }
+    
+    
+    // Disable round corners on modal view
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.view.superview!.layer.cornerRadius  = 0.0
+        self.view.superview!.layer.masksToBounds = false
+    }
 }
