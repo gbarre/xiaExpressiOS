@@ -160,12 +160,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
         transition.path = paths[touchedTag]
         transition.bkgdImage = bkgdImage
+        transition.duration = 0.5
         return transition
     }
     
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.transitionMode = .Dismiss
         transition.startingPoint = location
+        transition.duration = 0.0001
         return transition
     }
     

@@ -122,7 +122,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             containerView.addSubview(bubble)
             
 
-            presentedControllerView.center = startingPoint
+            presentedControllerView.center = (zoom) ? startingPoint : CGPointMake(0, UIScreen.mainScreen().bounds.height)
             presentedControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
             presentedControllerView.alpha = 0
             containerView.addSubview(presentedControllerView)
