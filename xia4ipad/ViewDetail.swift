@@ -113,7 +113,7 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
     
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.transitionMode = .Present
-        transition.startingPoint = CGPointMake(detail.bezierFrame().midX, detail.bezierFrame().midY)
+        transition.startingPoint = getCenter()
         transition.bubbleColor = UIColor.blackColor()
         transition.detailFrame = detail.bezierFrame()
         transition.path = path
