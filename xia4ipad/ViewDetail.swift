@@ -36,7 +36,9 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var btnZoom: UIButton!
     
     @IBAction func btnZoomAction(sender: AnyObject) {
-        performSegueWithIdentifier("zoomDetail", sender: self)
+        if !zoomDisable {
+            performSegueWithIdentifier("zoomDetail", sender: self)
+        }
     }
     
     
