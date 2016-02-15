@@ -127,6 +127,7 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .Dismiss
         transition.startingPoint = getCenter()
         transition.bubbleColor = UIColor.clearColor()
+        transition.zoom = true
         return transition
     }
     

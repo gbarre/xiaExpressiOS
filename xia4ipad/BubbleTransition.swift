@@ -122,7 +122,6 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             containerView.addSubview(bubble)
             
 
-            //presentedControllerView.center = (zoom) ? startingPoint : CGPointMake(0, UIScreen.mainScreen().bounds.height)
             presentedControllerView.center = (zoom) ? CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2) : CGPointMake(0, UIScreen.mainScreen().bounds.height)
             presentedControllerView.transform = (zoom) ? CGAffineTransformMakeScale(1, 1) : CGAffineTransformMakeScale(0.001, 0.001)
             presentedControllerView.alpha = 0
@@ -135,6 +134,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 tmpImg = UIImageView(frame: CGRect(x: distX, y: distY, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
                 tmpImg.contentMode = UIViewContentMode.ScaleAspectFit
                 tmpImg.image = bkgdImage.image
+                detail.alpha = 0
             }
             else {
                 tmpImg = UIImageView(frame: bkgdImage.frame)
@@ -147,12 +147,14 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
                 self.detail = self.showImage(transitionContext, fullImage: tmpImg, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom)
+                if self.zoom {
+                    self.detail.alpha = 1
+                }
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
             
             UIView.animateWithDuration(0.5, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
-                //self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
                 self.bubble.alpha = 0
                 }, completion: nil)
             
@@ -167,30 +169,50 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             let returningControllerView = transitionContext.viewForKey(key)!
             let originalCenter = returningControllerView.center
             let originalSize = returningControllerView.frame.size
-
-            bubble.frame = frameForBubble(originalCenter, size: originalSize, start: startingPoint)
-            bubble.layer.cornerRadius = bubble.frame.size.height / 2
-            bubble.center = startingPoint
-
-            UIView.animateWithDuration(duration, animations: {
-                self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
-                returningControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
-                returningControllerView.center = self.startingPoint
-                returningControllerView.alpha = 0
-                if self.zoom {
-                    self.detail.center = getCenter()
-                    self.detail.transform = CGAffineTransformMakeScale(1, 1)
+            
+            if zoom {
+                var detailScale: CGFloat = 1.0
+                let detailScaleX = 190 / self.detailFrame.width
+                let detailScaleY = 190 / self.detailFrame.height
+                detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+                let centerTarget = getCenter()
+                let pathCenter = CGPointMake(self.detailFrame.midX * detailScale, self.detailFrame.midY * detailScale)
+                let newCenter = CGPointMake(bkgdImage.center.x * detailScale - pathCenter.x + centerTarget.x, bkgdImage.center.y * detailScale - pathCenter.y + centerTarget.y)
+                UIView.animateWithDuration(duration, animations: {
+                    returningControllerView.alpha = 0
+                    self.detail.center = newCenter
+                    self.detail.transform = CGAffineTransformMakeScale(detailScale, detailScale)
+                    
+                    if self.transitionMode == .Pop {
+                        containerView.insertSubview(returningControllerView, belowSubview: returningControllerView)
+                    }
+                    }) { (_) in
+                        returningControllerView.removeFromSuperview()
+                        transitionContext.completeTransition(true)
                 }
-
-                if self.transitionMode == .Pop {
-                    containerView.insertSubview(returningControllerView, belowSubview: returningControllerView)
-                    containerView.insertSubview(self.bubble, belowSubview: returningControllerView)
-                }
-                }) { (_) in
-                    returningControllerView.removeFromSuperview()
-                    self.bubble.removeFromSuperview()
-                    transitionContext.completeTransition(true)
             }
+            else {
+                bubble.frame = frameForBubble(originalCenter, size: originalSize, start: startingPoint)
+                bubble.layer.cornerRadius = bubble.frame.size.height / 2
+                bubble.center = startingPoint
+                
+                UIView.animateWithDuration(duration, animations: {
+                    self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                    returningControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                    returningControllerView.center = self.startingPoint
+                    returningControllerView.alpha = 0
+                    
+                    if self.transitionMode == .Pop {
+                        containerView.insertSubview(returningControllerView, belowSubview: returningControllerView)
+                        containerView.insertSubview(self.bubble, belowSubview: returningControllerView)
+                    }
+                    }) { (_) in
+                        returningControllerView.removeFromSuperview()
+                        self.bubble.removeFromSuperview()
+                        transitionContext.completeTransition(true)
+                }
+            }
+            
         }
     }
     
@@ -200,6 +222,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         let imgThumb: UIImageView = UIImageView(frame: fullImage.frame)
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = fullImage.image
+        imgThumb.alpha = (zoom) ? 0 : 1
         
         guard let containerView = transitionContext.containerView() else {
             return imgThumb
