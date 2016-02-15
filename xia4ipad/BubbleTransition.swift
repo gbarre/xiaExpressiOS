@@ -51,7 +51,7 @@ public class BubbleTransition: NSObject {
     
     /**
     The transition duration. The same value is used in both the Present or Dismiss actions
-    Defaults to `0.5`
+    Defaults to `1.0`
     */
     public var duration = 1.0
     
@@ -122,8 +122,9 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             containerView.addSubview(bubble)
             
 
-            presentedControllerView.center = (zoom) ? startingPoint : CGPointMake(0, UIScreen.mainScreen().bounds.height)
-            presentedControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+            //presentedControllerView.center = (zoom) ? startingPoint : CGPointMake(0, UIScreen.mainScreen().bounds.height)
+            presentedControllerView.center = (zoom) ? CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2) : CGPointMake(0, UIScreen.mainScreen().bounds.height)
+            presentedControllerView.transform = (zoom) ? CGAffineTransformMakeScale(1, 1) : CGAffineTransformMakeScale(0.001, 0.001)
             presentedControllerView.alpha = 0
             containerView.addSubview(presentedControllerView)
             
@@ -178,7 +179,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 returningControllerView.alpha = 0
                 if self.zoom {
                     self.detail.center = getCenter()
-                    self.detail.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                    self.detail.transform = CGAffineTransformMakeScale(1, 1)
                 }
 
                 if self.transitionMode == .Pop {
