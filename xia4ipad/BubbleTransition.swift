@@ -147,18 +147,18 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
                 self.detail = self.showImage(transitionContext, fullImage: tmpImg, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom)
-                if self.zoom {
-                    self.detail.alpha = 1
-                }
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
-            
-            UIView.animateWithDuration(0.5, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
+            UIView.animateWithDuration(2 * duration, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
                 self.bubble.alpha = 0
                 }, completion: nil)
-            
-            UIView.animateWithDuration(1.5, delay: 0.9, options: .ShowHideTransitionViews, animations: { () -> Void in
+            UIView.animateWithDuration(duration, delay: 0.1, options: .ShowHideTransitionViews, animations: { () -> Void in
+                if self.zoom {
+                    self.detail.alpha = 1
+                }
+                }, completion: nil)
+            UIView.animateWithDuration(3 * duration, delay: 0.9, options: .ShowHideTransitionViews, animations: { () -> Void in
                 if !self.zoom {
                     self.detail.alpha = 0
                 }
