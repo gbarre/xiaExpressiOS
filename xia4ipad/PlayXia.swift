@@ -159,6 +159,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.bubbleColor = blueColor
         transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
         transition.path = paths[touchedTag]
+        transition.theDetail = details["\(touchedTag)"]
         transition.bkgdImage = bkgdImage
         transition.duration = 0.5
         return transition

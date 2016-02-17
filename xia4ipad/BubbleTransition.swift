@@ -84,6 +84,7 @@ public class BubbleTransition: NSObject {
     public var path: UIBezierPath!
     public var bkgdImage: UIImageView!
     public var zoom = false
+    var theDetail: xiaDetail!
     
     private var detail = UIImageView()
     
@@ -128,7 +129,27 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             containerView.addSubview(presentedControllerView)
             
             var tmpImg: UIImageView
+            var detailScale: CGFloat = 1.0
             if zoom {
+                /*let tmpImg1 = UIImageView(frame: bkgdImage.frame)
+                tmpImg1.contentMode = UIViewContentMode.ScaleAspectFit
+                tmpImg1.image = bkgdImage.image
+                
+                
+                let detailScaleX = 190 / self.detailFrame.width
+                let detailScaleY = 190 / self.detailFrame.height
+                detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+                tmpImg1.transform = CGAffineTransformScale(tmpImg1.transform, detailScale, detailScale)
+                
+                //let centerTarget = getCenter()
+                //let pathCenter = CGPointMake(self.detailFrame.midX * detailScale, self.detailFrame.midY * detailScale)
+                //let newCenter = CGPointMake(bkgdImage.center.x * detailScale - pathCenter.x + centerTarget.x, bkgdImage.center.y * detailScale - pathCenter.y + centerTarget.y)
+                let distX: CGFloat = getCenter().x - detailFrame.midX
+                let distY: CGFloat = getCenter().y - detailFrame.midY
+                tmpImg = UIImageView(frame: CGRect(x: distX, y: distY, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
+                tmpImg.contentMode = UIViewContentMode.ScaleAspectFit
+                tmpImg.image = tmpImg1.image
+                */
                 let distX: CGFloat = getCenter().x - detailFrame.midX
                 let distY: CGFloat = getCenter().y - detailFrame.midY
                 tmpImg = UIImageView(frame: CGRect(x: distX, y: distY, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
@@ -146,7 +167,8 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 presentedControllerView.transform = CGAffineTransformIdentity
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
-                self.detail = self.showImage(transitionContext, fullImage: tmpImg, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom)
+                //self.detail = self.showImage(transitionContext, fullImage: tmpImg, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom, previousScale: detailScale)
+                self.detail = self.showImage(transitionContext, fullImage: tmpImg, myDetail: self.theDetail, zoom: self.zoom, previousScale: detailScale)
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
@@ -216,7 +238,10 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect, zoom: Bool) -> UIImageView {
+    //public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect, zoom: Bool, previousScale: CGFloat = 1.0) -> UIImageView {
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, zoom: Bool, previousScale: CGFloat = 1.0) -> UIImageView {
+        let path = (myDetail as! xiaDetail).bezierPath(1/previousScale)
+        let pathFrameCorners = (myDetail as! xiaDetail).bezierFrame(1/previousScale)
         let screenWidth = UIScreen.mainScreen().bounds.width
         let screenHeight = UIScreen.mainScreen().bounds.height
         let imgThumb: UIImageView = UIImageView(frame: fullImage.frame)
@@ -263,6 +288,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         
         return imgThumb
     }
+    
 }
 
 private extension BubbleTransition {

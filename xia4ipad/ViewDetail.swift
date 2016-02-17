@@ -117,6 +117,7 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         transition.bubbleColor = UIColor.clearColor()
         transition.detailFrame = detail.bezierFrame()
         transition.path = path
+        transition.theDetail = detail
         transition.bkgdImage = bkgdImage
         transition.zoom = true
         transition.duration = 0.5
