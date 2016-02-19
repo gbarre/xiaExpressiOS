@@ -22,7 +22,7 @@ class ViewDetailInfos: UIViewController {
     var index: Int = 0
     var fileName: String = ""
     var filePath: String = ""
-    weak var viewPhotoController: ViewPhoto?
+    weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet weak var btnZoom: UISwitch!
     @IBOutlet weak var btnLock: UISwitch!
@@ -45,9 +45,9 @@ class ViewDetailInfos: UIViewController {
             }
         }
         let _ = writeXML(xml, path: "\(filePath).xml")
-        viewPhotoController?.details["\(tag)"]?.locked = btnLock.on
+        ViewCreateDetailsController?.details["\(tag)"]?.locked = btnLock.on
         btnLock.resignFirstResponder()
-        viewPhotoController!.changeDetailColor(tag)
+        ViewCreateDetailsController!.changeDetailColor(tag)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

@@ -21,7 +21,7 @@ class ViewImageInfos: UIViewController {
     var fileName: String = ""
     var filePath: String = ""
     var pass: String = ""
-    weak var viewPhotoController: ViewPhoto?
+    weak var ViewCreateDetailsController: ViewCreateDetails?
     
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtCreator: UITextField!
@@ -108,7 +108,7 @@ class ViewImageInfos: UIViewController {
         xml["xia"]["readonly"].value = "\(readOnly.on)"
         xml["xia"]["readonly"].attributes["code"] = pass
         let _ = writeXML(xml, path: "\(filePath).xml")
-        viewPhotoController?.btnTitleLabel.title = txtTitle.text
+        ViewCreateDetailsController?.btnTitleLabel.title = txtTitle.text
         txtTitle.resignFirstResponder()
         self.dismissViewControllerAnimated(true, completion: nil)
     }

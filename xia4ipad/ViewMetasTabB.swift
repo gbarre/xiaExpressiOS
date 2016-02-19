@@ -29,7 +29,7 @@ class ViewMetasTabB: UIViewController, UIPickerViewDataSource, UIPickerViewDeleg
         "Other"
     ]
     
-    weak var viewPhotoController: ViewPhoto?
+    weak var ViewCreateDetailsController: ViewCreateDetails?
     
     @IBOutlet var txtDescription: UITextView!
     @IBOutlet var license: UIPickerView!

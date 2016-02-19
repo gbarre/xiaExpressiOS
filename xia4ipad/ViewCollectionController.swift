@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ViewCollectionController.swift
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -164,7 +164,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
-            if let controller:ViewPhoto = segue.destinationViewController as? ViewPhoto {
+            if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue

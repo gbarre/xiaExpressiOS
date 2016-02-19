@@ -6,10 +6,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Photo Album-->
+        <!--Collection-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" userLabel="Collection" customClass="ViewCollectionController" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -141,10 +141,10 @@
             </objects>
             <point key="canvasLocation" x="1220" y="-79"/>
         </scene>
-        <!--Full-Size Image-->
+        <!--Create Details-->
         <scene sceneID="ffb-Ng-4sP">
             <objects>
-                <viewController id="fts-Lk-uqf" customClass="ViewPhoto" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="fts-Lk-uqf" userLabel="Create Details" customClass="ViewCreateDetails" customModule="xia4ipad" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HvZ-Wa-GXu"/>
                         <viewControllerLayoutGuide type="bottom" id="Gyc-e0-9V8"/>
@@ -268,7 +268,9 @@
                         <outlet property="infoBtn" destination="fI0-A2-zBP" id="GAm-TW-5lW"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
                         <segue destination="sQ2-dz-HWJ" kind="presentation" identifier="viewMetas" modalPresentationStyle="formSheet" id="4pf-iL-bkX"/>
-                        <segue destination="cwz-uV-RB1" kind="presentation" identifier="ViewDetailInfos" modalPresentationStyle="formSheet" id="1Zu-E8-fy3"/>
+                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorBarButtonItem="g81-gt-cZy" id="1Zu-E8-fy3">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -691,7 +693,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pK2-BQ-1RC">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pK2-BQ-1RC">
                                 <rect key="frame" x="20" y="81" width="560" height="499"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <attributedString key="attributedText">
@@ -704,7 +706,7 @@
                                 </attributedString>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnu-0w-hMV">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wnu-0w-hMV">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t34-KE-U8g">
@@ -752,7 +754,7 @@
                                     <constraint firstItem="t34-KE-U8g" firstAttribute="leading" secondItem="i3A-TS-Y6z" secondAttribute="trailing" constant="67" id="yp0-wy-6dQ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EpJ-Ie-KDQ">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EpJ-Ie-KDQ">
                                 <rect key="frame" x="20" y="43" width="560" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable Zoom :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eg-c7-9lt">

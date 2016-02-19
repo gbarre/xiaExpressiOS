@@ -15,7 +15,7 @@ class ViewMetasTabA: UIViewController {
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
     
-    weak var viewPhotoController: ViewPhoto?
+    weak var ViewCreateDetailsController: ViewCreateDetails?
     
     @IBOutlet var txtTitle: UITextField!
     @IBOutlet var txtCreator: UITextField!

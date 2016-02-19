@@ -1,5 +1,5 @@
 //
-//  ViewPhoto.swift
+//  ViewCreateDetails.swift
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
@@ -9,7 +9,7 @@
 import UIKit
 import MessageUI
 
-class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
+class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -712,25 +712,11 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.xml = self.xml
                         controller.index = self.index
                         controller.filePath = filePath
-                        controller.viewPhotoController = self
+                        controller.ViewCreateDetailsController = self
                     }
                 }
             }
         }
-        /*if (segue.identifier == "ViewImageInfos") {
-            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
-                controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
-                controller.imageCreator = (xml["xia"]["creator"].value == nil) ? "" : xml["xia"]["creator"].value!
-                controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
-                controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
-                let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
-                controller.readOnlyState = readonlyStatus
-                controller.fileName = self.fileName
-                controller.filePath = self.filePath
-                controller.xml = xml
-                controller.viewPhotoController = self
-            }
-        }*/
         if (segue.identifier == "viewMetas") {
             if let controller:ViewMetasContainer = segue.destinationViewController as? ViewMetasContainer {
                 controller.xml = xml
