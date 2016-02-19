@@ -123,7 +123,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             
 
             presentedControllerView.center = CGPointMake(0, UIScreen.mainScreen().bounds.height)
-            presentedControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+            presentedControllerView.transform = CGAffineTransformMakeScale(1, 1)
             presentedControllerView.alpha = 0
             containerView.addSubview(presentedControllerView)
             
@@ -155,7 +155,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             
             UIView.animateWithDuration(duration, animations: {
                 self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
-                returningControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                returningControllerView.transform = CGAffineTransformMakeScale(1, 1)
                 returningControllerView.center = self.startingPoint
                 returningControllerView.alpha = 0
                 
