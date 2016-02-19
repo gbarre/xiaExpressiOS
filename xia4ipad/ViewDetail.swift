@@ -42,7 +42,6 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var detailTitle: UILabel!
     @IBOutlet var detailSubTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
-    @IBOutlet var btnZoom: UIButton!
     @IBOutlet var bkgdzoom: UIImageView!
     
     @IBAction func btnZoomAction(sender: AnyObject) {
@@ -54,27 +53,14 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBAction func closeZoom(sender: AnyObject) {
         if showZoom {
             // Show / hide elements
-            btnZoom.hidden = zoomDisable
-            btnZoom.alpha = 0
-            btnZoom.layer.zPosition = 3
-            
+            self.imgArea.hidden = false
+            self.imgArea.alpha = 0
             UIView.animateWithDuration(transitionDuration) { () -> Void in
-//                self.bkgdzoom.alpha = 0
                 self.imgThumb.transform = CGAffineTransformScale(self.imgThumb.transform, self.currentScale / self.zoomScale, self.currentScale / self.zoomScale)
                 self.imgThumb.center = self.currentCenter
-                //self.btnZoom.alpha = 1
-            }
-            
-            UIView.animateWithDuration(0.1, delay: 1 * transitionDuration, options: .ShowHideTransitionViews, animations: { () -> Void in
                 self.bkgdzoom.alpha = 0
-                self.btnZoom.alpha = 1
-                }, completion: nil)
-            
-            
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
-            dispatch_after(delayTime, dispatch_get_main_queue()){
-                self.bkgdzoom.hidden = true
-                self.imgArea.hidden = false
+            }
+            UIView.animateWithDuration(2 * transitionDuration) { () -> Void in
                 self.imgArea.alpha = 1
             }
             showZoom = false
@@ -120,10 +106,6 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 detailSubTitle.text = "Sub Title..."
                 txtDesc.text = d.value
                 zoomDisable = (d.attributes["zoom"] == "true") ? false : true
-                btnZoom.hidden = zoomDisable
-                btnZoom.enabled = !zoomDisable
-                //btnZoom.layer.zPosition = 3
-                //self.view.addSubview(btnZoom)
             }
         }
         
@@ -138,17 +120,10 @@ class ViewDetail: UIViewController, UIViewControllerTransitioningDelegate {
         super.viewWillLayoutSubviews()
         self.view.superview!.layer.cornerRadius  = 0.0
         self.view.superview!.layer.masksToBounds = false
-        //self.btnZoom.alpha = 0
-        
-        UIView.animateWithDuration(0.5, delay: 1.1, options: .ShowHideTransitionViews, animations: { () -> Void in
-          //  self.btnZoom.alpha = 1
-            }, completion: nil)
     }
     
     func showDetail(detailImg: UIImageView) {
         // Show / hide elements
-        //self.imgArea.hidden = true
-        self.btnZoom.hidden = true
         self.bkgdzoom.hidden = false
         self.bkgdzoom.alpha = 0
         txtDesc.selectable = false
