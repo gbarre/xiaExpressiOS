@@ -167,8 +167,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.transitionMode = .Dismiss
-        transition.startingPoint = location
-        transition.duration = 0.0001
+        transition.startingPoint = CGPointMake(screenWidth / 2, 2 * screenHeight)
+        transition.duration = 0.5
         return transition
     }
     
