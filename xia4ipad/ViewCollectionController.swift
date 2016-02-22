@@ -160,6 +160,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segueIndex == -1 {
+            segueIndex = 0
+        }
         let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"

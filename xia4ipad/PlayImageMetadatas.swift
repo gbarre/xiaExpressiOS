@@ -52,9 +52,9 @@ class PlayImageMetadatas: UIViewController {
     override func viewDidLoad() {
         
         documentLicense.attributedText = getLicense()
-        documentTitle.attributedText = getElementValue("title")
+        documentTitle.text = (xml["xia"]["title"].value != nil && xml["xia"]["title"].value != "element <title> not found") ? xml["xia"]["title"].value! : ""
         documentDate.attributedText = getElementValue("date")
-        documentCreator.attributedText = getElementValue("creator")
+        documentCreator.text = (xml["xia"]["creator"].value != nil && xml["xia"]["creator"].value != "element <creator> not found") ? xml["xia"]["creator"].value! : ""
         documentRights.attributedText = getElementValue("rights")
         documentPublisher.attributedText = getElementValue("publisher")
         documentIdentifier.attributedText = getElementValue("identifier")
@@ -64,7 +64,7 @@ class PlayImageMetadatas: UIViewController {
         documentKeywords.attributedText = getElementValue("keywords")
         documentCoverage.attributedText = getElementValue("coverage")
         documentContributors.attributedText = getElementValue("contributors")
-        documentDescription.attributedText = getDescriptionValue()
+        documentDescription.text = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
     }
     
     // Disable round corners on modal view
@@ -78,7 +78,7 @@ class PlayImageMetadatas: UIViewController {
         let key = xmlElements[element]
         let keyWidth = key?.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
-        let txtSize: CGFloat = (element == "description") ? 17 : 14
+        let txtSize: CGFloat = 14
         attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(txtSize)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml["xia"][element].value != nil && xml["xia"][element].value != "element <\(element)> not found") {
@@ -110,10 +110,10 @@ class PlayImageMetadatas: UIViewController {
         let key = xmlElements["license"]
         let keyWidth = key!.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
-        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(28)], range: NSRange(location: 0, length: keyWidth))
+        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(17)], range: NSRange(location: 0, length: keyWidth))
         
         if (xml["xia"]["license"].value != nil && xml["xia"]["license"].value != "element <license> not found") {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: "\n\(xml["xia"]["license"].value!)")
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: "\(xml["xia"]["license"].value!)")
             attributedText.appendAttributedString(attributedValue)
         }
         else {

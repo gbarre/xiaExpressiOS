@@ -84,10 +84,10 @@
 		F08B2BB01C15C662009EDB13 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
-		F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia4ipadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xia4ipadTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia4ipadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0BBA6EA1C11CD7400173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
 		F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasContainer.swift; sourceTree = "<group>"; };
 		F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabB.swift; sourceTree = "<group>"; };
@@ -97,7 +97,7 @@
 		F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDetail.swift; sourceTree = "<group>"; };
 		F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetas.swift; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
-		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0F15E651BB6FCDF00268F06 /* xia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCollectionController.swift; sourceTree = "<group>"; };
 		F0F15E6D1BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -133,20 +133,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F0BBA6DD1C11CD3000173A3A /* xia4ipadTests */ = {
+		F0BBA6DD1C11CD3000173A3A /* xiaTests */ = {
 			isa = PBXGroup;
 			children = (
 				F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */,
 				F0BBA6E01C11CD3000173A3A /* Info.plist */,
 			);
+			name = xiaTests;
 			path = xia4ipadTests;
 			sourceTree = "<group>";
 		};
 		F0F15E5C1BB6FCDE00268F06 = {
 			isa = PBXGroup;
 			children = (
-				F0F15E671BB6FCDF00268F06 /* xia4ipad */,
-				F0BBA6DD1C11CD3000173A3A /* xia4ipadTests */,
+				F0F15E671BB6FCDF00268F06 /* xia */,
+				F0BBA6DD1C11CD3000173A3A /* xiaTests */,
 				F0F15E661BB6FCDF00268F06 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,14 +155,14 @@
 		F0F15E661BB6FCDF00268F06 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F0F15E651BB6FCDF00268F06 /* xia4ipad.app */,
-				F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */,
-				F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */,
+				F0F15E651BB6FCDF00268F06 /* xia.app */,
+				F0BBA6DC1C11CD3000173A3A /* xia.xctest */,
+				F0BBA6EA1C11CD7400173A3A /* xia.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F0F15E671BB6FCDF00268F06 /* xia4ipad */ = {
+		F0F15E671BB6FCDF00268F06 /* xia */ = {
 			isa = PBXGroup;
 			children = (
 				F0013F801BF61A750000F83A /* default.jpg */,
@@ -192,15 +193,16 @@
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
 				F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */,
 			);
+			name = xia;
 			path = xia4ipad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F0BBA6DB1C11CD3000173A3A /* xia4ipadTests */ = {
+		F0BBA6DB1C11CD3000173A3A /* xiaTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xia4ipadTests" */;
+			buildConfigurationList = F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xiaTests" */;
 			buildPhases = (
 				F0BBA6D81C11CD3000173A3A /* Sources */,
 				F0BBA6D91C11CD3000173A3A /* Frameworks */,
@@ -211,14 +213,14 @@
 			dependencies = (
 				F0BBA6E21C11CD3000173A3A /* PBXTargetDependency */,
 			);
-			name = xia4ipadTests;
+			name = xiaTests;
 			productName = xia4ipadTests;
-			productReference = F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */;
+			productReference = F0BBA6DC1C11CD3000173A3A /* xia.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F0BBA6E91C11CD7400173A3A /* xia4ipadUITests */ = {
+		F0BBA6E91C11CD7400173A3A /* xiaUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xia4ipadUITests" */;
+			buildConfigurationList = F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xiaUITests" */;
 			buildPhases = (
 				F0BBA6E61C11CD7400173A3A /* Sources */,
 				F0BBA6E71C11CD7400173A3A /* Frameworks */,
@@ -229,14 +231,14 @@
 			dependencies = (
 				F0BBA6F01C11CD7400173A3A /* PBXTargetDependency */,
 			);
-			name = xia4ipadUITests;
+			name = xiaUITests;
 			productName = xia4ipadUITests;
-			productReference = F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */;
+			productReference = F0BBA6EA1C11CD7400173A3A /* xia.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		F0F15E641BB6FCDF00268F06 /* xia4ipad */ = {
+		F0F15E641BB6FCDF00268F06 /* xia */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia4ipad" */;
+			buildConfigurationList = F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia" */;
 			buildPhases = (
 				F0F15E611BB6FCDF00268F06 /* Sources */,
 				F0F15E621BB6FCDF00268F06 /* Frameworks */,
@@ -246,9 +248,9 @@
 			);
 			dependencies = (
 			);
-			name = xia4ipad;
+			name = xia;
 			productName = xia4ipad;
-			productReference = F0F15E651BB6FCDF00268F06 /* xia4ipad.app */;
+			productReference = F0F15E651BB6FCDF00268F06 /* xia.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -275,7 +277,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia4ipad" */;
+			buildConfigurationList = F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -288,9 +290,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F0F15E641BB6FCDF00268F06 /* xia4ipad */,
-				F0BBA6DB1C11CD3000173A3A /* xia4ipadTests */,
-				F0BBA6E91C11CD7400173A3A /* xia4ipadUITests */,
+				F0F15E641BB6FCDF00268F06 /* xia */,
+				F0BBA6DB1C11CD3000173A3A /* xiaTests */,
+				F0BBA6E91C11CD7400173A3A /* xiaUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -393,12 +395,12 @@
 /* Begin PBXTargetDependency section */
 		F0BBA6E21C11CD3000173A3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F0F15E641BB6FCDF00268F06 /* xia4ipad */;
+			target = F0F15E641BB6FCDF00268F06 /* xia */;
 			targetProxy = F0BBA6E11C11CD3000173A3A /* PBXContainerItemProxy */;
 		};
 		F0BBA6F01C11CD7400173A3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F0F15E641BB6FCDF00268F06 /* xia4ipad */;
+			target = F0F15E641BB6FCDF00268F06 /* xia */;
 			targetProxy = F0BBA6EF1C11CD7400173A3A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -431,8 +433,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia4ipad.app/xia4ipad";
+				PRODUCT_NAME = xia;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Debug;
 		};
@@ -444,8 +446,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia4ipad.app/xia4ipad";
+				PRODUCT_NAME = xia;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Release;
 		};
@@ -456,7 +458,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TEST_TARGET_NAME = xia4ipad;
 				USES_XCTRUNNER = YES;
 			};
@@ -469,7 +471,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TEST_TARGET_NAME = xia4ipad;
 				USES_XCTRUNNER = YES;
 			};
@@ -566,8 +568,8 @@
 				INFOPLIST_FILE = xia4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia";
+				PRODUCT_NAME = xia;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -580,8 +582,8 @@
 				INFOPLIST_FILE = xia4ipad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia";
+				PRODUCT_NAME = xia;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
@@ -589,7 +591,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xia4ipadTests" */ = {
+		F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xiaTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0BBA6E31C11CD3000173A3A /* Debug */,
@@ -598,7 +600,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xia4ipadUITests" */ = {
+		F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xiaUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0BBA6F21C11CD7400173A3A /* Debug */,
@@ -607,7 +609,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia4ipad" */ = {
+		F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0F15E751BB6FCDF00268F06 /* Debug */,
@@ -616,7 +618,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia4ipad" */ = {
+		F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0F15E781BB6FCDF00268F06 /* Debug */,
