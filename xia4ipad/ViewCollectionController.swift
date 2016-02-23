@@ -179,19 +179,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 controller.filePath = pathToSegue
             }
         }
-        if (segue.identifier == "ViewImageInfos") {
-            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
-                controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
-                controller.imageCreator = (xmlToSegue["xia"]["creator"].value == nil) ? "" : xmlToSegue["xia"]["creator"].value!
-                controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
-                controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
-                let readonlyStatus: Bool = (xmlToSegue["xia"]["readonly"].value == "true" ) ? true : false
-                controller.readOnlyState = readonlyStatus
-                controller.fileName = nameToSegue
-                controller.filePath = pathToSegue
-                controller.xml = xmlToSegue
-            }
-        }
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
                 controller.fileName = nameToSegue

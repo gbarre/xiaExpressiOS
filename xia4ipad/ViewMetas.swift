@@ -16,6 +16,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
     
+    weak var ViewCreateDetailsController: ViewCreateDetails?
+    
     var pass: String = ""
     var selectedLicense: String = ""
     var showKeyboard: Bool = true
@@ -64,9 +66,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["license"].value = selectedLicense
         
         let _ = writeXML(xml, path: "\(filePath).xml")
+        ViewCreateDetailsController?.btnTitleLabel.title = txtTitle.text
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBOutlet var navBar: UINavigationBar!
     @IBOutlet var segment: UISegmentedControl!
     
     @IBAction func changeSegment(sender: AnyObject) {
@@ -218,15 +222,14 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         // First subview
         txtTitle.becomeFirstResponder()
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
-        /*let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
-        roSwitch.setOn(readonlyStatus, animated: true)*/
+        navBar.topItem?.title = txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
         let btnImg = (xml["xia"]["readonly"].value == "true" ) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
         roButton.setImage(btnImg, forState: .Normal)
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
-        txtDescription.layer.borderWidth = 1
         txtDescription.layer.cornerRadius = 5
-        txtDescription.layer.borderColor = UIColor.grayColor().CGColor
+        txtDescription.setContentOffset(CGPointMake(0, -200), animated: false)
+        
 
         // Second subview
         txtCreator.text = (xml["xia"]["creator"].value != nil) ? xml["xia"]["creator"].value : ""

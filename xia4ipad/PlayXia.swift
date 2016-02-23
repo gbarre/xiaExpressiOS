@@ -141,7 +141,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         }
         if (segue.identifier == "openDetail") {
             detailsVisibles = hideDetails(true)
-            if let controller:ViewDetail = segue.destinationViewController as? ViewDetail {
+            if let controller:PlayDetail = segue.destinationViewController as? PlayDetail {
                 controller.transitioningDelegate = self
                 controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
