@@ -785,7 +785,7 @@
         <!--Play Image Metadatas-->
         <scene sceneID="PeB-Zl-vO5">
             <objects>
-                <viewController id="qPI-AN-OzC" customClass="PlayImageMetadatas" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="qPI-AN-OzC" customClass="PlayImageMetadatas" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="O36-Uy-ulJ"/>
                         <viewControllerLayoutGuide type="bottom" id="Ojb-BF-zQZ"/>
@@ -935,7 +935,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IDs-5h-N0L">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IDs-5h-N0L" userLabel="License View">
                                 <rect key="frame" x="0.0" y="415" width="800" height="37"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="License :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOl-89-UZY">
@@ -946,10 +946,14 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="lTo-to-ArQ"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="IDs-5h-N0L" firstAttribute="leading" secondItem="npe-DL-JEH" secondAttribute="leadingMargin" constant="-20" id="1c6-8b-aaP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vcV-ky-zXs" secondAttribute="trailing" id="6PK-PL-vet"/>
                             <constraint firstItem="StV-QI-mli" firstAttribute="leading" secondItem="npe-DL-JEH" secondAttribute="leadingMargin" constant="-20" id="A0y-mC-dK5"/>
                             <constraint firstItem="StV-QI-mli" firstAttribute="top" secondItem="O36-Uy-ulJ" secondAttribute="bottom" id="BWK-fz-EyT"/>
@@ -960,6 +964,8 @@
                             <constraint firstAttribute="trailingMargin" secondItem="OVn-HS-QBV" secondAttribute="trailing" id="htE-9q-YBX"/>
                             <constraint firstItem="Ojb-BF-zQZ" firstAttribute="top" secondItem="OVn-HS-QBV" secondAttribute="bottom" constant="4" id="iwO-N4-Ucw"/>
                             <constraint firstAttribute="trailingMargin" secondItem="StV-QI-mli" secondAttribute="trailing" constant="-20" id="lZk-kd-yOC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="IDs-5h-N0L" secondAttribute="trailing" constant="-20" id="tSc-iY-BRS"/>
+                            <constraint firstItem="Ojb-BF-zQZ" firstAttribute="top" secondItem="IDs-5h-N0L" secondAttribute="bottom" constant="148" id="zCN-Eb-4ax"/>
                         </constraints>
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="800" height="600"/>
@@ -1159,6 +1165,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="IaL-8D-KRP"/>
-        <segue reference="g1C-J3-xmC"/>
+        <segue reference="J54-6x-Hse"/>
     </inferredMetricsTieBreakers>
 </document>

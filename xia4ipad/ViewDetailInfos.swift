@@ -86,9 +86,10 @@ class ViewDetailInfos: UIViewController {
         // autofocus
         txtTitle.becomeFirstResponder()
         txtTitle.backgroundColor = UIColor.clearColor()
-        
-        txtDesc.setContentOffset(CGPointMake(0, -200), animated: false)
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        txtDesc.setContentOffset(CGPointMake(0, -txtDesc.contentInset.top), animated: false)
     }
     
     func attributedString2pikipiki(attrString: NSAttributedString) -> String {

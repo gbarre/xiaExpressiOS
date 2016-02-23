@@ -227,9 +227,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         let btnImg = (xml["xia"]["readonly"].value == "true" ) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
         roButton.setImage(btnImg, forState: .Normal)
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
-        txtDescription.layer.cornerRadius = 5
-        txtDescription.setContentOffset(CGPointMake(0, -200), animated: false)
-        
+        txtDescription.layer.cornerRadius = 5        
 
         // Second subview
         txtCreator.text = (xml["xia"]["creator"].value != nil) ? xml["xia"]["creator"].value : ""
@@ -265,6 +263,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             }
         }
         txtLicense.setTitle(xmlLicense, forState: .Normal)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        txtDescription.setContentOffset(CGPointMake(0, -txtDescription.contentInset.top), animated: false)
     }
     
     func keybShow(notification: NSNotification) {

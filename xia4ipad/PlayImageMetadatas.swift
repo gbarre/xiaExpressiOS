@@ -65,7 +65,10 @@ class PlayImageMetadatas: UIViewController {
         documentCoverage.attributedText = getElementValue("coverage")
         documentContributors.attributedText = getElementValue("contributors")
         documentDescription.text = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
-        documentDescription.setContentOffset(CGPointMake(0, -200), animated: false)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        documentDescription.setContentOffset(CGPointMake(0, -documentDescription.contentInset.top), animated: false)
     }
     
     // Disable round corners on modal view

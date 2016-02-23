@@ -105,7 +105,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 detailTitle.numberOfLines = 0
                 detailSubTitle.text = d.attributes["subtitle"]
                 txtDesc.text = d.value
-                txtDesc.setContentOffset(CGPointMake(0, -200), animated: false)
                 zoomDisable = (d.attributes["zoom"] == "true") ? false : true
             }
         }
@@ -114,6 +113,10 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         dispatch_after(delayTime, dispatch_get_main_queue()){
             self.imgThumb.hidden = false
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        txtDesc.setContentOffset(CGPointMake(0, -txtDesc.contentInset.top), animated: false)
     }
     
     // Disable round corners on modal view
