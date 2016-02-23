@@ -139,7 +139,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             UIView.animateWithDuration(1 * duration, delay: duration/5, options: .ShowHideTransitionViews, animations: { () -> Void in
                 self.bubble.alpha = 0
                 }, completion: nil)
-            UIView.animateWithDuration(3 * duration, delay: 0.9, options: .ShowHideTransitionViews, animations: { () -> Void in
+            UIView.animateWithDuration(duration, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
                 self.detail.alpha = 0
                 }, completion: nil)
             
