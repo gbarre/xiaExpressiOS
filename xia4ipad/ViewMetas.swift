@@ -18,6 +18,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     var pass: String = ""
     var selectedLicense: String = ""
+    var showKeyboard: Bool = true
     
     let availableLicenses = [
         "Proprietary - CC-Zero",
@@ -38,8 +39,32 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     @IBAction func btnDone(sender: AnyObject) {
-        //self.dismissViewControllerAnimated(true, completion: nil)
-        dbg.pt(xml.xmlString)
+        // Save metas in xml
+        xml["xia"]["title"].value = txtTitle.text
+        xml["xia"]["readonly"].value = (readOnlyState) ? "true" : "false" //"\(roSwitch.on)"
+        xml["xia"]["readonly"].attributes["code"] = pass
+        xml["xia"]["description"].value = txtDescription.text
+        
+        xml["xia"]["creator"].value = txtCreator.text
+        xml["xia"]["rights"].value = txtRights.text
+        xml["xia"]["publisher"].value = txtPublisher.text
+        xml["xia"]["identifier"].value = txtIdentifier.text
+        xml["xia"]["source"].value = txtSource.text
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
+        
+        
+        xml["xia"]["language"].value = txtLanguages.text
+        xml["xia"]["keywords"].value = txtKeywords.text
+        xml["xia"]["contributors"].value = txtContributors.text
+        xml["xia"]["relation"].value = txtRelation.text
+        xml["xia"]["coverage"].value = txtCoverage.text
+        xml["xia"]["license"].value = selectedLicense
+        
+        let _ = writeXML(xml, path: "\(filePath).xml")
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBOutlet var segment: UISegmentedControl!
@@ -50,8 +75,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     // First subview
     @IBOutlet var txtTitle: UITextField!
-    @IBOutlet var roSwitch: UISwitch!
-    @IBAction func roAction(sender: AnyObject) {
+    @IBOutlet var roButton: UIButton!
+    @IBAction func roBtnAction(sender: AnyObject) {
         let passTitle = (readOnlyState) ? "Enter code" : "Create code"
         let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         
@@ -61,7 +86,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             textField.keyboardType = UIKeyboardType.DecimalPad
         })
         controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
-            self.roSwitch.on = self.readOnlyState
+            let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+            self.roButton.setImage(btnImg, forState: .Normal)
+            
+            //self.roSwitch.on = self.readOnlyState
         }))
         controller.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { action in
             self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
@@ -69,8 +97,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             
             if self.readOnlyState {
                 if currentPass != nil && currentPass! == self.pass {
-                    self.roSwitch.on = !self.readOnlyState
+                    //self.roSwitch.on = !self.readOnlyState
                     self.readOnlyState = !self.readOnlyState
+                    let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+                    self.roButton.setImage(btnImg, forState: .Normal)
+                    
                 }
                 else {
                     let alert = UIAlertController(title: "Wrong code", message: "Please, try again or cancel...", preferredStyle: UIAlertControllerStyle.Alert)
@@ -90,20 +121,26 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     checkPass.keyboardType = UIKeyboardType.DecimalPad
                 })
                 check.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
-                    self.roSwitch.on = self.readOnlyState
+                    let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+                    self.roButton.setImage(btnImg, forState: .Normal)
+                    //self.roSwitch.on = self.readOnlyState
                 }))
                 check.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
-                        self.roSwitch.on = !self.readOnlyState
+                        //self.roSwitch.on = !self.readOnlyState
                         self.readOnlyState = !self.readOnlyState
+                        let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+                        self.roButton.setImage(btnImg, forState: .Normal)
                     }
                     else {
                         let alert = UIAlertController(title: "Code error", message: "Please, try again...", preferredStyle: UIAlertControllerStyle.Alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
                         self.presentViewController(alert, animated: true, completion: nil)
-                        self.roSwitch.on = self.readOnlyState
+                        let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+                        self.roButton.setImage(btnImg, forState: .Normal)
+                        //self.roSwitch.on = self.readOnlyState
                     }
                     
                 }))
@@ -127,10 +164,23 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
+        if showKeyboard {
+            txtCreator.becomeFirstResponder()
+            txtCreator.resignFirstResponder()
+            datePicker.hidden = false
+        }
+        else {
+            datePicker.hidden = true
+            txtCreator.becomeFirstResponder()
+        }
     }
     
     @IBOutlet var datePicker: UIDatePicker!
     @IBAction func datePicker(sender: AnyObject) {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        let strDate = dateFormatter.stringFromDate(datePicker.date)
+        txtDate.setTitle(strDate, forState: .Normal)
     }
     
     // Third subview
@@ -142,6 +192,15 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
+        if showKeyboard {
+            txtLanguages.becomeFirstResponder()
+            txtLanguages.resignFirstResponder()
+            licensePicker.hidden = false
+        }
+        else {
+            licensePicker.hidden = true
+            txtLanguages.becomeFirstResponder()
+        }
     }
     
     @IBOutlet var licensePicker: UIPickerView!
@@ -150,12 +209,24 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         super.viewDidLoad()
         showSegmentView(0)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keybShow:",
+            name: UIKeyboardWillShowNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keybHide:",
+            name: UIKeyboardWillHideNotification, object: nil)
+        
         // First subview
         txtTitle.becomeFirstResponder()
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
-        let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
-        roSwitch.setOn(readonlyStatus, animated: true)
+        /*let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
+        roSwitch.setOn(readonlyStatus, animated: true)*/
+        readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
+        let btnImg = (xml["xia"]["readonly"].value == "true" ) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
+        roButton.setImage(btnImg, forState: .Normal)
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
+        txtDescription.layer.borderWidth = 1
+        txtDescription.layer.cornerRadius = 5
+        txtDescription.layer.borderColor = UIColor.grayColor().CGColor
 
         // Second subview
         txtCreator.text = (xml["xia"]["creator"].value != nil) ? xml["xia"]["creator"].value : ""
@@ -163,6 +234,15 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtPublisher.text = (xml["xia"]["publisher"].value != nil) ? xml["xia"]["publisher"].value : ""
         txtIdentifier.text = (xml["xia"]["identifier"].value != nil) ? xml["xia"]["identifier"].value : ""
         txtSource.text = (xml["xia"]["source"].value != nil) ? xml["xia"]["source"].value : ""
+        
+        var detailDate = NSDate(timeIntervalSinceNow: NSTimeInterval(0))
+        if ( xml["xia"]["date"].value != nil && xml["xia"]["date"].value! != "element <date> not found"){
+            let mydateFormatter = NSDateFormatter()
+            mydateFormatter.dateStyle = .ShortStyle
+            detailDate = mydateFormatter.dateFromString(xml["xia"]["date"].value!)!
+            txtDate.setTitle(xml["xia"]["date"].value!, forState: .Normal)
+        }
+        datePicker.setDate(detailDate, animated: false)
         
         // Third subview
         txtLanguages.text = (xml["xia"]["language"].value != nil) ? xml["xia"]["language"].value : ""
@@ -181,6 +261,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                 licensePicker.selectRow(index, inComponent: 0, animated: true)
             }
         }
+        txtLicense.setTitle(xmlLicense, forState: .Normal)
+    }
+    
+    func keybShow(notification: NSNotification) {
+        showKeyboard = true
+    }
+    
+    
+    func keybHide(notification: NSNotification) {
+        showKeyboard = false
     }
 
     func showSegmentView(index: Int) {
@@ -193,6 +283,14 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     subview.hidden = true
                 }
             }
+        }
+        if index == 1 {
+            txtCreator.becomeFirstResponder()
+            datePicker.hidden = true
+        }
+        if index == 2 {
+            txtLanguages.becomeFirstResponder()
+            licensePicker.hidden = true
         }
     }
     
@@ -212,6 +310,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedLicense = availableLicenses[row]
+        txtLicense.setTitle(selectedLicense, forState: .Normal)
     }
     
 }

@@ -27,7 +27,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
-    var landscape = false
+    var landscape: Bool = false
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
@@ -171,6 +171,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
+            }
+        }
+        if (segue.identifier == "viewMetas") {
+            if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
+                controller.xml = xmlToSegue
+                controller.filePath = pathToSegue
             }
         }
         if (segue.identifier == "ViewImageInfos") {
@@ -347,7 +353,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if let path = indexPath {
             segueIndex = path.row
             if editingMode {
-                performSegueWithIdentifier("ViewImageInfos", sender: self)
+                performSegueWithIdentifier("viewMetas", sender: self)
             }
             else {
                 let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
