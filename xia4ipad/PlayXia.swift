@@ -93,9 +93,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let touch: UITouch = touches.first!
-        location = touch.locationInView(self.bkgdImage)
-            
         if !detailsVisibles {
             showDetails = hideDetails(false)
         }

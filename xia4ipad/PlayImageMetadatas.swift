@@ -113,11 +113,11 @@ class PlayImageMetadatas: UIViewController {
         attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(17)], range: NSRange(location: 0, length: keyWidth))
         
         if (xml["xia"]["license"].value != nil && xml["xia"]["license"].value != "element <license> not found") {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: "\(xml["xia"]["license"].value!)")
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: " \(xml["xia"]["license"].value!)")
             attributedText.appendAttributedString(attributedValue)
         }
         else {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: "\nNone")
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: " None")
             attributedText.appendAttributedString(attributedValue)
         }
         
