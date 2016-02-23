@@ -175,12 +175,6 @@
                                             <action selector="btnAddDetail:" destination="fts-Lk-uqf" id="gPN-ca-xjH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem tag="11" width="20" style="plain" systemItem="fixedSpace" id="3tg-un-NlM"/>
-                                    <barButtonItem tag="12" image="Info" id="g81-gt-cZy">
-                                        <connections>
-                                            <action selector="btnDetailInfos:" destination="fts-Lk-uqf" id="7kn-8Z-mRX"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem tag="12" width="20" style="plain" systemItem="fixedSpace" id="8mZ-fc-3mV"/>
                                     <barButtonItem tag="14" style="plain" systemItem="reply" id="eCh-MI-UAO">
                                         <connections>
@@ -263,17 +257,16 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="btnInfos" destination="g81-gt-cZy" id="c8t-dO-gC6"/>
                         <outlet property="btnTitleLabel" destination="x4L-95-X7o" id="lBd-Qt-aCU"/>
                         <outlet property="imgTopBarBkgd" destination="vTl-S5-lKu" id="jbs-Lk-RAS"/>
                         <outlet property="infoBkgd" destination="uml-rI-VS4" id="atj-df-tp5"/>
                         <outlet property="infoBtn" destination="fI0-A2-zBP" id="GAm-TW-5lW"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
-                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorBarButtonItem="g81-gt-cZy" id="1Zu-E8-fy3">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
-                        </segue>
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorView="fI0-A2-zBP" id="IaL-8D-KRP">
                             <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
+                        </segue>
+                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorView="fI0-A2-zBP" id="te6-xG-Kfx">
+                            <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                     </connections>
                 </viewController>

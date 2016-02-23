@@ -28,7 +28,7 @@
 		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
-		F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */; };
+		F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */; };
 		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E4343C1C575C8D007CD7CE /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
@@ -75,7 +75,7 @@
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
 		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xia4ipadTests.swift; sourceTree = "<group>"; };
+		F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0BBA6EA1C11CD7400173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
@@ -119,13 +119,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F0BBA6DD1C11CD3000173A3A /* xiaTests */ = {
+		F0BBA6DD1C11CD3000173A3A /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */,
+				F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */,
 				F0BBA6E01C11CD3000173A3A /* Info.plist */,
 			);
-			name = xiaTests;
+			name = xia;
 			path = xia4ipadTests;
 			sourceTree = "<group>";
 		};
@@ -133,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				F0F15E671BB6FCDF00268F06 /* xia */,
-				F0BBA6DD1C11CD3000173A3A /* xiaTests */,
+				F0BBA6DD1C11CD3000173A3A /* xia */,
 				F0F15E661BB6FCDF00268F06 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -326,7 +326,7 @@
 				F05103901C21C01700E6C25C /* PlayXia.swift in Sources */,
 				F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */,
 				F05103961C21C01700E6C25C /* ViewCreateDetails.swift in Sources */,
-				F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */,
+				F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */,
 				F05103911C21C01700E6C25C /* ShapeView.swift in Sources */,
 				F051038B1C21C01700E6C25C /* AEXML.swift in Sources */,
 			);

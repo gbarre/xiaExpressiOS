@@ -169,12 +169,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         presentViewController(menu, animated: true, completion: nil)
     }
     
-    @IBOutlet weak var btnInfos: UIBarButtonItem!
-    @IBAction func btnDetailInfos(sender: AnyObject) {
-        detailToSegue = currentDetailTag
-        performSegueWithIdentifier("ViewDetailInfos", sender: self)
-    }
-    
     @IBAction func btnTrash(sender: AnyObject) {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
@@ -295,9 +289,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
-        
-        // Disable detail info
-        btnInfos.enabled = false
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -660,8 +651,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
-        setBtnsIcons()
-        
         switch createDetail {
         case true:
             moveDetail = false
@@ -678,6 +667,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
             break
         }
+        
+        setBtnsIcons()
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -910,7 +901,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     func stopCreation() {
         createDetail = false
-        btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
         if details["\(currentDetailTag)"]?.constraint == "polygon" {
             currentDetailTag = 0

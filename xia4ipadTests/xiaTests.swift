@@ -1,13 +1,13 @@
 //
-//  xia4ipadTests.swift
-//  xia4ipadTests
+//  xiaTests.swift
+//  xiaTests
 //
 //  Created by Guillaume on 04/12/2015.
 //  Copyright © 2015 Guillaume. All rights reserved.
 //
 
 import XCTest
-@testable import xia4ipad
+@testable import xia
 
 class xia4ipadTests: XCTestCase {
     
