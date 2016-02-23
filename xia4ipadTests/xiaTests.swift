@@ -7,9 +7,7 @@
 //
 
 import XCTest
-@testable import xia
-
-class xia4ipadTests: XCTestCase {
+class xiaTests: XCTestCase {
     
     var singlePointDetail = xiaDetail(tag: 1, scale: 1)
     var multiplePointsDetail = xiaDetail(tag: 1, scale: 1)
