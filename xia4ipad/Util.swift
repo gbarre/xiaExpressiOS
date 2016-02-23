@@ -76,6 +76,9 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
             if detail.attributes["locked"] == nil {
                 detail.attributes["locked"] = "false"
             }
+            if detail.attributes["subtitle"] == nil {
+                detail.attributes["subtitle"] = ""
+            }
         }
     }
     

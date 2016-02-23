@@ -702,12 +702,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
-                        let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
-                        controller.zoom = zoomStatus
-                        let lockStatus: Bool = (d.attributes["locked"] == "true") ? true : false
-                        controller.lock = lockStatus
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
+                        controller.detailSubtitle = (d.attributes["subtitle"] == nil) ? "" : d.attributes["subtitle"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
+                        controller.zoom = (d.attributes["zoom"] != nil && d.attributes["zoom"] == "true") ? true : false
+                        controller.lock = (d.attributes["locked"] != nil && d.attributes["locked"] == "true") ? true : false
                         controller.tag = self.detailToSegue
                         controller.xml = self.xml
                         controller.index = self.index
@@ -721,6 +720,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
+                controller.ViewCreateDetailsController = self
             }
         }
         if (segue.identifier == "playXia") {
