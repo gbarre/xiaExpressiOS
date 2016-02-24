@@ -81,21 +81,21 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtTitle: UITextField!
     @IBOutlet var roButton: UIButton!
     @IBAction func roBtnAction(sender: AnyObject) {
-        let passTitle = (readOnlyState) ? "Enter code" : "Create code"
+        let passTitle = (readOnlyState) ? NSLocalizedString("ENTER_CODE", comment: "") : NSLocalizedString("CREATE_CODE", comment: "")
         let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         
         controller.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
-            textField.placeholder = "Password"
+            textField.placeholder = NSLocalizedString("PASSWORD", comment: "")
             textField.secureTextEntry = true  // setting the secured text for using password
             textField.keyboardType = UIKeyboardType.DecimalPad
         })
-        controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
             let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
             self.roButton.setImage(btnImg, forState: .Normal)
             
             //self.roSwitch.on = self.readOnlyState
         }))
-        controller.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
             self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
             let currentPass = controller.textFields!.first!.text
             
@@ -108,8 +108,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     
                 }
                 else {
-                    let alert = UIAlertController(title: "Wrong code", message: "Please, try again or cancel...", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: { action in
+                    let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Destructive, handler: { action in
                         self.presentViewController(controller, animated: true, completion: nil)
                     }))
                     self.presentViewController(alert, animated: true, completion: nil)
@@ -117,19 +117,19 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             }
             else { // create password
                 // double check
-                let check = UIAlertController(title: "Again please...", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                let check = UIAlertController(title: NSLocalizedString("DOUBLE_CHECK", comment: ""), message: nil, preferredStyle: UIAlertControllerStyle.Alert)
                 
                 check.addTextFieldWithConfigurationHandler({(checkPass: UITextField!) in
-                    checkPass.placeholder = "Password"
+                    checkPass.placeholder = NSLocalizedString("PASSWORD", comment: "")
                     checkPass.secureTextEntry = true  // setting the secured text for using password
                     checkPass.keyboardType = UIKeyboardType.DecimalPad
                 })
-                check.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
                     let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                     self.roButton.setImage(btnImg, forState: .Normal)
                     //self.roSwitch.on = self.readOnlyState
                 }))
-                check.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
@@ -139,8 +139,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         self.roButton.setImage(btnImg, forState: .Normal)
                     }
                     else {
-                        let alert = UIAlertController(title: "Code error", message: "Please, try again...", preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: nil))
+                        let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Destructive, handler: nil))
                         self.presentViewController(alert, animated: true, completion: nil)
                         let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                         self.roButton.setImage(btnImg, forState: .Normal)
@@ -237,11 +237,17 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtSource.text = (xml["xia"]["source"].value != nil) ? xml["xia"]["source"].value : ""
         
         var detailDate = NSDate(timeIntervalSinceNow: NSTimeInterval(0))
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         if ( xml["xia"]["date"].value != nil && xml["xia"]["date"].value! != "element <date> not found"){
-            let mydateFormatter = NSDateFormatter()
-            mydateFormatter.dateStyle = .ShortStyle
-            detailDate = mydateFormatter.dateFromString(xml["xia"]["date"].value!)!
+            detailDate = dateFormatter.dateFromString(xml["xia"]["date"].value!)!
             txtDate.setTitle(xml["xia"]["date"].value!, forState: .Normal)
+        }
+        else {
+            let stringDate: String = dateFormatter.stringFromDate(detailDate)
+            txtDate.setTitle(stringDate, forState: .Normal)
+            
         }
         datePicker.setDate(detailDate, animated: false)
         

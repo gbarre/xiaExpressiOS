@@ -64,17 +64,17 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
         let attributes = ["tag" : "\(self.currentDetailTag)",
             "zoom" : "false",
-            "title" : "Detail \(self.currentDetailTag - 99)",
+            "title" : "\(NSLocalizedString("DETAIL", comment: "")) \(self.currentDetailTag - 99)",
             "path" : "0;0"]
         
         // Build menu
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let rectangleAction = UIAlertAction(title: "Rectangle", style: .Default, handler: { action in
+        let rectangleAction = UIAlertAction(title: NSLocalizedString("RECTANGLE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -104,12 +104,12 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
             let _ = writeXML(self.xml, path: "\(self.filePath).xml")
         })
-        let ellipseAction = UIAlertAction(title: "Ellipse", style: .Default, handler: { action in
+        let ellipseAction = UIAlertAction(title: NSLocalizedString("ELLIPSE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -139,11 +139,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
             let _ = writeXML(self.xml, path: "\(self.filePath).xml")
         })
-        let polygonAction = UIAlertAction(title: "Polygon", style: .Default, handler: { action in
+        let polygonAction = UIAlertAction(title: NSLocalizedString("POLYGON", comment: ""), style: .Default, handler: { action in
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
-            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             self.setBtnsIcons()
@@ -155,7 +155,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
         })
-        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
+        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_DETAIL", comment: ""), attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
             NSForegroundColorAttributeName : UIColor.blackColor()
             ])
@@ -220,8 +220,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(now).xml")
             }
             else {
-                let alert = UIAlertController(title: "Export issue", message: "Sorry, we are unable to export your resource...", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("EXPORT_ISSUE", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
             self.presentViewController(mailComposer, animated: true, completion: nil)
@@ -872,7 +872,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         for item in myToolbar.items! {
             if item.tag == 10 { // play/STOP btn
                 if createDetail {
-                    btn = UIBarButtonItem(title: "OK", style: .Done, target: self, action: "stopCreation")
+                    btn = UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: "stopCreation")
                 }
                 else {
                     btn = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")

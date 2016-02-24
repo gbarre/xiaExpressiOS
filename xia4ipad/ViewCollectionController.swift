@@ -32,7 +32,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let cameraAction = UIAlertAction(title: "Take a photo", style: .Default, handler: { action in
+        let cameraAction = UIAlertAction(title: NSLocalizedString("TAKE_PHOTO", comment: ""), style: .Default, handler: { action in
             if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
                 //load the camera interface
                 let picker : UIImagePickerController = UIImagePickerController()
@@ -44,14 +44,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
             else{
                 //no camera available
-                let alert = UIAlertController(title: "Error", message: "There is no camera available", preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: {(alertAction)in
+                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
                     alert.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
         })
-        let libraryAction = UIAlertAction(title: "Search in Photos", style: .Default, handler: { action in
+        let libraryAction = UIAlertAction(title: NSLocalizedString("SEARCH_IN_PHOTOS", comment: ""), style: .Default, handler: { action in
             let picker : UIImagePickerController = UIImagePickerController()
             picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
@@ -64,7 +64,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
             picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
         })
-        let attributedTitle = NSAttributedString(string: "Create new document", attributes: [
+        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_NEW_DOC", comment: ""), attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
             NSForegroundColorAttributeName : UIColor.blackColor()
             ])
@@ -99,7 +99,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBAction func btnEdit(sender: AnyObject) {
         if editingMode {
             editingMode = false
-            self.editMode.title = "Edit"
+            self.editMode.title = NSLocalizedString("EDIT", comment: "")
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(false)
@@ -109,7 +109,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         else {
             editingMode = true
-            self.editMode.title = "Done"
+            self.editMode.title = NSLocalizedString("DONE", comment: "")
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
@@ -283,8 +283,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             let fileName = arrayNames[deleteIndex]
             
             let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
-                message: "Delete \(fileName)?", preferredStyle: .Alert)
-            let yesAction = UIAlertAction(title: "Yes, I'm sure!",
+                message: "\(NSLocalizedString("DELETE", comment: ""))\(fileName)\(NSLocalizedString("?", comment: ""))", preferredStyle: .Alert)
+            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""),
                 style: .Destructive, handler: { action in
                     
                     // Delete the file
@@ -306,17 +306,17 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information
-                    let msg = "\(fileName) has been deleted..."
+                    let msg = "\(fileName)\(NSLocalizedString("DELETED", comment: ""))"
                     let controller2 = UIAlertController(
                         title:nil,
                         message: msg, preferredStyle: .Alert)
-                    let cancelAction = UIAlertAction(title: "OK",
+                    let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""),
                         style: .Default , handler: nil)
                     controller2.addAction(cancelAction)
                     self.presentViewController(controller2, animated: true,
                         completion: nil)
             })
-            let noAction = UIAlertAction(title: "No way!",
+            let noAction = UIAlertAction(title: NSLocalizedString("NO", comment: ""),
                 style: .Cancel, handler: nil)
             
             controller.addAction(yesAction)
@@ -378,9 +378,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer, contextInfo:UnsafePointer<Void>) {
         if error != nil {
-            let alert = UIAlertController(title: "Save Failed", message: "Failed to save image", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("IMAGE_SAVE_FAILED", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
             
-            let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Cancel, handler: nil)
             
             alert.addAction(cancelAction)
             self.presentViewController(alert, animated: true, completion: nil)

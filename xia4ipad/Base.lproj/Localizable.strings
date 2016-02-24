@@ -6,4 +6,55 @@
   Copyright (c) 2016 Dane Versailles. All rights reserved.
 */
 
+// Global
 "WARNING" = "Warning!";
+"ERROR" = "Error";
+"OK" = "Ok";
+"YES" = "Yes";
+"NO" = "No";
+"?" = "?";
+"CANCEL" = "Cancel";
+
+// PlayImageMetadatas.swift
+"LICENSE" = "License: ";
+"TITLE" = "Title: ";
+"DATE" = "Date: ";
+"CREATOR" = "Creator: ";
+"RIGHTS" = "Rights: ";
+"PUBLISHER" = "Publisher: ";
+"IDENTIFIER" = "Identifier: ";
+"SOURCE" = "Source: ";
+"RELATION" = "Relation: ";
+"LANGUAGES" = "Languages: ";
+"KEYWORDS" = "Keywords: ";
+"COVERAGE" = "Coverage: ";
+"CONTRIBUTORS" = "Contributors: ";
+"DESCRIPTION" = "Description: ";
+
+// ViewCollectionController.swift
+"TAKE_PHOTO" = "Take a photo";
+"NO_CAMERA" = "There is no camera available.";
+"SEARCH_IN_PHOTOS" = "Search in Photos";
+"CREATE_NEW_DOC" = "Create new document";
+"EDIT" = "Edit";
+"DONE" = "Done";
+"DELETE" = "Delete ";
+"DELETED" = " has been deleted...";
+"IMAGE_SAVE_FAILED" = "Failed to save image.";
+
+// ViewCreateDetails.swift
+"DETAIL" = "Detail ";
+"RECTANGLE" = "Rectangle";
+"ELLIPSE" = "Ellipse";
+"POLYGON" = "Polygon";
+"DESCRIPTION..." = "Description...";
+"CREATE_DETAIL" = "Create detail...";
+"EXPORT_ISSUE" = "Sorry, we are unable to export your resource...";
+
+// ViewMetas.swift
+"ENTER_CODE" = "Enter code";
+"CREATE_CODE" = "Create code";
+"PASSWORD" = "Password";
+"TRY_AGAIN" = "Please, try again...";
+"DOUBLE_CHECK" = "Type again please";
+

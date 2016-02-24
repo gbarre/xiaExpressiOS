@@ -14,20 +14,20 @@ class PlayImageMetadatas: UIViewController {
     
     var xml: AEXMLDocument!
     let xmlElements: [String: String!] = [
-        "license" : "License: ",
-        "title" : "Title: ",
-        "date" : "Date: ",
-        "creator" : "Creator: ",
-        "rights" : "Rights: ",
-        "publisher" : "Publisher: ",
-        "identifier" : "Identifier: ",
-        "source" : "Source: ",
-        "relation" : "Relation: ",
-        "language" : "Language: ",
-        "keywords" : "Keywords: ",
-        "coverage" : "Coverage: ",
-        "contributors" : "Contributors: ",
-        "description" : "Description: "
+        "license" : NSLocalizedString("LICENSE", comment: ""),
+        "title" : NSLocalizedString("TITLE", comment: ""),
+        "date" : NSLocalizedString("DATE", comment: ""),
+        "creator" : NSLocalizedString("CREATOR", comment: ""),
+        "rights" : NSLocalizedString("RIGHTS", comment: ""),
+        "publisher" : NSLocalizedString("PUBLISHER", comment: ""),
+        "identifier" : NSLocalizedString("IDENTIFIER", comment: ""),
+        "source" : NSLocalizedString("SOURCE", comment: ""),
+        "relation" : NSLocalizedString("RELATION", comment: ""),
+        "language" : NSLocalizedString("LANGUAGES", comment: ""),
+        "keywords" : NSLocalizedString("KEYWORDS", comment: ""),
+        "coverage" : NSLocalizedString("COVERAGE", comment: ""),
+        "contributors" : NSLocalizedString("CONTRIBUTORS", comment: ""),
+        "description" : NSLocalizedString("DESCRIPTION", comment: "")
     ]
     
     @IBAction func Hide(sender: AnyObject) {

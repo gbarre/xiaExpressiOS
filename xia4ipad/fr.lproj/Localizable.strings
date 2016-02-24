@@ -1,9 +1,60 @@
 /* 
-  Localization.strings
+  Localization.strings (fr)
   xia4ipad
 
   Created by Guillaume on 24/02/2016.
   Copyright (c) 2016 Dane Versailles. All rights reserved.
 */
 
-"WARNING" = "Attention !";
+// Global
+"WARNING" = "Attention !!";
+"ERROR" = "Erreur";
+"OK" = "Ok";
+"YES" = "Oui";
+"NO" = "Non";
+"?" = " ?";
+"CANCEL" = "Annuler";
+
+// PlayImageMetadatas.swift
+"LICENSE" = "Licence : ";
+"TITLE" = "Titre : ";
+"DATE" = "Date : ";
+"CREATOR" = "Auteur : ";
+"RIGHTS" = "Droits : ";
+"PUBLISHER" = "Éditeur: ";
+"IDENTIFIER" = "Identifiant : ";
+"SOURCE" = "Source : ";
+"RELATION" = "Relation : ";
+"LANGUAGES" = "Langues : ";
+"KEYWORDS" = "Mots clés : ";
+"COVERAGE" = "Portée : ";
+"CONTRIBUTORS" = "Collaborateurs : ";
+"DESCRIPTION" = "Description : ";
+
+// ViewCollectionController.swift
+"TAKE_PHOTO" = "Prendre une photo";
+"NO_CAMERA" = "Aucun appareil photo disponible.";
+"SEARCH_IN_PHOTOS" = "Chercher dans Photos";
+"CREATE_NEW_DOC" = "Créer un nouveau document";
+"EDIT" = "Éditer";
+"DONE" = "Terminer";
+"DELETE" = "Supprimer ";
+"DELETED" = " a été supprimé...";
+"IMAGE_SAVE_FAILED" = "Impossible de sauver l'image.";
+
+// ViewCreateDetails.swift
+"DETAIL" = "Détail ";
+"RECTANGLE" = "Rectangle";
+"ELLIPSE" = "Ellipse";
+"POLYGON" = "Polygone";
+"DESCRIPTION..." = "Description...";
+"CREATE_DETAIL" = "Créer un détail...";
+"EXPORT_ISSUE" = "Désolé, votre ressource n'est pas exportable...";
+
+// ViewMetas.swift
+"ENTER_CODE" = "Saisir le code";
+"CREATE_CODE" = "Créer un code";
+"PASSWORD" = "Mot de passe";
+"TRY_AGAIN" = "Veuillez réessayer...";
+"DOUBLE_CHECK" = "Saisir à nouveau";
+
