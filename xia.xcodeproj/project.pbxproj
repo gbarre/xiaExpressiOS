@@ -28,6 +28,7 @@
 		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
+		F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0B560E51C7DAA3300E79D55 /* Localizable.strings */; };
 		F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */; };
 		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
@@ -74,6 +75,8 @@
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
 		F0B560E31C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F0B560E41C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		F0B560E61C7DAA3300E79D55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F0B560E81C7DAA9100E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -170,6 +173,7 @@
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
 				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
+				F0B560E51C7DAA3300E79D55 /* Localizable.strings */,
 				F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */,
 			);
 			name = xia;
@@ -263,6 +267,7 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
 			);
 			mainGroup = F0F15E5C1BB6FCDE00268F06;
 			productRefGroup = F0F15E661BB6FCDF00268F06 /* Products */;
@@ -296,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
+				F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
 				F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */,
@@ -374,6 +380,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		F0B560E51C7DAA3300E79D55 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F0B560E61C7DAA3300E79D55 /* Base */,
+				F0B560E81C7DAA9100E79D55 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

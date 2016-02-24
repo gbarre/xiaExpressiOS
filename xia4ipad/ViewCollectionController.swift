@@ -282,7 +282,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             
             let fileName = arrayNames[deleteIndex]
             
-            let controller = UIAlertController(title: "Warning!",
+            let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
                 message: "Delete \(fileName)?", preferredStyle: .Alert)
             let yesAction = UIAlertAction(title: "Yes, I'm sure!",
                 style: .Destructive, handler: { action in
