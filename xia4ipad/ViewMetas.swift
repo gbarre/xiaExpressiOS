@@ -15,12 +15,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var readOnlyState: Bool = false
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
-    
+    var landscape: Bool = false
     weak var ViewCreateDetailsController: ViewCreateDetails?
     
     var pass: String = ""
     var selectedLicense: String = ""
-    var showKeyboard: Bool = true
+    var showPicker: Bool = true
     
     let availableLicenses = [
         "Proprietary - CC-Zero",
@@ -168,15 +168,18 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
-        if showKeyboard {
-            txtCreator.becomeFirstResponder()
-            txtCreator.resignFirstResponder()
+        if showPicker {
+            if landscape {
+                txtCreator.becomeFirstResponder()
+                txtCreator.resignFirstResponder()
+            }
             datePicker.hidden = false
         }
         else {
             datePicker.hidden = true
             txtCreator.becomeFirstResponder()
         }
+        showPicker = !showPicker
     }
     
     @IBOutlet var datePicker: UIDatePicker!
@@ -196,15 +199,18 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
-        if showKeyboard {
-            txtLanguages.becomeFirstResponder()
-            txtLanguages.resignFirstResponder()
+        if showPicker {
+            if landscape {
+                txtLanguages.becomeFirstResponder()
+                txtLanguages.resignFirstResponder()
+            }
             licensePicker.hidden = false
         }
         else {
             licensePicker.hidden = true
             txtLanguages.becomeFirstResponder()
         }
+        showPicker = !showPicker
     }
     
     @IBOutlet var licensePicker: UIPickerView!
@@ -276,12 +282,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func keybShow(notification: NSNotification) {
-        showKeyboard = true
+        showPicker = true
     }
     
     
     func keybHide(notification: NSNotification) {
-        showKeyboard = false
+        showPicker = false
     }
 
     func showSegmentView(index: Int) {

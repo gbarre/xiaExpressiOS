@@ -272,7 +272,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2038" y="333"/>
+            <point key="canvasLocation" x="1566" y="697"/>
         </scene>
         <!--View Metas-->
         <scene sceneID="esf-mq-9t6">
@@ -449,7 +449,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Elj-an-Bgi">
                                         <rect key="frame" x="142" y="194" width="550" height="30"/>
                                         <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
-                                        <state key="normal" title="Button"/>
                                         <connections>
                                             <action selector="showDatePicker:" destination="6f8-Rg-eyD" eventType="touchUpInside" id="8oN-Iq-1p5"/>
                                         </connections>
@@ -579,7 +578,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bbL-sU-QsP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2866" y="-55"/>
+            <point key="canvasLocation" x="2628" y="-59"/>
         </scene>
         <!--Detail Info-->
         <scene sceneID="Ulb-4K-ajy">
@@ -718,7 +717,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2038" y="1116"/>
+            <point key="canvasLocation" x="2628" y="697"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">
@@ -780,7 +779,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1242" y="1110"/>
+            <point key="canvasLocation" x="1220" y="1476"/>
         </scene>
         <!--Play Image Metadatas-->
         <scene sceneID="PeB-Zl-vO5">
@@ -990,7 +989,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CMD-SV-YNm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1778" y="1917"/>
+            <point key="canvasLocation" x="778" y="2253"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
@@ -1012,7 +1011,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="85K-7O-qWd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="452" y="-79"/>
+            <point key="canvasLocation" x="1220" y="-855"/>
         </scene>
         <!--Play Detail-->
         <scene sceneID="UEW-P9-ESR">
@@ -1152,7 +1151,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="666" y="1917"/>
+            <point key="canvasLocation" x="1666" y="2253"/>
         </scene>
     </scenes>
     <resources>
@@ -1164,7 +1163,7 @@
         <image name="uncheckedbox" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="J54-6x-Hse"/>
-        <segue reference="4uf-YC-Gjx"/>
+        <segue reference="g1C-J3-xmC"/>
+        <segue reference="IaL-8D-KRP"/>
     </inferredMetricsTieBreakers>
 </document>

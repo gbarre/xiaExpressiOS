@@ -177,6 +177,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = xmlToSegue
                 controller.filePath = pathToSegue
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "playXia") {
@@ -184,7 +185,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
-                controller.landscape = self.landscape
+                controller.landscape = landscape
             }
         }
     }

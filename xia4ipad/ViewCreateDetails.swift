@@ -718,6 +718,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
+                controller.landscape = landscape
                 controller.ViewCreateDetailsController = self
             }
         }
