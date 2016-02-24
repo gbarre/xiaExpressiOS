@@ -32,13 +32,11 @@
 		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E4343C1C575C8D007CD7CE /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
-		F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
 		F0E6A6271C777BBE00A1CDF7 /* ViewMetas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */; };
 		F0E6A6281C777BBE00A1CDF7 /* ViewMetas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
 		F0EC29B31C678ECA009AE0BA /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
 		F0EC29B41C678ED1009AE0BA /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */; };
-		F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F0F15E6B1BB6FCDF00268F06 /* ViewCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */; };
 		F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */; };
@@ -74,6 +72,8 @@
 		F08B2BB01C15C662009EDB13 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
+		F0B560E31C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F0B560E41C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,7 +81,6 @@
 		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
 		F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTransition.swift; sourceTree = "<group>"; };
-		F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDetail.swift; sourceTree = "<group>"; };
 		F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetas.swift; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F0F15E651BB6FCDF00268F06 /* xia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,7 +167,6 @@
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */,
 				F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
-				F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
 				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
@@ -324,7 +322,6 @@
 				F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */,
 				F0EC29B41C678ED1009AE0BA /* PlayDetail.swift in Sources */,
 				F05103901C21C01700E6C25C /* PlayXia.swift in Sources */,
-				F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */,
 				F05103961C21C01700E6C25C /* ViewCreateDetails.swift in Sources */,
 				F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */,
 				F05103911C21C01700E6C25C /* ShapeView.swift in Sources */,
@@ -354,7 +351,6 @@
 				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,
 				F07BACB81C4BC6DB0037CF13 /* PlayDetail.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
-				F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
 				F0F15E7B1BB7097B00268F06 /* ViewCreateDetails.swift in Sources */,
 				F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */,
@@ -382,6 +378,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F0F15E6D1BB6FCDF00268F06 /* Base */,
+				F0B560E41C7DA1F900E79D55 /* fr */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -390,6 +387,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F0F15E721BB6FCDF00268F06 /* Base */,
+				F0B560E31C7DA1F900E79D55 /* fr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

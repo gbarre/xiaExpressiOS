@@ -64,7 +64,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
         let attributes = ["tag" : "\(self.currentDetailTag)",
             "zoom" : "false",
-            "title" : "detail \(self.currentDetailTag)",
+            "title" : "Detail \(self.currentDetailTag - 99)",
             "path" : "0;0"]
         
         // Build menu
@@ -74,7 +74,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -109,7 +109,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -143,10 +143,17 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "Description...", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             self.setBtnsIcons()
+            
+            // Disable other gesture
+            if let recognizers = self.view.gestureRecognizers {
+                for recognizer in recognizers {
+                    self.view.removeGestureRecognizer(recognizer)
+                }
+            }
         })
         let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
@@ -908,5 +915,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             imgTopBarBkgd.backgroundColor = blueColor
         }
         setBtnsIcons()
+        
+        // Add double tap gesture
+        let dSelector : Selector = "detailInfos"
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
+        doubleTapGesture.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTapGesture)
     }
 }
