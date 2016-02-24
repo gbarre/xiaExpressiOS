@@ -135,7 +135,7 @@
                         <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="LFL-AM-sdI" id="4uf-YC-Gjx">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                            <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                     </connections>
                 </viewController>
@@ -889,7 +889,7 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Language:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pa1-Lr-9JK">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Languages:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pa1-Lr-9JK">
                                                 <rect key="frame" x="0.0" y="0.0" width="387" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1164,7 +1164,7 @@
         <image name="uncheckedbox" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="IaL-8D-KRP"/>
         <segue reference="J54-6x-Hse"/>
+        <segue reference="4uf-YC-Gjx"/>
     </inferredMetricsTieBreakers>
 </document>
