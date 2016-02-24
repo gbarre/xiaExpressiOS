@@ -66,7 +66,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["license"].value = selectedLicense
         
         let _ = writeXML(xml, path: "\(filePath).xml")
-        ViewCreateDetailsController?.btnTitleLabel.title = txtTitle.text
+        ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? " " : txtTitle.text!
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -92,8 +92,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
             let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
             self.roButton.setImage(btnImg, forState: .Normal)
-            
-            //self.roSwitch.on = self.readOnlyState
         }))
         controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
             self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
@@ -101,7 +99,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             
             if self.readOnlyState {
                 if currentPass != nil && currentPass! == self.pass {
-                    //self.roSwitch.on = !self.readOnlyState
                     self.readOnlyState = !self.readOnlyState
                     let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                     self.roButton.setImage(btnImg, forState: .Normal)
@@ -127,13 +124,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                 check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
                     let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                     self.roButton.setImage(btnImg, forState: .Normal)
-                    //self.roSwitch.on = self.readOnlyState
                 }))
                 check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
-                        //self.roSwitch.on = !self.readOnlyState
                         self.readOnlyState = !self.readOnlyState
                         let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                         self.roButton.setImage(btnImg, forState: .Normal)
@@ -144,7 +139,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         self.presentViewController(alert, animated: true, completion: nil)
                         let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
                         self.roButton.setImage(btnImg, forState: .Normal)
-                        //self.roSwitch.on = self.readOnlyState
                     }
                     
                 }))

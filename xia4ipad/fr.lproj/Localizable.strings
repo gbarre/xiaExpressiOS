@@ -50,6 +50,7 @@
 "DESCRIPTION..." = "Description...";
 "CREATE_DETAIL" = "Créer un détail...";
 "EXPORT_ISSUE" = "Désolé, votre ressource n'est pas exportable...";
+"COLLECTION" = "Collection";
 
 // ViewMetas.swift
 "ENTER_CODE" = "Saisir le code";

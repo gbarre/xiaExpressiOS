@@ -61,6 +61,7 @@ class ViewDetailInfos: UIViewController {
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
         btnLock.resignFirstResponder()
         ViewCreateDetailsController!.changeDetailColor(tag)
+        ViewCreateDetailsController?.setBtnsIcons()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
