@@ -49,7 +49,6 @@
 "POLYGON" = "Polygon";
 "DESCRIPTION..." = "Description...";
 "CREATE_DETAIL" = "Create detail...";
-"EXPORT_ISSUE" = "Sorry, we are unable to export your resource...";
 "COLLECTION" = "Collection";
 
 // ViewMetas.swift

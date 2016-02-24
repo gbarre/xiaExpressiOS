@@ -29,6 +29,8 @@
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
 		F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0B560E51C7DAA3300E79D55 /* Localizable.strings */; };
+		F0B560EA1C7E174100E79D55 /* ViewExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B560E91C7E174100E79D55 /* ViewExport.swift */; };
+		F0B560EB1C7E174100E79D55 /* ViewExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B560E91C7E174100E79D55 /* ViewExport.swift */; };
 		F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */; };
 		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
@@ -77,6 +79,7 @@
 		F0B560E41C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		F0B560E61C7DAA3300E79D55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0B560E81C7DAA9100E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F0B560E91C7E174100E79D55 /* ViewExport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExport.swift; sourceTree = "<group>"; };
 		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -168,6 +171,7 @@
 				F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */,
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */,
+				F0B560E91C7E174100E79D55 /* ViewExport.swift */,
 				F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
@@ -331,6 +335,7 @@
 				F05103961C21C01700E6C25C /* ViewCreateDetails.swift in Sources */,
 				F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */,
 				F05103911C21C01700E6C25C /* ShapeView.swift in Sources */,
+				F0B560EB1C7E174100E79D55 /* ViewExport.swift in Sources */,
 				F051038B1C21C01700E6C25C /* AEXML.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,6 +359,7 @@
 				F0E6A6271C777BBE00A1CDF7 /* ViewMetas.swift in Sources */,
 				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
+				F0B560EA1C7E174100E79D55 /* ViewExport.swift in Sources */,
 				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,
 				F07BACB81C4BC6DB0037CF13 /* PlayDetail.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,

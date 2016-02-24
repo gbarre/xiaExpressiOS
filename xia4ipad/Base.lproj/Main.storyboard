@@ -155,6 +155,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlx-rC-dtL" userLabel="export anchor">
+                                <rect key="frame" x="570" y="70" width="30" height="30"/>
+                            </button>
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8Q-UV-Vxn">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items/>
@@ -195,6 +198,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="lHe-lY-w41" secondAttribute="trailing" constant="-20" id="8ZM-on-rZa"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="lHe-lY-w41" secondAttribute="bottom" id="ELg-fq-59G"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Fwa-cM-DUY"/>
+                            <constraint firstItem="tlx-rC-dtL" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="50" id="Pji-AH-ODe"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="T8v-I8-egC"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Zsa-lD-UhT"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="fI0-A2-zBP" secondAttribute="bottom" id="ckF-Yb-Y9O"/>
@@ -206,6 +210,7 @@
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="uml-rI-VS4" secondAttribute="bottom" id="ukj-FU-Wss"/>
                             <constraint firstAttribute="trailingMargin" secondItem="uml-rI-VS4" secondAttribute="trailing" constant="-20" id="vEo-v8-PuS"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="vTl-S5-lKu" secondAttribute="bottom" constant="44" id="wNX-tq-TnE"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="tlx-rC-dtL" secondAttribute="trailing" constant="-20" id="zUX-tR-Kd3"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -225,6 +230,9 @@
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                         <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="n0o-Cr-euA"/>
+                        <segue destination="Mn2-Ut-VnD" kind="popoverPresentation" identifier="viewExport" popoverAnchorView="tlx-rC-dtL" id="oa9-FL-rx3">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -675,6 +683,84 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2628" y="697"/>
+        </scene>
+        <!--View Export-->
+        <scene sceneID="13d-Xi-7bK">
+            <objects>
+                <viewController id="Mn2-Ut-VnD" customClass="ViewExport" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mVw-Bx-R6G"/>
+                        <viewControllerLayoutGuide type="bottom" id="2F2-0b-bHe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hs2-xj-XmN">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose export format" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S8B-NA-m8q">
+                                <rect key="frame" x="216" y="89" width="168" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bgb-Yq-Xcg">
+                                <rect key="frame" x="240" y="229" width="120" height="30"/>
+                                <state key="normal" title="Inkscape (SVG)"/>
+                                <connections>
+                                    <action selector="exportSVG:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="3U2-qH-fZa"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9E6-ph-iRl">
+                                <rect key="frame" x="63" y="229" width="120" height="30"/>
+                                <state key="normal" title="Xia Tablette"/>
+                                <connections>
+                                    <action selector="exportSimpleXML:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="h8M-fB-4hE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0HM-1I-jwK">
+                                <rect key="frame" x="421" y="229" width="120" height="30"/>
+                                <state key="normal" title="Autre..."/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qiJ-9Y-ftz">
+                                <rect key="frame" x="63" y="121" width="120" height="100"/>
+                                <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="exportSimpleXML:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="Cfl-iv-WKP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uf5-A3-AVp">
+                                <rect key="frame" x="240" y="121" width="120" height="100"/>
+                                <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="exportSVG:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="TR6-qz-dEV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bT-Z7-Sr7">
+                                <rect key="frame" x="421" y="121" width="120" height="100"/>
+                                <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="koT-5A-IDh">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem systemItem="cancel" id="8yP-Ol-XMB">
+                                        <connections>
+                                            <action selector="btnCancel:" destination="Mn2-Ut-VnD" id="Tjj-OS-kHl"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="S8B-NA-m8q" firstAttribute="top" secondItem="mVw-Bx-R6G" secondAttribute="bottom" constant="69" id="8Lh-7h-vkU"/>
+                            <constraint firstItem="S8B-NA-m8q" firstAttribute="centerX" secondItem="hs2-xj-XmN" secondAttribute="centerX" id="Vgz-Lk-Qzy"/>
+                        </constraints>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="600" height="300"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="300"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kWN-GP-6pM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2528" y="1326"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">

@@ -514,6 +514,13 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = self.xml
             }
         }
+        if (segue.identifier == "viewExport") {
+            if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                controller.filePath = filePath
+                controller.xml = self.xml
+                controller.imgView = self.imgView
+            }
+        }
     }
     
     func addDetail(sender: UIBarButtonItem) {
@@ -732,57 +739,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func export() {
-        // encode image to base64
-        let imageData = UIImageJPEGRepresentation(imgView.image!, 85)
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
-        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
-        
-        // prepare xml
-        let xiaXML = AEXMLDocument()
-        xiaXML.addChild(name: "XiaiPad")
-        xiaXML["XiaiPad"].addChild(xml["xia"])
-        xiaXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String, attributes: nil)
-        
-        // write xml to temp directory
-        let now:Int = Int(NSDate().timeIntervalSince1970)
-        let tempFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
-        do {
-            try xiaXML.xmlString.writeToFile(tempFilePath, atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
-        
-        let mailComposer = MFMailComposeViewController()
-        mailComposer.mailComposeDelegate = self
-        //Check to see the device can send email.
-        if( MFMailComposeViewController.canSendMail() ) {
-            //Set the subject and message of the email
-            let xiaTitle = (xml["xia"]["title"].value == nil) ? "\(now)" : xml["xia"]["title"].value!
-            mailComposer.setSubject("[xia iPad] export \"\(xiaTitle)\"")
-            mailComposer.setMessageBody("", isHTML: false)
-            
-            if let fileData = NSData(contentsOfFile: tempFilePath) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(now).xml")
-            }
-            else {
-                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("EXPORT_ISSUE", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-            self.presentViewController(mailComposer, animated: true, completion: nil)
-        }
-        else {
-            dbg.pt("Device cannot send mail")
-        }
-        
-        // remove tmp file
-        do {
-            try NSFileManager().removeItemAtPath(tempFilePath)
-        }
-        catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
+        performSegueWithIdentifier("viewExport", sender: self)
     }
     
     func goBack() {
