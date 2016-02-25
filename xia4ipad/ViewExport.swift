@@ -51,8 +51,5 @@ class ViewExport: UIViewController {
     }
     @IBAction func exportSVG(sender: AnyObject) {
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
+    
 }
