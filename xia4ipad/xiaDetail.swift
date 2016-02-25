@@ -26,7 +26,7 @@ class xiaDetail: NSObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bezierFrame() -> CGRect {
+    func bezierFrame(scale:CGFloat = 1.0) -> CGRect {
         var xMin: CGFloat = UIScreen.mainScreen().bounds.width
         var xMax: CGFloat = 0
         var yMin: CGFloat = UIScreen.mainScreen().bounds.height
@@ -48,10 +48,10 @@ class xiaDetail: NSObject {
                 yMax = yPoint
             }
         }
-        return CGRect(x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin)
+        return CGRect(x: xMin * scale, y: yMin * scale, width: (xMax - xMin) * scale, height: (yMax - yMin) * scale)
     }
     
-    func bezierPath() -> UIBezierPath {
+    func bezierPath(scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
         if constraint == "ellipse" {
             path = UIBezierPath(ovalInRect: self.bezierFrame())
@@ -59,10 +59,10 @@ class xiaDetail: NSObject {
         else {
             for point in points {
                 if (point == points.first) {
-                    path.moveToPoint(point.center)
+                    path.moveToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
                 }
                 else {
-                    path.addLineToPoint(point.center)
+                    path.addLineToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
                 }
             }
             path.closePath()

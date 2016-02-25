@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
-		F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */; };
 		F051038B1C21C01700E6C25C /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F051038D1C21C01700E6C25C /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
@@ -19,41 +18,34 @@
 		F05103921C21C01700E6C25C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F05103931C21C01700E6C25C /* ViewCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */; };
 		F05103941C21C01700E6C25C /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
-		F05103951C21C01700E6C25C /* ViewImageInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */; };
 		F05103961C21C01700E6C25C /* ViewCreateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */; };
 		F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F077D90E1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */; };
-		F07BACB81C4BC6DB0037CF13 /* ViewDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */; };
+		F07BACB81C4BC6DB0037CF13 /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */; };
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
 		F08B2BB11C15C662009EDB13 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08B2BB01C15C662009EDB13 /* Util.swift */; };
 		F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F092D8B31BE78BE000EDB0CE /* images.xcassets */; };
 		F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */ = {isa = PBXBuildFile; fileRef = F098E28A1C06391000AB1185 /* PlayXia.swift */; };
-		F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */; };
+		F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0B560E51C7DAA3300E79D55 /* Localizable.strings */; };
+		F0B560EA1C7E174100E79D55 /* ViewExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B560E91C7E174100E79D55 /* ViewExport.swift */; };
+		F0B560EB1C7E174100E79D55 /* ViewExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B560E91C7E174100E79D55 /* ViewExport.swift */; };
+		F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */; };
 		F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
-		F0D1FCDF1C6B3F3100C8CB38 /* ViewMetasContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */; };
-		F0D1FCE01C6B3F3100C8CB38 /* ViewMetasContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */; };
-		F0D1FCE51C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */; };
-		F0D1FCE61C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */; };
-		F0D1FCE81C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */; };
-		F0D1FCE91C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */; };
 		F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */; };
 		F0E4343C1C575C8D007CD7CE /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
-		F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
 		F0E6A6271C777BBE00A1CDF7 /* ViewMetas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */; };
 		F0E6A6281C777BBE00A1CDF7 /* ViewMetas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */; };
 		F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */; };
 		F0EC29B31C678ECA009AE0BA /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */; };
-		F0EC29B41C678ED1009AE0BA /* ViewDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */; };
-		F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */; };
+		F0EC29B41C678ED1009AE0BA /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */; };
 		F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F0F15E6B1BB6FCDF00268F06 /* ViewCollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */; };
 		F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */; };
 		F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */; };
 		F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */; };
 		F0F15E7B1BB7097B00268F06 /* ViewCreateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */; };
-		F0F798481C4FCC7800E2746A /* ViewMetasTabA.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F798471C4FCC7800E2746A /* ViewMetasTabA.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,29 +67,29 @@
 
 /* Begin PBXFileReference section */
 		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
-		F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewImageInfos.swift; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayImageMetadatas.swift; sourceTree = "<group>"; };
-		F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetail.swift; sourceTree = "<group>"; };
+		F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayDetail.swift; sourceTree = "<group>"; };
 		F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewDetailInfos.swift; sourceTree = "<group>"; };
 		F08B2BB01C15C662009EDB13 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F092D8B31BE78BE000EDB0CE /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F098E28A1C06391000AB1185 /* PlayXia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayXia.swift; sourceTree = "<group>"; };
-		F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia4ipadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xia4ipadTests.swift; sourceTree = "<group>"; };
+		F0B560E31C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F0B560E41C7DA1F900E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		F0B560E61C7DAA3300E79D55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F0B560E81C7DAA9100E79D55 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F0B560E91C7E174100E79D55 /* ViewExport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExport.swift; sourceTree = "<group>"; };
+		F0BBA6DC1C11CD3000173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaTests.swift; sourceTree = "<group>"; };
 		F0BBA6E01C11CD3000173A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia4ipadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0BBA6EA1C11CD7400173A3A /* xia.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xia.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0C97ACA1C0C386E0057D802 /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
-		F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasContainer.swift; sourceTree = "<group>"; };
-		F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabB.swift; sourceTree = "<group>"; };
-		F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabC.swift; sourceTree = "<group>"; };
 		F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTransition.swift; sourceTree = "<group>"; };
-		F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDetail.swift; sourceTree = "<group>"; };
 		F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetas.swift; sourceTree = "<group>"; };
 		F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
-		F0F15E651BB6FCDF00268F06 /* xia4ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia4ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0F15E651BB6FCDF00268F06 /* xia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCollectionController.swift; sourceTree = "<group>"; };
 		F0F15E6D1BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -105,7 +97,6 @@
 		F0F15E721BB6FCDF00268F06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F0F15E741BB6FCDF00268F06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCreateDetails.swift; sourceTree = "<group>"; };
-		F0F798471C4FCC7800E2746A /* ViewMetasTabA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetasTabA.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,20 +124,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F0BBA6DD1C11CD3000173A3A /* xia4ipadTests */ = {
+		F0BBA6DD1C11CD3000173A3A /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F0BBA6DE1C11CD3000173A3A /* xia4ipadTests.swift */,
+				F0BBA6DE1C11CD3000173A3A /* xiaTests.swift */,
 				F0BBA6E01C11CD3000173A3A /* Info.plist */,
 			);
+			name = xia;
 			path = xia4ipadTests;
 			sourceTree = "<group>";
 		};
 		F0F15E5C1BB6FCDE00268F06 = {
 			isa = PBXGroup;
 			children = (
-				F0F15E671BB6FCDF00268F06 /* xia4ipad */,
-				F0BBA6DD1C11CD3000173A3A /* xia4ipadTests */,
+				F0F15E671BB6FCDF00268F06 /* xia */,
+				F0BBA6DD1C11CD3000173A3A /* xia */,
 				F0F15E661BB6FCDF00268F06 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,14 +146,14 @@
 		F0F15E661BB6FCDF00268F06 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F0F15E651BB6FCDF00268F06 /* xia4ipad.app */,
-				F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */,
-				F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */,
+				F0F15E651BB6FCDF00268F06 /* xia.app */,
+				F0BBA6DC1C11CD3000173A3A /* xia.xctest */,
+				F0BBA6EA1C11CD7400173A3A /* xia.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F0F15E671BB6FCDF00268F06 /* xia4ipad */ = {
+		F0F15E671BB6FCDF00268F06 /* xia */ = {
 			isa = PBXGroup;
 			children = (
 				F0013F801BF61A750000F83A /* default.jpg */,
@@ -171,36 +163,33 @@
 				F0E4343B1C575C8D007CD7CE /* BubbleTransition.swift */,
 				F0C97ACA1C0C386E0057D802 /* debug.swift */,
 				F0E9EF641BC29CBB0006A4E5 /* PhotoThumbnail.swift */,
+				F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */,
 				F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */,
 				F098E28A1C06391000AB1185 /* PlayXia.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
 				F08B2BB01C15C662009EDB13 /* Util.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */,
-				F07BACB71C4BC6DB0037CF13 /* ViewDetail.swift */,
 				F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */,
-				F01979F01C174C1C0035EEDA /* ViewImageInfos.swift */,
-				F0D1FCDE1C6B3F3100C8CB38 /* ViewMetasContainer.swift */,
-				F0F798471C4FCC7800E2746A /* ViewMetasTabA.swift */,
-				F0D1FCE41C6B789E00C8CB38 /* ViewMetasTabB.swift */,
-				F0D1FCE71C6B9CE400C8CB38 /* ViewMetasTabC.swift */,
+				F0B560E91C7E174100E79D55 /* ViewExport.swift */,
 				F0E6A6261C777BBE00A1CDF7 /* ViewMetas.swift */,
 				F0E12B771BED3B7B00F3DFBA /* xiaDetail.swift */,
-				F0E434411C58CC4A007CD7CE /* ZoomDetail.swift */,
 				F0F15E6F1BB6FCDF00268F06 /* Assets.xcassets */,
 				F092D8B31BE78BE000EDB0CE /* images.xcassets */,
 				F0F15E711BB6FCDF00268F06 /* LaunchScreen.storyboard */,
+				F0B560E51C7DAA3300E79D55 /* Localizable.strings */,
 				F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */,
 			);
+			name = xia;
 			path = xia4ipad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F0BBA6DB1C11CD3000173A3A /* xia4ipadTests */ = {
+		F0BBA6DB1C11CD3000173A3A /* xiaTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xia4ipadTests" */;
+			buildConfigurationList = F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xiaTests" */;
 			buildPhases = (
 				F0BBA6D81C11CD3000173A3A /* Sources */,
 				F0BBA6D91C11CD3000173A3A /* Frameworks */,
@@ -211,14 +200,14 @@
 			dependencies = (
 				F0BBA6E21C11CD3000173A3A /* PBXTargetDependency */,
 			);
-			name = xia4ipadTests;
+			name = xiaTests;
 			productName = xia4ipadTests;
-			productReference = F0BBA6DC1C11CD3000173A3A /* xia4ipadTests.xctest */;
+			productReference = F0BBA6DC1C11CD3000173A3A /* xia.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F0BBA6E91C11CD7400173A3A /* xia4ipadUITests */ = {
+		F0BBA6E91C11CD7400173A3A /* xiaUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xia4ipadUITests" */;
+			buildConfigurationList = F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xiaUITests" */;
 			buildPhases = (
 				F0BBA6E61C11CD7400173A3A /* Sources */,
 				F0BBA6E71C11CD7400173A3A /* Frameworks */,
@@ -229,14 +218,14 @@
 			dependencies = (
 				F0BBA6F01C11CD7400173A3A /* PBXTargetDependency */,
 			);
-			name = xia4ipadUITests;
+			name = xiaUITests;
 			productName = xia4ipadUITests;
-			productReference = F0BBA6EA1C11CD7400173A3A /* xia4ipadUITests.xctest */;
+			productReference = F0BBA6EA1C11CD7400173A3A /* xia.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		F0F15E641BB6FCDF00268F06 /* xia4ipad */ = {
+		F0F15E641BB6FCDF00268F06 /* xia */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia4ipad" */;
+			buildConfigurationList = F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia" */;
 			buildPhases = (
 				F0F15E611BB6FCDF00268F06 /* Sources */,
 				F0F15E621BB6FCDF00268F06 /* Frameworks */,
@@ -246,9 +235,9 @@
 			);
 			dependencies = (
 			);
-			name = xia4ipad;
+			name = xia;
 			productName = xia4ipad;
-			productReference = F0F15E651BB6FCDF00268F06 /* xia4ipad.app */;
+			productReference = F0F15E651BB6FCDF00268F06 /* xia.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -275,22 +264,23 @@
 					};
 				};
 			};
-			buildConfigurationList = F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia4ipad" */;
+			buildConfigurationList = F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				fr,
 			);
 			mainGroup = F0F15E5C1BB6FCDE00268F06;
 			productRefGroup = F0F15E661BB6FCDF00268F06 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F0F15E641BB6FCDF00268F06 /* xia4ipad */,
-				F0BBA6DB1C11CD3000173A3A /* xia4ipadTests */,
-				F0BBA6E91C11CD7400173A3A /* xia4ipadUITests */,
+				F0F15E641BB6FCDF00268F06 /* xia */,
+				F0BBA6DB1C11CD3000173A3A /* xiaTests */,
+				F0BBA6E91C11CD7400173A3A /* xiaUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -315,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
+				F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
 				F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */,
@@ -335,20 +326,16 @@
 				F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */,
 				F05103921C21C01700E6C25C /* Util.swift in Sources */,
 				F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */,
-				F0D1FCE91C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */,
 				F05103941C21C01700E6C25C /* ViewDetailInfos.swift in Sources */,
 				F051038E1C21C01700E6C25C /* PhotoThumbnail.swift in Sources */,
 				F051038D1C21C01700E6C25C /* debug.swift in Sources */,
 				F05103971C21C01700E6C25C /* xiaDetail.swift in Sources */,
-				F0EC29B41C678ED1009AE0BA /* ViewDetail.swift in Sources */,
+				F0EC29B41C678ED1009AE0BA /* PlayDetail.swift in Sources */,
 				F05103901C21C01700E6C25C /* PlayXia.swift in Sources */,
-				F0EC29B51C678EDA009AE0BA /* ZoomDetail.swift in Sources */,
-				F0D1FCE61C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */,
-				F05103951C21C01700E6C25C /* ViewImageInfos.swift in Sources */,
-				F0D1FCE01C6B3F3100C8CB38 /* ViewMetasContainer.swift in Sources */,
 				F05103961C21C01700E6C25C /* ViewCreateDetails.swift in Sources */,
-				F0BBA6DF1C11CD3000173A3A /* xia4ipadTests.swift in Sources */,
+				F0BBA6DF1C11CD3000173A3A /* xiaTests.swift in Sources */,
 				F05103911C21C01700E6C25C /* ShapeView.swift in Sources */,
+				F0B560EB1C7E174100E79D55 /* ViewExport.swift in Sources */,
 				F051038B1C21C01700E6C25C /* AEXML.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,17 +357,12 @@
 				F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */,
 				F0F15E6B1BB6FCDF00268F06 /* ViewCollectionController.swift in Sources */,
 				F0E6A6271C777BBE00A1CDF7 /* ViewMetas.swift in Sources */,
-				F0D1FCE81C6B9CE400C8CB38 /* ViewMetasTabC.swift in Sources */,
 				F098E28B1C06391000AB1185 /* PlayXia.swift in Sources */,
 				F0E12B781BED3B7B00F3DFBA /* xiaDetail.swift in Sources */,
+				F0B560EA1C7E174100E79D55 /* ViewExport.swift in Sources */,
 				F0C97ACB1C0C386E0057D802 /* debug.swift in Sources */,
-				F0F798481C4FCC7800E2746A /* ViewMetasTabA.swift in Sources */,
-				F07BACB81C4BC6DB0037CF13 /* ViewDetail.swift in Sources */,
+				F07BACB81C4BC6DB0037CF13 /* PlayDetail.swift in Sources */,
 				F0E9EF651BC29CBB0006A4E5 /* PhotoThumbnail.swift in Sources */,
-				F0E434421C58CC4A007CD7CE /* ZoomDetail.swift in Sources */,
-				F0D1FCE51C6B789E00C8CB38 /* ViewMetasTabB.swift in Sources */,
-				F01979F11C174C1C0035EEDA /* ViewImageInfos.swift in Sources */,
-				F0D1FCDF1C6B3F3100C8CB38 /* ViewMetasContainer.swift in Sources */,
 				F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */,
 				F0F15E7B1BB7097B00268F06 /* ViewCreateDetails.swift in Sources */,
 				F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */,
@@ -393,21 +375,31 @@
 /* Begin PBXTargetDependency section */
 		F0BBA6E21C11CD3000173A3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F0F15E641BB6FCDF00268F06 /* xia4ipad */;
+			target = F0F15E641BB6FCDF00268F06 /* xia */;
 			targetProxy = F0BBA6E11C11CD3000173A3A /* PBXContainerItemProxy */;
 		};
 		F0BBA6F01C11CD7400173A3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F0F15E641BB6FCDF00268F06 /* xia4ipad */;
+			target = F0F15E641BB6FCDF00268F06 /* xia */;
 			targetProxy = F0BBA6EF1C11CD7400173A3A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		F0B560E51C7DAA3300E79D55 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F0B560E61C7DAA3300E79D55 /* Base */,
+				F0B560E81C7DAA9100E79D55 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		F0F15E6C1BB6FCDF00268F06 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				F0F15E6D1BB6FCDF00268F06 /* Base */,
+				F0B560E41C7DA1F900E79D55 /* fr */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -416,6 +408,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F0F15E721BB6FCDF00268F06 /* Base */,
+				F0B560E31C7DA1F900E79D55 /* fr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -431,8 +424,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia4ipad.app/xia4ipad";
+				PRODUCT_NAME = xia;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Debug;
 		};
@@ -444,8 +437,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia4ipad.app/xia4ipad";
+				PRODUCT_NAME = xia;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Release;
 		};
@@ -456,7 +449,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TEST_TARGET_NAME = xia4ipad;
 				USES_XCTRUNNER = YES;
 			};
@@ -469,7 +462,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia4ipadUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TEST_TARGET_NAME = xia4ipad;
 				USES_XCTRUNNER = YES;
 			};
@@ -567,7 +560,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -581,7 +574,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = xia;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
@@ -589,7 +582,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xia4ipadTests" */ = {
+		F0BBA6E51C11CD3000173A3A /* Build configuration list for PBXNativeTarget "xiaTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0BBA6E31C11CD3000173A3A /* Debug */,
@@ -598,7 +591,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xia4ipadUITests" */ = {
+		F0BBA6F11C11CD7400173A3A /* Build configuration list for PBXNativeTarget "xiaUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0BBA6F21C11CD7400173A3A /* Debug */,
@@ -607,7 +600,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia4ipad" */ = {
+		F0F15E601BB6FCDE00268F06 /* Build configuration list for PBXProject "xia" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0F15E751BB6FCDF00268F06 /* Debug */,
@@ -616,7 +609,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia4ipad" */ = {
+		F0F15E771BB6FCDF00268F06 /* Build configuration list for PBXNativeTarget "xia" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F0F15E781BB6FCDF00268F06 /* Debug */,

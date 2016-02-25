@@ -21,7 +21,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
-    var showDetail: Bool = false
+    var showDetails: Bool = false
+    var detailsVisibles: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
     var img: UIImage!
     
@@ -84,7 +85,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
             }
         }
-        hideDetails(true)
+        detailsVisibles = hideDetails(true)
         
         if xml["xia"]["readonly"].value! == "true" {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
@@ -92,35 +93,29 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let touch: UITouch = touches.first!
-        location = touch.locationInView(self.bkgdImage)
-        touchedTag = 0
-        
-        switch showDetail {
-        case true:
-            touchBegin = location
-            break
-        default:
-            // Get tag of the touched detail
-            for detail in details {
-                let (detailTag, detailPoints) = detail
-                if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                    touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                    //let zoom: Bool = btnZoom.on
-                    performSegueWithIdentifier("openDetail", sender: self)
-                    break
-                }
-            }
-            // Show details area if none is touched
-            if touchedTag == 0 {
-                hideDetails(false)
-            }
+        if !detailsVisibles {
+            showDetails = hideDetails(false)
         }
         
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if touchedTag == 0 {
+        let touch: UITouch = touches.first!
+        location = touch.locationInView(self.bkgdImage)
+        touchedTag = 0
+        
+        // Get tag of the touched detail
+        for detail in details {
+            let (detailTag, detailPoints) = detail
+            if (pointInPolygon(detailPoints.points, touchPoint: location)) {
+                touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                //let zoom: Bool = btnZoom.on
+                performSegueWithIdentifier("openDetail", sender: self)
+                break
+            }
+        }
+        
+        if (touchedTag == 0 && detailsVisibles) {
             for subview in view.subviews {
                 if subview.tag == 666 || subview.tag == 667 {
                     subview.removeFromSuperview()
@@ -129,9 +124,13 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                     subview.hidden = false
                 }
             }
-            showDetail = false
-            hideDetails(true)
+            detailsVisibles = hideDetails(true)
         }
+        if !detailsVisibles && showDetails {
+            detailsVisibles = true
+            showDetails = false
+        }
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -141,7 +140,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         if (segue.identifier == "openDetail") {
-            if let controller:ViewDetail = segue.destinationViewController as? ViewDetail {
+            detailsVisibles = hideDetails(true)
+            if let controller:PlayDetail = segue.destinationViewController as? PlayDetail {
                 controller.transitioningDelegate = self
                 controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
@@ -159,13 +159,16 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.bubbleColor = blueColor
         transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
         transition.path = paths[touchedTag]
+        transition.theDetail = details["\(touchedTag)"]
         transition.bkgdImage = bkgdImage
+        transition.duration = 0.5
         return transition
     }
     
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.transitionMode = .Dismiss
-        transition.startingPoint = location
+        transition.startingPoint = CGPointMake(screenWidth / 2, 2 * screenHeight)
+        transition.duration = 0.5
         return transition
     }
     
@@ -173,12 +176,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         navigationController?.popViewControllerAnimated(true)
     }
     
-    func hideDetails(hidden: Bool) {
+    func hideDetails(hidden: Bool) -> Bool {
         for subview in view.subviews {
             if subview.tag > 199 {
                 subview.hidden = hidden
             }
         }
+        
+        return !hidden
     }
     
     func rotated() {

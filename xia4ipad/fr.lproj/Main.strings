@@ -1,0 +1,155 @@
+
+/* Class = "UILabel"; text = "Publisher:"; ObjectID = "0iM-yM-5dr"; */
+"0iM-yM-5dr.text" = "Éditeur :";
+
+/* Class = "UILabel"; text = "Rights:"; ObjectID = "1Jo-GE-FsJ"; */
+"1Jo-GE-FsJ.text" = "Droits :";
+
+/* Class = "UILabel"; text = "Enable Zoom :"; ObjectID = "1eg-c7-9lt"; */
+"1eg-c7-9lt.text" = "Activer le zoom :";
+
+/* Class = "UILabel"; text = "Title:"; ObjectID = "2tJ-dC-njn"; */
+"2tJ-dC-njn.text" = "Titre :";
+
+/* Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ"; */
+"72e-zG-aQJ.text" = "Source :";
+
+/* Class = "UILabel"; text = "Creator:"; ObjectID = "9Qo-Kh-Y2a"; */
+"9Qo-Kh-Y2a.text" = "Auteur :";
+
+/* Class = "UILabel"; text = "Identifier:"; ObjectID = "AFw-Te-aYH"; */
+"AFw-Te-aYH.text" = "Identifiant :";
+
+/* Class = "UINavigationItem"; title = "Title"; ObjectID = "Bz9-wZ-fV4"; */
+"Bz9-wZ-fV4.title" = "Titre";
+
+/* Class = "UILabel"; text = "Relation:"; ObjectID = "CKh-Gp-nNv"; */
+"CKh-Gp-nNv.text" = "Relation :";
+
+/* Class = "UILabel"; text = "Date:"; ObjectID = "CPm-pq-eaL"; */
+"CPm-pq-eaL.text" = "Date :";
+
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "First"; ObjectID = "EUE-hm-iSr"; */
+"EUE-hm-iSr.segmentTitles[0]" = "Premier";
+
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Second"; ObjectID = "EUE-hm-iSr"; */
+"EUE-hm-iSr.segmentTitles[1]" = "Second";
+
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Third"; ObjectID = "EUE-hm-iSr"; */
+"EUE-hm-iSr.segmentTitles[2]" = "Troisième";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Elj-an-Bgi"; */
+"Elj-an-Bgi.normalTitle" = "Boutton";
+
+/* Class = "UILabel"; text = "License:"; ObjectID = "HaU-RO-jTp"; */
+"HaU-RO-jTp.text" = "Licence:";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "HmH-nV-S1b"; */
+"HmH-nV-S1b.text" = "";
+
+/* Class = "UIBarButtonItem"; title = "Collection"; ObjectID = "LBo-27-0LP"; */
+"LBo-27-0LP.title" = "Collection";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "LFL-AM-sdI"; */
+"LFL-AM-sdI.title" = "Éditer";
+
+/* Class = "UIBarButtonItem"; title = "XIA"; ObjectID = "NdE-Wn-yec"; */
+"NdE-Wn-yec.title" = "XIA";
+
+/* Class = "UILabel"; text = "License :"; ObjectID = "OOl-89-UZY"; */
+"OOl-89-UZY.text" = "Licence :";
+
+/* Class = "UILabel"; text = "Languages:"; ObjectID = "Pa1-Lr-9JK"; */
+"Pa1-Lr-9JK.text" = "Langues :";
+
+/* Class = "UILabel"; text = "Identifier:"; ObjectID = "PqV-gI-xQQ"; */
+"PqV-gI-xQQ.text" = "Identifiant :";
+
+/* Class = "UILabel"; text = "Contributors:"; ObjectID = "Qb8-OO-2vj"; */
+"Qb8-OO-2vj.text" = "Collaborateurs :";
+
+/* Class = "UINavigationItem"; title = "Photo Album"; ObjectID = "TDA-2G-8Io"; */
+"TDA-2G-8Io.title" = "Album Photo";
+
+/* Class = "UILabel"; text = "Keywords:"; ObjectID = "TOp-EQ-Cf2"; */
+"TOp-EQ-Cf2.text" = "Mots clés :";
+
+/* Class = "UITextField"; placeholder = "Subtitle..."; ObjectID = "TmQ-jy-TSr"; */
+"TmQ-jy-TSr.placeholder" = "Sous titre ...";
+
+/* Class = "UILabel"; text = "Read Only:"; ObjectID = "Ty8-Oi-H75"; */
+"Ty8-Oi-H75.text" = "Lecture seule :";
+
+/* Class = "UILabel"; text = "Title:"; ObjectID = "UCD-k4-NMh"; */
+"UCD-k4-NMh.text" = "Titre :";
+
+/* Class = "UILabel"; text = "Lock detail :"; ObjectID = "V9p-SZ-4yS"; */
+"V9p-SZ-4yS.text" = "Verrouiller :";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "VlB-Ig-h1b"; */
+"VlB-Ig-h1b.text" = "Label";
+
+/* Class = "UIViewController"; title = "Detail Info"; ObjectID = "cwz-uV-RB1"; */
+"cwz-uV-RB1.title" = "Info";
+
+/* Class = "UILabel"; text = "Rights:"; ObjectID = "fgB-2y-w7g"; */
+"fgB-2y-w7g.text" = "Droits :";
+
+/* Class = "UILabel"; text = "Languages:"; ObjectID = "gEh-52-awz"; */
+"gEh-52-awz.text" = "Langues :";
+
+/* Class = "UILabel"; text = "Contributors:"; ObjectID = "gLO-k7-ciw"; */
+"gLO-k7-ciw.text" = "Collaborateurs :";
+
+/* Class = "UILabel"; text = "Keywords:"; ObjectID = "gsk-9I-6e2"; */
+"gsk-9I-6e2.text" = "Mots clés :";
+
+/* Class = "UITextField"; placeholder = "Detail title..."; ObjectID = "i3A-TS-Y6z"; */
+"i3A-TS-Y6z.placeholder" = "Titre ...";
+
+/* Class = "UILabel"; text = "Source:"; ObjectID = "jEZ-dQ-SXu"; */
+"jEZ-dQ-SXu.text" = "Source :";
+
+/* Class = "UILabel"; text = "Coverage:"; ObjectID = "kQc-PX-Qno"; */
+"kQc-PX-Qno.text" = "Portée :";
+
+/* Class = "UILabel"; text = "Date:"; ObjectID = "kUw-Ha-Bf8"; */
+"kUw-Ha-Bf8.text" = "Date :";
+
+/* Class = "UILabel"; text = "Relation:"; ObjectID = "o0j-WH-kyQ"; */
+"o0j-WH-kyQ.text" = "Relation :";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "o2a-Cq-mW0"; */
+"o2a-Cq-mW0.text" = "Label";
+
+/* Class = "UITextView"; text = "Detail description..."; ObjectID = "pK2-BQ-1RC"; */
+"pK2-BQ-1RC.text" = "Description ...";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "qNg-bF-MbM"; */
+"qNg-bF-MbM.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Full-Size Image"; ObjectID = "tex-5h-mAS"; */
+"tex-5h-mAS.title" = "Full-Size Image";
+
+/* Class = "UILabel"; text = "Coverage:"; ObjectID = "ubQ-BF-bVa"; */
+"ubQ-BF-bVa.text" = "Portée :";
+
+/* Class = "UILabel"; text = "Publisher:"; ObjectID = "vBa-jZ-peo"; */
+"vBa-jZ-peo.text" = "Éditeur :";
+
+/* Class = "UITextView"; text = "text"; ObjectID = "vcV-ky-zXs"; */
+"vcV-ky-zXs.text" = "text";
+
+/* Class = "UIBarButtonItem"; title = "Title"; ObjectID = "x4L-95-X7o"; */
+"x4L-95-X7o.title" = "Titre";
+
+/* Class = "UIViewController"; title = "Play Xia"; ObjectID = "xod-8C-OKb"; */
+"xod-8C-OKb.title" = "Play Xia";
+
+/* Class = "UILabel"; text = "Creator:"; ObjectID = "yao-fD-b5p"; */
+"yao-fD-b5p.text" = "Auteur :";
+
+/* Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH"; */
+"ysm-4r-fEH.text" = "Description :";
+
+"S8B-NA-m8q.text" = "Choisissez votre format";

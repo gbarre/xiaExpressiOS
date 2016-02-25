@@ -1,5 +1,5 @@
 //
-//  ViewPhoto.swift
+//  ViewCreateDetails.swift
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
@@ -9,7 +9,7 @@
 import UIKit
 import MessageUI
 
-class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
+class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -17,6 +17,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
     var filePath: String = ""
+    var fileTitle: String = ""
     
     var location = CGPoint(x: 0, y: 0)
     var movingPoint = -1 // Id of point
@@ -38,221 +39,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     let editColor: UIColor = UIColor.redColor()
     let noEditColor: UIColor = UIColor.greenColor()
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
-    
-    @IBAction func btnCancel(sender: AnyObject) {
-        self.navigationController?.popToRootViewControllerAnimated(true)
-    }
-    
-    @IBOutlet weak var btnTitleLabel: UIBarButtonItem!
-    @IBAction func btnTitle(sender: AnyObject) {
-        performSegueWithIdentifier("viewMetas", sender: self)
-    }
-    
-    
-    @IBAction func btnPlay(sender: AnyObject) {
-    }
-    
-    @IBAction func btnAddDetail(sender: UIBarButtonItem) {
-        // Prepare new detail
-        let lastDetailTag = self.xml["xia"]["details"]["detail"].last
-        if lastDetailTag != nil {
-            self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
-        }
-        else {
-            self.currentDetailTag = 100
-        }
-        let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
-        let attributes = ["tag" : "\(self.currentDetailTag)",
-            "zoom" : "false",
-            "title" : "detail \(self.currentDetailTag)",
-            "path" : "0;0"]
-        
-        // Build menu
-        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let rectangleAction = UIAlertAction(title: "Rectangle", style: .Default, handler: { action in
-            // Create new detail
-            self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
-            
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
-            self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag)
-            
-            // Now build the rectangle
-            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
-            newPoint0?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint0!)
-            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
-            newPoint1?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint1!)
-            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
-            newPoint2?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint2!)
-            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
-            newPoint3?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
-            
-            self.stopCreation()
-            
-            // Save the detail in xml
-            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
-                for d in detail {
-                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
-                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
-                }
-            }
-            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
-        })
-        let ellipseAction = UIAlertAction(title: "Ellipse", style: .Default, handler: { action in
-            // Create new detail
-            self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
-            
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
-            self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag)
-            
-            // Now build the rectangle
-            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
-            newPoint0?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint0!)
-            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner")
-            newPoint1?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint1!)
-            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner")
-            newPoint2?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint2!)
-            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
-            newPoint3?.layer.zPosition = 1
-            self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
-            
-            self.stopCreation()
-            
-            // Save the detail in xml
-            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
-                for d in detail {
-                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
-                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
-                }
-            }
-            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
-        })
-        let polygonAction = UIAlertAction(title: "Polygon", style: .Default, handler: { action in
-            // Create new detail object
-            self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
-            self.xml["xia"]["details"].addChild(name: "detail", value: "detail \(self.currentDetailTag) description", attributes: attributes)
-            self.createDetail = true
-            self.changeDetailColor(self.currentDetailTag)
-            self.setBtnsIcons()
-        })
-        let attributedTitle = NSAttributedString(string: "Create detail...", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
-            NSForegroundColorAttributeName : UIColor.blackColor()
-            ])
-        menu.setValue(attributedTitle, forKey: "attributedTitle")
-        
-        rectangleAction.setValue(UIImage(named: "rectangle"), forKey: "image")
-        ellipseAction.setValue(UIImage(named: "ellipse"), forKey: "image")
-        polygonAction.setValue(UIImage(named: "polygon"), forKey: "image")
-        menu.addAction(rectangleAction)
-        menu.addAction(ellipseAction)
-        menu.addAction(polygonAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.barButtonItem = sender
-            ppc.permittedArrowDirections = .Up
-        }
-        
-        presentViewController(menu, animated: true, completion: nil)
-    }
-    
-    @IBOutlet weak var btnInfos: UIBarButtonItem!
-    @IBAction func btnDetailInfos(sender: AnyObject) {
-        detailToSegue = currentDetailTag
-        performSegueWithIdentifier("ViewDetailInfos", sender: self)
-    }
-    
-    @IBAction func btnTrash(sender: AnyObject) {
-        let detailTag = self.currentDetailTag
-        if ( detailTag != 0 ) {
-            stopCreation()
-            performFullDetailRemove(detailTag, force: true)
-            setBtnsIcons()
-        }
-    }
-    
-    @IBAction func btnExport(sender: AnyObject) {
-        // encode image to base64
-        let imageData = UIImageJPEGRepresentation(imgView.image!, 85)
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
-        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
-        
-        // prepare xml
-        let xiaXML = AEXMLDocument()
-        xiaXML.addChild(name: "XiaiPad")
-        xiaXML["XiaiPad"].addChild(xml["xia"])
-        xiaXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String, attributes: nil)
-        
-        // write xml to temp directory
-        let now:Int = Int(NSDate().timeIntervalSince1970)
-        let tempFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
-        do {
-            try xiaXML.xmlString.writeToFile(tempFilePath, atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
-        
-        let mailComposer = MFMailComposeViewController()
-        mailComposer.mailComposeDelegate = self
-        //Check to see the device can send email.
-        if( MFMailComposeViewController.canSendMail() ) {
-            //Set the subject and message of the email
-            let xiaTitle = (xml["xia"]["title"].value == nil) ? "\(now)" : xml["xia"]["title"].value!
-            mailComposer.setSubject("[xia iPad] export \"\(xiaTitle)\"")
-            mailComposer.setMessageBody("", isHTML: false)
-            
-            if let fileData = NSData(contentsOfFile: tempFilePath) {
-                mailComposer.addAttachmentData(fileData, mimeType: "text/xml", fileName: "\(now).xml")
-            }
-            else {
-                let alert = UIAlertController(title: "Export issue", message: "Sorry, we are unable to export your resource...", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-            self.presentViewController(mailComposer, animated: true, completion: nil)
-        }
-        else {
-            dbg.pt("Device cannot send mail")
-        }
-        
-        // remove tmp file
-        do {
-            try NSFileManager().removeItemAtPath(tempFilePath)
-        }
-        catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-    }
-    
-    @IBAction func btnUndo(sender: AnyObject) {
-        if details["\(currentDetailTag)"]?.points.count > 3 {
-            // remove last point
-            details["\(currentDetailTag)"]?.points.last?.removeFromSuperview()
-            details["\(currentDetailTag)"]?.points.removeLast()
-            
-            // Remove old polygon
-            for subview in imgView.subviews {
-                if subview.tag == (currentDetailTag + 100) {
-                    subview.removeFromSuperview()
-                }
-            }
-            buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(currentDetailTag)"]!.points, parentView: imgView, locked: details["\(currentDetailTag)"]!.locked)
-        }
-    }
     
     @IBAction func btnMetas(sender: AnyObject) {
         performSegueWithIdentifier("viewMetas", sender: self)
@@ -295,9 +81,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
-        
-        // Disable detail info
-        btnInfos.enabled = false
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -387,7 +170,7 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
-            btnTitleLabel.title = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
+            fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         }
         cleaningDetails()
         setBtnsIcons()
@@ -660,8 +443,6 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
-        setBtnsIcons()
-        
         switch createDetail {
         case true:
             moveDetail = false
@@ -678,6 +459,8 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             }
             break
         }
+        
+        setBtnsIcons()
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -702,39 +485,26 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewDetailInfos = segue.destinationViewController as? ViewDetailInfos {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
-                        let zoomStatus: Bool = (d.attributes["zoom"] == "true") ? true : false
-                        controller.zoom = zoomStatus
-                        let lockStatus: Bool = (d.attributes["locked"] == "true") ? true : false
-                        controller.lock = lockStatus
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
+                        controller.detailSubtitle = (d.attributes["subtitle"] == nil) ? "" : d.attributes["subtitle"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
+                        controller.zoom = (d.attributes["zoom"] != nil && d.attributes["zoom"] == "true") ? true : false
+                        controller.lock = (d.attributes["locked"] != nil && d.attributes["locked"] == "true") ? true : false
                         controller.tag = self.detailToSegue
                         controller.xml = self.xml
                         controller.index = self.index
                         controller.filePath = filePath
-                        controller.viewPhotoController = self
+                        controller.ViewCreateDetailsController = self
                     }
                 }
             }
         }
-        /*if (segue.identifier == "ViewImageInfos") {
-            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
-                controller.imageTitle = (xml["xia"]["title"].value == nil) ? "" : xml["xia"]["title"].value!
-                controller.imageCreator = (xml["xia"]["creator"].value == nil) ? "" : xml["xia"]["creator"].value!
-                controller.imageRights = (xml["xia"]["rights"].value == nil) ? "" : xml["xia"]["rights"].value!
-                controller.imageDesc = (xml["xia"]["description"].value == nil) ? "" : xml["xia"]["description"].value!
-                let readonlyStatus: Bool = (xml["xia"]["readonly"].value == "true" ) ? true : false
-                controller.readOnlyState = readonlyStatus
-                controller.fileName = self.fileName
-                controller.filePath = self.filePath
-                controller.xml = xml
-                controller.viewPhotoController = self
-            }
-        }*/
         if (segue.identifier == "viewMetas") {
-            if let controller:ViewMetasContainer = segue.destinationViewController as? ViewMetasContainer {
-                controller.xml = xml
+            if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
+                controller.xml = self.xml
                 controller.filePath = self.filePath
+                controller.landscape = landscape
+                controller.ViewCreateDetailsController = self
             }
         }
         if (segue.identifier == "playXia") {
@@ -744,6 +514,137 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = self.xml
             }
         }
+        if (segue.identifier == "viewExport") {
+            if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                controller.filePath = filePath
+                controller.xml = self.xml
+                controller.imgView = self.imgView
+            }
+        }
+    }
+    
+    func addDetail(sender: UIBarButtonItem) {
+        // Prepare new detail
+        let lastDetailTag = self.xml["xia"]["details"]["detail"].last
+        if lastDetailTag != nil {
+            self.currentDetailTag = (NSNumberFormatter().numberFromString((lastDetailTag?.attributes["tag"]!)!)?.integerValue)! + 1
+        }
+        else {
+            self.currentDetailTag = 100
+        }
+        let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
+        let attributes = ["tag" : "\(self.currentDetailTag)",
+            "zoom" : "false",
+            "title" : "\(NSLocalizedString("DETAIL", comment: "")) \(self.currentDetailTag - 99)",
+            "path" : "0;0"]
+        
+        // Build menu
+        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        let rectangleAction = UIAlertAction(title: NSLocalizedString("RECTANGLE", comment: ""), style: .Default, handler: { action in
+            // Create new detail
+            self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
+            
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag)
+            
+            // Now build the rectangle
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
+            newPoint1?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint1!)
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
+            newPoint2?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint2!)
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
+            newPoint3?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint3!)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
+            
+            self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+        })
+        let ellipseAction = UIAlertAction(title: NSLocalizedString("ELLIPSE", comment: ""), style: .Default, handler: { action in
+            // Create new detail
+            self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
+            
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag)
+            
+            // Now build the rectangle
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
+            newPoint0?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint0!)
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner")
+            newPoint1?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint1!)
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner")
+            newPoint2?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint2!)
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
+            newPoint3?.layer.zPosition = 1
+            self.imgView.addSubview(newPoint3!)
+            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
+            
+            self.stopCreation()
+            
+            // Save the detail in xml
+            if let detail = self.xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.currentDetailTag)"]) {
+                for d in detail {
+                    d.attributes["path"] = (self.details["\(self.currentDetailTag)"]?.createPath())!
+                    d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
+                }
+            }
+            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+        })
+        let polygonAction = UIAlertAction(title: NSLocalizedString("POLYGON", comment: ""), style: .Default, handler: { action in
+            // Create new detail object
+            self.details["\(self.currentDetailTag)"] = newDetail
+            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
+            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.createDetail = true
+            self.changeDetailColor(self.currentDetailTag)
+            self.setBtnsIcons()
+            
+            // Disable other gesture
+            if let recognizers = self.view.gestureRecognizers {
+                for recognizer in recognizers {
+                    self.view.removeGestureRecognizer(recognizer)
+                }
+            }
+        })
+        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_DETAIL", comment: ""), attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
+            NSForegroundColorAttributeName : UIColor.blackColor()
+            ])
+        menu.setValue(attributedTitle, forKey: "attributedTitle")
+        
+        rectangleAction.setValue(UIImage(named: "rectangle"), forKey: "image")
+        ellipseAction.setValue(UIImage(named: "ellipse"), forKey: "image")
+        polygonAction.setValue(UIImage(named: "polygon"), forKey: "image")
+        menu.addAction(rectangleAction)
+        menu.addAction(ellipseAction)
+        menu.addAction(polygonAction)
+        
+        if let ppc = menu.popoverPresentationController {
+            ppc.barButtonItem = sender
+            ppc.permittedArrowDirections = .Up
+        }
+        
+        presentViewController(menu, animated: true, completion: nil)
     }
     
     func changeDetailColor(tag: Int) {
@@ -815,6 +716,15 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    func deleteDetail() {
+        let detailTag = self.currentDetailTag
+        if ( detailTag != 0 ) {
+            stopCreation()
+            performFullDetailRemove(detailTag, force: true)
+            setBtnsIcons()
+        }
+    }
+    
     func detailInfos() {
         moveDetail = false
         movingPoint = -1
@@ -828,6 +738,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    func export() {
+        performSegueWithIdentifier("viewExport", sender: self)
+    }
+    
     func goBack() {
         navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -838,6 +752,10 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func openMetas() {
+        performSegueWithIdentifier("viewMetas", sender: self)
     }
     
     func performFullDetailRemove(tag: Int, force: Bool = false) {
@@ -863,6 +781,24 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    func polygonUndo() {
+        let detailTag = self.currentDetailTag
+        if details["\(detailTag)"]?.points.count > 3 {
+            // remove last point
+            details["\(detailTag)"]?.points.last?.removeFromSuperview()
+            details["\(detailTag)"]?.points.removeLast()
+            
+            // Remove old polygon
+            for subview in imgView.subviews {
+                if subview.tag == (currentDetailTag + 100) {
+                    subview.removeFromSuperview()
+                }
+            }
+            buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(detailTag)"]!.points, parentView: imgView, locked: details["\(detailTag)"]!.locked)
+        }
+        setBtnsIcons()
+    }
+    
     func rotated() {
         if(UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation))
         {
@@ -882,49 +818,39 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func setBtnsIcons() {
-        var i = 0
-        var btn = UIBarButtonItem()
-        var arrayItems = myToolbar.items!
-        for item in myToolbar.items! {
-            if item.tag == 10 { // play/STOP btn
-                if createDetail {
-                    btn = UIBarButtonItem(title: "OK", style: .Done, target: self, action: "stopCreation")
-                }
-                else {
-                    btn = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "goForward")
-                }
-            }
-            else if item.tag == 11 { // add detail btn
-                btn = item
-            }
-            else if item.tag == 12 { // info detail btn
-                btn = item
-                btn.enabled = (createDetail || currentDetailTag == 0) ? false : true
-            }
-            else if item.tag == 13 { // trash btn
-                btn = item
-                btn.enabled = (currentDetailTag == 0 || details["\(currentDetailTag)"]!.locked ) ? false : true
-            }
-            else if item.tag == 14 { // undo btn (remove last point of polygon)
-                btn = item
-                btn.enabled = (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) ? true : false
-            }
-            else if item.tag == 20 { // export btn
-                btn = item
-            }
-            else {
-                btn = item
-            }
-            btn.tag = item.tag
-            arrayItems[i] = btn
-            i++
+        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil)
+        fixedSpace.width = 15.0
+        var items = [UIBarButtonItem]()
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: "goBack"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(title: fileTitle, style: .Plain, target: self, action: "openMetas"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addDetail:"))
+        items.append(fixedSpace)
+        if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) {
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: "polygonUndo"))
+            items.append(fixedSpace)
         }
-        myToolbar.setItems(arrayItems, animated: false)
+        if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Trash, target: self, action: "deleteDetail"))
+            items.append(fixedSpace)
+        }
+        if createDetail {
+            items.append(UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: "stopCreation"))
+        }
+        else {
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Play, target: self, action: "goForward"))
+        }
+        items.append(fixedSpace)
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "export"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
+        
+        myToolbar.items = items
     }
     
     func stopCreation() {
         createDetail = false
-        btnInfos.enabled = true
         performFullDetailRemove(currentDetailTag)
         if details["\(currentDetailTag)"]?.constraint == "polygon" {
             currentDetailTag = 0
@@ -932,5 +858,11 @@ class ViewPhoto: UIViewController, MFMailComposeViewControllerDelegate {
             imgTopBarBkgd.backgroundColor = blueColor
         }
         setBtnsIcons()
+        
+        // Add double tap gesture
+        let dSelector : Selector = "detailInfos"
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
+        doubleTapGesture.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTapGesture)
     }
 }

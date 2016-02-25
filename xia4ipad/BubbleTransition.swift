@@ -51,7 +51,7 @@ public class BubbleTransition: NSObject {
     
     /**
     The transition duration. The same value is used in both the Present or Dismiss actions
-    Defaults to `0.5`
+    Defaults to `1.0`
     */
     public var duration = 1.0
     
@@ -83,7 +83,7 @@ public class BubbleTransition: NSObject {
     public var detailFrame: CGRect!
     public var path: UIBezierPath!
     public var bkgdImage: UIImageView!
-    public var zoom = false
+    var theDetail: xiaDetail!
     
     private var detail = UIImageView()
     
@@ -122,43 +122,25 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             containerView.addSubview(bubble)
             
 
-            presentedControllerView.center = startingPoint
-            presentedControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+            presentedControllerView.center = CGPointMake(0, UIScreen.mainScreen().bounds.height)
+            presentedControllerView.transform = CGAffineTransformMakeScale(1, 1)
             presentedControllerView.alpha = 0
             containerView.addSubview(presentedControllerView)
             
-            var tmpImg: UIImageView
-            if zoom {
-                let distX: CGFloat = getCenter().x - detailFrame.midX
-                let distY: CGFloat = getCenter().y - detailFrame.midY
-                tmpImg = UIImageView(frame: CGRect(x: distX, y: distY, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
-                tmpImg.contentMode = UIViewContentMode.ScaleAspectFit
-                tmpImg.image = bkgdImage.image
-            }
-            else {
-                tmpImg = UIImageView(frame: bkgdImage.frame)
-                tmpImg.contentMode = UIViewContentMode.ScaleAspectFit
-                tmpImg.image = bkgdImage.image
-            }
             UIView.animateWithDuration(duration, animations: {
                 self.bubble.transform = CGAffineTransformIdentity
                 presentedControllerView.transform = CGAffineTransformIdentity
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
-                self.detail = self.showImage(transitionContext, fullImage: tmpImg, path: self.path, pathFrameCorners: self.detailFrame, zoom: self.zoom)
+                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, myDetail: self.theDetail)
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
-            
-            UIView.animateWithDuration(0.5, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
-                //self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
+            UIView.animateWithDuration(1 * duration, delay: duration/5, options: .ShowHideTransitionViews, animations: { () -> Void in
                 self.bubble.alpha = 0
                 }, completion: nil)
-            
-            UIView.animateWithDuration(1.5, delay: 0.9, options: .ShowHideTransitionViews, animations: { () -> Void in
-                if !self.zoom {
-                    self.detail.alpha = 0
-                }
+            UIView.animateWithDuration(duration, delay: duration, options: .ShowHideTransitionViews, animations: { () -> Void in
+                self.detail.alpha = 0
                 }, completion: nil)
             
         } else {
@@ -166,21 +148,17 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
             let returningControllerView = transitionContext.viewForKey(key)!
             let originalCenter = returningControllerView.center
             let originalSize = returningControllerView.frame.size
-
+            
             bubble.frame = frameForBubble(originalCenter, size: originalSize, start: startingPoint)
             bubble.layer.cornerRadius = bubble.frame.size.height / 2
             bubble.center = startingPoint
-
+            
             UIView.animateWithDuration(duration, animations: {
                 self.bubble.transform = CGAffineTransformMakeScale(0.001, 0.001)
-                returningControllerView.transform = CGAffineTransformMakeScale(0.001, 0.001)
+                returningControllerView.transform = CGAffineTransformMakeScale(1, 1)
                 returningControllerView.center = self.startingPoint
                 returningControllerView.alpha = 0
-                if self.zoom {
-                    self.detail.center = getCenter()
-                    self.detail.transform = CGAffineTransformMakeScale(0.001, 0.001)
-                }
-
+                
                 if self.transitionMode == .Pop {
                     containerView.insertSubview(returningControllerView, belowSubview: returningControllerView)
                     containerView.insertSubview(self.bubble, belowSubview: returningControllerView)
@@ -193,9 +171,9 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, path: UIBezierPath, pathFrameCorners: CGRect, zoom: Bool) -> UIImageView {
-        let screenWidth = UIScreen.mainScreen().bounds.width
-        let screenHeight = UIScreen.mainScreen().bounds.height
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject) -> UIImageView {
+        let path = (myDetail as! xiaDetail).bezierPath()
+        let pathFrameCorners = (myDetail as! xiaDetail).bezierFrame()
         let imgThumb: UIImageView = UIImageView(frame: fullImage.frame)
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = fullImage.image
@@ -210,35 +188,20 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         imgThumb.layer.mask = myMask
         containerView.addSubview(imgThumb)
         
-        var detailScale: CGFloat = 1.0
-        if zoom {
-            let detailScaleX = (screenWidth - 10) / pathFrameCorners.width
-            let detailScaleY = (screenHeight - 50) / pathFrameCorners.height
-            detailScale = min(detailScaleX, detailScaleY, 3) // 3 is maximum zoom
-        }
-        else { // Scaling cropped image to fit in the 200 x 200 square
-            let detailScaleX = 190 / pathFrameCorners.width
-            let detailScaleY = 190 / pathFrameCorners.height
-            detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
-        }
+        // Scaling cropped image to fit in the 200 x 200 square
+        let detailScaleX = 190 / pathFrameCorners.width
+        let detailScaleY = 190 / pathFrameCorners.height
+        let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
         imgThumb.transform = CGAffineTransformScale(imgThumb.transform, detailScale, detailScale)
         
-        var newCenter = CGPointMake(0, 0)
-        if zoom {
-            let distanceX = screenWidth/2 - pathFrameCorners.midX
-            let distanceY = screenHeight/2 - pathFrameCorners.midY
-            
-            newCenter = CGPointMake(imgThumb.center.x + distanceX * detailScale - fullImage.frame.origin.x, imgThumb.center.y + distanceY * detailScale - fullImage.frame.origin.y)
-        }
-        else {
-            let centerTarget = getCenter()
-            let pathCenter = CGPointMake(pathFrameCorners.midX * detailScale, pathFrameCorners.midY * detailScale)
-            newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + centerTarget.x, imgThumb.center.y * detailScale - pathCenter.y + centerTarget.y)
-        }
+        let centerTarget = getCenter()
+        let pathCenter = CGPointMake(pathFrameCorners.midX * detailScale, pathFrameCorners.midY * detailScale)
+        let newCenter = CGPointMake(imgThumb.center.x * detailScale - pathCenter.x + centerTarget.x, imgThumb.center.y * detailScale - pathCenter.y + centerTarget.y)
         imgThumb.center = newCenter
         
         return imgThumb
     }
+    
 }
 
 private extension BubbleTransition {

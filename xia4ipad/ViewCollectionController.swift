@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ViewCollectionController.swift
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -27,12 +27,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
-    var landscape = false
+    var landscape: Bool = false
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     @IBAction func btnCreate(sender: AnyObject) {
         let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let cameraAction = UIAlertAction(title: "Take a photo", style: .Default, handler: { action in
+        let cameraAction = UIAlertAction(title: NSLocalizedString("TAKE_PHOTO", comment: ""), style: .Default, handler: { action in
             if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
                 //load the camera interface
                 let picker : UIImagePickerController = UIImagePickerController()
@@ -44,14 +44,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }
             else{
                 //no camera available
-                let alert = UIAlertController(title: "Error", message: "There is no camera available", preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: {(alertAction)in
+                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
                     alert.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
         })
-        let libraryAction = UIAlertAction(title: "Search in Photos", style: .Default, handler: { action in
+        let libraryAction = UIAlertAction(title: NSLocalizedString("SEARCH_IN_PHOTOS", comment: ""), style: .Default, handler: { action in
             let picker : UIImagePickerController = UIImagePickerController()
             picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
@@ -64,7 +64,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
             picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
         })
-        let attributedTitle = NSAttributedString(string: "Create new document", attributes: [
+        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_NEW_DOC", comment: ""), attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
             NSForegroundColorAttributeName : UIColor.blackColor()
             ])
@@ -99,7 +99,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBAction func btnEdit(sender: AnyObject) {
         if editingMode {
             editingMode = false
-            self.editMode.title = "Edit"
+            self.editMode.title = NSLocalizedString("EDIT", comment: "")
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(false)
@@ -109,7 +109,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         else {
             editingMode = true
-            self.editMode.title = "Done"
+            self.editMode.title = NSLocalizedString("DONE", comment: "")
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
@@ -160,27 +160,24 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segueIndex == -1 {
+            segueIndex = 0
+        }
         let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
-            if let controller:ViewPhoto = segue.destinationViewController as? ViewPhoto {
+            if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
             }
         }
-        if (segue.identifier == "ViewImageInfos") {
-            if let controller:ViewImageInfos = segue.destinationViewController as? ViewImageInfos {
-                controller.imageTitle = (xmlToSegue["xia"]["title"].value == nil) ? "" : xmlToSegue["xia"]["title"].value!
-                controller.imageCreator = (xmlToSegue["xia"]["creator"].value == nil) ? "" : xmlToSegue["xia"]["creator"].value!
-                controller.imageRights = (xmlToSegue["xia"]["rights"].value == nil) ? "" : xmlToSegue["xia"]["rights"].value!
-                controller.imageDesc = (xmlToSegue["xia"]["description"].value == nil) ? "" : xmlToSegue["xia"]["description"].value!
-                let readonlyStatus: Bool = (xmlToSegue["xia"]["readonly"].value == "true" ) ? true : false
-                controller.readOnlyState = readonlyStatus
-                controller.fileName = nameToSegue
-                controller.filePath = pathToSegue
+        if (segue.identifier == "viewMetas") {
+            if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = xmlToSegue
+                controller.filePath = pathToSegue
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "playXia") {
@@ -188,7 +185,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
-                controller.landscape = self.landscape
+                controller.landscape = landscape
             }
         }
     }
@@ -286,9 +283,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
             let fileName = arrayNames[deleteIndex]
             
-            let controller = UIAlertController(title: "Warning!",
-                message: "Delete \(fileName)?", preferredStyle: .Alert)
-            let yesAction = UIAlertAction(title: "Yes, I'm sure!",
+            let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
+                message: "\(NSLocalizedString("DELETE", comment: ""))\(fileName)\(NSLocalizedString("?", comment: ""))", preferredStyle: .Alert)
+            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""),
                 style: .Destructive, handler: { action in
                     
                     // Delete the file
@@ -310,17 +307,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     self.CollectionView.deleteItemsAtIndexPaths([path])
                     
                     // Information
-                    let msg = "\(fileName) has been deleted..."
+                    let msg = "\(fileName)\(NSLocalizedString("DELETED", comment: ""))"
                     let controller2 = UIAlertController(
                         title:nil,
                         message: msg, preferredStyle: .Alert)
-                    let cancelAction = UIAlertAction(title: "OK",
+                    let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""),
                         style: .Default , handler: nil)
                     controller2.addAction(cancelAction)
                     self.presentViewController(controller2, animated: true,
                         completion: nil)
             })
-            let noAction = UIAlertAction(title: "No way!",
+            let noAction = UIAlertAction(title: NSLocalizedString("NO", comment: ""),
                 style: .Cancel, handler: nil)
             
             controller.addAction(yesAction)
@@ -344,7 +341,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if let path = indexPath {
             segueIndex = path.row
             if editingMode {
-                performSegueWithIdentifier("ViewImageInfos", sender: self)
+                performSegueWithIdentifier("viewMetas", sender: self)
             }
             else {
                 let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
@@ -382,9 +379,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer, contextInfo:UnsafePointer<Void>) {
         if error != nil {
-            let alert = UIAlertController(title: "Save Failed", message: "Failed to save image", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("IMAGE_SAVE_FAILED", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
             
-            let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Cancel, handler: nil)
             
             alert.addAction(cancelAction)
             self.presentViewController(alert, animated: true, completion: nil)
