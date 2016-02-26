@@ -517,8 +517,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if (segue.identifier == "viewExport") {
             if let controller:ViewExport = segue.destinationViewController as? ViewExport {
                 controller.filePath = filePath
+                controller.fileName = fileName
                 controller.xml = self.xml
-                controller.imgView = self.imgView
             }
         }
     }
