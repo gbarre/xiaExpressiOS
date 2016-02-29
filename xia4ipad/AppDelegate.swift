@@ -83,8 +83,85 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 break
             case "svg":
-                dbg.pt("try to import svg file")
-                errorAtSVGImport = false
+                if xml["svg"]["image"].attributes["xlink:href"] != nil {
+                    // convert base64 to image
+                    let b64Chain = xml["svg"]["image"].attributes["xlink:href"]!.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "")
+                    let imageDataB64 = NSData(base64EncodedString: b64Chain, options : .IgnoreUnknownCharacters)
+                    let image = UIImage(data: imageDataB64!)
+                    // store new image to document directory
+                    let imageData = UIImageJPEGRepresentation(image!, 85)
+                    if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                        errorAtImageImport = false
+                    }
+                }
+                // build the xia xml
+                if !errorAtImageImport {
+                    let xmlXIA = AEXMLDocument()
+                    xmlXIA.addChild(name: "xia")
+                    let metas = ["title" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:title"]),
+                        "description" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:description"]),
+                        "creator" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"]["cc:Agent"]["dc:title"]),
+                        "rights" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"]["cc:Agent"]["dc:title"]),
+                        "date" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:date"]),
+                        "publisher" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"]["cc:Agent"]["dc:title"]),
+                        "identifier" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:identifier"]),
+                        "source" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:source"]),
+                        "relation" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:relation"]),
+                        "language" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:language"]),
+                        "keywords" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"]["rdf:Bag"]["rdf:li"]),
+                        "coverage" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:coverage"]),
+                        "contributors" : getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"]["cc:Agent"]["dc:title"])
+                    ]
+                    
+                    for (thisName, thisValue) in metas {
+                        xmlXIA["xia"].addChild(name: thisName, value: thisValue, attributes: nil)
+                    }
+                    xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "12343"])
+                    let license = getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"])
+                    switch license {
+                    case "http://creativecommons.org/licenses/by/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution - CC-BY", attributes: nil)
+                        break
+                    case "http://creativecommons.org/licenses/by-sa/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution-ShareALike - CC-BY-SA", attributes: nil)
+                        break
+                    case "http://creativecommons.org/licenses/by-nd/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution-NoDerivs - CC-BY-ND", attributes: nil)
+                        break
+                    case "http://creativecommons.org/licenses/by-nc/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution-NonCommercial - CC-BY-NC", attributes: nil)
+                        break
+                    case "http://creativecommons.org/licenses/by-nc-sa/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution-NonCommercial-ShareALike - CC-BY-NC-SA", attributes: nil)
+                        break
+                    case "http://creativecommons.org/licenses/by-nc-nd/3.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC Attribution-NonCommercial-NoDerivs - CC-BY-NC-ND", attributes: nil)
+                        break
+                    case "http://creativecommons.org/publicdomain/zero/1.0/":
+                        xmlXIA["xia"].addChild(name: "license", value: "CC0 Public Domain Dedication", attributes: nil)
+                        break
+                    case "http://artlibre.org/licence/lal":
+                        xmlXIA["xia"].addChild(name: "license", value: "Free Art", attributes: nil)
+                        break
+                    case "http://scripts.sil.org/OFL":
+                        xmlXIA["xia"].addChild(name: "license", value: "Open Font License", attributes: nil)
+                        break
+                    default:
+                        xmlXIA["xia"].addChild(name: "license", value: "Other", attributes: nil)
+                        break
+                    }
+                    
+                    
+                    // Store the xia xml
+                    let xmlString = xmlXIA.xmlString
+                    do {
+                        try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                        errorAtSVGImport = false
+                    }
+                    catch {
+                        dbg.pt("\(error)")
+                    }
+                }
                 break
             default:
                 break
@@ -105,7 +182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // something was wrong
-        if errorAtXMLImport {
+        if errorAtXMLImport && errorAtSVGImport {
             do {
                 try fileManager.removeItemAtPath("\(documentRoot)/\(now).jpg")
             }
@@ -115,6 +192,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         return true
+    }
+    
+    func getElementValue(element: AEXMLElement) -> String {
+        if (element.value != nil && element.value! != "element <\(element)> not found") {
+            return element.value!
+        }
+        else {
+            return ""
+        }
     }
 
 }
