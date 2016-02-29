@@ -720,16 +720,16 @@
                                 <rect key="frame" x="421" y="229" width="120" height="30"/>
                                 <state key="normal" title="Autre..."/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qiJ-9Y-ftz">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qiJ-9Y-ftz">
                                 <rect key="frame" x="63" y="121" width="120" height="100"/>
-                                <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" image="export_tablet"/>
                                 <connections>
                                     <action selector="exportSimpleXML:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="Cfl-iv-WKP"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uf5-A3-AVp">
-                                <rect key="frame" x="240" y="121" width="120" height="100"/>
-                                <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uf5-A3-AVp">
+                                <rect key="frame" x="250" y="121" width="100" height="100"/>
+                                <state key="normal" image="inkscape"/>
                                 <connections>
                                     <action selector="exportSVG:" destination="Mn2-Ut-VnD" eventType="touchUpInside" id="TR6-qz-dEV"/>
                                 </connections>
@@ -1208,7 +1208,9 @@
         <image name="bubble" width="100" height="100"/>
         <image name="delete" width="50" height="50"/>
         <image name="disque-4" width="75" height="75"/>
+        <image name="export_tablet" width="120" height="100"/>
         <image name="help" width="25" height="25"/>
+        <image name="inkscape" width="100" height="100"/>
         <image name="uncheckedbox" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>

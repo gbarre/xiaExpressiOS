@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = url.standardizedURL
         var errorAtImageImport = true
         var errorAtXMLImport = true
+        var errorAtSVGImport = true
         let now:Int = Int(NSDate().timeIntervalSince1970)
         let documentRoot = NSHomeDirectory() + "/Documents"
         
@@ -53,29 +54,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var path = url!.path!
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
             let xml = getXML(path, check: false)
-            if (xml["XiaiPad"]["image"].value != "element <image> not found") {
-                // convert base64 to image
-                let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
-                let image = UIImage(data: imageDataB64!)
-                // store new image to document directory
-                let imageData = UIImageJPEGRepresentation(image!, 85)
-                if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
-                    errorAtImageImport = false
+            let ext = path.substringWithRange(Range<String.Index>(start: path.endIndex.advancedBy(-3), end: path.endIndex.advancedBy(0)))
+            switch (ext) {
+            case "xml": // The document was created by a tablet
+                if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+                    // convert base64 to image
+                    let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
+                    let image = UIImage(data: imageDataB64!)
+                    // store new image to document directory
+                    let imageData = UIImageJPEGRepresentation(image!, 85)
+                    if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                        errorAtImageImport = false
+                    }
                 }
-            }
-            
-            // store the xia xml
-            if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
-                let xmlXIA = AEXMLDocument()
-                xmlXIA.addChild(xml["XiaiPad"]["xia"])
-                let xmlString = xmlXIA.xmlString
-                do {
-                    try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-                    errorAtXMLImport = false
+                
+                // store the xia xml
+                if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+                    let xmlXIA = AEXMLDocument()
+                    xmlXIA.addChild(xml["XiaiPad"]["xia"])
+                    let xmlString = xmlXIA.xmlString
+                    do {
+                        try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                        errorAtXMLImport = false
+                    }
+                    catch {
+                        dbg.pt("\(error)")
+                    }
                 }
-                catch {
-                    dbg.pt("\(error)")
-                }
+                break
+            case "svg":
+                dbg.pt("try to import svg file")
+                errorAtSVGImport = false
+                break
+            default:
+                break
             }
         }
         // purge Inbox

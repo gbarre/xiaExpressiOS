@@ -8,9 +8,27 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
-			<array/>
+			<array>
+				<string>ipad_noir_80.png</string>
+			</array>
 			<key>CFBundleTypeName</key>
-			<string>xml</string>
+			<string>svg File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.example.document.svg</string>
+			</array>
+		</dict>
+		<dict>
+            <key>CFBundleTypeIconFiles</key>
+            <array>
+                <string>ipad_noir_80.png</string>
+            </array>
+            <key>CFBundleTypeName</key>
+			<string>xml file</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.xml</string>
@@ -66,5 +84,25 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>svg File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.example.document.svg</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>svg</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
