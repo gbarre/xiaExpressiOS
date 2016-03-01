@@ -269,6 +269,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             }
         }
         txtLicense.setTitle(xmlLicense, forState: .Normal)
+        selectedLicense = xmlLicense
     }
     
     override func viewDidAppear(animated: Bool) {
