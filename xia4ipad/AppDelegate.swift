@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case "svg":
                 if xml["svg"]["image"].attributes["xlink:href"] != nil {
                     // convert base64 to image
-                    let b64Chain = xml["svg"]["image"].attributes["xlink:href"]!.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "")
+                    let b64Chain = xml["svg"]["image"].attributes["xlink:href"]!.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: "")
                     let imageDataB64 = NSData(base64EncodedString: b64Chain, options : .IgnoreUnknownCharacters)
                     let image = UIImage(data: imageDataB64!)
                     // store new image to document directory
@@ -204,7 +204,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             }
                             else {
                                 thisPath = ""
-                                let path = svgPath.stringByReplacingOccurrencesOfString("m ", withString: "").stringByReplacingOccurrencesOfString(" m", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
+                                let path = svgPath.stringByReplacingOccurrencesOfString("m ", withString: "").stringByReplacingOccurrencesOfString(" z", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
                                 let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                                 var previousPoint = CGPointMake(0.0, 0.0)
                                 for point in pointsArray {
@@ -212,7 +212,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     let x = convertStringToCGFloat(coords[0])
                                     let y = convertStringToCGFloat(coords[1])
                                     thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
-                                    previousPoint = CGPointMake(x, y)
+                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
                                 }
                                 thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
                             }
