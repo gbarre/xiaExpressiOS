@@ -94,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         errorAtImageImport = false
                     }
                 }
+                
                 // build the xia xml
                 if !errorAtImageImport {
                     let xmlXIA = AEXMLDocument()
@@ -117,7 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         xmlXIA["xia"].addChild(name: thisName, value: thisValue, attributes: nil)
                     }
                     xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "12343"])
-                    let license = getElementValue(xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"])
+                    let license = (xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"] != nil) ? xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"]! : ""
                     switch license {
                     case "http://creativecommons.org/licenses/by/3.0/":
                         xmlXIA["xia"].addChild(name: "license", value: "CC Attribution - CC-BY", attributes: nil)
@@ -149,6 +150,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     default:
                         xmlXIA["xia"].addChild(name: "license", value: "Other", attributes: nil)
                         break
+                    }
+                    
+                    // Create details
+                    xmlXIA["xia"].addChild(name: "details")
+                    var currentDetailTag = 99
+                    
+                    // Get rectangles
+                    if let rectangles = xml["svg"]["rect"].all {
+                        for rect in rectangles {
+                            currentDetailTag++
+                            let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!), convertStringToCGFloat(rect.attributes["y"]!))
+                            let width = convertStringToCGFloat(rect.attributes["width"]!)
+                            let heigt = convertStringToCGFloat(rect.attributes["height"]!)
+                            
+                            let thisPath = "\(origin.x);\(origin.y) \(origin.x + width);\(origin.y) \(origin.x + width);\(origin.y + heigt) \(origin.x);\(origin.y + heigt)"
+                            let detailTitle = (rect["title"].value != nil) ? rect["title"].value! : ""
+                            let detailDescription = (rect["desc"].value != nil) ? rect["desc"].value! : ""
+                            
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
+                            
+                            xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
+                        }
+                    }
+                    
+                    // Get ellipse
+                    if let ellipses = xml["svg"]["ellipse"].all {
+                        for ellipse in ellipses {
+                            currentDetailTag++
+                            let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!), convertStringToCGFloat(ellipse.attributes["cy"]!))
+                            let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!)
+                            let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!)
+                            
+                            let thisPath = "\(center.x);\(center.y - radiusY) \(center.x + radiusX);\(center.y) \(center.x);\(center.y + radiusY) \(center.x - radiusX);\(center.y)"
+                            let detailTitle = (ellipse["title"].value != nil) ? ellipse["title"].value! : ""
+                            let detailDescription = (ellipse["desc"].value != nil) ? ellipse["desc"].value! : ""
+                            
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
+                            
+                            xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
+                        }
+                    }
+                    
+                    // Get polygons
+                    if let polygons = xml["svg"]["path"].all {
+                        for polygon in polygons {
+                            currentDetailTag++
+                            var thisPath = "0;0"
+                            let svgPath = polygon.attributes["d"]!
+                            let firstLetter: String = svgPath.substringWithRange(svgPath.startIndex..<svgPath.startIndex.successor())
+                            if firstLetter == "M" {
+                                thisPath = svgPath.stringByReplacingOccurrencesOfString("M ", withString: "").stringByReplacingOccurrencesOfString(" Z", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
+                            }
+                            else {
+                                thisPath = ""
+                                let path = svgPath.stringByReplacingOccurrencesOfString("m ", withString: "").stringByReplacingOccurrencesOfString(" m", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
+                                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                                var previousPoint = CGPointMake(0.0, 0.0)
+                                for point in pointsArray {
+                                    let coords = point.characters.split{$0 == ";"}.map(String.init)
+                                    let x = convertStringToCGFloat(coords[0])
+                                    let y = convertStringToCGFloat(coords[1])
+                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
+                                    previousPoint = CGPointMake(x, y)
+                                }
+                                thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
+                            }
+                            
+                            let detailTitle = (polygon["title"].value != nil) ? polygon["title"].value! : ""
+                            let detailDescription = (polygon["desc"].value != nil) ? polygon["desc"].value! : ""
+                            
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
+                            
+                            xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
+                        }
                     }
                     
                     

@@ -411,7 +411,7 @@ class ViewExport: UIViewController {
             return xml["xia"][element].value!
         }
         else {
-            return element
+            return ""
         }
     }
     
