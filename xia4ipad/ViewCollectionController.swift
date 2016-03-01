@@ -129,6 +129,20 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         
         // add observer to detect enter foreground and rebuild collection
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        // purge tmp
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath("\(NSHomeDirectory())/tmp")
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            do {
+                let filePath = "\(NSHomeDirectory())/tmp/\(file)"
+                try fileManager.removeItemAtPath(filePath)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
     }
     
     deinit {
