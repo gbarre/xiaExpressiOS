@@ -404,6 +404,17 @@ class ViewExport: UIViewController {
     
     override func viewDidLoad() {
         img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
+        
+        progressView.setProgress(0, animated: false)
+        progressView.hidden = true
+        
+    }
+    
+    // Disable round corners on modal view
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.view.superview!.layer.cornerRadius  = 0.0
+        self.view.superview!.layer.masksToBounds = false
     }
     
     func getElementValue(element: String) -> String {

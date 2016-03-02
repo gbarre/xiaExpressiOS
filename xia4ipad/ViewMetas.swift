@@ -241,7 +241,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         if ( xml["xia"]["date"].value != nil && xml["xia"]["date"].value! != "element <date> not found"){
-            detailDate = dateFormatter.dateFromString(xml["xia"]["date"].value!)!
+            detailDate = (dateFormatter.dateFromString(xml["xia"]["date"].value!) != nil) ? dateFormatter.dateFromString(xml["xia"]["date"].value!)! : detailDate
             txtDate.setTitle(xml["xia"]["date"].value!, forState: .Normal)
         }
         else {

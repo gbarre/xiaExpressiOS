@@ -155,9 +155,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlx-rC-dtL" userLabel="export anchor">
-                                <rect key="frame" x="570" y="70" width="30" height="30"/>
-                            </button>
                             <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8Q-UV-Vxn">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items/>
@@ -198,7 +195,6 @@
                             <constraint firstAttribute="trailingMargin" secondItem="lHe-lY-w41" secondAttribute="trailing" constant="-20" id="8ZM-on-rZa"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="lHe-lY-w41" secondAttribute="bottom" id="ELg-fq-59G"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Fwa-cM-DUY"/>
-                            <constraint firstItem="tlx-rC-dtL" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="50" id="Pji-AH-ODe"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="T8v-I8-egC"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Zsa-lD-UhT"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="fI0-A2-zBP" secondAttribute="bottom" id="ckF-Yb-Y9O"/>
@@ -210,7 +206,6 @@
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="uml-rI-VS4" secondAttribute="bottom" id="ukj-FU-Wss"/>
                             <constraint firstAttribute="trailingMargin" secondItem="uml-rI-VS4" secondAttribute="trailing" constant="-20" id="vEo-v8-PuS"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="vTl-S5-lKu" secondAttribute="bottom" constant="44" id="wNX-tq-TnE"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="tlx-rC-dtL" secondAttribute="trailing" constant="-20" id="zUX-tR-Kd3"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -230,9 +225,7 @@
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                         <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="n0o-Cr-euA"/>
-                        <segue destination="Mn2-Ut-VnD" kind="popoverPresentation" identifier="viewExport" popoverAnchorView="tlx-rC-dtL" id="oa9-FL-rx3">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
-                        </segue>
+                        <segue destination="Mn2-Ut-VnD" kind="presentation" identifier="viewExport" modalPresentationStyle="formSheet" id="oa9-FL-rx3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -697,7 +690,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose export format" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S8B-NA-m8q">
-                                <rect key="frame" x="216" y="89" width="168" height="21"/>
+                                <rect key="frame" x="216" y="70" width="168" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -748,12 +741,12 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P9G-N7-HAz">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="P9G-N7-HAz">
                                 <rect key="frame" x="225" y="278" width="150" height="2"/>
                             </progressView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="S8B-NA-m8q" firstAttribute="top" secondItem="mVw-Bx-R6G" secondAttribute="bottom" constant="69" id="8Lh-7h-vkU"/>
+                            <constraint firstItem="S8B-NA-m8q" firstAttribute="top" secondItem="mVw-Bx-R6G" secondAttribute="bottom" constant="70" id="8Lh-7h-vkU"/>
                             <constraint firstItem="S8B-NA-m8q" firstAttribute="centerX" secondItem="hs2-xj-XmN" secondAttribute="centerX" id="Vgz-Lk-Qzy"/>
                         </constraints>
                     </view>
