@@ -719,9 +719,22 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     func deleteDetail() {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
-            stopCreation()
-            performFullDetailRemove(detailTag, force: true)
-            setBtnsIcons()
+            // Alert
+            let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
+                message: "\(NSLocalizedString("DELETE_DETAIL", comment: ""))", preferredStyle: .Alert)
+            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""),
+                style: .Destructive, handler: { action in
+                    self.stopCreation()
+                    self.performFullDetailRemove(detailTag, force: true)
+                    self.setBtnsIcons()
+            })
+            let noAction = UIAlertAction(title: NSLocalizedString("NO", comment: ""),
+                style: .Cancel, handler: nil)
+            
+            controller.addAction(yesAction)
+            controller.addAction(noAction)
+            
+            presentViewController(controller, animated: true, completion: nil)
         }
     }
     

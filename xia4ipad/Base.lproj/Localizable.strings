@@ -50,6 +50,7 @@
 "DESCRIPTION..." = "Description...";
 "CREATE_DETAIL" = "Create detail...";
 "COLLECTION" = "Collection";
+"DELETE_DETAIL" = "Delete detail?";
 
 // ViewMetas.swift
 "ENTER_CODE" = "Enter code";
