@@ -12,10 +12,24 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var dbg = debug(enable: true)
+    var dbg = debug(enable: false)
+    let documentRoot = NSHomeDirectory() + "/Documents"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        // purge Inbox
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath("\(documentRoot)/Inbox")
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            do {
+                let filePath = "\(documentRoot)/Inbox/\(file)"
+                try fileManager.removeItemAtPath(filePath)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
         return true
     }
 
@@ -47,35 +61,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var errorAtXMLImport = true
         var errorAtSVGImport = true
         let now:Int = Int(NSDate().timeIntervalSince1970)
-        let documentRoot = NSHomeDirectory() + "/Documents"
         
         if url != nil {
+            dbg.pt("Try import file...")
             // read file to extract image
             var path = url!.path!
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
             let xml = getXML(path, check: false)
             let ext = path.substringWithRange(Range<String.Index>(start: path.endIndex.advancedBy(-3), end: path.endIndex.advancedBy(0)))
+            dbg.pt("File type is : \(ext)")
             switch (ext) {
             case "xml": // The document was created by a tablet
                 if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+                    dbg.pt("Image founded")
                     // convert base64 to image
                     let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
                     let image = UIImage(data: imageDataB64!)
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image!, 85)
                     if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                        dbg.pt("Image imported")
                         errorAtImageImport = false
                     }
                 }
                 
                 // store the xia xml
                 if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+                    dbg.pt("Try to import xia elements")
                     let xmlXIA = AEXMLDocument()
                     xmlXIA.addChild(xml["XiaiPad"]["xia"])
                     let xmlString = xmlXIA.xmlString
                     do {
                         try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
                         errorAtXMLImport = false
+                        dbg.pt("XML imported")
                     }
                     catch {
                         dbg.pt("\(error)")
@@ -83,15 +102,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 break
             case "svg":
-                if xml["svg"]["image"].attributes["xlink:href"] != nil {
-                    // convert base64 to image
-                    let b64Chain = xml["svg"]["image"].attributes["xlink:href"]!.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: "")
+                let (b64Chain, group) = getBackgroundImage(xml)
+                if b64Chain != "" {
+                    dbg.pt("Image founded")
                     let imageDataB64 = NSData(base64EncodedString: b64Chain, options : .IgnoreUnknownCharacters)
                     let image = UIImage(data: imageDataB64!)
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image!, 85)
                     if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
                         errorAtImageImport = false
+                        dbg.pt("Image imported")
                     }
                 }
                 
@@ -156,8 +176,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     xmlXIA["xia"].addChild(name: "details")
                     var currentDetailTag = 99
                     
+                    let svgRoot = (group) ? xml["svg"]["g"] : xml["svg"]
+                    
                     // Get rectangles
-                    if let rectangles = xml["svg"]["rect"].all {
+                    if let rectangles = svgRoot["rect"].all {
                         for rect in rectangles {
                             currentDetailTag++
                             let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!), convertStringToCGFloat(rect.attributes["y"]!))
@@ -175,7 +197,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     
                     // Get ellipse
-                    if let ellipses = xml["svg"]["ellipse"].all {
+                    if let ellipses = svgRoot["ellipse"].all {
                         for ellipse in ellipses {
                             currentDetailTag++
                             let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!), convertStringToCGFloat(ellipse.attributes["cy"]!))
@@ -193,7 +215,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     
                     // Get polygons
-                    if let polygons = xml["svg"]["path"].all {
+                    if let polygons = svgRoot["path"].all {
                         for polygon in polygons {
                             currentDetailTag++
                             var thisPath = "0;0"
@@ -209,10 +231,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 var previousPoint = CGPointMake(0.0, 0.0)
                                 for point in pointsArray {
                                     let coords = point.characters.split{$0 == ";"}.map(String.init)
-                                    let x = convertStringToCGFloat(coords[0])
-                                    let y = convertStringToCGFloat(coords[1])
-                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
-                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    if coords.count == 2 {
+                                        let x = convertStringToCGFloat(coords[0])
+                                        let y = convertStringToCGFloat(coords[1])
+                                        thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
+                                        previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    }
                                 }
                                 thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
                             }
@@ -276,6 +300,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             return ""
         }
+    }
+    
+    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool) {
+        var b64img = ""
+        var group = false
+        if xml["svg"]["image"].attributes["xlink:href"] != nil {
+            b64img = xml["svg"]["image"].attributes["xlink:href"]!
+        }
+        else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
+            b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
+            group = true
+        }
+        
+        
+        for all in xml["svg"]["g"].all! {
+            dbg.pt(all.xmlString)
+        }
+        
+        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group)
     }
 
 }

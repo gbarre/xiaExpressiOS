@@ -214,7 +214,17 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
             if (ext != "xml" && file != "Inbox") {
                 file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
-                self.arrayNames.append(file)
+                if fileManager.fileExistsAtPath("\(documentsDirectory)/\(file).xml") {
+                    self.arrayNames.append(file)
+                }
+                else {
+                    do {
+                        try fileManager.removeItemAtPath("\(documentsDirectory)/\(file).jpg")
+                    }
+                    catch {
+                        self.dbg.pt("\(error)")
+                    }
+                }
             }
         }
         // Create default image if the is no image in Documents directory

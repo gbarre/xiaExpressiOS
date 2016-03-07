@@ -144,14 +144,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                         var attainablePoints: Int = 0
                         for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
-                            let x = convertStringToCGFloat(coords[0]) * scale
-                            let y = convertStringToCGFloat(coords[1]) * scale
-                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
-                            newPoint?.layer.zPosition = 1
-                            newPoint?.hidden = true
-                            imgView.addSubview(newPoint!)
-                            if imgView.frame.contains((newPoint?.center)!) {
-                                attainablePoints++
+                            if coords.count == 2 {
+                                let x = convertStringToCGFloat(coords[0]) * scale
+                                let y = convertStringToCGFloat(coords[1]) * scale
+                                let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
+                                newPoint?.layer.zPosition = 1
+                                newPoint?.hidden = true
+                                imgView.addSubview(newPoint!)
+                                if imgView.frame.contains((newPoint?.center)!) {
+                                    attainablePoints++
+                                }
                             }
                         }
                         if let constraint = detail.attributes["constraint"] {
