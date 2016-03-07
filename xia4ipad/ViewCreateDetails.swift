@@ -536,7 +536,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
         let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
         let attributes = ["tag" : "\(self.currentDetailTag)",
-            "zoom" : "false",
+            "zoom" : "true",
             "title" : "\(NSLocalizedString("DETAIL", comment: "")) \(self.currentDetailTag - 99)",
             "path" : "0;0"]
         

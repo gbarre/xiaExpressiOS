@@ -103,12 +103,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 break
             case "svg":
                 let (b64Chain, group) = getBackgroundImage(xml)
+                var image = UIImage()
                 if b64Chain != "" {
                     dbg.pt("Image founded")
                     let imageDataB64 = NSData(base64EncodedString: b64Chain, options : .IgnoreUnknownCharacters)
-                    let image = UIImage(data: imageDataB64!)
+                    image = UIImage(data: imageDataB64!)!
                     // store new image to document directory
-                    let imageData = UIImageJPEGRepresentation(image!, 85)
+                    let imageData = UIImageJPEGRepresentation(image, 85)
                     if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
                         errorAtImageImport = false
                         dbg.pt("Image imported")
@@ -177,20 +178,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     var currentDetailTag = 99
                     
                     let svgRoot = (group) ? xml["svg"]["g"] : xml["svg"]
+                    let scale = image.size.width / convertStringToCGFloat(xml["svg"].attributes["width"]!)
                     
                     // Get rectangles
                     if let rectangles = svgRoot["rect"].all {
                         for rect in rectangles {
                             currentDetailTag++
-                            let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!), convertStringToCGFloat(rect.attributes["y"]!))
-                            let width = convertStringToCGFloat(rect.attributes["width"]!)
-                            let heigt = convertStringToCGFloat(rect.attributes["height"]!)
+                            let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!) * scale, convertStringToCGFloat(rect.attributes["y"]!) * scale)
+                            let width = convertStringToCGFloat(rect.attributes["width"]!) * scale
+                            let heigt = convertStringToCGFloat(rect.attributes["height"]!) * scale
                             
                             let thisPath = "\(origin.x);\(origin.y) \(origin.x + width);\(origin.y) \(origin.x + width);\(origin.y + heigt) \(origin.x);\(origin.y + heigt)"
                             let detailTitle = (rect["title"].value != nil) ? rect["title"].value! : ""
                             let detailDescription = (rect["desc"].value != nil) ? rect["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -200,15 +202,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     if let ellipses = svgRoot["ellipse"].all {
                         for ellipse in ellipses {
                             currentDetailTag++
-                            let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!), convertStringToCGFloat(ellipse.attributes["cy"]!))
-                            let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!)
-                            let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!)
+                            let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!) * scale, convertStringToCGFloat(ellipse.attributes["cy"]!) * scale)
+                            let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!) * scale
+                            let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!) * scale
                             
                             let thisPath = "\(center.x);\(center.y - radiusY) \(center.x + radiusX);\(center.y) \(center.x);\(center.y + radiusY) \(center.x - radiusX);\(center.y)"
                             let detailTitle = (ellipse["title"].value != nil) ? ellipse["title"].value! : ""
                             let detailDescription = (ellipse["desc"].value != nil) ? ellipse["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -232,8 +234,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 for point in pointsArray {
                                     let coords = point.characters.split{$0 == ";"}.map(String.init)
                                     if coords.count == 2 {
-                                        let x = convertStringToCGFloat(coords[0])
-                                        let y = convertStringToCGFloat(coords[1])
+                                        let x = convertStringToCGFloat(coords[0]) * scale
+                                        let y = convertStringToCGFloat(coords[1]) * scale
                                         thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
                                         previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
                                     }
@@ -244,7 +246,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let detailTitle = (polygon["title"].value != nil) ? polygon["title"].value! : ""
                             let detailDescription = (polygon["desc"].value != nil) ? polygon["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -311,11 +313,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
             group = true
-        }
-        
-        
-        for all in xml["svg"]["g"].all! {
-            dbg.pt(all.xmlString)
         }
         
         return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group)
