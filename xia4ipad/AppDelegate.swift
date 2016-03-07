@@ -189,8 +189,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let heigt = convertStringToCGFloat(rect.attributes["height"]!) * scale
                             
                             let thisPath = "\(origin.x);\(origin.y) \(origin.x + width);\(origin.y) \(origin.x + width);\(origin.y + heigt) \(origin.x);\(origin.y + heigt)"
-                            let detailTitle = (rect["title"].value != nil) ? rect["title"].value! : ""
-                            let detailDescription = (rect["desc"].value != nil) ? rect["desc"].value! : ""
+                            let detailTitle = (rect["title"].value != nil && rect["title"].value! != "element <title> not found") ? rect["title"].value! : ""
+                            let detailDescription = (rect["desc"].value != nil && rect["desc"].value! != "element <desc> not found") ? rect["desc"].value! : ""
                             
                             let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
                             
@@ -207,8 +207,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!) * scale
                             
                             let thisPath = "\(center.x);\(center.y - radiusY) \(center.x + radiusX);\(center.y) \(center.x);\(center.y + radiusY) \(center.x - radiusX);\(center.y)"
-                            let detailTitle = (ellipse["title"].value != nil) ? ellipse["title"].value! : ""
-                            let detailDescription = (ellipse["desc"].value != nil) ? ellipse["desc"].value! : ""
+                            let detailTitle = (ellipse["title"].value != nil && ellipse["title"].value! != "element <title> not found") ? ellipse["title"].value! : ""
+                            let detailDescription = (ellipse["desc"].value != nil && ellipse["desc"].value! != "element <desc> not found") ? ellipse["desc"].value! : ""
                             
                             let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
                             
@@ -243,8 +243,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
                             }
                             
-                            let detailTitle = (polygon["title"].value != nil) ? polygon["title"].value! : ""
-                            let detailDescription = (polygon["desc"].value != nil) ? polygon["desc"].value! : ""
+                            let detailTitle = (polygon["title"].value != nil && polygon["title"].value! != "element <title> not found") ? polygon["title"].value! : ""
+                            let detailDescription = (polygon["desc"].value != nil && polygon["desc"].value! != "element <desc> not found") ? polygon["desc"].value! : ""
                             
                             let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
                             
