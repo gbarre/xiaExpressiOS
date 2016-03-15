@@ -23,6 +23,7 @@
 		F0725E561BE9FBB6007ACE9B /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E551BE9FBB6007ACE9B /* ShapeView.swift */; };
 		F0725E5A1BEA87D9007ACE9B /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F072A5921C84384C00E85F61 /* ipad_noir_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F072A5911C84384C00E85F61 /* ipad_noir_80.png */; };
+		F0746BE41C9847A70056F7CA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0B560E51C7DAA3300E79D55 /* Localizable.strings */; };
 		F077D90E1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */; };
 		F07BACB81C4BC6DB0037CF13 /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07BACB71C4BC6DB0037CF13 /* PlayDetail.swift */; };
 		F084335E1BFCB48000D4FF5B /* ViewDetailInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F084335D1BFCB48000D4FF5B /* ViewDetailInfos.swift */; };
@@ -293,6 +294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0746BE41C9847A70056F7CA /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

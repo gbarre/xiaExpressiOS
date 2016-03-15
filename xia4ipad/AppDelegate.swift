@@ -102,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 break
             case "svg":
-                let (b64Chain, group) = getBackgroundImage(xml)
+                let (b64Chain, group, imgWidth) = getBackgroundImage(xml)
                 var image = UIImage()
                 if b64Chain != "" {
                     dbg.pt("Image founded")
@@ -178,7 +178,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     var currentDetailTag = 99
                     
                     let svgRoot = (group) ? xml["svg"]["g"] : xml["svg"]
-                    let scale = image.size.width / convertStringToCGFloat(xml["svg"].attributes["width"]!)
+                    let scale = image.size.width / imgWidth
                     
                     // Get rectangles
                     if let rectangles = svgRoot["rect"].all {
@@ -220,27 +220,237 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     if let polygons = svgRoot["path"].all {
                         for polygon in polygons {
                             currentDetailTag++
-                            var thisPath = "0;0"
+                            var thisPath = ""
                             let svgPath = polygon.attributes["d"]!
-                            let firstLetter: String = svgPath.substringWithRange(svgPath.startIndex..<svgPath.startIndex.successor())
-                            if firstLetter == "M" {
-                                thisPath = svgPath.stringByReplacingOccurrencesOfString("M ", withString: "").stringByReplacingOccurrencesOfString(" Z", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
-                            }
-                            else {
-                                thisPath = ""
-                                let path = svgPath.stringByReplacingOccurrencesOfString("m ", withString: "").stringByReplacingOccurrencesOfString(" z", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
-                                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                                var previousPoint = CGPointMake(0.0, 0.0)
-                                for point in pointsArray {
-                                    let coords = point.characters.split{$0 == ";"}.map(String.init)
-                                    if coords.count == 2 {
-                                        let x = convertStringToCGFloat(coords[0]) * scale
-                                        let y = convertStringToCGFloat(coords[1]) * scale
-                                        thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
-                                        previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
-                                    }
+                            
+                            var command: String = ""
+                            var previousPoint = CGPointMake(0.0, 0.0)
+                            var prepreviousPoint = CGPointMake(0.0, 0.0)
+                            var startPoint = CGPointMake(0.0, 0.0)
+                            var controlPoint1 = CGPointMake(3.14, 42)
+                            var controlPoint2 = CGPointMake(3.14, 42)
+                            var indexPoints: Int = 1
+                            
+                            let path = svgPath.stringByReplacingOccurrencesOfString(",", withString: ";")
+                            let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                            for point in pointsArray {
+                                let coords = point.characters.split{$0 == ";"}.map(String.init)
+                                let x: CGFloat = convertStringToCGFloat(coords[0]) * scale
+                                if x == -12345.6789 * scale {
+                                    command = coords[0]
+                                    continue
                                 }
-                                thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
+                                let y: CGFloat = (coords.count == 2) ? convertStringToCGFloat(coords[1]) * scale : x
+                                // get the point
+                                switch command {
+                                case "M": // move to absolute (x;y)
+                                    thisPath = (thisPath == "") ? "\(x);\(y) " : "\(thisPath) \(x);\(y) "
+                                    previousPoint = CGPointMake(x, y)
+                                    command = "L"
+                                    break
+                                case "m": // move to relative (x;y)
+                                    thisPath = (thisPath == "") ? "\(x);\(y) " : "\(thisPath) "
+                                    previousPoint = (thisPath == "") ? CGPointMake(x, y) : CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    command = "l"
+                                    break
+                                case "Z", "z": // close path (do nothing)
+                                    break
+                                case "L": // line to absolute (x;y)
+                                    thisPath += "\(x);\(y) "
+                                    previousPoint = CGPointMake(x, y)
+                                    break
+                                case "l": // line to relative (x;y)
+                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
+                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    break
+                                case "H": // horizontal line to absolute (x)
+                                    thisPath += "\(x);\(previousPoint.y) "
+                                    previousPoint = CGPointMake(x, previousPoint.y)
+                                    break
+                                case "h": // horizontal line to relative (x)
+                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y) "
+                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y)
+                                    break
+                                case "V": // vertical line to absolute (y)
+                                    thisPath += "\(previousPoint.x);\(y) "
+                                    previousPoint = CGPointMake(previousPoint.x, y)
+                                    break
+                                case "v": // vertical line to absolute (y)
+                                    thisPath += "\(previousPoint.x);\(previousPoint.y + y) "
+                                    previousPoint = CGPointMake(previousPoint.x, previousPoint.y + y)
+                                    break
+                                case "C": // curve to absolute (x1;y1 x2;y2 x;y) (2 controls points)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(x, y)
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints++
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((x + controlPoint1.x + controlPoint2.x)/3, (y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "c": // curve to relative (x1;y1 x2;y2 x;y) (2 controls points)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints++
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((startPoint.x + x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "S": // shorthand/smooth curve to absolute (x2;y2 x;y)
+                                    // (The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints++
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((x + controlPoint1.x + controlPoint2.x)/3, (y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "s": // shorthand/smooth curve to relative (x2;y2 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints++
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((startPoint.x + x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "Q": // quadratic Bézier curve to absolute (x1;y1 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "q": // quadratic Bézier curve to relative (x1;y1 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "T": // shorthand/smooth quadratic Bézier curve to absolute (x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints++
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "t": // shorthand/smooth quadratic Bézier curve to relative (x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints++
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "A": // elliptical arc absolute (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+                                    break
+                                case "a": // elliptical arc relative (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+                                    break
+                                default:
+                                    break
+                                }
                             }
                             
                             let detailTitle = (polygon["title"].value != nil && polygon["title"].value! != "element <title> not found") ? polygon["title"].value! : ""
@@ -304,18 +514,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool) {
+    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool, CGFloat) {
         var b64img = ""
         var group = false
+        var imgWidth:CGFloat = 1024.0
         if xml["svg"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["image"].attributes["xlink:href"]!
+            imgWidth = convertStringToCGFloat(xml["svg"]["image"].attributes["width"]!)
         }
         else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
             group = true
+            imgWidth = convertStringToCGFloat(xml["svg"]["g"]["image"].attributes["width"]!)
         }
         
-        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group)
+        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group, imgWidth)
     }
 
 }

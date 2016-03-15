@@ -109,7 +109,7 @@ func convertStringToCGFloat(txt: String) -> CGFloat {
     }
     else {
         let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
-        cgFloat = CGFloat(Double("\(d)")!)
+        cgFloat = (Double("\(d)") == nil) ? -12345.6789 : CGFloat(Double("\(d)")!)
     }
     return cgFloat!
 }
