@@ -213,10 +213,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         super.viewDidLoad()
         showSegmentView(0)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keybShow:",
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybShow(_:)),
             name: UIKeyboardWillShowNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keybHide:",
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
             name: UIKeyboardWillHideNotification, object: nil)
         
         // First subview

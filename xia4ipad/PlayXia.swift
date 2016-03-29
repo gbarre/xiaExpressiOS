@@ -42,7 +42,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         super.viewDidLoad()
         
         // Add gestures on swipe
-        let gbSelector = Selector("goBack")
+        let gbSelector = #selector(PlayXia.goBack)
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
@@ -88,7 +88,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         detailsVisibles = hideDetails(true)
         
         if xml["xia"]["readonly"].value! == "true" {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayXia.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         }
     }
     

@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var path = url!.path!
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
             let xml = getXML(path, check: false)
-            let ext = path.substringWithRange(Range<String.Index>(start: path.endIndex.advancedBy(-3), end: path.endIndex.advancedBy(0)))
+            let ext = path.substringWithRange(path.endIndex.advancedBy(-3)..<path.endIndex.advancedBy(0))
             dbg.pt("File type is : \(ext)")
             switch (ext) {
             case "xml": // The document was created by a tablet
@@ -183,7 +183,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // Get rectangles
                     if let rectangles = svgRoot["rect"].all {
                         for rect in rectangles {
-                            currentDetailTag++
+                            currentDetailTag += 1
                             let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!) * scale, convertStringToCGFloat(rect.attributes["y"]!) * scale)
                             let width = convertStringToCGFloat(rect.attributes["width"]!) * scale
                             let heigt = convertStringToCGFloat(rect.attributes["height"]!) * scale
@@ -201,7 +201,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // Get ellipse
                     if let ellipses = svgRoot["ellipse"].all {
                         for ellipse in ellipses {
-                            currentDetailTag++
+                            currentDetailTag += 1
                             let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!) * scale, convertStringToCGFloat(ellipse.attributes["cy"]!) * scale)
                             let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!) * scale
                             let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!) * scale
@@ -219,7 +219,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // Get polygons
                     if let polygons = svgRoot["path"].all {
                         for polygon in polygons {
-                            currentDetailTag++
+                            currentDetailTag += 1
                             var thisPath = ""
                             let svgPath = polygon.attributes["d"]!
                             
@@ -284,12 +284,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     case 1:
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(x, y)
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         controlPoint2 = CGPointMake(x, y)
                                         prepreviousPoint = controlPoint2
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 3:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
@@ -307,12 +307,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     case 1:
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
                                         prepreviousPoint = controlPoint2
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 3:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
@@ -331,12 +331,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     case 1:
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         controlPoint2 = CGPointMake(x, y)
                                         prepreviousPoint = controlPoint2
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 3:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
@@ -354,12 +354,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     case 1:
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
                                         prepreviousPoint = controlPoint2
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 3:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
@@ -378,7 +378,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(x, y)
                                         prepreviousPoint = controlPoint1
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
@@ -396,7 +396,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
                                         prepreviousPoint = controlPoint1
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)
@@ -414,7 +414,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
                                         prepreviousPoint = controlPoint1
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 2:
                                         let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
@@ -432,7 +432,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         startPoint = previousPoint
                                         controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
                                         prepreviousPoint = controlPoint1
-                                        indexPoints++
+                                        indexPoints += 1
                                         break
                                     case 3:
                                         let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)

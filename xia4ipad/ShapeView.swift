@@ -48,7 +48,7 @@ class ShapeView: UIView {
         
         CGContextBeginPath(ctx)
         CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
-        for var i=1; i < nbPoints; i++ {
+        for i in 1 ..< nbPoints {
             var point = arrayPoints[i].center
             point.x = point.x - origin.x
             point.y = point.y - origin.y
@@ -73,7 +73,7 @@ class ShapeView: UIView {
         
         CGContextBeginPath(ctx)
         CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
-        for var i=1; i < nbPoints; i++ {
+        for i in 1 ..< nbPoints {
             var point = arrayPoints[i].center
             point.x = point.x - origin.x
             point.y = point.y - origin.y

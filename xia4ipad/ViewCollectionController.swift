@@ -128,7 +128,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
         // add observer to detect enter foreground and rebuild collection
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         // purge tmp
         let fileManager = NSFileManager.defaultManager()
@@ -211,9 +211,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let files = fileManager.enumeratorAtPath(self.documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
+            let ext = file.substringWithRange(file.endIndex.advancedBy(-3)..<file.endIndex.advancedBy(0))
             if (ext != "xml" && file != "Inbox") {
-                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
+                file = file.substringWithRange(file.startIndex.advancedBy(0)..<file.endIndex.advancedBy(-4)) // remove .xyz
                 if fileManager.fileExistsAtPath("\(documentsDirectory)/\(file).xml") {
                     self.arrayNames.append(file)
                 }
@@ -281,12 +281,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
         cell.setLabel(label)
         
-        let cSelector = Selector("deleteFiles:")
+        let cSelector = #selector(ViewCollectionController.deleteFiles(_:))
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
         leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
         cell.addGestureRecognizer(leftSwipe)
         
-        let tap = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        let tap = UITapGestureRecognizer(target: self, action:#selector(ViewCollectionController.handleTap(_:)))
         tap.delegate = self
         cell.addGestureRecognizer(tap)
         
@@ -434,7 +434,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         
         // copy the image in the library
         if (newMedia == true) {
-            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ViewCollectionController.image(_:didFinishSavingWithError:contextInfo:)), nil)
             newMedia = false
         }
         self.CollectionView.reloadData()

@@ -157,7 +157,7 @@ func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
     var j = polyCorners - 1
     var oddNodes:Bool = false
     
-    for var i=0; i<polyCorners; i++ {
+    for i in 0 ..< polyCorners {
         if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
             || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
             && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {

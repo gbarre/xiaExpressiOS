@@ -82,7 +82,7 @@ class xiaDetail: NSObject {
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
-            path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
+            path = path.substringWithRange(path.startIndex.advancedBy(0)..<path.endIndex.advancedBy(-1))
             
             return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }

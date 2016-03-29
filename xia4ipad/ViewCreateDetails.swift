@@ -80,7 +80,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             landscape = false
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -99,7 +99,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         view.addGestureRecognizer(leftSwipe)
         */
         
-        let dSelector : Selector = "detailInfos"
+        let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
         doubleTapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapGesture)
@@ -152,7 +152,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                                 newPoint?.hidden = true
                                 imgView.addSubview(newPoint!)
                                 if imgView.frame.contains((newPoint?.center)!) {
-                                    attainablePoints++
+                                    attainablePoints += 1
                                 }
                             }
                         }
@@ -203,7 +203,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
                 
-                for var i=0; i<detailPoints; i++ { // should we move an existing point or add a new one
+                for var i=0; i<detailPoints; i += 1 { // should we move an existing point or add a new one
                     let ploc = details["\(detailTag)"]?.points[i].center
                     
                     let xDist: CGFloat = (location.x - ploc!.x)
@@ -261,7 +261,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
                 movingPoint = -1
                 let detailPoints = details["\(currentDetailTag)"]?.points.count
-                for var i=0; i<detailPoints; i++ {
+                for var i=0; i<detailPoints; i += 1 {
                     let ploc = details["\(currentDetailTag)"]?.points[i].center
                     
                     let xDist: CGFloat = (location.x - ploc!.x)
@@ -837,28 +837,28 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         fixedSpace.width = 15.0
         var items = [UIBarButtonItem]()
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: "goBack"))
+        items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: #selector(ViewCreateDetails.goBack)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: fileTitle, style: .Plain, target: self, action: "openMetas"))
+        items.append(UIBarButtonItem(title: fileTitle, style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addDetail:"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
         items.append(fixedSpace)
         if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: "polygonUndo"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
             items.append(fixedSpace)
         }
         if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Trash, target: self, action: "deleteDetail"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Trash, target: self, action: #selector(ViewCreateDetails.deleteDetail)))
             items.append(fixedSpace)
         }
         if createDetail {
-            items.append(UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: "stopCreation"))
+            items.append(UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: #selector(ViewCreateDetails.stopCreation)))
         }
         else {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Play, target: self, action: "goForward"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Play, target: self, action: #selector(ViewCreateDetails.goForward)))
         }
         items.append(fixedSpace)
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "export"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(ViewCreateDetails.export)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
         
         myToolbar.items = items
@@ -875,7 +875,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         setBtnsIcons()
         
         // Add double tap gesture
-        let dSelector : Selector = "detailInfos"
+        let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
         doubleTapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapGesture)
