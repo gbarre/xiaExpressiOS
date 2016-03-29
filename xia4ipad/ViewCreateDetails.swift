@@ -203,15 +203,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
                 
-                for var i=0; i<detailPoints; i += 1 { // should we move an existing point or add a new one
-                    let ploc = details["\(detailTag)"]?.points[i].center
+                var i=0
+                for point in (details["\(detailTag)"]?.points)! { // should we move an existing point or add a new one
+                    let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let xDist: CGFloat = (location.x - ploc.x)
+                    let yDist: CGFloat = (location.y - ploc.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(detailTag)"]!.points[i]
+                        let toMove: UIImageView = point
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
                         movingPoint = i
@@ -222,6 +223,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     else {
                         addPoint = true
                     }
+                    i += 1
                 }
             }
             if ( (addPoint || detailPoints == 0) && !moveDetail )  {
@@ -260,19 +262,19 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Should we move an existing point ?
             if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
                 movingPoint = -1
-                let detailPoints = details["\(currentDetailTag)"]?.points.count
-                for var i=0; i<detailPoints; i += 1 {
-                    let ploc = details["\(currentDetailTag)"]?.points[i].center
+                var i=0
+                for point in (details["\(currentDetailTag)"]?.points)! {
+                    let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let xDist: CGFloat = (location.x - ploc.x)
+                    let yDist: CGFloat = (location.y - ploc.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
+                        let toMove: UIImageView = point
                         switch details["\(currentDetailTag)"]!.constraint {
                         case "ellipse":
-                            toMove.center = ploc!
+                            toMove.center = ploc
                             break
                         default:
                             toMove.center = location
@@ -286,6 +288,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     else { // No point here, just move the detail
                         moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
                     }
+                    i += 1
                 }
             }
         }
