@@ -66,7 +66,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if ( img.size.width > img.size.height ) { // turn device to landscape
             if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
             {
-                value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : 3
+                value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : ( (UIDevice.currentDevice().orientation.rawValue == 4) ? 4 : 3)
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
             landscape = true
@@ -540,7 +540,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
         let attributes = ["tag" : "\(self.currentDetailTag)",
             "zoom" : "true",
-            "title" : "\(NSLocalizedString("DETAIL", comment: "")) \(self.currentDetailTag - 99)",
+            "title" : "",
             "path" : "0;0"]
         
         // Build menu
@@ -550,7 +550,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -585,7 +585,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -619,7 +619,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             self.setBtnsIcons()

@@ -66,7 +66,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             dbg.pt("Try import file...")
             // read file to extract image
             var path = url!.path!
+            dbg.pt("path : \(path)")
+            dbg.ptLine()
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
+            dbg.pt("path : \(path)")
             let xml = getXML(path, check: false)
             let ext = path.substringWithRange(path.endIndex.advancedBy(-3)..<path.endIndex.advancedBy(0))
             dbg.pt("File type is : \(ext)")
@@ -500,6 +503,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             catch let error as NSError {
                 dbg.pt(error.localizedDescription)
             }
+        }
+        else {
+            dbg.pt("import done")
         }
         
         return true

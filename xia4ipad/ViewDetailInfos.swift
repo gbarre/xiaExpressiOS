@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class ViewDetailInfos: UIViewController {
+class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     var dbg = debug(enable: true)
     
@@ -77,8 +77,14 @@ class ViewDetailInfos: UIViewController {
         txtTitle.text = self.detailTitle
         txtSubtitle.text = self.detailSubtitle
         
-        
-        txtDesc.text = self.detailDescription
+        txtDesc.delegate = self
+        if self.detailDescription == "" {// Add placeholder
+            txtDesc.text = NSLocalizedString("DESCRIPTION...", comment: "")
+            txtDesc.textColor = UIColor.lightGrayColor()
+        }
+        else {
+            txtDesc.text = self.detailDescription
+        }
         //txtDesc.attributedText = pikipiki2AttributedString(self.detailDescription)
         
         
@@ -87,6 +93,20 @@ class ViewDetailInfos: UIViewController {
         // autofocus
         txtTitle.becomeFirstResponder()
         txtTitle.backgroundColor = UIColor.clearColor()
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor == UIColor.lightGrayColor() {
+            textView.text = ""
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textViewDidEndEditing(textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = NSLocalizedString("DESCRIPTION...", comment: "")
+            textView.textColor = UIColor.lightGrayColor()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
