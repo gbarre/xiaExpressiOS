@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewExport: UIViewController {
+class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
     var docController:UIDocumentInteractionController!
     
     let dbg = debug(enable: true)
@@ -39,15 +39,30 @@ class ViewExport: UIViewController {
         }
     }
 
+    @IBOutlet var sendingButton: UIButton!
+    @IBAction func selectSendingMode(sender: AnyObject) {
+        //performSegueWithIdentifier("export", sender: self)
+        openDocumentInteractionController(tmpFilePath)
+    }
 
     @IBOutlet var progressView: UIProgressView!
     @IBAction func btnCancel(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBOutlet var imgSimpleXML: UIButton!
+    @IBOutlet weak var btnSimpleXML: UIButton!
     @IBAction func exportSimpleXML(sender: AnyObject) {
         progressView.hidden = false
-        self.counter = 0
+        sendingButton.hidden = true
+        
+        imgSVG.alpha = 0.5
+        btnSVG.alpha = 0.5
+        
+        imgSimpleXML.alpha = 1
+        btnSimpleXML.alpha = 1
+        
+        self.counter = 5
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
@@ -72,14 +87,21 @@ class ViewExport: UIViewController {
             dbg.pt("\(error)")
         }
         
-        // Show native export controller
-        docController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: tmpFilePath))
-        self.counter = 100
-        docController.presentOptionsMenuFromRect(sender.frame, inView:self.view, animated:true)
+        openDocumentInteractionController(tmpFilePath)
     }
+    
+    @IBOutlet var imgSVG: UIButton!
+    @IBOutlet var btnSVG: UIButton!
     @IBAction func exportSVG(sender: AnyObject) {
         progressView.hidden = false
-        self.counter = 0
+        sendingButton.hidden = true
+        
+        imgSVG.alpha = 1
+        btnSVG.alpha = 1
+        
+        imgSimpleXML.alpha = 0.5
+        btnSimpleXML.alpha = 0.5
+        self.counter = 5
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
@@ -396,10 +418,7 @@ class ViewExport: UIViewController {
         
         self.counter = 80
         
-        // Show native export controller
-        docController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: tmpFilePath))
-        self.counter = 100
-        docController.presentOptionsMenuFromRect(sender.frame, inView:self.view, animated:true)
+        openDocumentInteractionController(tmpFilePath)
     }
     
     override func viewDidLoad() {
@@ -407,6 +426,7 @@ class ViewExport: UIViewController {
         
         progressView.setProgress(0, animated: false)
         progressView.hidden = true
+        sendingButton.hidden = true
         
     }
     
@@ -425,5 +445,22 @@ class ViewExport: UIViewController {
             return ""
         }
     }
+    
+    func openDocumentInteractionController(url: String) {
+        // Show native export controller
+        self.counter = 100
+        progressView.hidden = true
+        self.counter = 0
+        sendingButton.hidden = false
+        docController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: url))
+        docController.delegate = self
+        docController.presentOptionsMenuFromRect(sendingButton.frame, inView:self.view, animated:true)
+    }
+    
+    /*func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
+        //self.dismissViewControllerAnimated(true, completion: nil)
+        dbg.pt("dismiss")
+    }*/
+        
     
 }
