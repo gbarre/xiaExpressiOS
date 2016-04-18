@@ -14,10 +14,7 @@ class PhotoThumbnail: UICollectionViewCell {
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     let animationRotateDegres: CGFloat = 0.5
-    let animationTranslateX: CGFloat = 1.0
-    let animationTranslateY: CGFloat = 1.0
-    let count: Int = 1
-
+    
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var imgViewHeight: NSLayoutConstraint!
     @IBOutlet weak var imgLabel: UILabel!
@@ -42,18 +39,20 @@ class PhotoThumbnail: UICollectionViewCell {
     }
     
     func wobble(enable: Bool) {
-        let leftOrRight: CGFloat = (count % 2 == 0 ? 1 : -1)
-        let rightOrLeft: CGFloat = (count % 2 == 0 ? -1 : 1)
+        let leftOrRight: CGFloat = 1
+        let rightOrLeft: CGFloat = -1
         let leftWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * leftOrRight))
         let rightWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * rightOrLeft))
-        let moveTransform: CGAffineTransform = CGAffineTransformTranslate(leftWobble, -animationTranslateX, -animationTranslateY)
-        let conCatTransform: CGAffineTransform = CGAffineTransformConcat(leftWobble, moveTransform)
         
         transform = rightWobble // starting point
         
         if enable {
-            UIView.animateWithDuration(0.1, delay: 0.08, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
-                self.transform = conCatTransform
+            let delay = Double(arc4random()) % 50 / 100
+            UIView.animateWithDuration(0.12 + delay / 20, delay: delay, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
+                self.transform = leftWobble
+                }, completion: nil)
+            UIView.animateWithDuration(0.12 - delay / 10, delay: delay, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
+                self.center = CGPointMake(self.center.x, self.center.y+3)
                 }, completion: nil)
         }
         else {
