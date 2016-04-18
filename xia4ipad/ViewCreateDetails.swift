@@ -43,7 +43,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBAction func btnMetas(sender: AnyObject) {
-        performSegueWithIdentifier("viewMetas", sender: self)
+        detailInfos()
     }
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!

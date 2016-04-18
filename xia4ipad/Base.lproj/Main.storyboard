@@ -189,7 +189,6 @@
                                 <state key="normal" image="Info"/>
                                 <connections>
                                     <action selector="btnMetas:" destination="fts-Lk-uqf" eventType="touchUpInside" id="urY-9Y-eRy"/>
-                                    <action selector="showMetas:" destination="xod-8C-OKb" eventType="touchUpInside" id="uNw-xh-Ueb"/>
                                 </connections>
                             </button>
                         </subviews>
