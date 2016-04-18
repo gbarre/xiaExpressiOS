@@ -36,6 +36,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     var img = UIImage()
     var scale: CGFloat = 1.0
     
+    var menu: UIAlertController!
+    
     let editColor: UIColor = UIColor.redColor()
     let noEditColor: UIColor = UIColor.greenColor()
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
@@ -544,7 +546,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             "path" : "0;0"]
         
         // Build menu
-        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
         let rectangleAction = UIAlertAction(title: NSLocalizedString("RECTANGLE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail

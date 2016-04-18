@@ -422,6 +422,7 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
         
         progressView.setProgress(0, animated: false)
@@ -457,10 +458,8 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
         docController.presentOptionsMenuFromRect(sendingButton.frame, inView:self.view, animated:true)
     }
     
-    /*func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
-        //self.dismissViewControllerAnimated(true, completion: nil)
-        dbg.pt("dismiss")
-    }*/
-        
+    func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
 }
