@@ -37,6 +37,10 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     @IBAction func showMetas(sender: AnyObject) {
         performSegueWithIdentifier("playMetas", sender: self)
     }
+    @IBAction func showImgInfos(sender: AnyObject) {
+        touchedTag = 0
+        performSegueWithIdentifier("openDetail", sender: self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,8 +150,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
-                controller.detail = details["\(touchedTag)"]
-                controller.path = paths[touchedTag]
+                controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
+                controller.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
                 controller.bkgdImage = bkgdImage
             }
         }
@@ -157,10 +161,11 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .Present
         transition.startingPoint = location
         transition.bubbleColor = blueColor
-        transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
-        transition.path = paths[touchedTag]
-        transition.theDetail = details["\(touchedTag)"]
+        transition.detailFrame = (touchedTag != 0) ? details["\(touchedTag)"]?.bezierFrame() : UIScreen.mainScreen().bounds
+        transition.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
+        transition.theDetail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
         transition.bkgdImage = bkgdImage
+        transition.noDetailStatus = (touchedTag != 0) ? false : true
         transition.duration = 0.5
         return transition
     }

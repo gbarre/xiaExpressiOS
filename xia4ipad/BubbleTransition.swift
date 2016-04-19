@@ -83,6 +83,7 @@ public class BubbleTransition: NSObject {
     public var detailFrame: CGRect!
     public var path: UIBezierPath!
     public var bkgdImage: UIImageView!
+    public var noDetailStatus: Bool = false
     var theDetail: xiaDetail!
     
     private var detail = UIImageView()
@@ -132,7 +133,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
                 presentedControllerView.transform = CGAffineTransformIdentity
                 presentedControllerView.alpha = 1
                 presentedControllerView.center = originalCenter
-                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, myDetail: self.theDetail)
+                self.detail = self.showImage(transitionContext, fullImage: self.bkgdImage, myDetail: self.theDetail, noDetail: self.noDetailStatus)
                 }) { (_) in
                     transitionContext.completeTransition(true)
             }
@@ -171,9 +172,12 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject) -> UIImageView {
-        let path = (myDetail as! xiaDetail).bezierPath()
-        let pathFrameCorners = (myDetail as! xiaDetail).bezierFrame()
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, noDetail: Bool = false) -> UIImageView {
+        var path: UIBezierPath!
+        if !noDetail {
+            path = (myDetail as! xiaDetail).bezierPath()
+        }
+        let pathFrameCorners = (!noDetail) ? (myDetail as! xiaDetail).bezierFrame() : UIScreen.mainScreen().bounds
         let imgThumb: UIImageView = UIImageView(frame: fullImage.frame)
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = fullImage.image
@@ -183,9 +187,11 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
         
         // Cropping image
-        let myMask = CAShapeLayer()
-        myMask.path = path.CGPath
-        imgThumb.layer.mask = myMask
+        if !noDetail {
+            let myMask = CAShapeLayer()
+            myMask.path = path.CGPath
+            imgThumb.layer.mask = myMask
+        }
         containerView.addSubview(imgThumb)
         
         // Scaling cropped image to fit in the 200 x 200 square

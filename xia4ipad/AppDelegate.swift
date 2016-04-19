@@ -105,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 break
             case "svg":
-                let (b64Chain, group, imgWidth) = getBackgroundImage(xml)
+                let (b64Chain, group, imgWidth, imgTitle, imgDesc) = getBackgroundImage(xml)
                 var image = UIImage()
                 if b64Chain != "" {
                     dbg.pt("Image founded")
@@ -141,7 +141,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     for (thisName, thisValue) in metas {
                         xmlXIA["xia"].addChild(name: thisName, value: thisValue, attributes: nil)
                     }
-                    xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "12343"])
+                    xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+                    xmlXIA["xia"].addChild(name: "image", value: "", attributes: ["title" : imgTitle, "subtitle" : "", "description" : imgDesc])
                     let license = (xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"] != nil) ? xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"]! : ""
                     switch license {
                     case "http://creativecommons.org/licenses/by/3.0/":
@@ -520,21 +521,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool, CGFloat) {
+    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool, CGFloat, String, String) {
         var b64img = ""
         var group = false
         var imgWidth:CGFloat = 1024.0
+        var title: String = ""
+        var desc: String = ""
         if xml["svg"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["image"].attributes["xlink:href"]!
             imgWidth = convertStringToCGFloat(xml["svg"]["image"].attributes["width"]!)
+            title = xml["svg"]["image"]["title"].value!
+            desc = xml["svg"]["image"]["desc"].value!
         }
         else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
             group = true
             imgWidth = convertStringToCGFloat(xml["svg"]["g"]["image"].attributes["width"]!)
+            title = xml["svg"]["g"]["image"]["title"].value!
+            desc = xml["svg"]["g"]["image"]["desc"].value!
         }
         
-        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group, imgWidth)
+        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group, imgWidth, title, desc)
     }
 
 }

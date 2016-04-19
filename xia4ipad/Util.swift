@@ -70,6 +70,10 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
                 xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
             }
         }
+        // Look for image child (to store image title & description)
+        if child["image"].attributes["title"] == nil {
+            xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "subtitle" : "", "desctription" : ""])
+        }
     }
     if let xmlDetails = xml["xia"]["details"]["detail"].all {
         for detail in xmlDetails {

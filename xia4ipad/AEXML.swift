@@ -401,6 +401,9 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "contributors", value: "", attributes: nil)
         xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
+        // Add img infos
+        xml.addChild(name: "image", value: "", attributes: ["title" : "", "subtitle" : "", "desctription" : ""])
+        
         // Create details
         xml.addChild(name: "details")
         

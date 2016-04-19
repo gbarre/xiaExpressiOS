@@ -37,18 +37,22 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     var scale: CGFloat = 1.0
     
     var menu: UIAlertController!
+    var btnTag: Int = 0
     
     let editColor: UIColor = UIColor.redColor()
     let noEditColor: UIColor = UIColor.greenColor()
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBAction func btnMetas(sender: AnyObject) {
+        btnTag = sender.tag
         detailInfos()
     }
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
     @IBOutlet var infoBkgd: UIImageView!
     @IBOutlet var infoBtn: UIButton!
+    @IBOutlet var imgInfoBkgd: UIImageView!
+    @IBOutlet var imgInfoBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +63,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         imgTopBarBkgd.hidden = false
         infoBkgd.layer.zPosition = 101
         infoBtn.layer.zPosition = 102
+        imgInfoBkgd.layer.zPosition = 101
+        imgInfoBtn.layer.zPosition = 102
         
         // Load image
         let filePath = "\(self.filePath).jpg"
@@ -511,6 +517,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
                 controller.landscape = landscape
+                controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
             }
         }

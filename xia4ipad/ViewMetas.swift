@@ -16,11 +16,13 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
     var landscape: Bool = false
+    var selectedSegment: Int = 0
     weak var ViewCreateDetailsController: ViewCreateDetails?
     
     var pass: String = ""
     var selectedLicense: String = ""
     var showPicker: Bool = true
+    
     
     let availableLicenses = [
         "Proprietary - CC-Zero",
@@ -57,13 +59,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
         
-        
         xml["xia"]["language"].value = txtLanguages.text
         xml["xia"]["keywords"].value = txtKeywords.text
         xml["xia"]["contributors"].value = txtContributors.text
         xml["xia"]["relation"].value = txtRelation.text
         xml["xia"]["coverage"].value = txtCoverage.text
         xml["xia"]["license"].value = selectedLicense
+        
+        xml["xia"]["image"].attributes["title"] = imgTitle.text
+        xml["xia"]["image"].attributes["subtitle"] = imgSubTitle.text
+        xml["xia"]["image"].attributes["description"] = imgDescription.text
         
         let _ = writeXML(xml, path: "\(filePath).xml")
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? " " : txtTitle.text!
@@ -209,9 +214,15 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     @IBOutlet var licensePicker: UIPickerView!
     
+    // Fourth subbiew
+    @IBOutlet var imgTitle: UITextField!
+    @IBOutlet var imgSubTitle: UITextField!
+    @IBOutlet var imgDescription: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        showSegmentView(0)
+        showSegmentView(selectedSegment)
+        segment.selectedSegmentIndex = selectedSegment
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybShow(_:)),
             name: UIKeyboardWillShowNotification, object: nil)
@@ -220,7 +231,9 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             name: UIKeyboardWillHideNotification, object: nil)
         
         // First subview
-        txtTitle.becomeFirstResponder()
+        if selectedSegment == 0 {
+            txtTitle.becomeFirstResponder()
+        }
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
         navBar.topItem?.title = txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
@@ -270,6 +283,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
         txtLicense.setTitle(xmlLicense, forState: .Normal)
         selectedLicense = xmlLicense
+        
+        // Fourth subview
+        imgTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"]! : ""
+        imgSubTitle.text = (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"]! : ""
+        imgDescription.text = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
+        imgDescription.layer.cornerRadius = 5
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -303,6 +322,9 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         if index == 2 {
             txtLanguages.becomeFirstResponder()
             licensePicker.hidden = true
+        }
+        if index == 3 {
+            imgTitle.becomeFirstResponder()
         }
     }
     

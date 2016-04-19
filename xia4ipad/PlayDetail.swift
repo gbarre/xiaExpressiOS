@@ -79,13 +79,15 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         
         // Cropping image
         let myMask = CAShapeLayer()
-        myMask.path = path.CGPath
-        imgThumb.layer.mask = myMask
+        if tag != 0 {
+            myMask.path = path.CGPath
+            imgThumb.layer.mask = myMask
+        }
         self.view.addSubview(imgThumb)
         imgThumb.hidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
-        let pathFrameCorners = detail.bezierFrame()
+        let pathFrameCorners = (tag != 0) ? detail.bezierFrame() : UIScreen.mainScreen().bounds
         let detailScaleX = (imgArea.frame.width - 10) / pathFrameCorners.width
         let detailScaleY = (imgArea.frame.height - 10) / pathFrameCorners.height
         let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
@@ -98,15 +100,25 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         imgThumb.center = newCenter
         
         // Show text
-        if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
-            for d in detail {
-                detailTitle.text = d.attributes["title"]
-                detailTitle.sizeToFit()
-                detailTitle.numberOfLines = 0
-                detailSubTitle.text = d.attributes["subtitle"]
-                txtDesc.text = d.value
-                zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+        if tag != 0 {
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    detailTitle.text = d.attributes["title"]
+                    detailTitle.sizeToFit()
+                    detailTitle.numberOfLines = 0
+                    detailSubTitle.text = d.attributes["subtitle"]
+                    txtDesc.text = d.value
+                    zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+                }
             }
+        }
+        else {
+            detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
+            detailTitle.sizeToFit()
+            detailTitle.numberOfLines = 0
+            detailSubTitle.text =  (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"] : ""
+            txtDesc.text =  (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"] : ""
+            zoomDisable = false
         }
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
