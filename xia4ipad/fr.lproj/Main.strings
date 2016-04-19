@@ -30,13 +30,16 @@
 "CPm-pq-eaL.text" = "Date :";
 
 /* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "First"; ObjectID = "EUE-hm-iSr"; */
-"EUE-hm-iSr.segmentTitles[0]" = "Premier";
+"EUE-hm-iSr.segmentTitles[0]" = "Métas 1";
 
 /* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Second"; ObjectID = "EUE-hm-iSr"; */
-"EUE-hm-iSr.segmentTitles[1]" = "Second";
+"EUE-hm-iSr.segmentTitles[1]" = "Métas 2";
 
 /* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Third"; ObjectID = "EUE-hm-iSr"; */
-"EUE-hm-iSr.segmentTitles[2]" = "Troisième";
+"EUE-hm-iSr.segmentTitles[2]" = "Métas 3";
+
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[3] = "Third"; ObjectID = "EUE-hm-iSr"; */
+"EUE-hm-iSr.segmentTitles[3]" = "Infos Image";
 
 /* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Elj-an-Bgi"; */
 "Elj-an-Bgi.normalTitle" = "Boutton";
