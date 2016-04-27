@@ -120,7 +120,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet weak var CollectionView: UICollectionView!
     
-    @IBOutlet weak var mytoolBar: UIToolbar!
+    //@IBOutlet weak var mytoolBar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,7 +156,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     override func viewWillAppear(animated: Bool) {
         // fetch the photos from collection
         self.navigationController!.hidesBarsOnTap = false
-        mytoolBar.clipsToBounds = true
+        //mytoolBar.clipsToBounds = true
         
         editingMode = false
         imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))

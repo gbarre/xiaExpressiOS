@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Collection-->
@@ -27,36 +28,6 @@
                                     </imageView>
                                 </subviews>
                             </view>
-                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kO4-Gr-RCm">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IfO-qU-IWf"/>
-                                    <barButtonItem width="7" style="plain" systemItem="fixedSpace" id="Z4f-gR-cFY"/>
-                                    <barButtonItem title="XIA" id="NdE-Wn-yec"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="31H-tP-TlM"/>
-                                    <barButtonItem systemItem="add" id="qM4-9i-cie">
-                                        <connections>
-                                            <action selector="btnCreate:" destination="BYZ-38-t0r" id="YS3-2E-1Sc"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="DLc-ka-LpH"/>
-                                    <barButtonItem enabled="NO" systemItem="action" id="U0P-NK-ZnO"/>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="fzZ-2G-Vla"/>
-                                    <barButtonItem enabled="NO" image="help" id="fRb-WL-06e">
-                                        <connections>
-                                            <action selector="btnHelp:" destination="BYZ-38-t0r" id="9Yj-MQ-dsa"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="eCj-kf-a9B"/>
-                                    <barButtonItem title="Edit" id="LFL-AM-sdI">
-                                        <connections>
-                                            <action selector="btnEdit:" destination="BYZ-38-t0r" id="QYS-7U-kk0"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                            </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8S7-Cb-jYU">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -115,17 +86,41 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="8yH-BO-HxQ"/>
                                 </connections>
                             </collectionView>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I15-vY-FYi">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="barTintColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Xia" id="mpy-Pt-Gc9">
+                                        <rightBarButtonItems>
+                                            <barButtonItem title="Edit" id="S4K-WX-yik">
+                                                <connections>
+                                                    <action selector="btnEdit:" destination="BYZ-38-t0r" id="Pak-jt-bKh"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem systemItem="add" id="Krq-J9-9E8">
+                                                <connections>
+                                                    <action selector="btnCreate:" destination="BYZ-38-t0r" id="B8r-tx-JVJ"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="6Cm-XX-eoM"/>
                             <constraint firstAttribute="trailingMargin" secondItem="EHx-LZ-bVD" secondAttribute="trailing" constant="-34" id="CkN-ew-djD"/>
+                            <constraint firstItem="I15-vY-FYi" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="DTY-9Y-V2J"/>
                             <constraint firstItem="EHx-LZ-bVD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="102" id="LKQ-Hy-Ku7"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="kO4-Gr-RCm" secondAttribute="leading" constant="20" id="LjB-1I-tmf"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="MIz-A4-9QF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="I15-vY-FYi" secondAttribute="trailing" constant="-20" id="Q4T-st-vq1"/>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="d5a-Em-0Jg"/>
-                            <constraint firstItem="kO4-Gr-RCm" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="fh2-8g-yRY"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="kO4-Gr-RCm" secondAttribute="trailing" constant="-20" id="lhL-V8-GhO"/>
+                            <constraint firstItem="I15-vY-FYi" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="fxk-MW-4LK"/>
                             <constraint firstAttribute="trailingMargin" secondItem="8S7-Cb-jYU" secondAttribute="trailing" constant="-20" id="yym-DZ-8Sr"/>
                         </constraints>
                     </view>
@@ -133,12 +128,11 @@
                     <navigationItem key="navigationItem" title="Photo Album" id="TDA-2G-8Io"/>
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
-                        <outlet property="btnCreateState" destination="qM4-9i-cie" id="JKn-cy-Wkm"/>
-                        <outlet property="editMode" destination="LFL-AM-sdI" id="1LR-77-L7M"/>
+                        <outlet property="btnCreateState" destination="Krq-J9-9E8" id="mtY-0p-mas"/>
+                        <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
                         <outlet property="imgHelp" destination="EHx-LZ-bVD" id="eVl-MV-nbq"/>
-                        <outlet property="mytoolBar" destination="kO4-Gr-RCm" id="umB-T1-sfX"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
-                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="LFL-AM-sdI" id="4uf-YC-Gjx">
+                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="S4K-WX-yik" id="4uf-YC-Gjx">
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                     </connections>
@@ -1297,7 +1291,6 @@
         <image name="disque-3" width="75" height="75"/>
         <image name="disque-4" width="75" height="75"/>
         <image name="export_tablet" width="150" height="150"/>
-        <image name="help" width="25" height="25"/>
         <image name="inkscape" width="150" height="150"/>
         <image name="uncheckedbox" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>

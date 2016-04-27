@@ -36,7 +36,7 @@
 "NO_CAMERA" = "Aucun appareil photo disponible.";
 "SEARCH_IN_PHOTOS" = "Chercher dans Photos";
 "CREATE_NEW_DOC" = "Créer un nouveau document";
-"EDIT" = "Éditer";
+"EDIT" = "Modifier";
 "DONE" = "Terminer";
 "DELETE" = "Supprimer ";
 "DELETED" = " a été supprimé...";

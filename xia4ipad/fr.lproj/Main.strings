@@ -53,11 +53,8 @@
 /* Class = "UIBarButtonItem"; title = "Collection"; ObjectID = "LBo-27-0LP"; */
 "LBo-27-0LP.title" = "Collection";
 
-/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "LFL-AM-sdI"; */
-"LFL-AM-sdI.title" = "Éditer";
-
-/* Class = "UIBarButtonItem"; title = "XIA"; ObjectID = "NdE-Wn-yec"; */
-"NdE-Wn-yec.title" = "XIA";
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "S4K-WX-yik"; */
+"S4K-WX-yik.title" = "Modifier";
 
 /* Class = "UILabel"; text = "License :"; ObjectID = "OOl-89-UZY"; */
 "OOl-89-UZY.text" = "Licence :";
