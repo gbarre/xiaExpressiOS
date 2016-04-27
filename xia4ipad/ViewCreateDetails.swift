@@ -499,7 +499,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
-                        controller.detailSubtitle = (d.attributes["subtitle"] == nil) ? "" : d.attributes["subtitle"]!
+                        //controller.detailSubtitle = (d.attributes["subtitle"] == nil) ? "" : d.attributes["subtitle"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
                         controller.zoom = (d.attributes["zoom"] != nil && d.attributes["zoom"] == "true") ? true : false
                         controller.lock = (d.attributes["locked"] != nil && d.attributes["locked"] == "true") ? true : false

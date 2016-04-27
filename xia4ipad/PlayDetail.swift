@@ -40,7 +40,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var imgArea: UIView!
     @IBOutlet var imgThumb: UIImageView!
     @IBOutlet var detailTitle: UILabel!
-    @IBOutlet var detailSubTitle: UILabel!
+    //@IBOutlet var detailSubTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
     @IBOutlet var bkgdzoom: UIImageView!
     
@@ -106,7 +106,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
                     detailTitle.text = d.attributes["title"]
                     detailTitle.sizeToFit()
                     detailTitle.numberOfLines = 0
-                    detailSubTitle.text = d.attributes["subtitle"]
+                    //detailSubTitle.text = d.attributes["subtitle"]
                     txtDesc.text = d.value
                     zoomDisable = (d.attributes["zoom"] == "true") ? false : true
                 }
@@ -116,7 +116,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
             detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
             detailTitle.sizeToFit()
             detailTitle.numberOfLines = 0
-            detailSubTitle.text =  (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"] : ""
+            //detailSubTitle.text =  (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"] : ""
             txtDesc.text =  (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"] : ""
             zoomDisable = false
         }

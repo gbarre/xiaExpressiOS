@@ -67,7 +67,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["license"].value = selectedLicense
         
         xml["xia"]["image"].attributes["title"] = imgTitle.text
-        xml["xia"]["image"].attributes["subtitle"] = imgSubTitle.text
+        //xml["xia"]["image"].attributes["subtitle"] = imgSubTitle.text
         xml["xia"]["image"].attributes["description"] = imgDescription.text
         
         let _ = writeXML(xml, path: "\(filePath).xml")
@@ -216,7 +216,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     // Fourth subbiew
     @IBOutlet var imgTitle: UITextField!
-    @IBOutlet var imgSubTitle: UITextField!
+    //@IBOutlet var imgSubTitle: UITextField!
     @IBOutlet var imgDescription: UITextView!
     
     override func viewDidLoad() {
@@ -286,7 +286,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         
         // Fourth subview
         imgTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"]! : ""
-        imgSubTitle.text = (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"]! : ""
+        //imgSubTitle.text = (xml["xia"]["image"].attributes["subtitle"] != nil) ? xml["xia"]["image"].attributes["subtitle"]! : ""
         imgDescription.text = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
         imgDescription.layer.cornerRadius = 5
     }

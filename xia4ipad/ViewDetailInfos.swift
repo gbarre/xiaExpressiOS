@@ -17,7 +17,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     var zoom: Bool = false
     var lock: Bool = false
     var detailTitle: String = ""
-    var detailSubtitle: String = ""
+    //var detailSubtitle: String = ""
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
@@ -38,7 +38,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         btnLock.setImage(btnImgLock, forState: .Normal)
     }
     @IBOutlet weak var txtTitle: UITextField!
-    @IBOutlet var txtSubtitle: UITextField!
+    //@IBOutlet var txtSubtitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
     @IBAction func btnCancel(sender: AnyObject) {
@@ -52,7 +52,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                 d.attributes["zoom"] = (zoom) ? "true" : "false" //"\(btnZoom.on)"
                 d.attributes["locked"] = (lock) ? "true" : "false" //"\(btnLock.on)"
                 d.attributes["title"] = txtTitle.text
-                d.attributes["subtitle"] = txtSubtitle.text
+                //d.attributes["subtitle"] = txtSubtitle.text
                 //d.value = attributedString2pikipiki(txtDesc.attributedText)
                 d.value = txtDesc.text
             }
@@ -75,7 +75,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         let btnImgLock = (lock) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
         btnLock.setImage(btnImgLock, forState: .Normal)
         txtTitle.text = self.detailTitle
-        txtSubtitle.text = self.detailSubtitle
+        //txtSubtitle.text = self.detailSubtitle
         
         txtDesc.delegate = self
         if self.detailDescription == "" {// Add placeholder
