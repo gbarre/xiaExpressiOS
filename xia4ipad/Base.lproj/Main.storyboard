@@ -19,15 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" tag="50" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L6f-Y4-ikl" userLabel="HelpView">
-                                <rect key="frame" x="42" y="21" width="51" height="70"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" tag="51" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bubble" translatesAutoresizingMaskIntoConstraints="NO" id="EHx-LZ-bVD">
-                                        <rect key="frame" x="514" y="122" width="100" height="100"/>
-                                        <color key="backgroundColor" red="1" green="0.23368567579999999" blue="0.33194737050000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </imageView>
-                                </subviews>
-                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8S7-Cb-jYU">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -101,9 +92,11 @@
                                                     <action selector="btnEdit:" destination="BYZ-38-t0r" id="Pak-jt-bKh"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem systemItem="add" id="Krq-J9-9E8">
+                                            <barButtonItem systemItem="add" id="5Zb-O2-v5O">
                                                 <connections>
-                                                    <action selector="btnCreate:" destination="BYZ-38-t0r" id="B8r-tx-JVJ"/>
+                                                    <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="menuAddResources" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
+                                                        <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                                                    </segue>
                                                 </connections>
                                             </barButtonItem>
                                         </rightBarButtonItems>
@@ -114,9 +107,7 @@
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="6Cm-XX-eoM"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="EHx-LZ-bVD" secondAttribute="trailing" constant="-34" id="CkN-ew-djD"/>
                             <constraint firstItem="I15-vY-FYi" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="DTY-9Y-V2J"/>
-                            <constraint firstItem="EHx-LZ-bVD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="102" id="LKQ-Hy-Ku7"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="8S7-Cb-jYU" secondAttribute="bottom" id="MIz-A4-9QF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="I15-vY-FYi" secondAttribute="trailing" constant="-20" id="Q4T-st-vq1"/>
                             <constraint firstItem="8S7-Cb-jYU" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="d5a-Em-0Jg"/>
@@ -128,9 +119,8 @@
                     <navigationItem key="navigationItem" title="Photo Album" id="TDA-2G-8Io"/>
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
-                        <outlet property="btnCreateState" destination="Krq-J9-9E8" id="mtY-0p-mas"/>
+                        <outlet property="btnCreateState" destination="5Zb-O2-v5O" id="rf2-cb-XVD"/>
                         <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
-                        <outlet property="imgHelp" destination="EHx-LZ-bVD" id="eVl-MV-nbq"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="S4K-WX-yik" id="4uf-YC-Gjx">
                             <popoverArrowDirection key="popoverArrowDirection"/>
@@ -1282,10 +1272,85 @@
             </objects>
             <point key="canvasLocation" x="1666" y="2253"/>
         </scene>
+        <!--Menu Add Resources-->
+        <scene sceneID="46Y-ad-Gjh">
+            <objects>
+                <viewController modalPresentationStyle="formSheet" id="en8-Mw-eGZ" customClass="MenuAddResources" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7Tr-zn-qqM"/>
+                        <viewControllerLayoutGuide type="bottom" id="Vdf-jK-A9N"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XuD-O1-XQ5">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5S9-dW-psV">
+                                <rect key="frame" x="0.0" y="61" width="600" height="493"/>
+                                <connections>
+                                    <segue destination="99H-qy-rZh" kind="embed" id="eBD-7D-Lsy"/>
+                                </connections>
+                            </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zXw-1L-ZiN">
+                                <rect key="frame" x="0.0" y="555" width="600" height="45"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="0ls-f7-etq"/>
+                                </constraints>
+                                <state key="normal" title="Take a photo"/>
+                                <connections>
+                                    <action selector="takePhoto:" destination="en8-Mw-eGZ" eventType="touchUpInside" id="YCg-XJ-R20"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create new document" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rpS-Y6-11Z">
+                                <rect key="frame" x="0.0" y="20" width="600" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="8E0-qb-2fw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="zXw-1L-ZiN" secondAttribute="bottom" id="5kn-NW-CGI"/>
+                            <constraint firstItem="rpS-Y6-11Z" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" id="Ggw-ci-bZg"/>
+                            <constraint firstItem="zXw-1L-ZiN" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="KFK-cX-OtX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="rpS-Y6-11Z" secondAttribute="trailing" constant="-20" id="Rpi-f9-A0c"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="zXw-1L-ZiN" secondAttribute="trailing" constant="-20" id="Y6p-jL-vVa"/>
+                            <constraint firstItem="5S9-dW-psV" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="b3I-Ij-PGy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5S9-dW-psV" secondAttribute="trailing" constant="-20" id="d0O-6O-Pn0"/>
+                            <constraint firstItem="rpS-Y6-11Z" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="l2e-LT-Ug9"/>
+                            <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="5S9-dW-psV" secondAttribute="bottom" constant="46" id="ltO-54-8OT"/>
+                            <constraint firstItem="5S9-dW-psV" firstAttribute="top" secondItem="rpS-Y6-11Z" secondAttribute="bottom" constant="1" id="ycU-fe-2JF"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7TT-BZ-Oaq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1929" y="-855"/>
+        </scene>
+        <!--Image Picker Controller-->
+        <scene sceneID="Pdt-i5-2zK">
+            <objects>
+                <viewController id="99H-qy-rZh" customClass="UIImagePickerController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Omd-VS-iEM"/>
+                        <viewControllerLayoutGuide type="bottom" id="8ec-aj-Ttb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bzr-wV-4DS">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="493"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dbN-CK-MkR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2678" y="-855"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Info" width="32" height="32"/>
-        <image name="bubble" width="100" height="100"/>
         <image name="delete" width="50" height="50"/>
         <image name="discuss" width="32" height="32"/>
         <image name="disque-3" width="75" height="75"/>

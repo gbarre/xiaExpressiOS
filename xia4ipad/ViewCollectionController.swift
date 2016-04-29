@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -30,70 +30,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     var landscape: Bool = false
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
-    @IBAction func btnCreate(sender: AnyObject) {
-        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let cameraAction = UIAlertAction(title: NSLocalizedString("TAKE_PHOTO", comment: ""), style: .Default, handler: { action in
-            if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
-                //load the camera interface
-                let picker : UIImagePickerController = UIImagePickerController()
-                picker.sourceType = UIImagePickerControllerSourceType.Camera
-                picker.delegate = self
-                picker.allowsEditing = false
-                self.presentViewController(picker, animated: true, completion: nil)
-                self.newMedia = true
-            }
-            else{
-                //no camera available
-                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
-                    alert.dismissViewControllerAnimated(true, completion: nil)
-                }))
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-        })
-        let libraryAction = UIAlertAction(title: NSLocalizedString("SEARCH_IN_PHOTOS", comment: ""), style: .Default, handler: { action in
-            let picker : UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
-            picker.delegate = self
-            picker.allowsEditing = false
-            picker.modalPresentationStyle = .Popover
-            self.presentViewController(picker, animated: true, completion: nil)
-            self.newMedia = false
-            
-            picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
-            picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
-        })
-        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_NEW_DOC", comment: ""), attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
-            NSForegroundColorAttributeName : UIColor.blackColor()
-            ])
-        menu.setValue(attributedTitle, forKey: "attributedTitle")
-        
-        cameraAction.setValue(UIImage(named: "camera"), forKey: "image")
-        libraryAction.setValue(UIImage(named: "photos"), forKey: "image")
-        menu.addAction(cameraAction)
-        menu.addAction(libraryAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.barButtonItem = sender as? UIBarButtonItem
-            ppc.permittedArrowDirections = .Up
-        }
-        
-        presentViewController(menu, animated: true, completion: nil)
-    }
-    
-    @IBAction func btnHelp(sender: AnyObject) {
-        for subview in view.subviews {
-            if subview.tag > 49 {
-                subview.hidden = showHelp
-                subview.layer.zPosition = 1
-            }
-        }
-        showHelp = !showHelp
-    }
-    
-    @IBOutlet weak var imgHelp: UIImageView!
     
     @IBOutlet weak var editMode: UIBarButtonItem!
     @IBAction func btnEdit(sender: AnyObject) {
@@ -119,8 +55,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     @IBOutlet weak var CollectionView: UICollectionView!
-    
-    //@IBOutlet weak var mytoolBar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,12 +88,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     override func viewWillAppear(animated: Bool) {
-        // fetch the photos from collection
         self.navigationController!.hidesBarsOnTap = false
-        //mytoolBar.clipsToBounds = true
         
         editingMode = false
-        imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -200,6 +131,11 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
                 controller.landscape = landscape
+            }
+        }
+        if (segue.identifier == "menuAddResources") {
+            if let controller:MenuAddResources = segue.destinationViewController as? MenuAddResources {
+                controller.ViewCollection = self
             }
         }
     }
