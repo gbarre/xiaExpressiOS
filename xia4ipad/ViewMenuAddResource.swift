@@ -1,14 +1,14 @@
 //
-//  MenuAddResources.swift
+//  ViewMenuAddResource.swift
 //  xia
 //
-//  Created by Guillaume on 27/04/2016.
+//  Created by Guillaume on 02/05/2016.
 //  Copyright © 2016 Guillaume. All rights reserved.
 //
 
 import UIKit
 
-class MenuAddResources: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var dbg = debug(enable: true)
     weak var ViewCollection: ViewCollectionController?
@@ -36,6 +36,10 @@ class MenuAddResources: UIViewController, UIImagePickerControllerDelegate, UINav
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         let now: Int = Int(NSDate().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image, 85)
@@ -54,7 +58,7 @@ class MenuAddResources: UIViewController, UIImagePickerControllerDelegate, UINav
         
         // copy the image in the library
         if newMedia {
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(MenuAddResources.image(_:didFinishSavingWithError:contextInfo:)), nil)
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(ViewMenuAddResource.image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
         self.dismissViewControllerAnimated(true, completion: nil)
         ViewCollection!.CollectionView.reloadData()
@@ -87,5 +91,4 @@ class MenuAddResources: UIViewController, UIImagePickerControllerDelegate, UINav
             picker.delegate = self
         }
     }
-    
 }

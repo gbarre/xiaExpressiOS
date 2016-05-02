@@ -94,7 +94,7 @@
                                             </barButtonItem>
                                             <barButtonItem systemItem="add" id="5Zb-O2-v5O">
                                                 <connections>
-                                                    <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="menuAddResources" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
+                                                    <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="Add" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
                                                         <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                                                     </segue>
                                                 </connections>
@@ -1272,10 +1272,10 @@
             </objects>
             <point key="canvasLocation" x="1666" y="2253"/>
         </scene>
-        <!--Menu Add Resources-->
+        <!--View Menu Add Resource-->
         <scene sceneID="46Y-ad-Gjh">
             <objects>
-                <viewController modalPresentationStyle="formSheet" id="en8-Mw-eGZ" customClass="MenuAddResources" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="formSheet" id="en8-Mw-eGZ" customClass="ViewMenuAddResource" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7Tr-zn-qqM"/>
                         <viewControllerLayoutGuide type="bottom" id="Vdf-jK-A9N"/>
@@ -1308,7 +1308,7 @@
                                     <constraint firstAttribute="height" constant="40" id="8E0-qb-2fw"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
