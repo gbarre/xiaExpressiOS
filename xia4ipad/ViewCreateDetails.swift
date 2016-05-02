@@ -851,7 +851,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
         items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: #selector(ViewCreateDetails.goBack)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: fileTitle, style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
+        items.append(UIBarButtonItem(title: ((fileTitle == "") ? fileName : fileTitle), style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
         items.append(fixedSpace)
