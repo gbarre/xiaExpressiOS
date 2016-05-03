@@ -157,63 +157,19 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                 <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="disque-4" translatesAutoresizingMaskIntoConstraints="NO" id="uml-rI-VS4">
-                                <rect key="frame" x="525" y="525" width="75" height="75"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="64g-dH-Jyn"/>
-                                    <constraint firstAttribute="height" constant="75" id="f4s-Xr-XGB"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="disque-3" translatesAutoresizingMaskIntoConstraints="NO" id="XXy-Fo-ysV">
-                                <rect key="frame" x="0.0" y="525" width="75" height="75"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="AUQ-RU-0v9"/>
-                                    <constraint firstAttribute="width" constant="75" id="oP3-rI-AcO"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fI0-A2-zBP">
-                                <rect key="frame" x="540" y="540" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="IWN-HI-m19"/>
-                                    <constraint firstAttribute="height" constant="60" id="ct5-Lh-WdR"/>
-                                </constraints>
-                                <state key="normal" image="Info"/>
-                                <connections>
-                                    <action selector="btnMetas:" destination="fts-Lk-uqf" eventType="touchUpInside" id="urY-9Y-eRy"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vOv-d1-dW5">
-                                <rect key="frame" x="-1" y="540" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="Pzv-r7-Agi"/>
-                                    <constraint firstAttribute="width" constant="60" id="STv-WJ-Yj3"/>
-                                </constraints>
-                                <state key="normal" image="discuss"/>
-                                <connections>
-                                    <action selector="btnMetas:" destination="fts-Lk-uqf" eventType="touchUpInside" id="As7-T5-y1X"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="c8Q-UV-Vxn" secondAttribute="trailing" constant="-20" id="5Bv-aL-JtK"/>
                             <constraint firstAttribute="trailingMargin" secondItem="lHe-lY-w41" secondAttribute="trailing" constant="-20" id="8ZM-on-rZa"/>
-                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="vOv-d1-dW5" secondAttribute="bottom" id="A38-rg-xi3"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="lHe-lY-w41" secondAttribute="bottom" id="ELg-fq-59G"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Fwa-cM-DUY"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="T8v-I8-egC"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Zsa-lD-UhT"/>
-                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="XXy-Fo-ysV" secondAttribute="bottom" id="aSZ-0A-ihy"/>
-                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="fI0-A2-zBP" secondAttribute="bottom" id="ckF-Yb-Y9O"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" id="cpf-7v-ZLl"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="der-pQ-9E6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vTl-S5-lKu" secondAttribute="trailing" constant="-20" id="lHR-UU-Tup"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="fI0-A2-zBP" secondAttribute="trailing" constant="-20" id="p9b-73-GhD"/>
-                            <constraint firstItem="XXy-Fo-ysV" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="pon-w1-AAV"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="44" id="tHm-Vg-EYu"/>
-                            <constraint firstItem="vOv-d1-dW5" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-21" id="uiU-CV-4v4"/>
-                            <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="uml-rI-VS4" secondAttribute="bottom" id="ukj-FU-Wss"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="uml-rI-VS4" secondAttribute="trailing" constant="-20" id="vEo-v8-PuS"/>
                             <constraint firstItem="lHe-lY-w41" firstAttribute="top" secondItem="vTl-S5-lKu" secondAttribute="bottom" constant="44" id="wNX-tq-TnE"/>
                         </constraints>
                     </view>
@@ -223,16 +179,12 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="imgInfoBkgd" destination="XXy-Fo-ysV" id="Hqf-B6-RuS"/>
-                        <outlet property="imgInfoBtn" destination="vOv-d1-dW5" id="IRH-Lk-ACd"/>
                         <outlet property="imgTopBarBkgd" destination="vTl-S5-lKu" id="jbs-Lk-RAS"/>
-                        <outlet property="infoBkgd" destination="uml-rI-VS4" id="atj-df-tp5"/>
-                        <outlet property="infoBtn" destination="fI0-A2-zBP" id="GAm-TW-5lW"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
-                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorView="fI0-A2-zBP" id="IaL-8D-KRP">
-                            <popoverArrowDirection key="popoverArrowDirection" down="YES"/>
+                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorView="c8Q-UV-Vxn" id="IaL-8D-KRP">
+                            <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
-                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorView="fI0-A2-zBP" id="te6-xG-Kfx">
+                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorView="c8Q-UV-Vxn" id="te6-xG-Kfx">
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                         <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="n0o-Cr-euA"/>
