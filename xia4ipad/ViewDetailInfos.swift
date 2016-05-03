@@ -17,7 +17,6 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     var zoom: Bool = false
     var lock: Bool = false
     var detailTitle: String = ""
-    //var detailSubtitle: String = ""
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
@@ -25,20 +24,17 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     var filePath: String = ""
     weak var ViewCreateDetailsController: ViewCreateDetails?
 
-    @IBOutlet weak var btnZoom: UIButton!
+    @IBOutlet var switchZoom: UISwitch!
     @IBAction func btnZoomAction(sender: AnyObject) {
         zoom = !zoom
-        let btnImgZoom = (zoom) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnZoom.setImage(btnImgZoom, forState: .Normal)
+        switchZoom.on = zoom
     }
-    @IBOutlet weak var btnLock: UIButton!
+    @IBOutlet var switchLock: UISwitch!
     @IBAction func btnLockAction(sender: AnyObject) {
         lock = !lock
-        let btnImgLock = (lock) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnLock.setImage(btnImgLock, forState: .Normal)
+        switchLock.on = lock
     }
     @IBOutlet weak var txtTitle: UITextField!
-    //@IBOutlet var txtSubtitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
     @IBAction func btnCancel(sender: AnyObject) {
@@ -49,17 +45,15 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         // Save the detail in xml
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
-                d.attributes["zoom"] = (zoom) ? "true" : "false" //"\(btnZoom.on)"
-                d.attributes["locked"] = (lock) ? "true" : "false" //"\(btnLock.on)"
+                d.attributes["zoom"] = "\(switchZoom.on)"
+                d.attributes["locked"] = "\(switchLock.on)"
                 d.attributes["title"] = txtTitle.text
-                //d.attributes["subtitle"] = txtSubtitle.text
                 //d.value = attributedString2pikipiki(txtDesc.attributedText)
                 d.value = txtDesc.text
             }
         }
         let _ = writeXML(xml, path: "\(filePath).xml")
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
-        btnLock.resignFirstResponder()
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -69,13 +63,9 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         txtDesc.layer.cornerRadius = 5
-        
-        let btnImgZoom = (zoom) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnZoom.setImage(btnImgZoom, forState: .Normal)
-        let btnImgLock = (lock) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnLock.setImage(btnImgLock, forState: .Normal)
+        switchZoom.on = zoom
+        switchLock.on = lock
         txtTitle.text = self.detailTitle
-        //txtSubtitle.text = self.detailSubtitle
         
         txtDesc.delegate = self
         if self.detailDescription == "" {// Add placeholder
@@ -85,10 +75,6 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         else {
             txtDesc.text = self.detailDescription
         }
-        //txtDesc.attributedText = pikipiki2AttributedString(self.detailDescription)
-        
-        
-        //txtDesc.allowsEditingTextAttributes = true
         
         // autofocus
         txtTitle.becomeFirstResponder()

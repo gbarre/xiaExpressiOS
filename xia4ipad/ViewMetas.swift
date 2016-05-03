@@ -45,7 +45,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBAction func btnDone(sender: AnyObject) {
         // Save metas in xml
         xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["readonly"].value = (readOnlyState) ? "true" : "false" //"\(roSwitch.on)"
+        xml["xia"]["readonly"].value = "\(roSwitch.on)"
         xml["xia"]["readonly"].attributes["code"] = pass
         xml["xia"]["description"].value = txtDescription.text
         
@@ -83,7 +83,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     // First subview
     @IBOutlet var txtTitle: UITextField!
-    @IBOutlet var roButton: UIButton!
+    @IBOutlet var roSwitch: UISwitch!
     @IBAction func roBtnAction(sender: AnyObject) {
         let passTitle = (readOnlyState) ? NSLocalizedString("ENTER_CODE", comment: "") : NSLocalizedString("CREATE_CODE", comment: "")
         let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
@@ -94,8 +94,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             textField.keyboardType = UIKeyboardType.DecimalPad
         })
         controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
-            let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-            self.roButton.setImage(btnImg, forState: .Normal)
+            self.roSwitch.on = self.readOnlyState
         }))
         controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
             self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
@@ -104,9 +103,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             if self.readOnlyState {
                 if currentPass != nil && currentPass! == self.pass {
                     self.readOnlyState = !self.readOnlyState
-                    let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-                    self.roButton.setImage(btnImg, forState: .Normal)
-                    
                 }
                 else {
                     let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
@@ -126,30 +122,23 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     checkPass.keyboardType = UIKeyboardType.DecimalPad
                 })
                 check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
-                    let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-                    self.roButton.setImage(btnImg, forState: .Normal)
+                    self.roSwitch.on = self.readOnlyState
                 }))
                 check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
                         self.readOnlyState = !self.readOnlyState
-                        let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-                        self.roButton.setImage(btnImg, forState: .Normal)
                     }
                     else {
                         let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
                         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Destructive, handler: nil))
                         self.presentViewController(alert, animated: true, completion: nil)
-                        let btnImg = (self.readOnlyState) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-                        self.roButton.setImage(btnImg, forState: .Normal)
                     }
                     
                 }))
                 
                 self.presentViewController(check, animated: true, completion: nil)
-                
-                
             }
         }))
         
@@ -235,8 +224,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
         navBar.topItem?.title = txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
-        let btnImg = (xml["xia"]["readonly"].value == "true" ) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        roButton.setImage(btnImg, forState: .Normal)
+        roSwitch.on = readOnlyState
+        
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
         txtDescription.layer.cornerRadius = 5        
 

@@ -274,13 +274,12 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f3m-RF-b7l">
-                                        <rect key="frame" x="142" y="42" width="30" height="30"/>
-                                        <state key="normal" image="uncheckedbox"/>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4KR-Bk-sGf">
+                                        <rect key="frame" x="142" y="41" width="51" height="31"/>
                                         <connections>
-                                            <action selector="roBtnAction:" destination="6f8-Rg-eyD" eventType="touchUpInside" id="hve-ZQ-zEA"/>
+                                            <action selector="roBtnAction:" destination="6f8-Rg-eyD" eventType="valueChanged" id="SlT-3s-piC"/>
                                         </connections>
-                                    </button>
+                                    </switch>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="HmH-nV-S1b" firstAttribute="top" secondItem="xQY-2I-aCi" secondAttribute="top" constant="81" id="0Z3-J6-cmJ"/>
@@ -516,7 +515,7 @@
                         <outlet property="imgTitle" destination="743-iM-0pW" id="XVc-IE-dvq"/>
                         <outlet property="licensePicker" destination="jfi-Xa-wqb" id="dQ8-Ex-kNL"/>
                         <outlet property="navBar" destination="lcf-Ec-yh1" id="Lar-KQ-6vN"/>
-                        <outlet property="roButton" destination="f3m-RF-b7l" id="5O3-2C-nId"/>
+                        <outlet property="roSwitch" destination="4KR-Bk-sGf" id="mT3-LU-1i5"/>
                         <outlet property="segment" destination="EUE-hm-iSr" id="bSe-44-nLM"/>
                         <outlet property="txtContributors" destination="GmU-93-RDc" id="sSB-w8-4u9"/>
                         <outlet property="txtCoverage" destination="p3K-E0-Ri8" id="87a-RI-QJ1"/>
@@ -577,34 +576,40 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EpJ-Ie-KDQ" userLabel="Buttons View">
                                 <rect key="frame" x="20" y="72" width="760" height="30"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enable Zoom :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eg-c7-9lt">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable Zoom :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1eg-c7-9lt">
                                         <rect key="frame" x="8" y="5" width="110" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBJ-mV-6Ba">
-                                        <rect key="frame" x="126" y="0.0" width="30" height="30"/>
-                                        <state key="normal" image="uncheckedbox"/>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h7G-r5-OAo">
+                                        <rect key="frame" x="126" y="-1" width="51" height="31"/>
                                         <connections>
-                                            <action selector="btnZoomAction:" destination="cwz-uV-RB1" eventType="touchUpInside" id="NSu-uf-q1U"/>
+                                            <action selector="btnZoomAction:" destination="cwz-uV-RB1" eventType="valueChanged" id="Qxb-4r-DLO"/>
                                         </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Lock detail :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V9p-SZ-4yS">
-                                        <rect key="frame" x="164" y="5" width="92" height="21"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lock detail :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V9p-SZ-4yS">
+                                        <rect key="frame" x="183" y="5" width="92" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WIE-eP-65r">
-                                        <rect key="frame" x="264" y="1" width="30" height="30"/>
-                                        <state key="normal" image="uncheckedbox"/>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rik-5d-Kuz">
+                                        <rect key="frame" x="283" y="-1" width="51" height="31"/>
                                         <connections>
-                                            <action selector="btnLockAction:" destination="cwz-uV-RB1" eventType="touchUpInside" id="aO9-uc-YqU"/>
+                                            <action selector="btnLockAction:" destination="cwz-uV-RB1" eventType="valueChanged" id="Y6a-CV-RPB"/>
                                         </connections>
-                                    </button>
+                                    </switch>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="V9p-SZ-4yS" firstAttribute="leading" secondItem="h7G-r5-OAo" secondAttribute="trailing" constant="8" id="Acz-hN-1Jy"/>
+                                    <constraint firstItem="V9p-SZ-4yS" firstAttribute="centerY" secondItem="EpJ-Ie-KDQ" secondAttribute="centerY" id="EwA-dH-PhV"/>
+                                    <constraint firstItem="rik-5d-Kuz" firstAttribute="leading" secondItem="V9p-SZ-4yS" secondAttribute="trailing" constant="8" id="HQv-lu-Ib1"/>
+                                    <constraint firstItem="rik-5d-Kuz" firstAttribute="centerY" secondItem="EpJ-Ie-KDQ" secondAttribute="centerY" id="IsU-u3-nkI"/>
+                                    <constraint firstItem="1eg-c7-9lt" firstAttribute="leading" secondItem="EpJ-Ie-KDQ" secondAttribute="leading" constant="8" id="QFB-Tx-7KX"/>
+                                    <constraint firstItem="1eg-c7-9lt" firstAttribute="centerY" secondItem="EpJ-Ie-KDQ" secondAttribute="centerY" id="eug-GV-zEQ"/>
+                                    <constraint firstItem="h7G-r5-OAo" firstAttribute="leading" secondItem="1eg-c7-9lt" secondAttribute="trailing" constant="8" id="qxd-VA-BuP"/>
+                                    <constraint firstItem="h7G-r5-OAo" firstAttribute="centerY" secondItem="EpJ-Ie-KDQ" secondAttribute="centerY" id="vkH-JJ-sVF"/>
                                     <constraint firstAttribute="height" constant="30" id="x2x-KW-haX"/>
                                 </constraints>
                             </view>
@@ -633,8 +638,8 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="800" height="600"/>
                     <connections>
-                        <outlet property="btnLock" destination="WIE-eP-65r" id="fJL-Dy-RSY"/>
-                        <outlet property="btnZoom" destination="xBJ-mV-6Ba" id="lDn-n2-9m3"/>
+                        <outlet property="switchLock" destination="rik-5d-Kuz" id="RwB-Lu-eea"/>
+                        <outlet property="switchZoom" destination="h7G-r5-OAo" id="UkP-vi-gzZ"/>
                         <outlet property="txtDesc" destination="pK2-BQ-1RC" id="DHa-qM-VVU"/>
                         <outlet property="txtTitle" destination="i3A-TS-Y6z" id="8t5-lA-kJz"/>
                     </connections>
@@ -1308,7 +1313,6 @@
         <image name="disque-4" width="75" height="75"/>
         <image name="export_tablet" width="150" height="150"/>
         <image name="inkscape" width="150" height="150"/>
-        <image name="uncheckedbox" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
