@@ -402,7 +402,6 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
         // Add img infos
-        //xml.addChild(name: "image", value: "", attributes: ["title" : "", "subtitle" : "", "desctription" : ""])
         xml.addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
         
         // Create details

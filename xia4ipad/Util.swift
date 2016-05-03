@@ -72,7 +72,6 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
         }
         // Look for image child (to store image title & description)
         if child["image"].attributes["title"] == nil {
-            //xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "subtitle" : "", "desctription" : ""])
             xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
         }
     }
@@ -81,9 +80,6 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
             if detail.attributes["locked"] == nil {
                 detail.attributes["locked"] = "false"
             }
-            /*if detail.attributes["subtitle"] == nil {
-                detail.attributes["subtitle"] = ""
-            }*/
         }
     }
     
