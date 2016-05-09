@@ -39,6 +39,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var popup: UIView!
     @IBOutlet var imgArea: UIView!
     @IBOutlet var imgThumb: UIImageView!
+    @IBOutlet var titleArea: UIView!
     @IBOutlet var detailTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
     @IBOutlet var bkgdzoom: UIImageView!
@@ -61,6 +62,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
             }
             UIView.animateWithDuration(2 * transitionDuration) { () -> Void in
                 self.imgArea.alpha = 1
+                self.titleArea.alpha = 1
             }
             showZoom = false
         }
@@ -152,6 +154,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         
         UIView.animateWithDuration(transitionDuration) { () -> Void in
             self.bkgdzoom.alpha = 1
+            self.titleArea.alpha = 0
             self.imgArea.alpha = 0
             detailImg.transform = CGAffineTransformScale(detailImg.transform, detailScale / self.currentScale, detailScale / self.currentScale)
         }
