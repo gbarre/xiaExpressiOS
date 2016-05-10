@@ -1,4 +1,3 @@
-
 /* Class = "UILabel"; text = "Publisher:"; ObjectID = "0iM-yM-5dr"; */
 "0iM-yM-5dr.text" = "Éditeur :";
 
@@ -11,14 +10,20 @@
 /* Class = "UILabel"; text = "Title:"; ObjectID = "2tJ-dC-njn"; */
 "2tJ-dC-njn.text" = "Titre :";
 
-/* Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ"; */
-"72e-zG-aQJ.text" = "Source :";
+/* Class = "UIButton"; normalTitle = "Xia Tablet"; ObjectID = "9E6-ph-iRl"; */
+"9E6-ph-iRl.normalTitle" = "Xia Tablette";
 
 /* Class = "UILabel"; text = "Creator:"; ObjectID = "9Qo-Kh-Y2a"; */
 "9Qo-Kh-Y2a.text" = "Auteur :";
 
+/* Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ"; */
+"72e-zG-aQJ.text" = "Source :";
+
 /* Class = "UILabel"; text = "Identifier:"; ObjectID = "AFw-Te-aYH"; */
 "AFw-Te-aYH.text" = "Identifiant :";
+
+/* Class = "UIButton"; normalTitle = "Inkscape (SVG)"; ObjectID = "Bgb-Yq-Xcg"; */
+"Bgb-Yq-Xcg.normalTitle" = "Inkscape (SVG)";
 
 /* Class = "UINavigationItem"; title = "Title"; ObjectID = "Bz9-wZ-fV4"; */
 "Bz9-wZ-fV4.title" = "Titre";
@@ -29,32 +34,20 @@
 /* Class = "UILabel"; text = "Date:"; ObjectID = "CPm-pq-eaL"; */
 "CPm-pq-eaL.text" = "Date :";
 
-/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "First"; ObjectID = "EUE-hm-iSr"; */
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "Metas 1"; ObjectID = "EUE-hm-iSr"; */
 "EUE-hm-iSr.segmentTitles[0]" = "Métas 1";
 
-/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Second"; ObjectID = "EUE-hm-iSr"; */
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Metas 2"; ObjectID = "EUE-hm-iSr"; */
 "EUE-hm-iSr.segmentTitles[1]" = "Métas 2";
 
-/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Third"; ObjectID = "EUE-hm-iSr"; */
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Metas 3"; ObjectID = "EUE-hm-iSr"; */
 "EUE-hm-iSr.segmentTitles[2]" = "Métas 3";
 
-/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[3] = "Third"; ObjectID = "EUE-hm-iSr"; */
+/* Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[3] = "Image Infos"; ObjectID = "EUE-hm-iSr"; */
 "EUE-hm-iSr.segmentTitles[3]" = "Infos Image";
-
-/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Elj-an-Bgi"; */
-"Elj-an-Bgi.normalTitle" = "Boutton";
 
 /* Class = "UILabel"; text = "License:"; ObjectID = "HaU-RO-jTp"; */
 "HaU-RO-jTp.text" = "Licence:";
-
-/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "HmH-nV-S1b"; */
-"HmH-nV-S1b.text" = "";
-
-/* Class = "UIBarButtonItem"; title = "Collection"; ObjectID = "LBo-27-0LP"; */
-"LBo-27-0LP.title" = "Collection";
-
-/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "S4K-WX-yik"; */
-"S4K-WX-yik.title" = "Modifier";
 
 /* Class = "UILabel"; text = "License :"; ObjectID = "OOl-89-UZY"; */
 "OOl-89-UZY.text" = "Licence :";
@@ -65,8 +58,20 @@
 /* Class = "UILabel"; text = "Identifier:"; ObjectID = "PqV-gI-xQQ"; */
 "PqV-gI-xQQ.text" = "Identifiant :";
 
+/* Class = "UILabel"; text = "Show details:"; ObjectID = "Prj-CR-6X0"; */
+"Prj-CR-6X0.text" = "Afficher les détails :";
+
 /* Class = "UILabel"; text = "Contributors:"; ObjectID = "Qb8-OO-2vj"; */
 "Qb8-OO-2vj.text" = "Collaborateurs :";
+
+/* Class = "UILabel"; text = "Title:"; ObjectID = "RiH-iE-LMf"; */
+"RiH-iE-LMf.text" = "Titre :";
+
+/* Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "S4K-WX-yik"; */
+"S4K-WX-yik.title" = "Modifier";
+
+/* Class = "UILabel"; text = "Choose export format"; ObjectID = "S8B-NA-m8q"; */
+"S8B-NA-m8q.text" = "Choisissez votre format";
 
 /* Class = "UINavigationItem"; title = "Photo Album"; ObjectID = "TDA-2G-8Io"; */
 "TDA-2G-8Io.title" = "Album Photo";
@@ -107,23 +112,32 @@
 /* Class = "UILabel"; text = "Source:"; ObjectID = "jEZ-dQ-SXu"; */
 "jEZ-dQ-SXu.text" = "Source :";
 
+/* Class = "UILabel"; text = "Description:"; ObjectID = "kGq-br-nQL"; */
+"kGq-br-nQL.text" = "Description :";
+
 /* Class = "UILabel"; text = "Coverage:"; ObjectID = "kQc-PX-Qno"; */
 "kQc-PX-Qno.text" = "Portée :";
 
 /* Class = "UILabel"; text = "Date:"; ObjectID = "kUw-Ha-Bf8"; */
 "kUw-Ha-Bf8.text" = "Date :";
 
+/* Class = "UINavigationItem"; title = "Xia"; ObjectID = "mpy-Pt-Gc9"; */
+"mpy-Pt-Gc9.title" = "Xia";
+
 /* Class = "UILabel"; text = "Relation:"; ObjectID = "o0j-WH-kyQ"; */
 "o0j-WH-kyQ.text" = "Relation :";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "o2a-Cq-mW0"; */
-"o2a-Cq-mW0.text" = "Label";
+/* Class = "UIButton"; normalTitle = "Select the sending mode"; ObjectID = "oaz-fN-m3c"; */
+"oaz-fN-m3c.normalTitle" = "Choisir le mode d'envoi";
 
 /* Class = "UITextView"; text = "Detail description..."; ObjectID = "pK2-BQ-1RC"; */
 "pK2-BQ-1RC.text" = "Description ...";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "qNg-bF-MbM"; */
 "qNg-bF-MbM.text" = "Label";
+
+/* Class = "UILabel"; text = "Create new document"; ObjectID = "rpS-Y6-11Z"; */
+"rpS-Y6-11Z.text" = "Créer un nouveau document";
 
 /* Class = "UINavigationItem"; title = "Full-Size Image"; ObjectID = "tex-5h-mAS"; */
 "tex-5h-mAS.title" = "Full-Size Image";
@@ -134,11 +148,11 @@
 /* Class = "UILabel"; text = "Publisher:"; ObjectID = "vBa-jZ-peo"; */
 "vBa-jZ-peo.text" = "Éditeur :";
 
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "vF0-pf-13y"; */
+"vF0-pf-13y.text" = "Texte...";
+
 /* Class = "UITextView"; text = "text"; ObjectID = "vcV-ky-zXs"; */
 "vcV-ky-zXs.text" = "text";
-
-/* Class = "UIBarButtonItem"; title = "Title"; ObjectID = "x4L-95-X7o"; */
-"x4L-95-X7o.title" = "Titre";
 
 /* Class = "UIViewController"; title = "Play Xia"; ObjectID = "xod-8C-OKb"; */
 "xod-8C-OKb.title" = "Play Xia";
@@ -149,23 +163,6 @@
 /* Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH"; */
 "ysm-4r-fEH.text" = "Description :";
 
-"S8B-NA-m8q.text" = "Choisissez votre format";
-
-"oaz-fN-m3c.title" = "Choissisez le mode d'envoi";
-
-"9E6-ph-iRl.title" = "Xia Tablette";
-
-"rpS-Y6-11Z.text" = "Créer un nouveau document";
-
+/* Class = "UIButton"; normalTitle = "Take a photo"; ObjectID = "zXw-1L-ZiN"; */
 "zXw-1L-ZiN.normalTitle" = "Prendre une photo";
-
-"RiH-iE-LMf.text" = "Titre :";
-
-"kGq-br-nQL.text" = "Description :";
-
-"743-iM-0pW.placeholder" = "Titre...";
-
-"Sm9-RL-rvh.placeholder" = "Titre...";
-
-"Prj-CR-6X0.text" = "Afficher les détails :";
 
