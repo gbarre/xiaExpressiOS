@@ -22,7 +22,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var touchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
     var showDetails: Bool = false
-    var detailsVisibles: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
     var img: UIImage!
     
@@ -34,12 +33,26 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
+    @IBOutlet var leftButtonBkgd: UIImageView!
+    @IBOutlet var leftButton: UIButton!
     @IBAction func showMetas(sender: AnyObject) {
         performSegueWithIdentifier("playMetas", sender: self)
     }
     @IBAction func showImgInfos(sender: AnyObject) {
         touchedTag = 0
         performSegueWithIdentifier("openDetail", sender: self)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        // hide left button (image infos) if there are no title & description
+        // hide left button if details are not showed
+        if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
+            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == "")) ||
+            !showDetails
+            ) {
+            leftButton.hidden = true
+            leftButtonBkgd.hidden = true
+        }
     }
     
     override func viewDidLoad() {
@@ -89,18 +102,16 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
             }
         }
-        detailsVisibles = hideDetails(true)
+        showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = !showDetails
+            }
+        }
         
         if xml["xia"]["readonly"].value! == "true" {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayXia.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         }
-    }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if !detailsVisibles {
-            showDetails = hideDetails(false)
-        }
-        
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -113,28 +124,10 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             let (detailTag, detailPoints) = detail
             if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                 touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                //let zoom: Bool = btnZoom.on
                 performSegueWithIdentifier("openDetail", sender: self)
                 break
             }
         }
-        
-        if (touchedTag == 0 && detailsVisibles) {
-            for subview in view.subviews {
-                if subview.tag == 666 || subview.tag == 667 {
-                    subview.removeFromSuperview()
-                }
-                if subview.tag > 99 {
-                    subview.hidden = false
-                }
-            }
-            detailsVisibles = hideDetails(true)
-        }
-        if !detailsVisibles && showDetails {
-            detailsVisibles = true
-            showDetails = false
-        }
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -144,7 +137,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         if (segue.identifier == "openDetail") {
-            detailsVisibles = hideDetails(true)
             if let controller:PlayDetail = segue.destinationViewController as? PlayDetail {
                 controller.transitioningDelegate = self
                 controller.modalPresentationStyle = .FormSheet
@@ -179,16 +171,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
-    }
-    
-    func hideDetails(hidden: Bool) -> Bool {
-        for subview in view.subviews {
-            if subview.tag > 199 {
-                subview.hidden = hidden
-            }
-        }
-        
-        return !hidden
     }
     
     func rotated() {

@@ -384,7 +384,7 @@ public class AEXMLDocument: AEXMLElement {
         // Create root xml with attributes
         let xml = xmlFile.addChild(name: "xia")
         
-        // Insert default title
+        // Insert default metas
         xml.addChild(name: "title", value: "", attributes: nil)
         xml.addChild(name: "description" , value: "", attributes: nil)
         xml.addChild(name: "creator", value: "", attributes: nil)
@@ -405,7 +405,7 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
         
         // Create details
-        xml.addChild(name: "details")
+        xml.addChild(name: "details", value: "", attributes: ["show" : "true"])
         
         return xmlFile.xmlString
     }

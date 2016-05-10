@@ -178,7 +178,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     
                     // Create details
-                    xmlXIA["xia"].addChild(name: "details")
+                    xmlXIA["xia"].addChild(name: "details", value: "", attributes: ["show" : "true"])
                     var currentDetailTag = 99
                     
                     let svgRoot = (group) ? xml["svg"]["g"] : xml["svg"]

@@ -74,6 +74,11 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
         if child["image"].attributes["title"] == nil {
             xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
         }
+        // Look for the default show details attributes
+        if child["details"].attributes["show"] == nil {
+            xml["xia"]["details"].attributes["show"] = "true"
+        }
+            
     }
     if let xmlDetails = xml["xia"]["details"]["detail"].all {
         for detail in xmlDetails {

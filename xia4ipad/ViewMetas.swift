@@ -47,6 +47,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["title"].value = txtTitle.text
         xml["xia"]["readonly"].value = "\(roSwitch.on)"
         xml["xia"]["readonly"].attributes["code"] = pass
+        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
         xml["xia"]["description"].value = txtDescription.text
         
         xml["xia"]["creator"].value = txtCreator.text
@@ -145,6 +146,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         presentViewController(controller, animated: true, completion: nil)
     }
     
+    @IBOutlet var showDetailSwitch: UISwitch!
+    
     @IBOutlet var txtDescription: UITextView!
     
     // Second subview
@@ -225,6 +228,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         navBar.topItem?.title = txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
         roSwitch.on = readOnlyState
+        showDetailSwitch.on = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
         
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
         txtDescription.layer.cornerRadius = 5        

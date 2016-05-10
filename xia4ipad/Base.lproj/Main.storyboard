@@ -251,7 +251,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Sm9-RL-rvh" userLabel="txt title">
                                         <rect key="frame" x="142" y="4" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Read Only:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ty8-Oi-H75">
                                         <rect key="frame" x="8" y="46" width="126" height="21"/>
@@ -280,11 +280,24 @@
                                             <action selector="roBtnAction:" destination="6f8-Rg-eyD" eventType="valueChanged" id="SlT-3s-piC"/>
                                         </connections>
                                     </switch>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VIb-7Y-3Je">
+                                        <rect key="frame" x="409" y="41" width="51" height="31"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show details:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Prj-CR-6X0">
+                                        <rect key="frame" x="299" y="46" width="102" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="HmH-nV-S1b" firstAttribute="top" secondItem="xQY-2I-aCi" secondAttribute="top" constant="81" id="0Z3-J6-cmJ"/>
                                     <constraint firstAttribute="bottom" secondItem="HmH-nV-S1b" secondAttribute="bottom" constant="8" id="ADi-0H-SCt"/>
+                                    <constraint firstItem="Prj-CR-6X0" firstAttribute="top" secondItem="xQY-2I-aCi" secondAttribute="top" constant="46" id="GWq-cg-DoX"/>
+                                    <constraint firstItem="Prj-CR-6X0" firstAttribute="centerX" secondItem="xQY-2I-aCi" secondAttribute="centerX" id="fHe-S0-Xoy"/>
                                     <constraint firstItem="HmH-nV-S1b" firstAttribute="leading" secondItem="xQY-2I-aCi" secondAttribute="leading" constant="142" id="hBR-rF-dDn"/>
+                                    <constraint firstItem="VIb-7Y-3Je" firstAttribute="leading" secondItem="Prj-CR-6X0" secondAttribute="trailing" constant="8" id="t0w-gZ-AMu"/>
+                                    <constraint firstItem="VIb-7Y-3Je" firstAttribute="top" secondItem="xQY-2I-aCi" secondAttribute="top" constant="41" id="tNM-n4-Jt6"/>
                                 </constraints>
                             </view>
                             <view tag="11" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1FH-9q-Ht7" userLabel="Second View">
@@ -299,7 +312,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="5hC-H3-zdk" userLabel="txt creator">
                                         <rect key="frame" x="142" y="4" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rights:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fgB-2y-w7g">
                                         <rect key="frame" x="8" y="46" width="126" height="21"/>
@@ -310,7 +323,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="wfO-Y2-PJH" userLabel="txt rights">
                                         <rect key="frame" x="142" y="42" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Publisher:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0iM-yM-5dr">
                                         <rect key="frame" x="8" y="84" width="126" height="21"/>
@@ -321,7 +334,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="VyZ-4n-KlH" userLabel="txt publisher">
                                         <rect key="frame" x="142" y="80" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Identifier:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PqV-gI-xQQ">
                                         <rect key="frame" x="8" y="122" width="126" height="21"/>
@@ -332,7 +345,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ri0-L2-dhW" userLabel="txt Identifier">
                                         <rect key="frame" x="142" y="118" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Source:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jEZ-dQ-SXu">
                                         <rect key="frame" x="8" y="160" width="126" height="21"/>
@@ -343,7 +356,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="feS-Yd-koS" userLabel="txt source">
                                         <rect key="frame" x="142" y="156" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPm-pq-eaL">
                                         <rect key="frame" x="8" y="198" width="126" height="21"/>
@@ -381,7 +394,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="SgT-wp-Ee7" userLabel="txt languages">
                                         <rect key="frame" x="143" y="4" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Keywords:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TOp-EQ-Cf2">
                                         <rect key="frame" x="8" y="46" width="126" height="21"/>
@@ -392,7 +405,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="MvU-aU-BEa" userLabel="txt keywords">
                                         <rect key="frame" x="142" y="42" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Contributors:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qb8-OO-2vj">
                                         <rect key="frame" x="8" y="85" width="126" height="21"/>
@@ -403,7 +416,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="GmU-93-RDc" userLabel="txt contributors">
                                         <rect key="frame" x="142" y="80" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Relation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o0j-WH-kyQ">
                                         <rect key="frame" x="8" y="121" width="126" height="21"/>
@@ -414,7 +427,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="2bB-9D-Pw1" userLabel="txt relation">
                                         <rect key="frame" x="142" y="118" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Coverage:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kQc-PX-Qno">
                                         <rect key="frame" x="8" y="160" width="126" height="21"/>
@@ -425,7 +438,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="p3K-E0-Ri8" userLabel="txt coverage">
                                         <rect key="frame" x="142" y="156" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="License:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HaU-RO-jTp">
                                         <rect key="frame" x="8" y="198" width="126" height="21"/>
@@ -456,7 +469,7 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="743-iM-0pW" userLabel="txt title">
                                         <rect key="frame" x="142" y="4" width="550" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vF0-pf-13y" userLabel="txt Description">
                                         <rect key="frame" x="142" y="42" width="550" height="338"/>
@@ -517,6 +530,7 @@
                         <outlet property="navBar" destination="lcf-Ec-yh1" id="Lar-KQ-6vN"/>
                         <outlet property="roSwitch" destination="4KR-Bk-sGf" id="mT3-LU-1i5"/>
                         <outlet property="segment" destination="EUE-hm-iSr" id="bSe-44-nLM"/>
+                        <outlet property="showDetailSwitch" destination="VIb-7Y-3Je" id="GcC-6t-61C"/>
                         <outlet property="txtContributors" destination="GmU-93-RDc" id="sSB-w8-4u9"/>
                         <outlet property="txtCoverage" destination="p3K-E0-Ri8" id="87a-RI-QJ1"/>
                         <outlet property="txtCreator" destination="5hC-H3-zdk" id="7Hg-po-Tqd"/>
@@ -861,6 +875,8 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bkgdImage" destination="0Lw-CX-Jch" id="izJ-qn-wVK"/>
+                        <outlet property="leftButton" destination="98v-a1-p6u" id="WNn-fS-2ei"/>
+                        <outlet property="leftButtonBkgd" destination="FRa-RV-v1u" id="zJB-t6-ZJk"/>
                         <segue destination="qPI-AN-OzC" kind="presentation" identifier="playMetas" modalPresentationStyle="formSheet" id="sHY-m5-oAp"/>
                         <segue destination="W9K-wb-Ida" kind="presentation" identifier="openDetail" modalPresentationStyle="formSheet" modalTransitionStyle="crossDissolve" id="acO-1Z-rxO"/>
                     </connections>
