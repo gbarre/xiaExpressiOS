@@ -677,7 +677,6 @@
         <!--Share-->
         <scene sceneID="Qxc-Wq-OHu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Rx7-BE-jgH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController autoresizesArchivedViewToFullSize="NO" title="Share" id="ZHU-7B-zUy" customClass="ViewExport" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleAspectFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" sectionIndexMinimumDisplayRowCount="-1" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="jKM-kv-IWe">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="135"/>
@@ -748,6 +747,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="135"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rx7-BE-jgH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1929" y="1243.5"/>
         </scene>
@@ -1045,7 +1045,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CMD-SV-YNm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="778" y="2253"/>
+            <point key="canvasLocation" x="781" y="2255"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
@@ -1195,7 +1195,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1666" y="2253"/>
+            <point key="canvasLocation" x="1666" y="2255"/>
         </scene>
         <!--View Menu Add Resource-->
         <scene sceneID="46Y-ad-Gjh">
@@ -1227,29 +1227,30 @@
                                 </connections>
                             </button>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dav-Eu-U9D">
-                                <rect key="frame" x="0.0" y="17" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <items>
                                     <navigationItem title="Create new document" id="74f-sH-8RF"/>
                                 </items>
                             </navigationBar>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="dav-Eu-U9D" secondAttribute="trailing" constant="-20" id="5SX-8y-oi0"/>
+                            <constraint firstItem="dav-Eu-U9D" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" constant="8" id="4Bt-Jc-5YK"/>
                             <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="zXw-1L-ZiN" secondAttribute="bottom" id="5kn-NW-CGI"/>
-                            <constraint firstItem="dav-Eu-U9D" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="IaU-UT-Jx7"/>
+                            <constraint firstItem="dav-Eu-U9D" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" constant="8" id="Cyp-uJ-rFf"/>
                             <constraint firstItem="zXw-1L-ZiN" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="KFK-cX-OtX"/>
-                            <constraint firstItem="5S9-dW-psV" firstAttribute="top" secondItem="dav-Eu-U9D" secondAttribute="bottom" id="Tn3-6Z-0U8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dav-Eu-U9D" secondAttribute="trailing" constant="-20" id="KqJ-g5-qVv"/>
+                            <constraint firstItem="dav-Eu-U9D" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="Q8L-2Z-izm"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zXw-1L-ZiN" secondAttribute="trailing" constant="-20" id="Y6p-jL-vVa"/>
                             <constraint firstItem="5S9-dW-psV" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="b3I-Ij-PGy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5S9-dW-psV" secondAttribute="trailing" constant="-20" id="d0O-6O-Pn0"/>
                             <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="5S9-dW-psV" secondAttribute="bottom" constant="46" id="ltO-54-8OT"/>
-                            <constraint firstItem="dav-Eu-U9D" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" constant="-3" id="pwr-VA-gb8"/>
+                            <constraint firstItem="5S9-dW-psV" firstAttribute="top" secondItem="dav-Eu-U9D" secondAttribute="bottom" constant="-11" id="x2Z-3e-FfV"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7TT-BZ-Oaq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1929" y="-855"/>
+            <point key="canvasLocation" x="1937" y="-855"/>
         </scene>
         <!--Image Picker Controller-->
         <scene sceneID="Pdt-i5-2zK">
@@ -1281,7 +1282,7 @@
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="n0o-Cr-euA"/>
-        <segue reference="IaL-8D-KRP"/>
+        <segue reference="4uf-YC-Gjx"/>
+        <segue reference="J54-6x-Hse"/>
     </inferredMetricsTieBreakers>
 </document>
