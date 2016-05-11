@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
+class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate {
     var docController:UIDocumentInteractionController!
     
     let dbg = debug(enable: true)
@@ -30,57 +30,37 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
         "keywords", "coverage", "contributors", "description"
     ]
     
-    var counter:Int = 0 {
-        didSet {
-            let fractionalProgress = Float(counter) / 100.0
-            let animated = counter != 0
-            
-            progressView.setProgress(fractionalProgress, animated: animated)
-        }
-    }
-
-    @IBOutlet var sendingButton: UIButton!
-    @IBAction func selectSendingMode(sender: AnyObject) {
-        //performSegueWithIdentifier("export", sender: self)
-        openDocumentInteractionController(tmpFilePath)
-    }
-
-    @IBOutlet var progressView: UIProgressView!
-    @IBAction func btnCancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
     }
     
-    @IBOutlet var imgSimpleXML: UIButton!
-    @IBOutlet weak var btnSimpleXML: UIButton!
-    @IBAction func exportSimpleXML(sender: AnyObject) {
-        progressView.hidden = false
-        sendingButton.hidden = true
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch indexPath.row {
+        case 0:
+            exportSimpleXML()
+        case 1:
+            exportSVG()
+        default:
+            dbg.pt("oups...")
+        }
         
-        imgSVG.alpha = 0.5
-        btnSVG.alpha = 0.5
-        
-        imgSimpleXML.alpha = 1
-        btnSimpleXML.alpha = 1
-        
-        self.counter = 5
+    }
+    
+    func exportSimpleXML() {
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
         let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
-        
-        self.counter = 25
         
         // prepare xml
         xmlSimpleXML.addChild(name: "XiaiPad")
         xmlSimpleXML["XiaiPad"].addChild(xml["xia"])
         xmlSimpleXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String, attributes: nil)
         
-        self.counter = 50
-        
         // write xml to temp directory
         tmpFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
         do {
-            self.counter = 75
             try xmlSimpleXML.xmlString.writeToFile(tmpFilePath, atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
@@ -90,47 +70,34 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
         openDocumentInteractionController(tmpFilePath)
     }
     
-    @IBOutlet var imgSVG: UIButton!
-    @IBOutlet var btnSVG: UIButton!
-    @IBAction func exportSVG(sender: AnyObject) {
-        progressView.hidden = false
-        sendingButton.hidden = true
-        
-        imgSVG.alpha = 1
-        btnSVG.alpha = 1
-        
-        imgSimpleXML.alpha = 0.5
-        btnSimpleXML.alpha = 0.5
-        self.counter = 5
-        // encode image to base64
+    func exportSVG() {
+       // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
         let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
-        
-        self.counter = 25
         
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
         
         // prepare xml
         let xmlAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
-            "xmlns:cc" : "http://creativecommons.org/ns#",
-            "xmlns:rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "xmlns:svg" : "http://www.w3.org/2000/svg",
-            "xmlns" : "http://www.w3.org/2000/svg",
-            "xmlns:xlink" : "http://www.w3.org/1999/xlink",
-            "xmlns:sodipodi" : "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
-            "xmlns:inkscape" : "http://www.inkscape.org/namespaces/inkscape",
-            "id" : "svg\(svgID)",
-            "version" : "1.1",
-            "inkscape:version" : "0.91",
-            "width" : "\(img.size.width)",
-            "height" : "\(img.size.height)",
-            "viewBox" : "0 0 \(img.size.width) \(img.size.height)",
-            "sodipodi:docname" : "\(now).svg"]
+                             "xmlns:cc" : "http://creativecommons.org/ns#",
+                             "xmlns:rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                             "xmlns:svg" : "http://www.w3.org/2000/svg",
+                             "xmlns" : "http://www.w3.org/2000/svg",
+                             "xmlns:xlink" : "http://www.w3.org/1999/xlink",
+                             "xmlns:sodipodi" : "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+                             "xmlns:inkscape" : "http://www.inkscape.org/namespaces/inkscape",
+                             "id" : "svg\(svgID)",
+                             "version" : "1.1",
+                             "inkscape:version" : "0.91",
+                             "width" : "\(img.size.width)",
+                             "height" : "\(img.size.height)",
+                             "viewBox" : "0 0 \(img.size.width) \(img.size.height)",
+                             "sodipodi:docname" : "\(now).svg"]
         xmlSVG.addChild(name: "svg", value: "", attributes: xmlAttributes)
         
-
+        
         xmlSVG["svg"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+1)"])
         
         // Metas
@@ -186,7 +153,7 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
             "CommercialUse" : "none",
             "DerivativeWorks" : "none",
             "ShareAlike" : "none"
-            ]
+        ]
         var rdfResource: String = ""
         switch license {
         case "Proprietary - CC-Zero":
@@ -303,40 +270,36 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
         xmlSVG["svg"].addChild(name: "defs", value: "", attributes: ["id" : "defs\(svgID+3)"])
         
         let sodipodiAttributes = ["pagecolor" : "#ffffff",
-            "bordercolor" : "#666666",
-            "borderopacity" : "1",
-            "objecttolerance" : "10",
-            "gridtolerance" : "10",
-            "guidetolerance" : "10",
-            "inkscape:pageopacity" : "0",
-            "inkscape:pageshadow" : "2",
-            "inkscape:window-width" : "640",
-            "inkscape:window-height" : "480",
-            "id" : "namedview\(svgID+4)",
-            "showgrid" : "false",
-            "inkscape:zoom" : "0.25",
-            "inkscape:cx" : "640",
-            "inkscape:cy" : "480",
-            "inkscape:current-layer" : "svg\(svgID+5)"
+                                  "bordercolor" : "#666666",
+                                  "borderopacity" : "1",
+                                  "objecttolerance" : "10",
+                                  "gridtolerance" : "10",
+                                  "guidetolerance" : "10",
+                                  "inkscape:pageopacity" : "0",
+                                  "inkscape:pageshadow" : "2",
+                                  "inkscape:window-width" : "640",
+                                  "inkscape:window-height" : "480",
+                                  "id" : "namedview\(svgID+4)",
+                                  "showgrid" : "false",
+                                  "inkscape:zoom" : "0.25",
+                                  "inkscape:cx" : "640",
+                                  "inkscape:cy" : "480",
+                                  "inkscape:current-layer" : "svg\(svgID+5)"
         ]
         xmlSVG["svg"].addChild(name: "sodipodi:namedview", value: "", attributes: sodipodiAttributes)
         
         let imageAttributes = ["width" : "\(img.size.width)",
-            "height" : "\(img.size.height)",
-            "preserveAspectRatio" : "none",
-            "xlink:href" : "data:image/jpeg;base64,\(trimmedBase64String)",
-            "id" : "image\(svgID+6)"
+                               "height" : "\(img.size.height)",
+                               "preserveAspectRatio" : "none",
+                               "xlink:href" : "data:image/jpeg;base64,\(trimmedBase64String)",
+                               "id" : "image\(svgID+6)"
         ]
         xmlSVG["svg"].addChild(name: "image", value: "", attributes: imageAttributes)
         
         xmlSVG["svg"]["image"].addChild(name: "desc", value: getElementValue("description"), attributes: ["id" : "desc\(svgID+7)"])
         xmlSVG["svg"]["image"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+8)"])
         
-        self.counter = 50
-        
         if let xmlDetails = xml.root["details"]["detail"].all {
-            let nbDetails = xmlDetails.count
-            let offset = nbDetails / 25
             for detail in xmlDetails {
                 let path = detail.attributes["path"]
                 let pointsArray = path!.characters.split{$0 == " "}.map(String.init)
@@ -373,18 +336,18 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
                     let height: CGFloat = maxPoint.y - originPoint.y
                     
                     let rectAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                        "id" : "rect\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                        "width" : "\(width)",
-                        "height" : "\(height)",
-                        "x" : "\(originPoint.x)",
-                        "y" : "\(originPoint.y)"
-                        ]
+                                          "id" : "rect\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
+                                          "width" : "\(width)",
+                                          "height" : "\(height)",
+                                          "x" : "\(originPoint.x)",
+                                          "y" : "\(originPoint.y)"
+                    ]
                     let ellipseAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                        "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                        "cx" : "\(originPoint.x + width/2)",
-                        "cy" : "\(originPoint.y + height/2)",
-                        "rx" : "\(width/2)",
-                        "ry" : "\(height/2)"
+                                             "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
+                                             "cx" : "\(originPoint.x + width/2)",
+                                             "cy" : "\(originPoint.y + height/2)",
+                                             "rx" : "\(width/2)",
+                                             "ry" : "\(height/2)"
                     ]
                     
                     detailAttributes = (detailType == "rect") ? rectAttributes : ellipseAttributes
@@ -392,9 +355,9 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
                 else {
                     detailType = "path"
                     detailAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                        "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                        "d" : "M \(path!.stringByReplacingOccurrencesOfString(";", withString: ",")) Z",
-                        "inkscape:connector-curvature" : "0"
+                                        "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
+                                        "d" : "M \(path!.stringByReplacingOccurrencesOfString(";", withString: ",")) Z",
+                                        "inkscape:connector-curvature" : "0"
                     ]
                 }
                 
@@ -403,7 +366,6 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
                 currentDetail[detailType].addChild(name: "title", value: detailTitle, attributes: ["id" : "title\(Int(svgID) + Int(detail.attributes["tag"]!)! + 200)"])
                 
                 xmlSVG["svg"].addChild(currentDetail[detailType])
-                self.counter += offset
             }
         }
         
@@ -416,26 +378,7 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
             dbg.pt("\(error)")
         }
         
-        self.counter = 80
-        
         openDocumentInteractionController(tmpFilePath)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
-        
-        progressView.setProgress(0, animated: false)
-        progressView.hidden = true
-        sendingButton.hidden = true
-        
-    }
-    
-    // Disable round corners on modal view
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        self.view.superview!.layer.cornerRadius  = 0.0
-        self.view.superview!.layer.masksToBounds = false
     }
     
     func getElementValue(element: String) -> String {
@@ -449,13 +392,9 @@ class ViewExport: UIViewController, UIDocumentInteractionControllerDelegate {
     
     func openDocumentInteractionController(url: String) {
         // Show native export controller
-        self.counter = 100
-        progressView.hidden = true
-        self.counter = 0
-        sendingButton.hidden = false
         docController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: url))
         docController.delegate = self
-        docController.presentOptionsMenuFromRect(sendingButton.frame, inView:self.view, animated:true)
+        docController.presentOptionsMenuFromRect(self.view.frame, inView:self.view, animated:true)
     }
     
     func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
