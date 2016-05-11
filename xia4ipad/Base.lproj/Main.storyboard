@@ -1226,28 +1226,24 @@
                                     <action selector="takePhoto:" destination="en8-Mw-eGZ" eventType="touchUpInside" id="YCg-XJ-R20"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create new document" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rpS-Y6-11Z">
-                                <rect key="frame" x="0.0" y="20" width="600" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="8E0-qb-2fw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dav-Eu-U9D">
+                                <rect key="frame" x="0.0" y="17" width="600" height="44"/>
+                                <items>
+                                    <navigationItem title="Create new document" id="74f-sH-8RF"/>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="dav-Eu-U9D" secondAttribute="trailing" constant="-20" id="5SX-8y-oi0"/>
                             <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="zXw-1L-ZiN" secondAttribute="bottom" id="5kn-NW-CGI"/>
-                            <constraint firstItem="rpS-Y6-11Z" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" id="Ggw-ci-bZg"/>
+                            <constraint firstItem="dav-Eu-U9D" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="IaU-UT-Jx7"/>
                             <constraint firstItem="zXw-1L-ZiN" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="KFK-cX-OtX"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="rpS-Y6-11Z" secondAttribute="trailing" constant="-20" id="Rpi-f9-A0c"/>
+                            <constraint firstItem="5S9-dW-psV" firstAttribute="top" secondItem="dav-Eu-U9D" secondAttribute="bottom" id="Tn3-6Z-0U8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="zXw-1L-ZiN" secondAttribute="trailing" constant="-20" id="Y6p-jL-vVa"/>
                             <constraint firstItem="5S9-dW-psV" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="b3I-Ij-PGy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5S9-dW-psV" secondAttribute="trailing" constant="-20" id="d0O-6O-Pn0"/>
-                            <constraint firstItem="rpS-Y6-11Z" firstAttribute="leading" secondItem="XuD-O1-XQ5" secondAttribute="leadingMargin" constant="-20" id="l2e-LT-Ug9"/>
                             <constraint firstItem="Vdf-jK-A9N" firstAttribute="top" secondItem="5S9-dW-psV" secondAttribute="bottom" constant="46" id="ltO-54-8OT"/>
-                            <constraint firstItem="5S9-dW-psV" firstAttribute="top" secondItem="rpS-Y6-11Z" secondAttribute="bottom" constant="1" id="ycU-fe-2JF"/>
+                            <constraint firstItem="dav-Eu-U9D" firstAttribute="top" secondItem="7Tr-zn-qqM" secondAttribute="bottom" constant="-3" id="pwr-VA-gb8"/>
                         </constraints>
                     </view>
                 </viewController>

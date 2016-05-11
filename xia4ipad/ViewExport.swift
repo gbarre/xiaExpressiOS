@@ -44,7 +44,6 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         default:
             dbg.pt("oups...")
         }
-        
     }
     
     func exportSimpleXML() {
@@ -400,5 +399,4 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    
 }
