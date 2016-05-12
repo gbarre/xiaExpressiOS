@@ -53,7 +53,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-zi-h2e">
-                                                    <rect key="frame" x="85" y="84" width="30" height="30"/>
+                                                    <rect key="frame" x="85" y="110" width="30" height="30"/>
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="MIu-vk-Xi3"/>
@@ -67,7 +67,7 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="qNg-bF-MbM" secondAttribute="trailing" id="2TC-6a-LgP"/>
                                             <constraint firstAttribute="leadingMargin" secondItem="qNg-bF-MbM" secondAttribute="leading" id="51x-Dr-Vzl"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="42" id="Ak4-9U-1jQ"/>
-                                            <constraint firstItem="qNg-bF-MbM" firstAttribute="top" secondItem="fcj-zi-h2e" secondAttribute="bottom" constant="96" id="NPE-rJ-YxU"/>
+                                            <constraint firstItem="qNg-bF-MbM" firstAttribute="top" secondItem="fcj-zi-h2e" secondAttribute="bottom" constant="70" id="NPE-rJ-YxU"/>
                                             <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leadingMargin" constant="-8" id="WfD-Dc-SBL"/>
                                             <constraint firstItem="fcj-zi-h2e" firstAttribute="bottom" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" id="Y0O-MG-B3E"/>
                                             <constraint firstItem="fcj-zi-h2e" firstAttribute="trailing" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" id="jnY-rc-SEm"/>
@@ -1324,7 +1324,7 @@
         <image name="edit" width="25" height="25"/>
         <image name="export_tablet" width="150" height="150"/>
         <image name="inkscape" width="150" height="150"/>
-        <image name="play" width="50" height="50"/>
+        <image name="play" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>

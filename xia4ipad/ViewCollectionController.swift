@@ -99,6 +99,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             CollectionView.selectItemAtIndexPath(nil, animated: true, scrollPosition: .None)
             btnCreateState.enabled = false
             navBar.barTintColor = selectingColor
+            self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.blackColor()
             navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
             navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.blackColor()]
@@ -363,6 +364,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         CollectionView.reloadData()
         btnCreateState.enabled = true
         navBar.barTintColor = blueColor
+        self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.whiteColor()
         navBarTitle.title = "Xia"
         navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
