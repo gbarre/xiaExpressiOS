@@ -18,6 +18,7 @@ class PhotoThumbnail: UICollectionViewCell {
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var imgViewHeight: NSLayoutConstraint!
     @IBOutlet weak var imgLabel: UILabel!
+    @IBOutlet var roIcon: UIImageView!
     
     func setLabel(text: String) {
         self.imgLabel.text = text
@@ -37,6 +38,10 @@ class PhotoThumbnail: UICollectionViewCell {
             self.imgViewHeight.constant = 200
         }
         self.imgView.image = thumbnailImage
+    }
+    
+    func showRoIcon(roState: Bool = false) {
+        roIcon.hidden = !roState
     }
     
     func degreesToRadians(x: CGFloat) -> CGFloat {

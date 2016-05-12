@@ -52,6 +52,14 @@
                                                     <color key="textColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-zi-h2e">
+                                                    <rect key="frame" x="85" y="84" width="30" height="30"/>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="MIu-vk-Xi3"/>
+                                                        <constraint firstAttribute="width" constant="30" id="xBg-jv-3Fv"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -59,15 +67,26 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="qNg-bF-MbM" secondAttribute="trailing" id="2TC-6a-LgP"/>
                                             <constraint firstAttribute="leadingMargin" secondItem="qNg-bF-MbM" secondAttribute="leading" id="51x-Dr-Vzl"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="42" id="Ak4-9U-1jQ"/>
+                                            <constraint firstItem="qNg-bF-MbM" firstAttribute="top" secondItem="fcj-zi-h2e" secondAttribute="bottom" constant="96" id="NPE-rJ-YxU"/>
                                             <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leadingMargin" constant="-8" id="WfD-Dc-SBL"/>
+                                            <constraint firstItem="fcj-zi-h2e" firstAttribute="bottom" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" id="Y0O-MG-B3E"/>
+                                            <constraint firstItem="fcj-zi-h2e" firstAttribute="trailing" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" id="jnY-rc-SEm"/>
+                                            <constraint firstItem="fcj-zi-h2e" firstAttribute="centerX" secondItem="qNg-bF-MbM" secondAttribute="centerX" id="mwf-IC-mqJ"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" constant="-8" id="wZM-hj-2vW"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="qNg-bF-MbM" secondAttribute="bottom" constant="11" id="y7S-x3-T5p"/>
                                         </constraints>
                                         <size key="customSize" width="200" height="250"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="Y0O-MG-B3E"/>
+                                                <exclude reference="jnY-rc-SEm"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <outlet property="imgLabel" destination="qNg-bF-MbM" id="Lj4-s2-gak"/>
                                             <outlet property="imgView" destination="ZgJ-fg-FiW" id="D17-2x-rAJ"/>
                                             <outlet property="imgViewHeight" destination="hvh-bj-oSX" id="AfG-tk-Zqh"/>
+                                            <outlet property="roIcon" destination="fcj-zi-h2e" id="RPo-ro-ad9"/>
                                             <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="J54-6x-Hse"/>
                                         </connections>
                                     </collectionViewCell>
@@ -1305,6 +1324,7 @@
         <image name="edit" width="25" height="25"/>
         <image name="export_tablet" width="150" height="150"/>
         <image name="inkscape" width="150" height="150"/>
+        <image name="play" width="50" height="50"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>

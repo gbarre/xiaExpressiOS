@@ -313,6 +313,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
         cell.setLabel(label)
         
+        // Show reaod Only Icon
+        let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
+        cell.showRoIcon(roState)
+        
         let tap = UITapGestureRecognizer(target: self, action:#selector(ViewCollectionController.handleTap(_:)))
         tap.delegate = self
         cell.addGestureRecognizer(tap)

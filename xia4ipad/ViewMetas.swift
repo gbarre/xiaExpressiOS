@@ -75,7 +75,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["image"].attributes["description"] = imgDescription.text
         
         let _ = writeXML(xml, path: "\(filePath).xml")
-        ViewCollection?.CollectionView.reloadData()
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
         ViewCreateDetailsController?.setBtnsIcons()
         ViewCollection?.buildLeftNavbarItems()
