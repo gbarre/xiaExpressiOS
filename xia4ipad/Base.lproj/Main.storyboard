@@ -86,6 +86,23 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Xia" id="mpy-Pt-Gc9">
+                                        <leftBarButtonItems>
+                                            <barButtonItem systemItem="trash" id="cGm-0U-sRw">
+                                                <connections>
+                                                    <action selector="btnTrashAction:" destination="BYZ-38-t0r" id="WfR-5f-9gD"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem systemItem="action" id="Vxz-4Q-6V9">
+                                                <connections>
+                                                    <action selector="btnExportAction:" destination="BYZ-38-t0r" id="Nyp-8d-bhH"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem image="edit" id="fu4-Qn-UIB">
+                                                <connections>
+                                                    <action selector="btnEditAction:" destination="BYZ-38-t0r" id="vkM-6c-OHY"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </leftBarButtonItems>
                                         <rightBarButtonItems>
                                             <barButtonItem title="Edit" id="S4K-WX-yik">
                                                 <connections>
@@ -120,10 +137,15 @@
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
                         <outlet property="btnCreateState" destination="5Zb-O2-v5O" id="rf2-cb-XVD"/>
+                        <outlet property="btnEdit" destination="fu4-Qn-UIB" id="gWV-FJ-Ikf"/>
+                        <outlet property="btnExport" destination="Vxz-4Q-6V9" id="RU8-SX-6ze"/>
+                        <outlet property="btnTrash" destination="cGm-0U-sRw" id="fnU-LC-lJW"/>
                         <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
+                        <outlet property="navBar" destination="I15-vY-FYi" id="zAf-Vt-nPo"/>
+                        <outlet property="navBarTitle" destination="mpy-Pt-Gc9" id="ZSt-7f-0mb"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
-                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="S4K-WX-yik" id="4uf-YC-Gjx">
-                            <popoverArrowDirection key="popoverArrowDirection"/>
+                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="4uf-YC-Gjx">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                         </segue>
                     </connections>
                 </viewController>
@@ -298,7 +320,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show details:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Prj-CR-6X0">
                                         <rect key="frame" x="299" y="46" width="102" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -704,7 +726,7 @@
                                                     <rect key="frame" x="73" y="0.0" width="212" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="export_tablet" id="u9Y-e8-svE">
@@ -725,7 +747,7 @@
                                                     <rect key="frame" x="73" y="0.0" width="212" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="inkscape" id="Un7-o0-CnW">
@@ -1277,6 +1299,7 @@
         <image name="discuss" width="32" height="32"/>
         <image name="disque-3" width="75" height="75"/>
         <image name="disque-4" width="75" height="75"/>
+        <image name="edit" width="25" height="25"/>
         <image name="export_tablet" width="150" height="150"/>
         <image name="inkscape" width="150" height="150"/>
         <image name="xia_filigrane" width="400" height="400"/>

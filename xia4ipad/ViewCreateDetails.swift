@@ -503,6 +503,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
+                controller.fileName = self.fileName
                 controller.landscape = landscape
                 controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self

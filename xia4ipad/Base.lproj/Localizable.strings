@@ -38,9 +38,11 @@
 // ViewCollectionController.swift
 "EDIT" = "Edit";
 "DONE" = "Done";
-"DELETE" = "Delete ";
-"DELETED" = " has been deleted...";
 "IMAGE_SAVE_FAILED" = "Failed to save image.";
+"FILE_SELECTED" = "file selected";
+"FILES_SELECTED" = "files selected";
+"DELETE_FILE" = "Delete file";
+"DELETE_N_FILES" = "Delete %d files";
 
 // ViewCreateDetails.swift
 "DETAIL" = "Detail ";

@@ -15,8 +15,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var readOnlyState: Bool = false
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
+    var fileName: String = ""
     var landscape: Bool = false
     var selectedSegment: Int = 0
+    weak var ViewCollection: ViewCollectionController?
     weak var ViewCreateDetailsController: ViewCreateDetails?
     
     var pass: String = ""
@@ -71,7 +73,9 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["image"].attributes["description"] = imgDescription.text
         
         let _ = writeXML(xml, path: "\(filePath).xml")
-        ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? " " : txtTitle.text!
+        ViewCollection?.CollectionView.reloadData()
+        ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
+        ViewCreateDetailsController?.setBtnsIcons()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -225,7 +229,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             txtTitle.becomeFirstResponder()
         }
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
-        navBar.topItem?.title = txtTitle.text
+        navBar.topItem?.title = (txtTitle.text == "") ? fileName : txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
         roSwitch.on = readOnlyState
         showDetailSwitch.on = (xml["xia"]["details"].attributes["show"] == "true") ? true : false

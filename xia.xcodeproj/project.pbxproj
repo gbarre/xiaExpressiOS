@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
 		F014AB2F1CE1DA5F00AFDC10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F014AB311CE1DA5F00AFDC10 /* InfoPlist.strings */; };
-		F014AB341CE1DA5F00AFDC10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F014AB361CE1DA5F00AFDC10 /* InfoPlist.strings */; };
 		F051038B1C21C01700E6C25C /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
 		F051038D1C21C01700E6C25C /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97ACA1C0C386E0057D802 /* debug.swift */; };
@@ -74,7 +73,6 @@
 /* Begin PBXFileReference section */
 		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
 		F014AB301CE1DA5F00AFDC10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F014AB351CE1DA5F00AFDC10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
 		F072A5911C84384C00E85F61 /* ipad_noir_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_noir_80.png; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 		F0F15E671BB6FCDF00268F06 /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F014AB361CE1DA5F00AFDC10 /* InfoPlist.strings */,
 				F0013F801BF61A750000F83A /* default.jpg */,
 				F0F15E741BB6FCDF00268F06 /* Info.plist */,
 				F0725E591BEA87D9007ACE9B /* AEXML.swift */,
@@ -321,7 +318,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0F15E731BB6FCDF00268F06 /* LaunchScreen.storyboard in Resources */,
-				F014AB341CE1DA5F00AFDC10 /* InfoPlist.strings in Resources */,
 				F0B560E71C7DAA3300E79D55 /* Localizable.strings in Resources */,
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
@@ -410,14 +406,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				F014AB301CE1DA5F00AFDC10 /* fr */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		F014AB361CE1DA5F00AFDC10 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F014AB351CE1DA5F00AFDC10 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

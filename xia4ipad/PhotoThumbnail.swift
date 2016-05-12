@@ -23,6 +23,11 @@ class PhotoThumbnail: UICollectionViewCell {
         self.imgLabel.text = text
     }
     
+    func setLabelBkgColor(color: UIColor) {
+        imgLabel.backgroundColor = color
+        imgLabel.textColor = (color == UIColor.clearColor()) ? blueColor : UIColor.whiteColor()
+    }
+    
     func setThumbnail(thumbnailImage: UIImage) {
         if thumbnailImage.size.width > thumbnailImage.size.height {
             let newHeight = thumbnailImage.size.height * 200 / thumbnailImage.size.width
