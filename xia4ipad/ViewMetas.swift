@@ -41,6 +41,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     ]
     
     @IBAction func btnCancel(sender: AnyObject) {
+        ViewCollection?.buildLeftNavbarItems()
+        ViewCollection?.endEdit()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -76,6 +78,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         ViewCollection?.CollectionView.reloadData()
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
         ViewCreateDetailsController?.setBtnsIcons()
+        ViewCollection?.buildLeftNavbarItems()
+        ViewCollection?.endEdit()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

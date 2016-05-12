@@ -1,7 +1,4 @@
 /* No comment provided by engineer. */
-"?" = " ?";
-
-/* No comment provided by engineer. */
 "CANCEL" = "Annuler";
 
 /* No comment provided by engineer. */
@@ -26,13 +23,13 @@
 "DATE" = "Date : ";
 
 /* No comment provided by engineer. */
-"DELETE" = "Supprimer ";
-
-/* No comment provided by engineer. */
-"DELETED" = " a été supprimé...";
-
-/* No comment provided by engineer. */
 "DELETE_DETAIL" = "Supprimer le détail ?";
+
+/* No comment provided by engineer. */
+"DELETE_FILE" = "Supprimer un fichier";
+
+/* No comment provided by engineer. */
+"DELETE_N_FILES" = "Supprimer %d fichiers";
 
 /* No comment provided by engineer. */
 "DESCRIPTION" = "Description : ";
@@ -57,6 +54,12 @@
 
 /* No comment provided by engineer. */
 "ERROR" = "Erreur";
+
+/* No comment provided by engineer. */
+"FILES_SELECTED" = "fichiers sélectionnés";
+
+/* No comment provided by engineer. */
+"FILE_SELECTED" = "fichier sélectionné";
 
 /* No comment provided by engineer. */
 "IDENTIFIER" = "Identifiant : ";

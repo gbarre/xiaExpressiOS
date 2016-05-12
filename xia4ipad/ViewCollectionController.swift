@@ -100,7 +100,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnCreateState.enabled = false
             navBar.barTintColor = selectingColor
             navBar.tintColor = UIColor.blackColor()
-            navBarTitle.title = "\(selectedPhotos.count) " + NSLocalizedString("ELEMENT_SELECTED", comment: "")
+            navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
             navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.blackColor()]
         }
         buildLeftNavbarItems(selectedPhotos.count)
@@ -175,7 +175,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         if (segue.identifier == "viewMetas") {
-            endEdit()
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = xmlToSegue
                 controller.filePath = pathToSegue
