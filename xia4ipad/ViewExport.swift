@@ -24,6 +24,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var xmlSVG: AEXMLDocument = AEXMLDocument()
     var tmpFilePath: String = ""
     let now:Int = Int(NSDate().timeIntervalSince1970)
+    weak var ViewCollection: ViewCollectionController?
     
     let xmlElements: [String] = ["license", "title", "date", "creator",
         "rights", "publisher", "identifier", "source", "relation", "language",
@@ -397,6 +398,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     }
     
     func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
+        ViewCollection?.buildLeftNavbarItems()
+        ViewCollection?.endEdit()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 }

@@ -147,6 +147,9 @@
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="4uf-YC-Gjx">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                         </segue>
+                        <segue destination="ZHU-7B-zUy" kind="popoverPresentation" identifier="export" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="kse-sD-zsl">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -771,7 +774,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rx7-BE-jgH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1929" y="1243.5"/>
+            <point key="canvasLocation" x="683" y="1243.5"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">
@@ -857,7 +860,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1220" y="1476"/>
+            <point key="canvasLocation" x="1215" y="1476"/>
         </scene>
         <!--Play Image Metadatas-->
         <scene sceneID="PeB-Zl-vO5">
@@ -1305,7 +1308,8 @@
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4uf-YC-Gjx"/>
         <segue reference="J54-6x-Hse"/>
+        <segue reference="kse-sD-zsl"/>
+        <segue reference="4uf-YC-Gjx"/>
     </inferredMetricsTieBreakers>
 </document>

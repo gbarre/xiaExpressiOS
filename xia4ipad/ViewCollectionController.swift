@@ -68,6 +68,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var btnExport: UIBarButtonItem!
     @IBAction func btnExportAction(sender: AnyObject) {
+        segueIndex = selectedPhotos[0].row
+        performSegueWithIdentifier("export", sender: self)
     }
     
     @IBOutlet var btnEdit: UIBarButtonItem!
@@ -160,11 +162,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if segueIndex == -1 {
             segueIndex = 0
         }
-        endEdit()
+        
         let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
+            endEdit()
             if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
@@ -172,6 +175,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         if (segue.identifier == "viewMetas") {
+            endEdit()
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = xmlToSegue
                 controller.filePath = pathToSegue
@@ -181,11 +185,20 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         if (segue.identifier == "playXia") {
+            endEdit()
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
                 controller.landscape = landscape
+            }
+        }
+        if (segue.identifier == "export") {
+            if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                controller.filePath = pathToSegue
+                controller.fileName = nameToSegue
+                controller.xml = xmlToSegue
+                controller.ViewCollection = self
             }
         }
         if (segue.identifier == "Add") {
@@ -196,31 +209,31 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func buildLeftNavbarItems(selectedItems: Int = 0) {
-        //let buttonColor = (editing) ? selectingColor : blueColor
+        let buttonColor = (editing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
             btnTrash.enabled = true
-            //btnTrash.tintColor = UIColor.blackColor()
+            btnTrash.tintColor = UIColor.blackColor()
             btnExport.enabled = true
-            //btnExport.tintColor = UIColor.blackColor()
+            btnExport.tintColor = UIColor.blackColor()
             btnEdit.enabled = true
-            //btnEdit.tintColor = UIColor.blackColor()
+            btnEdit.tintColor = UIColor.blackColor()
             break
         case 2...9999:
             btnTrash.enabled = true
-            //btnTrash.tintColor = UIColor.blackColor()
-            btnExport.enabled = true
-            //btnExport.tintColor = UIColor.blackColor()
+            btnTrash.tintColor = UIColor.blackColor()
+            btnExport.enabled = false
+            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnEdit.enabled = false
-            //btnEdit.tintColor = buttonColor
+            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
             break
         default:
             btnTrash.enabled = false
-            //btnTrash.tintColor = buttonColor
+            btnTrash.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnExport.enabled = false
-            //btnExport.tintColor = buttonColor
+            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnEdit.enabled = false
-            //btnEdit.tintColor = buttonColor
+            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
         }
     }
 
