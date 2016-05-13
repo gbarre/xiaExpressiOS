@@ -40,10 +40,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="200" height="250"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Wn-FJ-gjn">
+                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="242"/>
+                                                    <color key="backgroundColor" red="0.95686274510000002" green="0.4431372549" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZgJ-fg-FiW">
-                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                                    <rect key="frame" x="8" y="8" width="184" height="194"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="200" id="hvh-bj-oSX"/>
+                                                        <constraint firstAttribute="height" constant="194" id="hvh-bj-oSX"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qNg-bF-MbM">
@@ -66,13 +70,13 @@
                                         <constraints>
                                             <constraint firstAttribute="trailingMargin" secondItem="qNg-bF-MbM" secondAttribute="trailing" id="2TC-6a-LgP"/>
                                             <constraint firstAttribute="leadingMargin" secondItem="qNg-bF-MbM" secondAttribute="leading" id="51x-Dr-Vzl"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="42" id="Ak4-9U-1jQ"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" constant="40" id="Ak4-9U-1jQ"/>
                                             <constraint firstItem="qNg-bF-MbM" firstAttribute="top" secondItem="fcj-zi-h2e" secondAttribute="bottom" constant="70" id="NPE-rJ-YxU"/>
-                                            <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leadingMargin" constant="-8" id="WfD-Dc-SBL"/>
+                                            <constraint firstItem="ZgJ-fg-FiW" firstAttribute="leading" secondItem="Wwi-7K-K0l" secondAttribute="leadingMargin" id="WfD-Dc-SBL"/>
                                             <constraint firstItem="fcj-zi-h2e" firstAttribute="bottom" secondItem="ZgJ-fg-FiW" secondAttribute="bottom" id="Y0O-MG-B3E"/>
                                             <constraint firstItem="fcj-zi-h2e" firstAttribute="trailing" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" id="jnY-rc-SEm"/>
                                             <constraint firstItem="fcj-zi-h2e" firstAttribute="centerX" secondItem="qNg-bF-MbM" secondAttribute="centerX" id="mwf-IC-mqJ"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" constant="-8" id="wZM-hj-2vW"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="ZgJ-fg-FiW" secondAttribute="trailing" id="wZM-hj-2vW"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="qNg-bF-MbM" secondAttribute="bottom" constant="11" id="y7S-x3-T5p"/>
                                         </constraints>
                                         <size key="customSize" width="200" height="250"/>
@@ -83,11 +87,11 @@
                                             </mask>
                                         </variation>
                                         <connections>
+                                            <outlet property="imgBkgd" destination="8Wn-FJ-gjn" id="S92-66-okP"/>
                                             <outlet property="imgLabel" destination="qNg-bF-MbM" id="Lj4-s2-gak"/>
                                             <outlet property="imgView" destination="ZgJ-fg-FiW" id="D17-2x-rAJ"/>
                                             <outlet property="imgViewHeight" destination="hvh-bj-oSX" id="AfG-tk-Zqh"/>
                                             <outlet property="roIcon" destination="fcj-zi-h2e" id="RPo-ro-ad9"/>
-                                            <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="J54-6x-Hse"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -129,12 +133,14 @@
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem systemItem="add" id="5Zb-O2-v5O">
+                                                <inset key="imageInsets" minX="10" minY="0.0" maxX="25" maxY="0.0"/>
                                                 <connections>
                                                     <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="Add" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
                                                         <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                                                     </segue>
                                                 </connections>
                                             </barButtonItem>
+                                            <barButtonItem image="help" width="20" id="FiG-N9-YWu"/>
                                         </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
@@ -169,6 +175,7 @@
                         <segue destination="ZHU-7B-zUy" kind="popoverPresentation" identifier="export" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="kse-sD-zsl">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                         </segue>
+                        <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="S0D-7G-DJ3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -249,7 +256,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttq-fi-YTi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1566" y="697"/>
+            <point key="canvasLocation" x="1246" y="991"/>
         </scene>
         <!--View Metas-->
         <scene sceneID="esf-mq-9t6">
@@ -605,7 +612,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bbL-sU-QsP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2628" y="-59"/>
+            <point key="canvasLocation" x="2576" y="-29"/>
         </scene>
         <!--Detail Info-->
         <scene sceneID="Ulb-4K-ajy">
@@ -716,7 +723,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KYK-Sb-eWa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2628" y="697"/>
+            <point key="canvasLocation" x="2310" y="1563"/>
         </scene>
         <!--Share-->
         <scene sceneID="Qxc-Wq-OHu">
@@ -793,7 +800,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rx7-BE-jgH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="683" y="1243.5"/>
+            <point key="canvasLocation" x="1812" y="147.5"/>
         </scene>
         <!--Play Xia-->
         <scene sceneID="tPQ-XC-mp2">
@@ -879,7 +886,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBG-xR-NIZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1215" y="1476"/>
+            <point key="canvasLocation" x="421" y="1770"/>
         </scene>
         <!--Play Image Metadatas-->
         <scene sceneID="PeB-Zl-vO5">
@@ -1032,7 +1039,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IDs-5h-N0L" userLabel="License View">
                                 <rect key="frame" x="0.0" y="415" width="800" height="37"/>
@@ -1089,7 +1096,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CMD-SV-YNm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="781" y="2255"/>
+            <point key="canvasLocation" x="-69" y="2551"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ti8-oj-HQd">
@@ -1130,11 +1137,8 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
                             </textView>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZUw-vA-mQN" userLabel="Black Zoom Background">
-                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89n-Xj-Ogm" userLabel="Title View">
                                 <rect key="frame" x="200" y="0.0" width="600" height="200"/>
                                 <subviews>
@@ -1195,6 +1199,10 @@
                                     <outletCollection property="gestureRecognizers" destination="cjf-Hz-xTd" appends="YES" id="b00-CP-BRr"/>
                                 </connections>
                             </view>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZUw-vA-mQN" userLabel="Black Zoom Background">
+                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -1239,7 +1247,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1666" y="2255"/>
+            <point key="canvasLocation" x="928" y="2551"/>
         </scene>
         <!--View Menu Add Resource-->
         <scene sceneID="46Y-ad-Gjh">
@@ -1323,12 +1331,13 @@
         <image name="disque-4" width="75" height="75"/>
         <image name="edit" width="25" height="25"/>
         <image name="export_tablet" width="150" height="150"/>
+        <image name="help" width="20" height="20"/>
         <image name="inkscape" width="150" height="150"/>
         <image name="play" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="J54-6x-Hse"/>
+        <segue reference="S0D-7G-DJ3"/>
         <segue reference="kse-sD-zsl"/>
         <segue reference="4uf-YC-Gjx"/>
     </inferredMetricsTieBreakers>

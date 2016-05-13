@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -30,7 +43,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     var landscape: Bool = false
     
     var selectedPhotos = [NSIndexPath]()
-    let selectingColor = UIColor(red: 153/255, green: 120/255, blue: 150/255, alpha: 1)
+    let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1)
     
     @IBOutlet var navBar: UINavigationBar!
     
@@ -90,19 +103,22 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         else {
             editingMode = true
+            // Change button title
             self.editMode.title = NSLocalizedString("DONE", comment: "")
+            // Start cell wobbling
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
             }
             CollectionView.allowsMultipleSelection = true
             CollectionView.selectItemAtIndexPath(nil, animated: true, scrollPosition: .None)
+            // Cosmetic...
             btnCreateState.enabled = false
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
-            navBar.tintColor = UIColor.blackColor()
+            navBar.tintColor = UIColor.whiteColor()
             navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
-            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.blackColor()]
+            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         }
         buildLeftNavbarItems(selectedPhotos.count)
     }
@@ -111,7 +127,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        // Hide left navbar buttons
         buildLeftNavbarItems()
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
@@ -139,6 +155,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func applicationWillEnterForeground(notification: NSNotification) {
+        // Put the StatusBar in white
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         self.CollectionView.reloadData()
     }
     
@@ -149,7 +167,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     override func viewDidAppear(animated: Bool) {
-       self.CollectionView.reloadData()
+        self.CollectionView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -163,7 +181,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if segueIndex == -1 {
             segueIndex = 0
         }
-        
         let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
@@ -213,15 +230,15 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         switch selectedItems {
         case 1:
             btnTrash.enabled = true
-            btnTrash.tintColor = UIColor.blackColor()
+            btnTrash.tintColor = UIColor.whiteColor()
             btnExport.enabled = true
-            btnExport.tintColor = UIColor.blackColor()
+            btnExport.tintColor = UIColor.whiteColor()
             btnEdit.enabled = true
-            btnEdit.tintColor = UIColor.blackColor()
+            btnEdit.tintColor = UIColor.whiteColor()
             break
         case 2...9999:
             btnTrash.enabled = true
-            btnTrash.tintColor = UIColor.blackColor()
+            btnTrash.tintColor = UIColor.whiteColor()
             btnExport.enabled = false
             btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnEdit.enabled = false
@@ -368,6 +385,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         navBar.tintColor = UIColor.whiteColor()
         navBarTitle.title = "Xia"
         navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        // Put the StatusBar in white
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
     }
     
     func deleteFiles(path: NSIndexPath) {
@@ -389,14 +409,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         self.arrayNames.removeAtIndex(deleteIndex)
     }
     
-    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
+    func handleTap(gestureReconizer: UITapGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
         }
         
         let p = gestureReconizer.locationInView(CollectionView)
         let indexPath = CollectionView.indexPathForItemAtPoint(p)
-        
         if let path = indexPath {
             segueIndex = path.row
             if editingMode {
@@ -429,7 +448,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                         }
                         landscape = false
                     }
-                    
                     performSegueWithIdentifier("playXia", sender: self)
                 }
                 else {
