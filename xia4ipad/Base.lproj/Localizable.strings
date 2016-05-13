@@ -31,16 +31,18 @@
 "CONTRIBUTORS" = "Contributors: ";
 "DESCRIPTION" = "Description: ";
 
-// ViewCollectionController.swift
+// MenuAddResources.swift
 "TAKE_PHOTO" = "Take a photo";
 "NO_CAMERA" = "There is no camera available.";
-"SEARCH_IN_PHOTOS" = "Search in Photos";
-"CREATE_NEW_DOC" = "Create new document";
+
+// ViewCollectionController.swift
 "EDIT" = "Edit";
 "DONE" = "Done";
-"DELETE" = "Delete ";
-"DELETED" = " has been deleted...";
 "IMAGE_SAVE_FAILED" = "Failed to save image.";
+"FILE_SELECTED" = "file selected";
+"FILES_SELECTED" = "files selected";
+"DELETE_FILE" = "Delete file";
+"DELETE_N_FILES" = "Delete %d files";
 
 // ViewCreateDetails.swift
 "DETAIL" = "Detail ";
@@ -50,6 +52,7 @@
 "DESCRIPTION..." = "Description...";
 "CREATE_DETAIL" = "Create detail...";
 "COLLECTION" = "Collection";
+"DELETE_DETAIL" = "Delete detail?";
 
 // ViewMetas.swift
 "ENTER_CODE" = "Enter code";

@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -12,10 +25,24 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var dbg = debug(enable: true)
+    var dbg = debug(enable: false)
+    let documentRoot = NSHomeDirectory() + "/Documents"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        // purge Inbox
+        let fileManager = NSFileManager.defaultManager()
+        let files = fileManager.enumeratorAtPath("\(documentRoot)/Inbox")
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            do {
+                let filePath = "\(documentRoot)/Inbox/\(file)"
+                try fileManager.removeItemAtPath(filePath)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
         return true
     }
 
@@ -47,35 +74,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var errorAtXMLImport = true
         var errorAtSVGImport = true
         let now:Int = Int(NSDate().timeIntervalSince1970)
-        let documentRoot = NSHomeDirectory() + "/Documents"
         
         if url != nil {
+            dbg.pt("Try import file...")
             // read file to extract image
             var path = url!.path!
+            dbg.pt("path : \(path)")
+            dbg.ptLine()
             path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
+            dbg.pt("path : \(path)")
             let xml = getXML(path, check: false)
-            let ext = path.substringWithRange(Range<String.Index>(start: path.endIndex.advancedBy(-3), end: path.endIndex.advancedBy(0)))
+            let ext = path.substringWithRange(path.endIndex.advancedBy(-3)..<path.endIndex.advancedBy(0))
+            dbg.pt("File type is : \(ext)")
             switch (ext) {
             case "xml": // The document was created by a tablet
                 if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+                    dbg.pt("Image founded")
                     // convert base64 to image
                     let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
                     let image = UIImage(data: imageDataB64!)
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image!, 85)
                     if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                        dbg.pt("Image imported")
                         errorAtImageImport = false
                     }
                 }
                 
                 // store the xia xml
                 if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+                    dbg.pt("Try to import xia elements")
                     let xmlXIA = AEXMLDocument()
                     xmlXIA.addChild(xml["XiaiPad"]["xia"])
                     let xmlString = xmlXIA.xmlString
                     do {
                         try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
                         errorAtXMLImport = false
+                        dbg.pt("XML imported")
                     }
                     catch {
                         dbg.pt("\(error)")
@@ -83,15 +118,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 break
             case "svg":
-                if xml["svg"]["image"].attributes["xlink:href"] != nil {
-                    // convert base64 to image
-                    let b64Chain = xml["svg"]["image"].attributes["xlink:href"]!.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "")
+                let (b64Chain, group, imgWidth, imgTitle, imgDesc) = getBackgroundImage(xml)
+                var image = UIImage()
+                if b64Chain != "" {
+                    dbg.pt("Image founded")
                     let imageDataB64 = NSData(base64EncodedString: b64Chain, options : .IgnoreUnknownCharacters)
-                    let image = UIImage(data: imageDataB64!)
+                    image = UIImage(data: imageDataB64!)!
                     // store new image to document directory
-                    let imageData = UIImageJPEGRepresentation(image!, 85)
+                    let imageData = UIImageJPEGRepresentation(image, 85)
                     if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
                         errorAtImageImport = false
+                        dbg.pt("Image imported")
                     }
                 }
                 
@@ -117,7 +154,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     for (thisName, thisValue) in metas {
                         xmlXIA["xia"].addChild(name: thisName, value: thisValue, attributes: nil)
                     }
-                    xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "12343"])
+                    xmlXIA["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+                    xmlXIA["xia"].addChild(name: "image", value: "", attributes: ["title" : imgTitle, "description" : imgDesc])
                     let license = (xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"] != nil) ? xml["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["cc:license"].attributes["rdf:resource"]! : ""
                     switch license {
                     case "http://creativecommons.org/licenses/by/3.0/":
@@ -153,74 +191,289 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     
                     // Create details
-                    xmlXIA["xia"].addChild(name: "details")
+                    xmlXIA["xia"].addChild(name: "details", value: "", attributes: ["show" : "true"])
                     var currentDetailTag = 99
                     
+                    let svgRoot = (group) ? xml["svg"]["g"] : xml["svg"]
+                    let scale = image.size.width / imgWidth
+                    
                     // Get rectangles
-                    if let rectangles = xml["svg"]["rect"].all {
+                    if let rectangles = svgRoot["rect"].all {
                         for rect in rectangles {
-                            currentDetailTag++
-                            let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!), convertStringToCGFloat(rect.attributes["y"]!))
-                            let width = convertStringToCGFloat(rect.attributes["width"]!)
-                            let heigt = convertStringToCGFloat(rect.attributes["height"]!)
+                            currentDetailTag += 1
+                            let origin = CGPointMake(convertStringToCGFloat(rect.attributes["x"]!) * scale, convertStringToCGFloat(rect.attributes["y"]!) * scale)
+                            let width = convertStringToCGFloat(rect.attributes["width"]!) * scale
+                            let heigt = convertStringToCGFloat(rect.attributes["height"]!) * scale
                             
                             let thisPath = "\(origin.x);\(origin.y) \(origin.x + width);\(origin.y) \(origin.x + width);\(origin.y + heigt) \(origin.x);\(origin.y + heigt)"
-                            let detailTitle = (rect["title"].value != nil) ? rect["title"].value! : ""
-                            let detailDescription = (rect["desc"].value != nil) ? rect["desc"].value! : ""
+                            let detailTitle = (rect["title"].value != nil && rect["title"].value! != "element <title> not found") ? rect["title"].value! : ""
+                            let detailDescription = (rect["desc"].value != nil && rect["desc"].value! != "element <desc> not found") ? rect["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
                     }
                     
                     // Get ellipse
-                    if let ellipses = xml["svg"]["ellipse"].all {
+                    if let ellipses = svgRoot["ellipse"].all {
                         for ellipse in ellipses {
-                            currentDetailTag++
-                            let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!), convertStringToCGFloat(ellipse.attributes["cy"]!))
-                            let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!)
-                            let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!)
+                            currentDetailTag += 1
+                            let center = CGPointMake(convertStringToCGFloat(ellipse.attributes["cx"]!) * scale, convertStringToCGFloat(ellipse.attributes["cy"]!) * scale)
+                            let radiusX = convertStringToCGFloat(ellipse.attributes["rx"]!) * scale
+                            let radiusY = convertStringToCGFloat(ellipse.attributes["ry"]!) * scale
                             
                             let thisPath = "\(center.x);\(center.y - radiusY) \(center.x + radiusX);\(center.y) \(center.x);\(center.y + radiusY) \(center.x - radiusX);\(center.y)"
-                            let detailTitle = (ellipse["title"].value != nil) ? ellipse["title"].value! : ""
-                            let detailDescription = (ellipse["desc"].value != nil) ? ellipse["desc"].value! : ""
+                            let detailTitle = (ellipse["title"].value != nil && ellipse["title"].value! != "element <title> not found") ? ellipse["title"].value! : ""
+                            let detailDescription = (ellipse["desc"].value != nil && ellipse["desc"].value! != "element <desc> not found") ? ellipse["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
                     }
                     
                     // Get polygons
-                    if let polygons = xml["svg"]["path"].all {
+                    if let polygons = svgRoot["path"].all {
                         for polygon in polygons {
-                            currentDetailTag++
-                            var thisPath = "0;0"
+                            currentDetailTag += 1
+                            var thisPath = ""
                             let svgPath = polygon.attributes["d"]!
-                            let firstLetter: String = svgPath.substringWithRange(svgPath.startIndex..<svgPath.startIndex.successor())
-                            if firstLetter == "M" {
-                                thisPath = svgPath.stringByReplacingOccurrencesOfString("M ", withString: "").stringByReplacingOccurrencesOfString(" Z", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
-                            }
-                            else {
-                                thisPath = ""
-                                let path = svgPath.stringByReplacingOccurrencesOfString("m ", withString: "").stringByReplacingOccurrencesOfString(" m", withString: "").stringByReplacingOccurrencesOfString(",", withString: ";")
-                                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                                var previousPoint = CGPointMake(0.0, 0.0)
-                                for point in pointsArray {
-                                    let coords = point.characters.split{$0 == ";"}.map(String.init)
-                                    let x = convertStringToCGFloat(coords[0])
-                                    let y = convertStringToCGFloat(coords[1])
-                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
-                                    previousPoint = CGPointMake(x, y)
+                            
+                            var command: String = ""
+                            var previousPoint = CGPointMake(0.0, 0.0)
+                            var prepreviousPoint = CGPointMake(0.0, 0.0)
+                            var startPoint = CGPointMake(0.0, 0.0)
+                            var controlPoint1 = CGPointMake(3.14, 42)
+                            var controlPoint2 = CGPointMake(3.14, 42)
+                            var indexPoints: Int = 1
+                            
+                            let path = svgPath.stringByReplacingOccurrencesOfString(",", withString: ";")
+                            let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                            for point in pointsArray {
+                                let coords = point.characters.split{$0 == ";"}.map(String.init)
+                                let x: CGFloat = convertStringToCGFloat(coords[0]) * scale
+                                if x == -12345.6789 * scale {
+                                    command = coords[0]
+                                    continue
                                 }
-                                thisPath = thisPath.substringWithRange(Range<String.Index>(start: thisPath.startIndex.advancedBy(0), end: thisPath.endIndex.advancedBy(-1)))
+                                let y: CGFloat = (coords.count == 2) ? convertStringToCGFloat(coords[1]) * scale : x
+                                // get the point
+                                switch command {
+                                case "M": // move to absolute (x;y)
+                                    thisPath = (thisPath == "") ? "\(x);\(y) " : "\(thisPath) \(x);\(y) "
+                                    previousPoint = CGPointMake(x, y)
+                                    command = "L"
+                                    break
+                                case "m": // move to relative (x;y)
+                                    thisPath = (thisPath == "") ? "\(x);\(y) " : "\(thisPath) "
+                                    previousPoint = (thisPath == "") ? CGPointMake(x, y) : CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    command = "l"
+                                    break
+                                case "Z", "z": // close path (do nothing)
+                                    break
+                                case "L": // line to absolute (x;y)
+                                    thisPath += "\(x);\(y) "
+                                    previousPoint = CGPointMake(x, y)
+                                    break
+                                case "l": // line to relative (x;y)
+                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y + y) "
+                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y + y)
+                                    break
+                                case "H": // horizontal line to absolute (x)
+                                    thisPath += "\(x);\(previousPoint.y) "
+                                    previousPoint = CGPointMake(x, previousPoint.y)
+                                    break
+                                case "h": // horizontal line to relative (x)
+                                    thisPath += "\(previousPoint.x + x);\(previousPoint.y) "
+                                    previousPoint = CGPointMake(previousPoint.x + x, previousPoint.y)
+                                    break
+                                case "V": // vertical line to absolute (y)
+                                    thisPath += "\(previousPoint.x);\(y) "
+                                    previousPoint = CGPointMake(previousPoint.x, y)
+                                    break
+                                case "v": // vertical line to absolute (y)
+                                    thisPath += "\(previousPoint.x);\(previousPoint.y + y) "
+                                    previousPoint = CGPointMake(previousPoint.x, previousPoint.y + y)
+                                    break
+                                case "C": // curve to absolute (x1;y1 x2;y2 x;y) (2 controls points)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(x, y)
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints += 1
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((x + controlPoint1.x + controlPoint2.x)/3, (y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "c": // curve to relative (x1;y1 x2;y2 x;y) (2 controls points)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints += 1
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((startPoint.x + x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "S": // shorthand/smooth curve to absolute (x2;y2 x;y)
+                                    // (The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints += 1
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((x + controlPoint1.x + controlPoint2.x)/3, (y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "s": // shorthand/smooth curve to relative (x2;y2 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        controlPoint2 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint2
+                                        indexPoints += 1
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + controlPoint1.y + controlPoint2.y)/3)
+                                        let point2 = CGPointMake((startPoint.x + x + controlPoint1.x + controlPoint2.x)/3, (startPoint.y + y + controlPoint1.y + controlPoint2.y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(point2.x);\(point2.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "Q": // quadratic Bézier curve to absolute (x1;y1 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(x, y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "q": // quadratic Bézier curve to relative (x1;y1 x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "T": // shorthand/smooth quadratic Bézier curve to absolute (x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * previousPoint.x - prepreviousPoint.x, 2 * previousPoint.y - prepreviousPoint.y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints += 1
+                                        break
+                                    case 2:
+                                        let point1 = CGPointMake((startPoint.x + controlPoint1.x + x)/3, (startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(x);\(y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(x, y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "t": // shorthand/smooth quadratic Bézier curve to relative (x;y)
+                                    switch indexPoints {
+                                    case 1:
+                                        startPoint = previousPoint
+                                        controlPoint1 = CGPointMake(2 * startPoint.x - prepreviousPoint.x, 2 * startPoint.y - prepreviousPoint.y)
+                                        prepreviousPoint = controlPoint1
+                                        indexPoints += 1
+                                        break
+                                    case 3:
+                                        let point1 = CGPointMake((2 * startPoint.x + controlPoint1.x + x)/3, (2 * startPoint.y + controlPoint1.y + y)/3)
+                                        thisPath += "\(point1.x);\(point1.y) \(startPoint.x + x);\(startPoint.y + y) "
+                                        indexPoints = 1
+                                        previousPoint = CGPointMake(startPoint.x + x, startPoint.y + y)
+                                        break
+                                    default:
+                                        break
+                                    }
+                                    break
+                                case "A": // elliptical arc absolute (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+                                    break
+                                case "a": // elliptical arc relative (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
+                                    break
+                                default:
+                                    break
+                                }
                             }
                             
-                            let detailTitle = (polygon["title"].value != nil) ? polygon["title"].value! : ""
-                            let detailDescription = (polygon["desc"].value != nil) ? polygon["desc"].value! : ""
+                            let detailTitle = (polygon["title"].value != nil && polygon["title"].value! != "element <title> not found") ? polygon["title"].value! : ""
+                            let detailDescription = (polygon["desc"].value != nil && polygon["desc"].value! != "element <desc> not found") ? polygon["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "false", "title" : detailTitle, "subtitle" : "", "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -265,6 +518,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 dbg.pt(error.localizedDescription)
             }
         }
+        else {
+            dbg.pt("import done")
+        }
         
         return true
     }
@@ -276,6 +532,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             return ""
         }
+    }
+    
+    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool, CGFloat, String, String) {
+        var b64img = ""
+        var group = false
+        var imgWidth:CGFloat = 1024.0
+        var title: String = ""
+        var desc: String = ""
+        if xml["svg"]["image"].attributes["xlink:href"] != nil {
+            b64img = xml["svg"]["image"].attributes["xlink:href"]!
+            imgWidth = convertStringToCGFloat(xml["svg"]["image"].attributes["width"]!)
+            title = xml["svg"]["image"]["title"].value!
+            desc = xml["svg"]["image"]["desc"].value!
+        }
+        else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
+            b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
+            group = true
+            imgWidth = convertStringToCGFloat(xml["svg"]["g"]["image"].attributes["width"]!)
+            title = xml["svg"]["g"]["image"]["title"].value!
+            desc = xml["svg"]["g"]["image"]["desc"].value!
+        }
+        
+        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group, imgWidth, title, desc)
     }
 
 }

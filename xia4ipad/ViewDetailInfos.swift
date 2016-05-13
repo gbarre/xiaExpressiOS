@@ -3,13 +3,26 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 18/11/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
 import Foundation
 
-class ViewDetailInfos: UIViewController {
+class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     var dbg = debug(enable: true)
     
@@ -17,7 +30,6 @@ class ViewDetailInfos: UIViewController {
     var zoom: Bool = false
     var lock: Bool = false
     var detailTitle: String = ""
-    var detailSubtitle: String = ""
     var detailDescription: String = ""
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
@@ -25,20 +37,17 @@ class ViewDetailInfos: UIViewController {
     var filePath: String = ""
     weak var ViewCreateDetailsController: ViewCreateDetails?
 
-    @IBOutlet weak var btnZoom: UIButton!
+    @IBOutlet var switchZoom: UISwitch!
     @IBAction func btnZoomAction(sender: AnyObject) {
         zoom = !zoom
-        let btnImgZoom = (zoom) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnZoom.setImage(btnImgZoom, forState: .Normal)
+        switchZoom.on = zoom
     }
-    @IBOutlet weak var btnLock: UIButton!
+    @IBOutlet var switchLock: UISwitch!
     @IBAction func btnLockAction(sender: AnyObject) {
         lock = !lock
-        let btnImgLock = (lock) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnLock.setImage(btnImgLock, forState: .Normal)
+        switchLock.on = lock
     }
     @IBOutlet weak var txtTitle: UITextField!
-    @IBOutlet var txtSubtitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
     @IBAction func btnCancel(sender: AnyObject) {
@@ -49,17 +58,15 @@ class ViewDetailInfos: UIViewController {
         // Save the detail in xml
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
-                d.attributes["zoom"] = (zoom) ? "true" : "false" //"\(btnZoom.on)"
-                d.attributes["locked"] = (lock) ? "true" : "false" //"\(btnLock.on)"
+                d.attributes["zoom"] = "\(switchZoom.on)"
+                d.attributes["locked"] = "\(switchLock.on)"
                 d.attributes["title"] = txtTitle.text
-                d.attributes["subtitle"] = txtSubtitle.text
                 //d.value = attributedString2pikipiki(txtDesc.attributedText)
                 d.value = txtDesc.text
             }
         }
         let _ = writeXML(xml, path: "\(filePath).xml")
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
-        btnLock.resignFirstResponder()
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -69,24 +76,36 @@ class ViewDetailInfos: UIViewController {
         super.viewDidLoad()
         
         txtDesc.layer.cornerRadius = 5
-        
-        let btnImgZoom = (zoom) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnZoom.setImage(btnImgZoom, forState: .Normal)
-        let btnImgLock = (lock) ? UIImage(named: "checkedbox") : UIImage(named: "uncheckedbox")
-        btnLock.setImage(btnImgLock, forState: .Normal)
+        switchZoom.on = zoom
+        switchLock.on = lock
         txtTitle.text = self.detailTitle
-        txtSubtitle.text = self.detailSubtitle
         
-        
-        txtDesc.text = self.detailDescription
-        //txtDesc.attributedText = pikipiki2AttributedString(self.detailDescription)
-        
-        
-        //txtDesc.allowsEditingTextAttributes = true
+        txtDesc.delegate = self
+        if self.detailDescription == "" {// Add placeholder
+            txtDesc.text = NSLocalizedString("DESCRIPTION...", comment: "")
+            txtDesc.textColor = UIColor.lightGrayColor()
+        }
+        else {
+            txtDesc.text = self.detailDescription
+        }
         
         // autofocus
         txtTitle.becomeFirstResponder()
         txtTitle.backgroundColor = UIColor.clearColor()
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.textColor == UIColor.lightGrayColor() {
+            textView.text = ""
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textViewDidEndEditing(textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = NSLocalizedString("DESCRIPTION...", comment: "")
+            textView.textColor = UIColor.lightGrayColor()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {

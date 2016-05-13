@@ -1,2 +1,5 @@
+Xcode project for the development of xia4ipad application.
 
-To be completed...
+This application uses :
+- AEXML [tadija/AEXML](https://github.com/tadija/AEXML)
+- BubbleTransition [andreamazz/BubbleTransition](https://github.com/andreamazz/BubbleTransition)

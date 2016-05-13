@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 07/12/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -70,14 +83,20 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
                 xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
             }
         }
+        // Look for image child (to store image title & description)
+        if child["image"].attributes["title"] == nil {
+            xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
+        }
+        // Look for the default show details attributes
+        if child["details"].attributes["show"] == nil {
+            xml["xia"]["details"].attributes["show"] = "true"
+        }
+            
     }
     if let xmlDetails = xml["xia"]["details"]["detail"].all {
         for detail in xmlDetails {
             if detail.attributes["locked"] == nil {
                 detail.attributes["locked"] = "false"
-            }
-            if detail.attributes["subtitle"] == nil {
-                detail.attributes["subtitle"] = ""
             }
         }
     }
@@ -109,7 +128,7 @@ func convertStringToCGFloat(txt: String) -> CGFloat {
     }
     else {
         let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
-        cgFloat = CGFloat(Double("\(d)")!)
+        cgFloat = (Double("\(d)") == nil) ? -12345.6789 : CGFloat(Double("\(d)")!)
     }
     return cgFloat!
 }
@@ -157,7 +176,7 @@ func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
     var j = polyCorners - 1
     var oddNodes:Bool = false
     
-    for var i=0; i<polyCorners; i++ {
+    for i in 0 ..< polyCorners {
         if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
             || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
             && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {

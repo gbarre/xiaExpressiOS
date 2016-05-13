@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -36,17 +49,15 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     var img = UIImage()
     var scale: CGFloat = 1.0
     
+    var menu: UIAlertController!
+    var btnTag: Int = 0
+    
     let editColor: UIColor = UIColor.redColor()
     let noEditColor: UIColor = UIColor.greenColor()
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
-    @IBAction func btnMetas(sender: AnyObject) {
-        performSegueWithIdentifier("viewMetas", sender: self)
-    }
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
-    @IBOutlet var infoBkgd: UIImageView!
-    @IBOutlet var infoBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,8 +66,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         myToolbar.layer.zPosition = 999
         imgTopBarBkgd.layer.zPosition = 100
         imgTopBarBkgd.hidden = false
-        infoBkgd.layer.zPosition = 101
-        infoBtn.layer.zPosition = 102
         
         // Load image
         let filePath = "\(self.filePath).jpg"
@@ -66,7 +75,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if ( img.size.width > img.size.height ) { // turn device to landscape
             if( !UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) )
             {
-                value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : 3
+                value = (UIDevice.currentDevice().orientation.rawValue == 5) ? 5 : ( (UIDevice.currentDevice().orientation.rawValue == 4) ? 4 : 3)
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
             landscape = true
@@ -80,7 +89,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             landscape = false
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         
         // Add gesture on swipe
         /*if let recognizers = view.gestureRecognizers {
@@ -99,7 +108,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         view.addGestureRecognizer(leftSwipe)
         */
         
-        let dSelector : Selector = "detailInfos"
+        let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
         doubleTapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapGesture)
@@ -144,14 +153,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                         var attainablePoints: Int = 0
                         for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
-                            let x = convertStringToCGFloat(coords[0]) * scale
-                            let y = convertStringToCGFloat(coords[1]) * scale
-                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
-                            newPoint?.layer.zPosition = 1
-                            newPoint?.hidden = true
-                            imgView.addSubview(newPoint!)
-                            if imgView.frame.contains((newPoint?.center)!) {
-                                attainablePoints++
+                            if coords.count == 2 {
+                                let x = convertStringToCGFloat(coords[0]) * scale
+                                let y = convertStringToCGFloat(coords[1]) * scale
+                                let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
+                                newPoint?.layer.zPosition = 1
+                                newPoint?.hidden = true
+                                imgView.addSubview(newPoint!)
+                                if imgView.frame.contains((newPoint?.center)!) {
+                                    attainablePoints += 1
+                                }
                             }
                         }
                         if let constraint = detail.attributes["constraint"] {
@@ -201,15 +212,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
                 
-                for var i=0; i<detailPoints; i++ { // should we move an existing point or add a new one
-                    let ploc = details["\(detailTag)"]?.points[i].center
+                var i=0
+                for point in (details["\(detailTag)"]?.points)! { // should we move an existing point or add a new one
+                    let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let xDist: CGFloat = (location.x - ploc.x)
+                    let yDist: CGFloat = (location.y - ploc.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(detailTag)"]!.points[i]
+                        let toMove: UIImageView = point
                         toMove.center = location
                         details["\(detailTag)"]?.points[i] = toMove
                         movingPoint = i
@@ -220,6 +232,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     else {
                         addPoint = true
                     }
+                    i += 1
                 }
             }
             if ( (addPoint || detailPoints == 0) && !moveDetail )  {
@@ -258,19 +271,19 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Should we move an existing point ?
             if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
                 movingPoint = -1
-                let detailPoints = details["\(currentDetailTag)"]?.points.count
-                for var i=0; i<detailPoints; i++ {
-                    let ploc = details["\(currentDetailTag)"]?.points[i].center
+                var i=0
+                for point in (details["\(currentDetailTag)"]?.points)! {
+                    let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc!.x)
-                    let yDist: CGFloat = (location.y - ploc!.y)
+                    let xDist: CGFloat = (location.x - ploc.x)
+                    let yDist: CGFloat = (location.y - ploc.y)
                     let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
                     
                     if ( distance < 20 ) { // We are close to an exiting point, move it
-                        let toMove: UIImageView = details["\(currentDetailTag)"]!.points[i]
+                        let toMove: UIImageView = point
                         switch details["\(currentDetailTag)"]!.constraint {
                         case "ellipse":
-                            toMove.center = ploc!
+                            toMove.center = ploc
                             break
                         default:
                             toMove.center = location
@@ -284,6 +297,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     else { // No point here, just move the detail
                         moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
                     }
+                    i += 1
                 }
             }
         }
@@ -486,7 +500,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(self.detailToSegue)"]) {
                     for d in detail {
                         controller.detailTitle = (d.attributes["title"] == nil) ? "" : d.attributes["title"]!
-                        controller.detailSubtitle = (d.attributes["subtitle"] == nil) ? "" : d.attributes["subtitle"]!
                         controller.detailDescription = (d.value == nil) ? "" : d.value!
                         controller.zoom = (d.attributes["zoom"] != nil && d.attributes["zoom"] == "true") ? true : false
                         controller.lock = (d.attributes["locked"] != nil && d.attributes["locked"] == "true") ? true : false
@@ -503,7 +516,9 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
+                controller.fileName = self.fileName
                 controller.landscape = landscape
+                controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
             }
         }
@@ -534,18 +549,18 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
         let newDetail = xiaDetail(tag: self.currentDetailTag, scale: self.scale)
         let attributes = ["tag" : "\(self.currentDetailTag)",
-            "zoom" : "false",
-            "title" : "\(NSLocalizedString("DETAIL", comment: "")) \(self.currentDetailTag - 99)",
+            "zoom" : "true",
+            "title" : "",
             "path" : "0;0"]
         
         // Build menu
-        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
+        menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
         let rectangleAction = UIAlertAction(title: NSLocalizedString("RECTANGLE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -580,7 +595,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
             
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             
@@ -614,7 +629,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
             self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
-            self.xml["xia"]["details"].addChild(name: "detail", value: NSLocalizedString("DESCRIPTION...", comment: ""), attributes: attributes)
+            self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
             self.setBtnsIcons()
@@ -719,9 +734,22 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     func deleteDetail() {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
-            stopCreation()
-            performFullDetailRemove(detailTag, force: true)
-            setBtnsIcons()
+            // Alert
+            let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
+                message: "\(NSLocalizedString("DELETE_DETAIL", comment: ""))", preferredStyle: .Alert)
+            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""),
+                style: .Destructive, handler: { action in
+                    self.stopCreation()
+                    self.performFullDetailRemove(detailTag, force: true)
+                    self.setBtnsIcons()
+            })
+            let noAction = UIAlertAction(title: NSLocalizedString("NO", comment: ""),
+                style: .Cancel, handler: nil)
+            
+            controller.addAction(yesAction)
+            controller.addAction(noAction)
+            
+            presentViewController(controller, animated: true, completion: nil)
         }
     }
     
@@ -822,28 +850,37 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         fixedSpace.width = 15.0
         var items = [UIBarButtonItem]()
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: "goBack"))
+        items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: #selector(ViewCreateDetails.goBack)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: fileTitle, style: .Plain, target: self, action: "openMetas"))
+        items.append(UIBarButtonItem(title: ((fileTitle == "") ? fileName : fileTitle), style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addDetail:"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
         items.append(fixedSpace)
         if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: "polygonUndo"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
             items.append(fixedSpace)
         }
         if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Trash, target: self, action: "deleteDetail"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Trash, target: self, action: #selector(ViewCreateDetails.deleteDetail)))
             items.append(fixedSpace)
         }
         if createDetail {
-            items.append(UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: "stopCreation"))
+            items.append(UIBarButtonItem(title: NSLocalizedString("OK", comment: ""), style: .Done, target: self, action: #selector(ViewCreateDetails.stopCreation)))
         }
         else {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Play, target: self, action: "goForward"))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Play, target: self, action: #selector(ViewCreateDetails.goForward)))
         }
         items.append(fixedSpace)
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "export"))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(ViewCreateDetails.export)))
+        items.append(fixedSpace)
+        let editBtn: UIButton = UIButton()
+        editBtn.frame = CGRectMake(0, 0, 25, 25)
+        editBtn.backgroundColor = blueColor
+        editBtn.setImage(UIImage(named: "edit"), forState: UIControlState.Normal)
+        editBtn.addTarget(self, action: #selector(ViewCreateDetails.detailInfos), forControlEvents: UIControlEvents.TouchUpInside)
+        let customEditBtn: UIBarButtonItem = UIBarButtonItem()
+        customEditBtn.customView = editBtn
+        items.append(customEditBtn)
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
         
         myToolbar.items = items
@@ -860,7 +897,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         setBtnsIcons()
         
         // Add double tap gesture
-        let dSelector : Selector = "detailInfos"
+        let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
         doubleTapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapGesture)

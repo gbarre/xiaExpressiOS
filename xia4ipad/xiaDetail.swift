@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 06/11/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -82,7 +95,7 @@ class xiaDetail: NSObject {
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
-            path = path.substringWithRange(Range<String.Index>(start: path.startIndex.advancedBy(0), end: path.endIndex.advancedBy(-1)))
+            path = path.substringWithRange(path.startIndex.advancedBy(0)..<path.endIndex.advancedBy(-1))
             
             return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }

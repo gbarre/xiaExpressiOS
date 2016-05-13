@@ -3,12 +3,25 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 26/09/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
 
-class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
     var dbg = debug(enable: true)
     
@@ -29,106 +42,99 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     var landscape: Bool = false
     
-    @IBOutlet weak var btnCreateState: UIBarButtonItem!
-    @IBAction func btnCreate(sender: AnyObject) {
-        let menu = UIAlertController(title: "", message: nil, preferredStyle: .ActionSheet)
-        let cameraAction = UIAlertAction(title: NSLocalizedString("TAKE_PHOTO", comment: ""), style: .Default, handler: { action in
-            if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
-                //load the camera interface
-                let picker : UIImagePickerController = UIImagePickerController()
-                picker.sourceType = UIImagePickerControllerSourceType.Camera
-                picker.delegate = self
-                picker.allowsEditing = false
-                self.presentViewController(picker, animated: true, completion: nil)
-                self.newMedia = true
+    var selectedPhotos = [NSIndexPath]()
+    let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1)
+    
+    @IBOutlet var navBar: UINavigationBar!
+    
+    @IBOutlet var btnTrash: UIBarButtonItem!
+    @IBAction func btnTrashAction(sender: AnyObject) {
+        // Show confirm alert
+        let controller = UIAlertController()
+        let title = (selectedPhotos.count == 1) ? NSLocalizedString("DELETE_FILE", comment: "") : String(format: NSLocalizedString("DELETE_N_FILES", comment: ""), selectedPhotos.count)
+        let confirmDelete = UIAlertAction(title: title, style: .Destructive) { action in
+            // Reorder paths to delete from the end
+            var indexes = [NSIndexPath:Int]()
+            for path in self.selectedPhotos {
+                indexes[path] = path.row
             }
-            else{
-                //no camera available
-                let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
-                    alert.dismissViewControllerAnimated(true, completion: nil)
-                }))
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-        })
-        let libraryAction = UIAlertAction(title: NSLocalizedString("SEARCH_IN_PHOTOS", comment: ""), style: .Default, handler: { action in
-            let picker : UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            picker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
-            picker.delegate = self
-            picker.allowsEditing = false
-            picker.modalPresentationStyle = .Popover
-            self.presentViewController(picker, animated: true, completion: nil)
-            self.newMedia = false
+            let sortedPath = (indexes as NSDictionary).keysSortedByValueUsingComparator{
+                ($1 as! NSNumber).compare($0 as! NSNumber)
+                }
             
-            picker.popoverPresentationController?.barButtonItem = sender as? UIBarButtonItem
-            picker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
-        })
-        let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_NEW_DOC", comment: ""), attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(18),
-            NSForegroundColorAttributeName : UIColor.blackColor()
-            ])
-        menu.setValue(attributedTitle, forKey: "attributedTitle")
-        
-        cameraAction.setValue(UIImage(named: "camera"), forKey: "image")
-        libraryAction.setValue(UIImage(named: "photos"), forKey: "image")
-        menu.addAction(cameraAction)
-        menu.addAction(libraryAction)
-        
-        if let ppc = menu.popoverPresentationController {
-            ppc.barButtonItem = sender as? UIBarButtonItem
+            // Delete files
+            for path in sortedPath {
+                self.deleteFiles(path as! NSIndexPath)
+            }
+            // Exit editing mode
+            self.endEdit()
+            // Rebuild the navbar
+            self.buildLeftNavbarItems()
+        }
+        controller.addAction(confirmDelete)
+        if let ppc = controller.popoverPresentationController {
+            ppc.barButtonItem = btnTrash
             ppc.permittedArrowDirections = .Up
         }
-        
-        presentViewController(menu, animated: true, completion: nil)
+        presentViewController(controller, animated: true, completion: nil)
     }
     
-    @IBAction func btnHelp(sender: AnyObject) {
-        for subview in view.subviews {
-            if subview.tag > 49 {
-                subview.hidden = showHelp
-                subview.layer.zPosition = 1
-            }
-        }
-        showHelp = !showHelp
+    @IBOutlet var btnExport: UIBarButtonItem!
+    @IBAction func btnExportAction(sender: AnyObject) {
+        segueIndex = selectedPhotos[0].row
+        performSegueWithIdentifier("export", sender: self)
     }
     
-    @IBOutlet weak var imgHelp: UIImageView!
+    @IBOutlet var btnEdit: UIBarButtonItem!
+    @IBAction func btnEditAction(sender: AnyObject) {
+        segueIndex = selectedPhotos[0].row
+        performSegueWithIdentifier("viewMetas", sender: self)
+    }
+    
+    @IBOutlet var navBarTitle: UINavigationItem!
+    
+    @IBOutlet weak var btnCreateState: UIBarButtonItem!
     
     @IBOutlet weak var editMode: UIBarButtonItem!
     @IBAction func btnEdit(sender: AnyObject) {
+        selectedPhotos = []
         if editingMode {
-            editingMode = false
-            self.editMode.title = NSLocalizedString("EDIT", comment: "")
-            for cell in CollectionView.visibleCells() {
-                let customCell: PhotoThumbnail = cell as! PhotoThumbnail
-                customCell.wobble(false)
-            }
-            self.CollectionView.reloadData()
-            btnCreateState.enabled = true
+            endEdit()
         }
         else {
             editingMode = true
+            // Change button title
             self.editMode.title = NSLocalizedString("DONE", comment: "")
+            // Start cell wobbling
             for cell in CollectionView.visibleCells() {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
             }
+            CollectionView.allowsMultipleSelection = true
+            CollectionView.selectItemAtIndexPath(nil, animated: true, scrollPosition: .None)
+            // Cosmetic...
             btnCreateState.enabled = false
+            btnCreateState.tintColor = selectingColor.colorWithAlphaComponent(0)
+            navBar.barTintColor = selectingColor
+            self.view.backgroundColor = selectingColor
+            navBar.tintColor = UIColor.whiteColor()
+            navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
+            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         }
+        buildLeftNavbarItems(selectedPhotos.count)
     }
     
     @IBOutlet weak var CollectionView: UICollectionView!
     
-    @IBOutlet weak var mytoolBar: UIToolbar!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Hide left navbar buttons
+        buildLeftNavbarItems()
         // Put the StatusBar in white
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         
         // add observer to detect enter foreground and rebuild collection
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         // purge tmp
         let fileManager = NSFileManager.defaultManager()
@@ -150,20 +156,19 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func applicationWillEnterForeground(notification: NSNotification) {
+        // Put the StatusBar in white
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         self.CollectionView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {
-        // fetch the photos from collection
         self.navigationController!.hidesBarsOnTap = false
-        mytoolBar.clipsToBounds = true
         
         editingMode = false
-        imgHelp.image = self.textToImage("Hide help", inImage: self.imgHelp.image!, atPoint: CGPointMake(20, 36))
     }
     
     override func viewDidAppear(animated: Bool) {
-       self.CollectionView.reloadData()
+        self.CollectionView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -181,6 +186,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let nameToSegue = "\(arrayNames[segueIndex])"
         let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
         if (segue.identifier == "viewLargePhoto") {
+            endEdit()
             if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
@@ -191,16 +197,61 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
                 controller.xml = xmlToSegue
                 controller.filePath = pathToSegue
+                controller.fileName = nameToSegue
                 controller.landscape = landscape
+                controller.ViewCollection = self
             }
         }
         if (segue.identifier == "playXia") {
+            endEdit()
             if let controller:PlayXia = segue.destinationViewController as? PlayXia {
                 controller.fileName = nameToSegue
                 controller.filePath = pathToSegue
                 controller.xml = xmlToSegue
                 controller.landscape = landscape
             }
+        }
+        if (segue.identifier == "export") {
+            if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                controller.filePath = pathToSegue
+                controller.fileName = nameToSegue
+                controller.xml = xmlToSegue
+                controller.ViewCollection = self
+            }
+        }
+        if (segue.identifier == "Add") {
+            if let controller:ViewMenuAddResource = segue.destinationViewController as? ViewMenuAddResource {
+                controller.ViewCollection = self
+            }
+        }
+    }
+    
+    func buildLeftNavbarItems(selectedItems: Int = 0) {
+        let buttonColor = (editing) ? selectingColor : blueColor
+        switch selectedItems {
+        case 1:
+            btnTrash.enabled = true
+            btnTrash.tintColor = UIColor.whiteColor()
+            btnExport.enabled = true
+            btnExport.tintColor = UIColor.whiteColor()
+            btnEdit.enabled = true
+            btnEdit.tintColor = UIColor.whiteColor()
+            break
+        case 2...9999:
+            btnTrash.enabled = true
+            btnTrash.tintColor = UIColor.whiteColor()
+            btnExport.enabled = false
+            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnEdit.enabled = false
+            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
+            break
+        default:
+            btnTrash.enabled = false
+            btnTrash.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnExport.enabled = false
+            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnEdit.enabled = false
+            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
         }
     }
 
@@ -211,10 +262,20 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let files = fileManager.enumeratorAtPath(self.documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            let ext = file.substringWithRange(Range<String.Index>(start: file.endIndex.advancedBy(-3), end: file.endIndex.advancedBy(0)))
+            let ext = file.substringWithRange(file.endIndex.advancedBy(-3)..<file.endIndex.advancedBy(0))
             if (ext != "xml" && file != "Inbox") {
-                file = file.substringWithRange(Range<String.Index>(start: file.startIndex.advancedBy(0), end: file.endIndex.advancedBy(-4))) // remove .xyz
-                self.arrayNames.append(file)
+                file = file.substringWithRange(file.startIndex.advancedBy(0)..<file.endIndex.advancedBy(-4)) // remove .xyz
+                if fileManager.fileExistsAtPath("\(documentsDirectory)/\(file).xml") {
+                    self.arrayNames.append(file)
+                }
+                else {
+                    do {
+                        try fileManager.removeItemAtPath("\(documentsDirectory)/\(file).jpg")
+                    }
+                    catch {
+                        self.dbg.pt("\(error)")
+                    }
+                }
             }
         }
         // Create default image if the is no image in Documents directory
@@ -271,91 +332,99 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
         cell.setLabel(label)
         
-        let cSelector = Selector("deleteFiles:")
-        let leftSwipe = UISwipeGestureRecognizer(target: self, action: cSelector )
-        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
-        cell.addGestureRecognizer(leftSwipe)
+        // Show reaod Only Icon
+        let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
+        cell.showRoIcon(roState)
         
-        let tap = UITapGestureRecognizer(target: self, action:Selector("handleTap:"))
+        let tap = UITapGestureRecognizer(target: self, action:#selector(ViewCollectionController.handleTap(_:)))
         tap.delegate = self
         cell.addGestureRecognizer(tap)
+        
+        if editingMode {
+            if selectedPhotos.contains(indexPath) {
+                cell.setLabelBkgColor(selectingColor)
+            }
+            else {
+                cell.setLabelBkgColor(UIColor.clearColor())
+            }
+            cell.wobble(true)
+        }
         
         return cell
     }
     
-    func deleteFiles(gestureReconizer: UISwipeGestureRecognizer) {
-        if gestureReconizer.state != UIGestureRecognizerState.Ended {
-            return
-        }
-        
-        let p = gestureReconizer.locationInView(CollectionView)
-        let indexPath = CollectionView.indexPathForItemAtPoint(p)
-        var deleteIndex:Int = 9999
-        
-        if let path = indexPath {
-            deleteIndex = path.row
-            
-            let fileName = arrayNames[deleteIndex]
-            
-            let controller = UIAlertController(title: NSLocalizedString("WARNING", comment: ""),
-                message: "\(NSLocalizedString("DELETE", comment: ""))\(fileName)\(NSLocalizedString("?", comment: ""))", preferredStyle: .Alert)
-            let yesAction = UIAlertAction(title: NSLocalizedString("YES", comment: ""),
-                style: .Destructive, handler: { action in
-                    
-                    // Delete the file
-                    let fileManager = NSFileManager()
-                    do {
-                        var filePath = "\(self.documentsDirectory)/\(fileName).jpg"
-                        try fileManager.removeItemAtPath(filePath)
-                        filePath = "\(self.documentsDirectory)/\(fileName).xml"
-                        try fileManager.removeItemAtPath(filePath)
-                    }
-                    catch let error as NSError {
-                        self.dbg.pt(error.localizedDescription)
-                    }
-                    
-                    // Update arrays
-                    self.arrayNames.removeAtIndex(deleteIndex)
-                    
-                    // Delete cell in CollectionView
-                    self.CollectionView.deleteItemsAtIndexPaths([path])
-                    
-                    // Information
-                    let msg = "\(fileName)\(NSLocalizedString("DELETED", comment: ""))"
-                    let controller2 = UIAlertController(
-                        title:nil,
-                        message: msg, preferredStyle: .Alert)
-                    let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""),
-                        style: .Default , handler: nil)
-                    controller2.addAction(cancelAction)
-                    self.presentViewController(controller2, animated: true,
-                        completion: nil)
-            })
-            let noAction = UIAlertAction(title: NSLocalizedString("NO", comment: ""),
-                style: .Cancel, handler: nil)
-            
-            controller.addAction(yesAction)
-            controller.addAction(noAction)
-            
-            presentViewController(controller, animated: true, completion: nil)
+    func changeCellLabelBkgColor(path: NSIndexPath) {
+        var labelColor: UIColor
+        if selectedPhotos.contains(path) {
+            let indexOfPhoto = selectedPhotos.indexOf(path)
+            selectedPhotos.removeAtIndex(indexOfPhoto!)
+            labelColor = UIColor.clearColor()
         }
         else {
-            dbg.pt("Could not find index path")
+            selectedPhotos.append(path)
+            labelColor = selectingColor
+        }
+        if let cell = CollectionView.cellForItemAtIndexPath(path) {
+            let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+            customCell.setLabelBkgColor(labelColor)
+            navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
         }
     }
     
-    func handleTap(gestureReconizer: UISwipeGestureRecognizer) {
+    func endEdit() {
+        editingMode = false
+        editMode.title = NSLocalizedString("EDIT", comment: "")
+        for cell in CollectionView.visibleCells() {
+            let customCell: PhotoThumbnail = cell as! PhotoThumbnail
+            customCell.wobble(false)
+            customCell.setLabelBkgColor(UIColor.clearColor())
+        }
+        CollectionView.reloadData()
+        btnCreateState.enabled = true
+        btnCreateState.tintColor = UIColor.whiteColor()
+        navBar.barTintColor = blueColor
+        self.view.backgroundColor = blueColor
+        navBar.tintColor = UIColor.whiteColor()
+        navBarTitle.title = "Xia"
+        navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        // Put the StatusBar in white
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+    }
+    
+    func deleteFiles(path: NSIndexPath) {
+        let deleteIndex = path.row
+        let fileName = arrayNames[deleteIndex]
+        // Delete the file
+        let fileManager = NSFileManager()
+        do {
+            var filePath = "\(self.documentsDirectory)/\(fileName).jpg"
+            try fileManager.removeItemAtPath(filePath)
+            filePath = "\(self.documentsDirectory)/\(fileName).xml"
+            try fileManager.removeItemAtPath(filePath)
+        }
+        catch let error as NSError {
+            self.dbg.pt(error.localizedDescription)
+        }
+        
+        // Update arrays
+        self.arrayNames.removeAtIndex(deleteIndex)
+    }
+    
+    func handleTap(gestureReconizer: UITapGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.Ended {
             return
         }
         
         let p = gestureReconizer.locationInView(CollectionView)
         let indexPath = CollectionView.indexPathForItemAtPoint(p)
-        
         if let path = indexPath {
             segueIndex = path.row
             if editingMode {
-                performSegueWithIdentifier("viewMetas", sender: self)
+                if segueIndex != -1 {
+                    changeCellLabelBkgColor(path)
+                }
+                buildLeftNavbarItems(selectedPhotos.count)
             }
             else {
                 let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
@@ -381,7 +450,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                         }
                         landscape = false
                     }
-                    
                     performSegueWithIdentifier("playXia", sender: self)
                 }
                 else {
@@ -390,85 +458,4 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
     }
-    
-    func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer, contextInfo:UnsafePointer<Void>) {
-        if error != nil {
-            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("IMAGE_SAVE_FAILED", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
-            
-            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Cancel, handler: nil)
-            
-            alert.addAction(cancelAction)
-            self.presentViewController(alert, animated: true, completion: nil)
-        }
-    }
-    
-    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
-        self.dismissViewControllerAnimated(true, completion: { () -> Void in
-        })
-        
-        // Let's store the image
-        let now:Int = Int(NSDate().timeIntervalSince1970)
-        let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
-        
-        // Create associated xml
-        let xml = AEXMLDocument()
-        let xmlString = xml.createXML("\(now)")
-        do {
-            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
-        arrayNames.append("\(now)")
-        
-        // copy the image in the library
-        if (newMedia == true) {
-            UIImageWriteToSavedPhotosAlbum(image, self, "image:didFinishSavingWithError:contextInfo:", nil)
-            newMedia = false
-        }
-        self.CollectionView.reloadData()
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func textToImage(drawText: NSString, inImage: UIImage, atPoint:CGPoint)->UIImage{
-        
-        // Setup the font specific variables
-        let textColor: UIColor = UIColor.blackColor()
-        let textFont: UIFont = UIFont.systemFontOfSize(14.0)
-
-        
-        //Setup the image context using the passed image.
-        UIGraphicsBeginImageContext(inImage.size)
-        
-        //Setups up the font attributes that will be later used to dictate how the text should be drawn
-        let textFontAttributes = [
-            NSFontAttributeName: textFont,
-            NSForegroundColorAttributeName: textColor,
-        ]
-        
-        //Put the image into a rectangle as large as the original image.
-        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
-        
-        // Creating a point within the space that is as bit as the image.
-        let rect: CGRect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
-        
-        //Now Draw the text into an image.
-        drawText.drawInRect(rect, withAttributes: textFontAttributes)
-        
-        // Create a new image out of the images we have created
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        // End the context now that we have the image we need
-        UIGraphicsEndImageContext()
-        
-        //And pass it back up to the caller.
-        return newImage
-        
-    }
-    
 }
-

@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 17/01/2016.
-//  Copyright © 2016 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -39,8 +52,8 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var popup: UIView!
     @IBOutlet var imgArea: UIView!
     @IBOutlet var imgThumb: UIImageView!
+    @IBOutlet var titleArea: UIView!
     @IBOutlet var detailTitle: UILabel!
-    @IBOutlet var detailSubTitle: UILabel!
     @IBOutlet var txtDesc: UITextView!
     @IBOutlet var bkgdzoom: UIImageView!
     
@@ -62,6 +75,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
             }
             UIView.animateWithDuration(2 * transitionDuration) { () -> Void in
                 self.imgArea.alpha = 1
+                self.titleArea.alpha = 1
             }
             showZoom = false
         }
@@ -79,13 +93,15 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         
         // Cropping image
         let myMask = CAShapeLayer()
-        myMask.path = path.CGPath
-        imgThumb.layer.mask = myMask
+        if tag != 0 {
+            myMask.path = path.CGPath
+            imgThumb.layer.mask = myMask
+        }
         self.view.addSubview(imgThumb)
         imgThumb.hidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
-        let pathFrameCorners = detail.bezierFrame()
+        let pathFrameCorners = (tag != 0) ? detail.bezierFrame() : UIScreen.mainScreen().bounds
         let detailScaleX = (imgArea.frame.width - 10) / pathFrameCorners.width
         let detailScaleY = (imgArea.frame.height - 10) / pathFrameCorners.height
         let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
@@ -98,15 +114,23 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         imgThumb.center = newCenter
         
         // Show text
-        if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
-            for d in detail {
-                detailTitle.text = d.attributes["title"]
-                detailTitle.sizeToFit()
-                detailTitle.numberOfLines = 0
-                detailSubTitle.text = d.attributes["subtitle"]
-                txtDesc.text = d.value
-                zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+        if tag != 0 {
+            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+                for d in detail {
+                    detailTitle.text = d.attributes["title"]
+                    detailTitle.sizeToFit()
+                    detailTitle.numberOfLines = 0
+                    txtDesc.text = d.value
+                    zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+                }
             }
+        }
+        else {
+            detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
+            detailTitle.sizeToFit()
+            detailTitle.numberOfLines = 0
+            txtDesc.text =  (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"] : ""
+            zoomDisable = false
         }
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
@@ -143,6 +167,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         
         UIView.animateWithDuration(transitionDuration) { () -> Void in
             self.bkgdzoom.alpha = 1
+            self.titleArea.alpha = 0
             self.imgArea.alpha = 0
             detailImg.transform = CGAffineTransformScale(detailImg.transform, detailScale / self.currentScale, detailScale / self.currentScale)
         }

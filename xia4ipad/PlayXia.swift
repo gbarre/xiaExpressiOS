@@ -3,7 +3,20 @@
 //  xia4ipad
 //
 //  Created by Guillaume on 25/11/2015.
-//  Copyright © 2015 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -22,7 +35,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var touchedTag: Int = 0
     var paths = [Int: UIBezierPath]()
     var showDetails: Bool = false
-    var detailsVisibles: Bool = false
     var touchBegin = CGPoint(x: 0, y: 0)
     var img: UIImage!
     
@@ -34,15 +46,33 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
+    @IBOutlet var leftButtonBkgd: UIImageView!
+    @IBOutlet var leftButton: UIButton!
     @IBAction func showMetas(sender: AnyObject) {
         performSegueWithIdentifier("playMetas", sender: self)
+    }
+    @IBAction func showImgInfos(sender: AnyObject) {
+        touchedTag = 0
+        performSegueWithIdentifier("openDetail", sender: self)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        // hide left button (image infos) if there are no title & description
+        // hide left button if details are not showed
+        if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
+            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == "")) ||
+            !showDetails
+            ) {
+            leftButton.hidden = true
+            leftButtonBkgd.hidden = true
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Add gestures on swipe
-        let gbSelector = Selector("goBack")
+        let gbSelector = #selector(PlayXia.goBack)
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
         rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
@@ -85,18 +115,21 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
             }
         }
-        detailsVisibles = hideDetails(true)
+        showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = !showDetails
+            }
+        }
         
         if xml["xia"]["readonly"].value! == "true" {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayXia.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if !detailsVisibles {
-            showDetails = hideDetails(false)
-        }
-        
+    override func viewWillDisappear(animated: Bool) {
+        // Put the StatusBar in white
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -109,28 +142,10 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             let (detailTag, detailPoints) = detail
             if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                 touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
-                //let zoom: Bool = btnZoom.on
                 performSegueWithIdentifier("openDetail", sender: self)
                 break
             }
         }
-        
-        if (touchedTag == 0 && detailsVisibles) {
-            for subview in view.subviews {
-                if subview.tag == 666 || subview.tag == 667 {
-                    subview.removeFromSuperview()
-                }
-                if subview.tag > 99 {
-                    subview.hidden = false
-                }
-            }
-            detailsVisibles = hideDetails(true)
-        }
-        if !detailsVisibles && showDetails {
-            detailsVisibles = true
-            showDetails = false
-        }
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -140,14 +155,13 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         if (segue.identifier == "openDetail") {
-            detailsVisibles = hideDetails(true)
             if let controller:PlayDetail = segue.destinationViewController as? PlayDetail {
                 controller.transitioningDelegate = self
                 controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
-                controller.detail = details["\(touchedTag)"]
-                controller.path = paths[touchedTag]
+                controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
+                controller.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
                 controller.bkgdImage = bkgdImage
             }
         }
@@ -157,10 +171,11 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .Present
         transition.startingPoint = location
         transition.bubbleColor = blueColor
-        transition.detailFrame = details["\(touchedTag)"]?.bezierFrame()
-        transition.path = paths[touchedTag]
-        transition.theDetail = details["\(touchedTag)"]
+        transition.detailFrame = (touchedTag != 0) ? details["\(touchedTag)"]?.bezierFrame() : UIScreen.mainScreen().bounds
+        transition.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
+        transition.theDetail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
         transition.bkgdImage = bkgdImage
+        transition.noDetailStatus = (touchedTag != 0) ? false : true
         transition.duration = 0.5
         return transition
     }
@@ -174,16 +189,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func goBack() {
         navigationController?.popViewControllerAnimated(true)
-    }
-    
-    func hideDetails(hidden: Bool) -> Bool {
-        for subview in view.subviews {
-            if subview.tag > 199 {
-                subview.hidden = hidden
-            }
-        }
-        
-        return !hidden
     }
     
     func rotated() {

@@ -164,7 +164,7 @@ public class AEXMLElement: NSObject {
             var countAttributes = 0
             for (key, value) in attributes {
                 if element.attributes[key] == value {
-                    countAttributes++
+                    countAttributes += 1
                 }
             }
             return countAttributes == attributes.count
@@ -216,17 +216,18 @@ public class AEXMLElement: NSObject {
         var count = 0
         var element = self
         while let parent = element.parent {
-            count++
+            count += 1
             element = parent
         }
         return count
     }
     
-    private func indentation(var count: Int) -> String {
+    private func indentation(count: Int) -> String {
+        var nb = count
         var indent = String()
-        while count > 0 {
+        while nb > 0 {
             indent += "\t"
-            count--
+            nb -= 1
         }
         return indent
     }
@@ -383,9 +384,9 @@ public class AEXMLDocument: AEXMLElement {
         // Create root xml with attributes
         let xml = xmlFile.addChild(name: "xia")
         
-        // Insert default title
-        xml.addChild(name: "title", value: "\(name)", attributes: nil)
-        xml.addChild(name: "description" , value: "\(name) description", attributes: nil)
+        // Insert default metas
+        xml.addChild(name: "title", value: "", attributes: nil)
+        xml.addChild(name: "description" , value: "", attributes: nil)
         xml.addChild(name: "creator", value: "", attributes: nil)
         xml.addChild(name: "rights", value: "", attributes: nil)
         xml.addChild(name: "license", value: "", attributes: nil)
@@ -400,8 +401,11 @@ public class AEXMLDocument: AEXMLElement {
         xml.addChild(name: "contributors", value: "", attributes: nil)
         xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
+        // Add img infos
+        xml.addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
+        
         // Create details
-        xml.addChild(name: "details")
+        xml.addChild(name: "details", value: "", attributes: ["show" : "true"])
         
         return xmlFile.xmlString
     }

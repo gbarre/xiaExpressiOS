@@ -1,60 +1,120 @@
-/* 
-  Localization.strings (fr)
-  xia4ipad
-
-  Created by Guillaume on 24/02/2016.
-  Copyright (c) 2016 Dane Versailles. All rights reserved.
-*/
-
-// Global
-"WARNING" = "Attention !!";
-"ERROR" = "Erreur";
-"OK" = "Ok";
-"YES" = "Oui";
-"NO" = "Non";
-"?" = " ?";
+/* No comment provided by engineer. */
 "CANCEL" = "Annuler";
 
-// PlayImageMetadatas.swift
-"LICENSE" = "Licence : ";
-"TITLE" = "Titre : ";
-"DATE" = "Date : ";
-"CREATOR" = "Auteur : ";
-"RIGHTS" = "Droits : ";
-"PUBLISHER" = "Éditeur: ";
-"IDENTIFIER" = "Identifiant : ";
-"SOURCE" = "Source : ";
-"RELATION" = "Relation : ";
-"LANGUAGES" = "Langues : ";
-"KEYWORDS" = "Mots clés : ";
-"COVERAGE" = "Portée : ";
-"CONTRIBUTORS" = "Collaborateurs : ";
-"DESCRIPTION" = "Description : ";
-
-// ViewCollectionController.swift
-"TAKE_PHOTO" = "Prendre une photo";
-"NO_CAMERA" = "Aucun appareil photo disponible.";
-"SEARCH_IN_PHOTOS" = "Chercher dans Photos";
-"CREATE_NEW_DOC" = "Créer un nouveau document";
-"EDIT" = "Éditer";
-"DONE" = "Terminer";
-"DELETE" = "Supprimer ";
-"DELETED" = " a été supprimé...";
-"IMAGE_SAVE_FAILED" = "Impossible de sauver l'image.";
-
-// ViewCreateDetails.swift
-"DETAIL" = "Détail ";
-"RECTANGLE" = "Rectangle";
-"ELLIPSE" = "Ellipse";
-"POLYGON" = "Polygone";
-"DESCRIPTION..." = "Description...";
-"CREATE_DETAIL" = "Créer un détail...";
+/* No comment provided by engineer. */
 "COLLECTION" = "Collection";
 
-// ViewMetas.swift
-"ENTER_CODE" = "Saisir le code";
+/* No comment provided by engineer. */
+"CONTRIBUTORS" = "Collaborateurs : ";
+
+/* No comment provided by engineer. */
+"COVERAGE" = "Portée : ";
+
+/* No comment provided by engineer. */
 "CREATE_CODE" = "Créer un code";
-"PASSWORD" = "Mot de passe";
-"TRY_AGAIN" = "Veuillez réessayer...";
+
+/* No comment provided by engineer. */
+"CREATE_DETAIL" = "Créer un détail...";
+
+/* No comment provided by engineer. */
+"CREATOR" = "Auteur : ";
+
+/* No comment provided by engineer. */
+"DATE" = "Date : ";
+
+/* No comment provided by engineer. */
+"DELETE_DETAIL" = "Supprimer le détail ?";
+
+/* No comment provided by engineer. */
+"DELETE_FILE" = "Supprimer un fichier";
+
+/* No comment provided by engineer. */
+"DELETE_N_FILES" = "Supprimer %d fichiers";
+
+/* No comment provided by engineer. */
+"DESCRIPTION" = "Description : ";
+
+/* No comment provided by engineer. */
+"DESCRIPTION..." = "Description...";
+
+/* No comment provided by engineer. */
+"DONE" = "Terminer";
+
+/* No comment provided by engineer. */
 "DOUBLE_CHECK" = "Saisir à nouveau";
+
+/* No comment provided by engineer. */
+"EDIT" = "Modifier";
+
+/* No comment provided by engineer. */
+"ELLIPSE" = "Ellipse";
+
+/* No comment provided by engineer. */
+"ENTER_CODE" = "Saisir le code";
+
+/* No comment provided by engineer. */
+"ERROR" = "Erreur";
+
+/* No comment provided by engineer. */
+"FILES_SELECTED" = "fichiers sélectionnés";
+
+/* No comment provided by engineer. */
+"FILE_SELECTED" = "fichier sélectionné";
+
+/* No comment provided by engineer. */
+"IDENTIFIER" = "Identifiant : ";
+
+/* No comment provided by engineer. */
+"IMAGE_SAVE_FAILED" = "Impossible de sauver l'image.";
+
+/* No comment provided by engineer. */
+"KEYWORDS" = "Mots clés : ";
+
+/* No comment provided by engineer. */
+"LANGUAGES" = "Langues : ";
+
+/* No comment provided by engineer. */
+"LICENSE" = "Licence : ";
+
+/* No comment provided by engineer. */
+"NO" = "Non";
+
+/* No comment provided by engineer. */
+"NO_CAMERA" = "Aucun appareil photo disponible.";
+
+/* No comment provided by engineer. */
+"OK" = "Ok";
+
+/* No comment provided by engineer. */
+"PASSWORD" = "Mot de passe";
+
+/* No comment provided by engineer. */
+"POLYGON" = "Polygone";
+
+/* No comment provided by engineer. */
+"PUBLISHER" = "Éditeur: ";
+
+/* No comment provided by engineer. */
+"RECTANGLE" = "Rectangle";
+
+/* No comment provided by engineer. */
+"RELATION" = "Relation : ";
+
+/* No comment provided by engineer. */
+"RIGHTS" = "Droits : ";
+
+/* No comment provided by engineer. */
+"SOURCE" = "Source : ";
+
+/* No comment provided by engineer. */
+"TITLE" = "Titre : ";
+
+/* No comment provided by engineer. */
+"TRY_AGAIN" = "Veuillez réessayer...";
+
+/* No comment provided by engineer. */
+"WARNING" = "Attention !!";
+
+/* No comment provided by engineer. */
+"YES" = "Oui";
 
