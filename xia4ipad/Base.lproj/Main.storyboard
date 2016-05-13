@@ -133,14 +133,12 @@
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem systemItem="add" id="5Zb-O2-v5O">
-                                                <inset key="imageInsets" minX="10" minY="0.0" maxX="25" maxY="0.0"/>
                                                 <connections>
                                                     <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="Add" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
                                                         <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                                                     </segue>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem image="help" width="20" id="FiG-N9-YWu"/>
                                         </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
@@ -1331,7 +1329,6 @@
         <image name="disque-4" width="75" height="75"/>
         <image name="edit" width="25" height="25"/>
         <image name="export_tablet" width="150" height="150"/>
-        <image name="help" width="20" height="20"/>
         <image name="inkscape" width="150" height="150"/>
         <image name="play" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>
