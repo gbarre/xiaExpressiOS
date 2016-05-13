@@ -114,6 +114,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             CollectionView.selectItemAtIndexPath(nil, animated: true, scrollPosition: .None)
             // Cosmetic...
             btnCreateState.enabled = false
+            btnCreateState.tintColor = selectingColor.colorWithAlphaComponent(0)
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.whiteColor()
@@ -380,6 +381,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         CollectionView.reloadData()
         btnCreateState.enabled = true
+        btnCreateState.tintColor = UIColor.whiteColor()
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.whiteColor()
