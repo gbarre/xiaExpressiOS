@@ -60,32 +60,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     @IBAction func btnDone(sender: AnyObject) {
-        // Save metas in xml
-        xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["readonly"].value = "\(roSwitch.on)"
-        xml["xia"]["readonly"].attributes["code"] = pass
-        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
-        xml["xia"]["description"].value = txtDescription.text
-        
-        xml["xia"]["creator"].value = txtCreator.text
-        xml["xia"]["rights"].value = txtRights.text
-        xml["xia"]["publisher"].value = txtPublisher.text
-        xml["xia"]["identifier"].value = txtIdentifier.text
-        xml["xia"]["source"].value = txtSource.text
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
-        
-        xml["xia"]["language"].value = txtLanguages.text
-        xml["xia"]["keywords"].value = txtKeywords.text
-        xml["xia"]["contributors"].value = txtContributors.text
-        xml["xia"]["relation"].value = txtRelation.text
-        xml["xia"]["coverage"].value = txtCoverage.text
-        xml["xia"]["license"].value = selectedLicense
-        
-        xml["xia"]["image"].attributes["title"] = imgTitle.text
-        xml["xia"]["image"].attributes["description"] = imgDescription.text
+        prepareToWriteXML()
         
         let _ = writeXML(xml, path: "\(filePath).xml")
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
@@ -150,6 +125,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
                         self.readOnlyState = !self.readOnlyState
+                        
+                        // save to xml
+                        self.prepareToWriteXML()
+                        let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+                        
                     }
                     else {
                         let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
@@ -336,6 +316,35 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         if index == 3 {
             imgTitle.becomeFirstResponder()
         }
+    }
+    
+    func prepareToWriteXML() {
+        // Save metas in xml
+        xml["xia"]["title"].value = txtTitle.text
+        xml["xia"]["readonly"].value = "\(roSwitch.on)"
+        xml["xia"]["readonly"].attributes["code"] = pass
+        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
+        xml["xia"]["description"].value = txtDescription.text
+        
+        xml["xia"]["creator"].value = txtCreator.text
+        xml["xia"]["rights"].value = txtRights.text
+        xml["xia"]["publisher"].value = txtPublisher.text
+        xml["xia"]["identifier"].value = txtIdentifier.text
+        xml["xia"]["source"].value = txtSource.text
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
+        
+        xml["xia"]["language"].value = txtLanguages.text
+        xml["xia"]["keywords"].value = txtKeywords.text
+        xml["xia"]["contributors"].value = txtContributors.text
+        xml["xia"]["relation"].value = txtRelation.text
+        xml["xia"]["coverage"].value = txtCoverage.text
+        xml["xia"]["license"].value = selectedLicense
+        
+        xml["xia"]["image"].attributes["title"] = imgTitle.text
+        xml["xia"]["image"].attributes["description"] = imgDescription.text
     }
     
     //MARK: - Delegates and data sources
