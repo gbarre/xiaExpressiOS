@@ -181,8 +181,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
-            fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         }
+        fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         cleaningDetails()
         setBtnsIcons()
     }
