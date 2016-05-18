@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="g92-NS-802">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="g92-NS-802">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
@@ -1130,13 +1129,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-BS-hKZ">
-                                <rect key="frame" x="20" y="208" width="760" height="372"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
-                            </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89n-Xj-Ogm" userLabel="Title View">
                                 <rect key="frame" x="200" y="0.0" width="600" height="200"/>
                                 <subviews>
@@ -1197,7 +1189,12 @@
                                     <outletCollection property="gestureRecognizers" destination="cjf-Hz-xTd" appends="YES" id="b00-CP-BRr"/>
                                 </connections>
                             </view>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZUw-vA-mQN" userLabel="Black Zoom Background">
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wVj-EJ-g5P">
+                                <rect key="frame" x="20" y="208" width="760" height="392"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
+                            </webView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZUw-vA-mQN" userLabel="Black Zoom Background">
                                 <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
@@ -1205,16 +1202,19 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ZcZ-BS-hKZ" firstAttribute="top" secondItem="89n-Xj-Ogm" secondAttribute="top" constant="208" id="1Pg-0C-H1N"/>
-                            <constraint firstItem="ZcZ-BS-hKZ" firstAttribute="top" secondItem="66N-t8-hgQ" secondAttribute="bottom" constant="8" id="86Z-c3-4O6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="89n-Xj-Ogm" secondAttribute="trailing" constant="-20" id="8UG-Vk-zQn"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="ZcZ-BS-hKZ" secondAttribute="leading" id="HC7-LS-cp9"/>
-                            <constraint firstItem="0mn-Kn-Rsb" firstAttribute="top" secondItem="ZcZ-BS-hKZ" secondAttribute="bottom" constant="20" id="PzX-3d-55X"/>
+                            <constraint firstItem="wVj-EJ-g5P" firstAttribute="top" secondItem="W1R-0D-27R" secondAttribute="bottom" constant="208" id="8tm-L5-hMz"/>
                             <constraint firstItem="89n-Xj-Ogm" firstAttribute="top" secondItem="W1R-0D-27R" secondAttribute="bottom" identifier="titleTop" id="QGu-Kz-H0j"/>
                             <constraint firstItem="66N-t8-hgQ" firstAttribute="leading" secondItem="3TI-sM-3RZ" secondAttribute="leadingMargin" constant="-20" id="UFy-pp-7OK"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="ZcZ-BS-hKZ" secondAttribute="trailing" id="bUX-eG-BQq"/>
+                            <constraint firstItem="0mn-Kn-Rsb" firstAttribute="top" secondItem="ZUw-vA-mQN" secondAttribute="bottom" id="ULp-mo-tNM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ZUw-vA-mQN" secondAttribute="trailing" constant="-20" id="W5y-4j-hsF"/>
+                            <constraint firstItem="ZUw-vA-mQN" firstAttribute="top" secondItem="W1R-0D-27R" secondAttribute="bottom" id="b10-1w-cVK"/>
                             <constraint firstItem="89n-Xj-Ogm" firstAttribute="leading" secondItem="3TI-sM-3RZ" secondAttribute="leadingMargin" constant="180" id="nCW-73-z4b"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="wVj-EJ-g5P" secondAttribute="trailing" id="oXV-Va-asQ"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="wVj-EJ-g5P" secondAttribute="leading" id="rj6-Pp-0d3"/>
+                            <constraint firstItem="ZUw-vA-mQN" firstAttribute="leading" secondItem="3TI-sM-3RZ" secondAttribute="leadingMargin" constant="-20" id="xs6-HD-KKb"/>
                             <constraint firstItem="66N-t8-hgQ" firstAttribute="top" secondItem="W1R-0D-27R" secondAttribute="bottom" identifier="imgTop" id="zYL-hU-u9f"/>
+                            <constraint firstItem="0mn-Kn-Rsb" firstAttribute="top" secondItem="wVj-EJ-g5P" secondAttribute="bottom" id="zkc-6Q-kDC"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="b9O-O3-uWs" appends="YES" id="jdk-fw-wib"/>
@@ -1225,12 +1225,12 @@
                     <size key="freeformSize" width="800" height="600"/>
                     <connections>
                         <outlet property="bkgdzoom" destination="ZUw-vA-mQN" id="iB9-92-Pbb"/>
+                        <outlet property="descView" destination="wVj-EJ-g5P" id="ePd-AM-ogg"/>
                         <outlet property="detailTitle" destination="VlB-Ig-h1b" id="V2z-h8-cTy"/>
                         <outlet property="imgArea" destination="66N-t8-hgQ" id="nk9-Mv-5cW"/>
                         <outlet property="imgThumb" destination="nd3-Yr-lbR" id="Om1-1O-B9L"/>
                         <outlet property="popup" destination="3TI-sM-3RZ" id="q8U-f1-hnA"/>
                         <outlet property="titleArea" destination="89n-Xj-Ogm" id="jkT-3H-kJN"/>
-                        <outlet property="txtDesc" destination="ZcZ-BS-hKZ" id="8xx-ft-Cv5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zTQ-xZ-Me9" userLabel="First Responder" sceneMemberID="firstResponder"/>

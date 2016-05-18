@@ -6,9 +6,9 @@
     </header>
     <body>
       <trans-unit id="h3g-i8-Bnm.text">
-        <source>xia</source>
-        <target>xia</target>
-        <note>Class = "UILabel"; text = "xia"; ObjectID = "h3g-i8-Bnm";</note>
+        <source>Xia</source>
+        <target>Xia</target>
+        <note>Class = "UILabel"; text = "Xia"; ObjectID = "h3g-i8-Bnm";</note>
       </trans-unit>
     </body>
   </file>
@@ -304,11 +304,14 @@
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
     </header>
     <body>
+      <trans-unit id="CFBundleDisplayName">
+        <source>Xia</source>
+      </trans-unit>
       <trans-unit id="CFBundleName">
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
       <trans-unit id="CFBundleShortVersionString">
-        <source>0.14</source>
+        <source>0.15</source>
       </trans-unit>
     </body>
   </file>
@@ -414,12 +417,12 @@
       </trans-unit>
       <trans-unit id="FILES_SELECTED">
         <source>FILES_SELECTED</source>
-        <target>fichier sélectionné</target>
+        <target>fichiers sélectionnés</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="FILE_SELECTED">
         <source>FILE_SELECTED</source>
-        <target>fichiers sélectionnés</target>
+        <target>fichier sélectionné</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="IDENTIFIER">
@@ -465,6 +468,11 @@
       <trans-unit id="PASSWORD">
         <source>PASSWORD</source>
         <target>Mot de passe</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="PHOTO_PUBLISHED_BY">
+        <source>PHOTO_PUBLISHED_BY</source>
+        <target>Photo publiée par</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="POLYGON">

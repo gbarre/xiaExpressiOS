@@ -41,7 +41,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
-    var landscape = false
+    var landscape: Bool = false
     
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
@@ -163,6 +163,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
                 controller.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
                 controller.bkgdImage = bkgdImage
+                controller.landscape = landscape
             }
         }
     }

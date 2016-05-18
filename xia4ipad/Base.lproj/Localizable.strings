@@ -15,6 +15,9 @@
 "?" = "?";
 "CANCEL" = "Cancel";
 
+// PlayDetail.swift
+"PHOTO_PUBLISHED_BY" = "Photo published by";
+
 // PlayImageMetadatas.swift
 "LICENSE" = "License: ";
 "TITLE" = "Title: ";
