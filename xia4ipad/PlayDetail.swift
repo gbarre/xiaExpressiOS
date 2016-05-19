@@ -58,7 +58,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var titleArea: UIView!
     @IBOutlet var detailTitle: UILabel!
     @IBOutlet var descView: UIWebView!
-    @IBOutlet var descViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet var bkgdzoom: UIImageView!
     
     @IBAction func btnZoomAction(sender: AnyObject) {

@@ -213,6 +213,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                 <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
+                            <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k0U-kv-aGA" userLabel="Center_anchor">
+                                <rect key="frame" x="290" y="0.0" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="AgF-7W-ERN"/>
+                                    <constraint firstAttribute="height" constant="20" id="pwa-Dn-t7e"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.59999999999999998" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -221,6 +228,8 @@
                             <constraint firstItem="eJG-rx-0rj" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="2" id="C9o-Hj-fXG"/>
                             <constraint firstItem="Gyc-e0-9V8" firstAttribute="top" secondItem="lHe-lY-w41" secondAttribute="bottom" id="ELg-fq-59G"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Fwa-cM-DUY"/>
+                            <constraint firstItem="k0U-kv-aGA" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="Nac-hG-Zr2"/>
+                            <constraint firstItem="k0U-kv-aGA" firstAttribute="centerX" secondItem="sPW-ku-11p" secondAttribute="centerX" id="QPO-xt-XDd"/>
                             <constraint firstItem="vTl-S5-lKu" firstAttribute="top" secondItem="HvZ-Wa-GXu" secondAttribute="bottom" constant="-20" id="T8v-I8-egC"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eJG-rx-0rj" secondAttribute="trailing" constant="35" id="XQ7-Hm-HHf"/>
                             <constraint firstItem="c8Q-UV-Vxn" firstAttribute="leading" secondItem="sPW-ku-11p" secondAttribute="leadingMargin" constant="-20" id="Zsa-lD-UhT"/>
@@ -239,10 +248,10 @@
                     <connections>
                         <outlet property="imgTopBarBkgd" destination="vTl-S5-lKu" id="jbs-Lk-RAS"/>
                         <outlet property="myToolbar" destination="c8Q-UV-Vxn" id="FA9-Tg-0Kl"/>
-                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorView="c8Q-UV-Vxn" id="IaL-8D-KRP">
+                        <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorView="k0U-kv-aGA" id="IaL-8D-KRP">
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
-                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorView="c8Q-UV-Vxn" id="te6-xG-Kfx">
+                        <segue destination="cwz-uV-RB1" kind="popoverPresentation" identifier="ViewDetailInfos" popoverAnchorView="k0U-kv-aGA" id="te6-xG-Kfx">
                             <popoverArrowDirection key="popoverArrowDirection"/>
                         </segue>
                         <segue destination="xod-8C-OKb" kind="show" identifier="playXia" id="n0o-Cr-euA"/>
@@ -1334,8 +1343,8 @@
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="S0D-7G-DJ3"/>
-        <segue reference="kse-sD-zsl"/>
-        <segue reference="4uf-YC-Gjx"/>
+        <segue reference="AUe-5m-BUd"/>
+        <segue reference="IaL-8D-KRP"/>
+        <segue reference="n0o-Cr-euA"/>
     </inferredMetricsTieBreakers>
 </document>
