@@ -21,7 +21,7 @@
 
 import UIKit
 
-class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
+class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWebViewDelegate {
     
     var dbg = debug(enable: true)
     
@@ -94,7 +94,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         imgThumb = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = bkgdImage.image
-                
+        
         videoWidth = (landscape) ? 480 : 360
         videoHeight = (landscape) ? 270 : 210
         
@@ -147,6 +147,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
         htmlString = pikipikiToHTML(htmlString)
         htmlString = showAudio(htmlString)
+        htmlString = showCustomLinks(htmlString)
         htmlString = showPictures(htmlString)
         htmlString = showVideo(htmlString)
 
@@ -165,6 +166,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         dbg.pt(htmlString)
         descView.loadHTMLString(htmlString, baseURL: nil)
         descView.allowsInlineMediaPlayback = true
+        descView.delegate = self
         
         // wait 0.5s before showing image (bubbletransition effect)
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
@@ -183,7 +185,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildAudiolinguaLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/www\\.audio-lingua\\.eu\\/spip\\.php\\?article([0-9]*)", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}www\\.audio-lingua\\.eu\\/spip\\.php\\?article([0-9]*)", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -200,7 +202,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildDailymotionLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "http:\\/\\/dai\\.ly\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/{2}dai\\.ly\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -217,7 +219,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildInstagramLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https:\\/\\/www\\.instagram\\.com\\/p\\/(\\w|-|_)*\\/", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https:\\/{2}www\\.instagram\\.com\\/p\\/(\\w|-|_)*\\/", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -242,7 +244,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildFlickrLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https:\\/\\/flic\\.kr\\/p\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https:\\/{2}flic\\.kr\\/p\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -271,7 +273,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildScolawebtvLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/scolawebtv\\.crdp-versailles\\.fr\\/\\?id=?[0-9]*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}scolawebtv\\.crdp-versailles\\.fr\\/\\?id=?[0-9]*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -301,7 +303,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildSlideshareLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "http:\\/\\/([a-z]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -322,7 +324,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildVimeoLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https:\\/\\/vimeo\\.com\\/(\\w|\\/|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https:\\/{2}vimeo\\.com\\/(\\w|\\/|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -344,7 +346,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         var output = inText
         do {
             // youtu.be
-            let regex = try NSRegularExpression(pattern: "http:\\/\\/youtu\\.be\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/{2}youtu\\.be\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -353,7 +355,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"https://www.youtube.com/embed/\(videoCode)\" frameborder=\"0\" allowfullscreen></iframe></center>")
             }
              // youtube.com/embed
-            let regex2 = try NSRegularExpression(pattern: "http:\\/\\/youtube\\.com\\/embed\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex2 = try NSRegularExpression(pattern: "http:\\/{2}youtube\\.com\\/embed\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString2 = inText as NSString
             let results2 = regex2.matchesInString(inText, options: [], range: NSMakeRange(0, nsString2.length))
             let arrayResults2 = results2.map {nsString2.substringWithRange($0.range)}
@@ -370,7 +372,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildWebtvLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/webtv\\.ac-versailles\\.fr\\/(spip\\.php)?(\\?)?article[0-9]*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}webtv\\.ac-versailles\\.fr\\/(spip\\.php)?(\\?)?article[0-9]*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -479,7 +481,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func showAudio(inText: String) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(mp3|ogg)( autostart)?", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(mp3|ogg)( autostart)?", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -489,6 +491,27 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 let mp3Result = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".mp3", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
                 let oggResult = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".ogg", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
                 let replaceString = "<center><audio controls data-state=\"\(dataState)\"><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /></audio></center>";
+                output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        return output
+    }
+    
+    func showCustomLinks(inText: String) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* ((?!\\]).)*\\]", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                let text = result.stringByReplacingOccurrencesOfString("\\[|\\]", withString: "", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let urlEndRange: NSRange = (text as NSString).rangeOfString(" ")
+                let url = text[text.startIndex.advancedBy(0)...text.startIndex.advancedBy(urlEndRange.location - 1)]
+                let linkText = text[text.startIndex.advancedBy(urlEndRange.location+1)...text.endIndex.predecessor()]
+                let replaceString = "<a href=\"\(url)\">\(linkText)</a>";
                 output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
             }
         } catch let error as NSError {
@@ -542,7 +565,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func showPictures(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(jpg|jpeg|gif|png)", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(jpg|jpeg|gif|png)", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -558,7 +581,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func showVideo(inText: String) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(mp4|ogv|webm)( autostart)?", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(mp4|ogv|webm)( autostart)?", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -579,6 +602,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     
     func solveSrcPb(intext: String, s: String = "") -> String {
         return intext.stringByReplacingOccurrencesOfString("src=\"//", withString: "src=\"http\(s)://")
+    }
+    
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.LinkClicked {
+            UIApplication.sharedApplication().openURL(request.URL!)
+            return false
+        }
+        return true
     }
     
 }
