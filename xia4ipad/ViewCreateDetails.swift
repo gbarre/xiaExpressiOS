@@ -527,6 +527,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.fileName = fileName
                 controller.filePath = filePath
                 controller.xml = self.xml
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "viewExport") {

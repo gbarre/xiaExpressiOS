@@ -94,7 +94,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         imgThumb = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
         imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = bkgdImage.image
-        
+                
         videoWidth = (landscape) ? 480 : 360
         videoHeight = (landscape) ? 270 : 210
         
@@ -145,7 +145,10 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
         htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
         htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
-        htmlString = buildPicturesLinks(htmlString)
+        htmlString = pikipikiToHTML(htmlString)
+        htmlString = showAudio(htmlString)
+        htmlString = showPictures(htmlString)
+        htmlString = showVideo(htmlString)
 
         // oembed
         htmlString = buildAudiolinguaLinks(htmlString)
@@ -159,7 +162,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         htmlString = buildWebtvLinks(htmlString)
         
         
-        //dbg.pt(htmlString)
+        dbg.pt(htmlString)
         descView.loadHTMLString(htmlString, baseURL: nil)
         descView.allowsInlineMediaPlayback = true
         
@@ -265,22 +268,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         return output
     }
     
-    func buildPicturesLinks(inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.)*\\.(jpg|jpeg|gif|png)", options: .CaseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substringWithRange($0.range)}
-            for result in arrayResults {
-                output = output.stringByReplacingOccurrencesOfString(result, withString: "<img src=\"\(result)\" alt=\"\(result)\" style=\"max-width: \(videoWidth);\" />")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output
-    }
-    
     func buildScolawebtvLinks(inText: String!) -> String {
         var output = inText
         do {
@@ -314,7 +301,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildSlideshareLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "http:\\/\\/[a-z]*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/\\/([a-z]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -356,6 +343,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     func buildYoutubeLinks(inText: String!) -> String {
         var output = inText
         do {
+            // youtu.be
             let regex = try NSRegularExpression(pattern: "http:\\/\\/youtu\\.be\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
@@ -364,6 +352,15 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
                 let videoCode = result.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"https://www.youtube.com/embed/\(videoCode)\" frameborder=\"0\" allowfullscreen></iframe></center>")
             }
+             // youtube.com/embed
+            let regex2 = try NSRegularExpression(pattern: "http:\\/\\/youtube\\.com\\/embed\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let nsString2 = inText as NSString
+            let results2 = regex2.matchesInString(inText, options: [], range: NSMakeRange(0, nsString2.length))
+            let arrayResults2 = results2.map {nsString2.substringWithRange($0.range)}
+            for result in arrayResults2 {
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"\(result)\" frameborder=\"0\" allowfullscreen></iframe></center>")
+            }
+            
         } catch let error as NSError {
             dbg.pt(error.localizedDescription)
         }
@@ -406,6 +403,100 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         return boardsDictionary
     }
     
+    func pikipikiToHTML(text: String) -> String {
+        var output = text
+        // Make bold
+        do {
+            let regex = try NSRegularExpression(pattern: "(\\*){3}((?!\\*{3}).)*\\*{3}", options: .CaseInsensitive)
+            let nsString = output as NSString
+            let results = regex.matchesInString(output, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                dbg.pt("Found *** \(result)")
+                let cleanResult = result.stringByReplacingOccurrencesOfString("***", withString: "")
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<b>\(cleanResult)</b>")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        
+        // Make emphasize
+        do {
+            let regex = try NSRegularExpression(pattern: "(\\*){2}((?!\\*{2}).)*\\*{2}", options: .CaseInsensitive)
+            let nsString = output as NSString
+            let results = regex.matchesInString(output, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                dbg.pt("Found ** \(result)")
+                let cleanResult = result.stringByReplacingOccurrencesOfString("**", withString: "")
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<em>\(cleanResult)</em>")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        
+        // Make pre-formatted
+        do {
+            let regex = try NSRegularExpression(pattern: "(\\{){3}((?!\\{{3}).)*\\}{3}", options: .CaseInsensitive)
+            let nsString = output as NSString
+            let results = regex.matchesInString(output, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                dbg.pt("Found {{{ }}} \(result)")
+                var cleanResult = result.stringByReplacingOccurrencesOfString("{{{", withString: "")
+                cleanResult = cleanResult.stringByReplacingOccurrencesOfString("}}}", withString: "")
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<pre>\(cleanResult)</pre>")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        
+        // Make line
+        output = output.stringByReplacingOccurrencesOfString("-----", withString: "<hr size=3/>")
+        output = output.stringByReplacingOccurrencesOfString("----", withString: "<hr/>")
+        
+        // Make list
+        do {
+            let regex = try NSRegularExpression(pattern: "(<br \\/>)? ?\\* ((?!(<br \\/>)).)*(<br \\/>)?", options: .CaseInsensitive)
+            let nsString = output as NSString
+            let results = regex.matchesInString(output, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                dbg.pt("Found list element : \(result)")
+                //var cleanResult = result.stringByReplacingOccurrencesOfString("{{{", withString: "")
+                //cleanResult = cleanResult.stringByReplacingOccurrencesOfString("}}}", withString: "")
+                //output = output.stringByReplacingOccurrencesOfString(result, withString: "<pre>\(cleanResult)</pre>")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        
+        
+        
+        return output
+    }
+    
+    func showAudio(inText: String) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(mp3|ogg)( autostart)?", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                let autostartRange: NSRange = (result as NSString).rangeOfString(" autostart")
+                let dataState = (autostartRange.length > 0) ? "autotart" : "none"
+                let mp3Result = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".mp3", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let oggResult = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".ogg", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let replaceString = "<center><audio controls data-state=\"\(dataState)\"><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /></audio></center>";
+                output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        return output
+    }
+    
     func showDetail(detailImg: UIImageView) {
         // Show / hide elements
         self.bkgdzoom.hidden = false
@@ -446,6 +537,44 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         dispatch_after(delayTime, dispatch_get_main_queue()){
             self.imgArea.hidden = true
         }
+    }
+    
+    func showPictures(inText: String!) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(jpg|jpeg|gif|png)", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<img src=\"\(result)\" alt=\"\(result)\" style=\"max-width: \(videoWidth);\" />")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        return output
+    }
+    
+    func showVideo(inText: String) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "https?:\\/\\/(\\w|\\/|\\.|-)*\\.(mp4|ogv|webm)( autostart)?", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            for result in arrayResults {
+                let autostartRange: NSRange = (result as NSString).rangeOfString(" autostart")
+                let dataState = (autostartRange.length > 0) ? "autostart" : "none"
+                let mp4Result = result.stringByReplacingOccurrencesOfString("\\.(mp4|ogv|webm)( autostart)?", withString: ".mp4", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let ogvResult = result.stringByReplacingOccurrencesOfString("\\.(mp4|ogv|webm)( autostart)?", withString: ".ogv", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let webmResult = result.stringByReplacingOccurrencesOfString("\\.(mp4|ogv|webm)( autostart)?", withString: ".webm", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let replaceString = "<center><video controls preload=\"none\" data-state=\"\(dataState)\" width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"\(mp4Result)\" /><source type=\"video/ogg\" src=\"\(ogvResult)\" /><source type=\"video/webm\" src=\"\(webmResult)\" /></video></center>";
+                output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        return output
     }
     
     func solveSrcPb(intext: String, s: String = "") -> String {

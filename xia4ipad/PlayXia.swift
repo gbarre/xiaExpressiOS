@@ -199,6 +199,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let value = UIInterfaceOrientation.Portrait.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
+            landscape = true
         }
         
         if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
@@ -207,6 +208,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let value = UIInterfaceOrientation.LandscapeRight.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
+            landscape = false
         }
     }
 }
