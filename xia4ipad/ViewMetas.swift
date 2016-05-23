@@ -36,8 +36,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     var pass: String = ""
     var selectedLicense: String = ""
-    var showPicker: Bool = true
-    
+    var showKbd: Bool = false
+    var iPadPro: Bool = false
     
     let availableLicenses = [
         "Proprietary - CC-Zero",
@@ -54,8 +54,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     ]
     
     @IBAction func btnCancel(sender: AnyObject) {
-        ViewCollection?.buildLeftNavbarItems()
-        ViewCollection?.endEdit()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -158,18 +156,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
-        if showPicker {
-            if landscape {
-                txtCreator.becomeFirstResponder()
+        if landscape && !iPadPro {
+            if showKbd {
                 txtCreator.resignFirstResponder()
+                datePicker.hidden = false
             }
-            datePicker.hidden = false
+            else {
+                datePicker.hidden = true
+                txtCreator.becomeFirstResponder()
+            }
         }
-        else {
-            datePicker.hidden = true
-            txtCreator.becomeFirstResponder()
-        }
-        showPicker = !showPicker
     }
     
     @IBOutlet var datePicker: UIDatePicker!
@@ -189,18 +185,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
-        if showPicker {
-            if landscape {
-                txtLanguages.becomeFirstResponder()
+        if landscape && !iPadPro {
+            if showKbd {
                 txtLanguages.resignFirstResponder()
+                licensePicker.hidden = false
             }
-            licensePicker.hidden = false
+            else {
+                licensePicker.hidden = true
+                txtLanguages.becomeFirstResponder()
+            }
         }
-        else {
-            licensePicker.hidden = true
-            txtLanguages.becomeFirstResponder()
-        }
-        showPicker = !showPicker
     }
     
     @IBOutlet var licensePicker: UIPickerView!
@@ -219,6 +213,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
             name: UIKeyboardWillHideNotification, object: nil)
+        
+        // Get the device model identifier
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let machineString = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8 where value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        iPadPro = (machineString == "iPad6,7" || machineString == "iPad6,8") ? true : false
         
         // First subview
         if selectedSegment == 0 {
@@ -286,12 +290,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func keybShow(notification: NSNotification) {
-        showPicker = true
+        showKbd = true
     }
     
     
     func keybHide(notification: NSNotification) {
-        showPicker = false
+        showKbd = false
     }
 
     func showSegmentView(index: Int) {
@@ -307,11 +311,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
         if index == 1 {
             txtCreator.becomeFirstResponder()
-            datePicker.hidden = true
+            datePicker.hidden = (landscape && !iPadPro) ? true : false
         }
         if index == 2 {
             txtLanguages.becomeFirstResponder()
-            licensePicker.hidden = true
+            licensePicker.hidden = (landscape && !iPadPro) ? true : false
         }
         if index == 3 {
             imgTitle.becomeFirstResponder()

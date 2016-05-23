@@ -60,8 +60,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         // hide left button (image infos) if there are no title & description
         // hide left button if details are not showed
         if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
-            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == "")) ||
-            !showDetails
+            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == ""))
             ) {
             leftButton.hidden = true
             leftButtonBkgd.hidden = true
