@@ -21,7 +21,7 @@
 
 import UIKit
 
-class PlayImageMetadatas: UIViewController {
+class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
     var dbg = debug(enable: true)
     
@@ -43,6 +43,9 @@ class PlayImageMetadatas: UIViewController {
         "description" : NSLocalizedString("DESCRIPTION", comment: "")
     ]
     
+    var landscape: Bool = true
+    let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
+    
     @IBAction func Hide(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -60,7 +63,7 @@ class PlayImageMetadatas: UIViewController {
     @IBOutlet var documentKeywords: UILabel!
     @IBOutlet var documentCoverage: UILabel!
     @IBOutlet var documentContributors: UILabel!
-    @IBOutlet weak var documentDescription: UITextView!
+    @IBOutlet var documentDescription: UIWebView!
     
     override func viewDidLoad() {
         
@@ -77,11 +80,22 @@ class PlayImageMetadatas: UIViewController {
         documentKeywords.attributedText = getElementValue("keywords")
         documentCoverage.attributedText = getElementValue("coverage")
         documentContributors.attributedText = getElementValue("contributors")
-        documentDescription.text = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        documentDescription.setContentOffset(CGPointMake(0, -documentDescription.contentInset.top), animated: false)
+        
+        var htmlString = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
+        // Build the webView
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
+        htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
+        if !landscape {
+            converter.videoWidth = 360
+            converter.videoHeight = 210
+        }
+        htmlString = converter._text2html(htmlString)
+        
+        documentDescription.loadHTMLString(htmlString, baseURL: nil)
+        documentDescription.allowsInlineMediaPlayback = true
+        documentDescription.delegate = self
+        
     }
     
     // Disable round corners on modal view
@@ -139,6 +153,14 @@ class PlayImageMetadatas: UIViewController {
         }
         
         return attributedText
+    }
+    
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.LinkClicked {
+            UIApplication.sharedApplication().openURL(request.URL!)
+            return false
+        }
+        return true
     }
     
 }

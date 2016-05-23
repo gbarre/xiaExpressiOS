@@ -138,9 +138,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         }
         
         // Build the webView
-        htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
         if !landscape {
             converter.videoWidth = 360
             converter.videoHeight = 210

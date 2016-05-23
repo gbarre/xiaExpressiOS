@@ -24,6 +24,11 @@ class TextConverter: NSObject {
     
     func _text2html(inText: String) -> String {
         var htmlString = inText
+        
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
+        htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
+        
         htmlString = pikipikiToHTML(htmlString)
         htmlString = showAudio(htmlString)
         htmlString = showCustomLinks(htmlString)

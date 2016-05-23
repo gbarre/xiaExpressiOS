@@ -152,6 +152,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         if (segue.identifier == "playMetas") {
             if let controller:PlayImageMetadatas = segue.destinationViewController as? PlayImageMetadatas {
                 controller.xml = self.xml
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "openDetail") {
