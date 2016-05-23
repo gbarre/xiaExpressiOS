@@ -21,7 +21,7 @@
 
 import UIKit
 
-class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
+class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWebViewDelegate {
     
     var dbg = debug(enable: true)
     
@@ -32,16 +32,18 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     var bkgdImage: UIImageView!
     var zoomDisable: Bool = true
     var showZoom: Bool = false
+    var landscape: Bool = true
     
     let transition = BubbleTransition()
     
-    //var imgThumb: UIImageView!
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
     var currentScale: CGFloat = 1.0
     var currentCenter: CGPoint!
     var zoomScale: CGFloat = 1.0
     let transitionDuration: NSTimeInterval = 0.5
+    
+    let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     @IBAction func close(sender: AnyObject) {
         if !showZoom {
@@ -54,7 +56,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var imgThumb: UIImageView!
     @IBOutlet var titleArea: UIView!
     @IBOutlet var detailTitle: UILabel!
-    @IBOutlet var txtDesc: UITextView!
+    @IBOutlet var descView: UIWebView!
     @IBOutlet var bkgdzoom: UIImageView!
     
     @IBAction func btnZoomAction(sender: AnyObject) {
@@ -68,6 +70,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
             // Show / hide elements
             self.imgArea.hidden = false
             self.imgArea.alpha = 0
+            descView.userInteractionEnabled = true
             UIView.animateWithDuration(transitionDuration) { () -> Void in
                 self.imgThumb.transform = CGAffineTransformScale(self.imgThumb.transform, self.currentScale / self.zoomScale, self.currentScale / self.zoomScale)
                 self.imgThumb.center = self.currentCenter
@@ -114,13 +117,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         imgThumb.center = newCenter
         
         // Show text
+        var htmlString: String = ""
         if tag != 0 {
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
                 for d in detail {
                     detailTitle.text = d.attributes["title"]
                     detailTitle.sizeToFit()
                     detailTitle.numberOfLines = 0
-                    txtDesc.text = d.value
+                    htmlString = (d.value != nil) ? d.value! : ""
                     zoomDisable = (d.attributes["zoom"] == "true") ? false : true
                 }
             }
@@ -129,18 +133,27 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
             detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
             detailTitle.sizeToFit()
             detailTitle.numberOfLines = 0
-            txtDesc.text =  (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"] : ""
+            htmlString = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
             zoomDisable = false
         }
         
+        // Build the webView
+        if !landscape {
+            converter.videoWidth = 360
+            converter.videoHeight = 210
+        }
+        htmlString = converter._text2html(htmlString)
+        
+        //dbg.pt(htmlString)
+        descView.loadHTMLString(htmlString, baseURL: nil)
+        descView.allowsInlineMediaPlayback = true
+        descView.delegate = self
+        
+        // wait 0.5s before showing image (bubbletransition effect)
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
         dispatch_after(delayTime, dispatch_get_main_queue()){
             self.imgThumb.hidden = false
         }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        txtDesc.setContentOffset(CGPointMake(0, -txtDesc.contentInset.top), animated: false)
     }
     
     // Disable round corners on modal view
@@ -154,7 +167,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         // Show / hide elements
         self.bkgdzoom.hidden = false
         self.bkgdzoom.alpha = 0
-        txtDesc.selectable = false
+        descView.userInteractionEnabled = false
         showZoom = true
         
         currentCenter = detailImg.center
@@ -190,6 +203,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate {
         dispatch_after(delayTime, dispatch_get_main_queue()){
             self.imgArea.hidden = true
         }
+    }
+    
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.LinkClicked {
+            UIApplication.sharedApplication().openURL(request.URL!)
+            return false
+        }
+        return true
     }
     
 }

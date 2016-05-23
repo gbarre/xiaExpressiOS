@@ -41,7 +41,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     let screenWidth = UIScreen.mainScreen().bounds.width
     let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
-    var landscape = false
+    var landscape: Bool = false
     
     let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
@@ -60,8 +60,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         // hide left button (image infos) if there are no title & description
         // hide left button if details are not showed
         if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
-            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == "")) ||
-            !showDetails
+            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == ""))
             ) {
             leftButton.hidden = true
             leftButtonBkgd.hidden = true
@@ -152,6 +151,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         if (segue.identifier == "playMetas") {
             if let controller:PlayImageMetadatas = segue.destinationViewController as? PlayImageMetadatas {
                 controller.xml = self.xml
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "openDetail") {
@@ -163,6 +163,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
                 controller.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
                 controller.bkgdImage = bkgdImage
+                controller.landscape = landscape
             }
         }
     }
@@ -198,6 +199,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let value = UIInterfaceOrientation.Portrait.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
+            landscape = true
         }
         
         if(UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation))
@@ -206,6 +208,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let value = UIInterfaceOrientation.LandscapeRight.rawValue
                 UIDevice.currentDevice().setValue(value, forKey: "orientation")
             }
+            landscape = false
         }
     }
 }

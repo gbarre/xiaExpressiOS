@@ -181,8 +181,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
             }
-            fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         }
+        fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         cleaningDetails()
         setBtnsIcons()
     }
@@ -527,6 +527,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.fileName = fileName
                 controller.filePath = filePath
                 controller.xml = self.xml
+                controller.landscape = landscape
             }
         }
         if (segue.identifier == "viewExport") {
@@ -852,7 +853,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: self, action: nil))
         items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .Plain, target: self, action: #selector(ViewCreateDetails.goBack)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(title: ((fileTitle == "") ? fileName : fileTitle), style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
+        var itemText = (fileTitle == "") ? fileName : fileTitle
+        if itemText.characters.count > 47 {
+            itemText = itemText[itemText.startIndex.advancedBy(0)...itemText.startIndex.advancedBy(46)] + "..."
+        }
+        items.append(UIBarButtonItem(title: (itemText), style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
         items.append(fixedSpace)

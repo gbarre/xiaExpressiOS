@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
+		F00C4A8E1CF2F825005B1342 /* TextConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C4A8D1CF2F825005B1342 /* TextConverter.swift */; };
+		F00C4A8F1CF2F825005B1342 /* TextConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C4A8D1CF2F825005B1342 /* TextConverter.swift */; };
 		F014AB2F1CE1DA5F00AFDC10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F014AB311CE1DA5F00AFDC10 /* InfoPlist.strings */; };
 		F051038B1C21C01700E6C25C /* AEXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0725E591BEA87D9007ACE9B /* AEXML.swift */; };
 		F051038C1C21C01700E6C25C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */; };
@@ -72,6 +74,7 @@
 
 /* Begin PBXFileReference section */
 		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
+		F00C4A8D1CF2F825005B1342 /* TextConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextConverter.swift; sourceTree = "<group>"; };
 		F014AB301CE1DA5F00AFDC10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F0725E551BE9FBB6007ACE9B /* ShapeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		F0725E591BEA87D9007ACE9B /* AEXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXML.swift; sourceTree = "<group>"; };
@@ -177,6 +180,7 @@
 				F077D90D1C1CD1CE0081DD0B /* PlayImageMetadatas.swift */,
 				F098E28A1C06391000AB1185 /* PlayXia.swift */,
 				F0725E551BE9FBB6007ACE9B /* ShapeView.swift */,
+				F00C4A8D1CF2F825005B1342 /* TextConverter.swift */,
 				F08B2BB01C15C662009EDB13 /* Util.swift */,
 				F0F15E6A1BB6FCDF00268F06 /* ViewCollectionController.swift */,
 				F0F15E7A1BB7097B00268F06 /* ViewCreateDetails.swift */,
@@ -336,6 +340,7 @@
 			files = (
 				F0EC29B31C678ECA009AE0BA /* BubbleTransition.swift in Sources */,
 				F05103931C21C01700E6C25C /* ViewCollectionController.swift in Sources */,
+				F00C4A8F1CF2F825005B1342 /* TextConverter.swift in Sources */,
 				F0E6A6281C777BBE00A1CDF7 /* ViewMetas.swift in Sources */,
 				F051038F1C21C01700E6C25C /* PlayImageMetadatas.swift in Sources */,
 				F05103921C21C01700E6C25C /* Util.swift in Sources */,
@@ -383,6 +388,7 @@
 				F0DE946C1CD7798500FC657A /* ViewMenuAddResource.swift in Sources */,
 				F0F15E691BB6FCDF00268F06 /* AppDelegate.swift in Sources */,
 				F077D90E1C1CD1CE0081DD0B /* PlayImageMetadatas.swift in Sources */,
+				F00C4A8E1CF2F825005B1342 /* TextConverter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,7 +587,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = xia4ipad/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
 				PRODUCT_NAME = xia;
@@ -595,7 +601,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = xia4ipad/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ac-versailles.dane.xia4ipad";
 				PRODUCT_NAME = xia;

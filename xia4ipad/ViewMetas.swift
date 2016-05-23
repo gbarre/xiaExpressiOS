@@ -36,8 +36,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     var pass: String = ""
     var selectedLicense: String = ""
-    var showPicker: Bool = true
-    
+    var showKbd: Bool = false
+    var iPadPro: Bool = false
     
     let availableLicenses = [
         "Proprietary - CC-Zero",
@@ -54,38 +54,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     ]
     
     @IBAction func btnCancel(sender: AnyObject) {
-        ViewCollection?.buildLeftNavbarItems()
-        ViewCollection?.endEdit()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func btnDone(sender: AnyObject) {
-        // Save metas in xml
-        xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["readonly"].value = "\(roSwitch.on)"
-        xml["xia"]["readonly"].attributes["code"] = pass
-        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
-        xml["xia"]["description"].value = txtDescription.text
-        
-        xml["xia"]["creator"].value = txtCreator.text
-        xml["xia"]["rights"].value = txtRights.text
-        xml["xia"]["publisher"].value = txtPublisher.text
-        xml["xia"]["identifier"].value = txtIdentifier.text
-        xml["xia"]["source"].value = txtSource.text
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
-        
-        xml["xia"]["language"].value = txtLanguages.text
-        xml["xia"]["keywords"].value = txtKeywords.text
-        xml["xia"]["contributors"].value = txtContributors.text
-        xml["xia"]["relation"].value = txtRelation.text
-        xml["xia"]["coverage"].value = txtCoverage.text
-        xml["xia"]["license"].value = selectedLicense
-        
-        xml["xia"]["image"].attributes["title"] = imgTitle.text
-        xml["xia"]["image"].attributes["description"] = imgDescription.text
+        prepareToWriteXML()
         
         let _ = writeXML(xml, path: "\(filePath).xml")
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
@@ -150,6 +123,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
                         self.readOnlyState = !self.readOnlyState
+                        
+                        // save to xml
+                        self.prepareToWriteXML()
+                        let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+                        
                     }
                     else {
                         let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
@@ -178,18 +156,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
-        if showPicker {
-            if landscape {
-                txtCreator.becomeFirstResponder()
+        if landscape && !iPadPro {
+            if showKbd {
                 txtCreator.resignFirstResponder()
+                datePicker.hidden = false
             }
-            datePicker.hidden = false
+            else {
+                datePicker.hidden = true
+                txtCreator.becomeFirstResponder()
+            }
         }
-        else {
-            datePicker.hidden = true
-            txtCreator.becomeFirstResponder()
-        }
-        showPicker = !showPicker
     }
     
     @IBOutlet var datePicker: UIDatePicker!
@@ -209,18 +185,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
-        if showPicker {
-            if landscape {
-                txtLanguages.becomeFirstResponder()
+        if landscape && !iPadPro {
+            if showKbd {
                 txtLanguages.resignFirstResponder()
+                licensePicker.hidden = false
             }
-            licensePicker.hidden = false
+            else {
+                licensePicker.hidden = true
+                txtLanguages.becomeFirstResponder()
+            }
         }
-        else {
-            licensePicker.hidden = true
-            txtLanguages.becomeFirstResponder()
-        }
-        showPicker = !showPicker
     }
     
     @IBOutlet var licensePicker: UIPickerView!
@@ -239,6 +213,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
             name: UIKeyboardWillHideNotification, object: nil)
+        
+        // Get the device model identifier
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let machineString = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8 where value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        iPadPro = (machineString == "iPad6,7" || machineString == "iPad6,8") ? true : false
         
         // First subview
         if selectedSegment == 0 {
@@ -306,12 +290,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     func keybShow(notification: NSNotification) {
-        showPicker = true
+        showKbd = true
     }
     
     
     func keybHide(notification: NSNotification) {
-        showPicker = false
+        showKbd = false
     }
 
     func showSegmentView(index: Int) {
@@ -327,15 +311,44 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
         if index == 1 {
             txtCreator.becomeFirstResponder()
-            datePicker.hidden = true
+            datePicker.hidden = (landscape && !iPadPro) ? true : false
         }
         if index == 2 {
             txtLanguages.becomeFirstResponder()
-            licensePicker.hidden = true
+            licensePicker.hidden = (landscape && !iPadPro) ? true : false
         }
         if index == 3 {
             imgTitle.becomeFirstResponder()
         }
+    }
+    
+    func prepareToWriteXML() {
+        // Save metas in xml
+        xml["xia"]["title"].value = txtTitle.text
+        xml["xia"]["readonly"].value = "\(roSwitch.on)"
+        xml["xia"]["readonly"].attributes["code"] = pass
+        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
+        xml["xia"]["description"].value = txtDescription.text
+        
+        xml["xia"]["creator"].value = txtCreator.text
+        xml["xia"]["rights"].value = txtRights.text
+        xml["xia"]["publisher"].value = txtPublisher.text
+        xml["xia"]["identifier"].value = txtIdentifier.text
+        xml["xia"]["source"].value = txtSource.text
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
+        
+        xml["xia"]["language"].value = txtLanguages.text
+        xml["xia"]["keywords"].value = txtKeywords.text
+        xml["xia"]["contributors"].value = txtContributors.text
+        xml["xia"]["relation"].value = txtRelation.text
+        xml["xia"]["coverage"].value = txtCoverage.text
+        xml["xia"]["license"].value = selectedLicense
+        
+        xml["xia"]["image"].attributes["title"] = imgTitle.text
+        xml["xia"]["image"].attributes["description"] = imgDescription.text
     }
     
     //MARK: - Delegates and data sources

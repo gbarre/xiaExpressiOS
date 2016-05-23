@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "iPadx1.png",
+      "filename" : "xia_30.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "iPadx2.png",
+      "filename" : "xia_60.png",
       "scale" : "2x"
     },
     {
