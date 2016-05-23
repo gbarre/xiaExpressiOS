@@ -758,14 +758,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Xia Tablet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6ZW-hF-Iyq">
-                                                    <rect key="frame" x="73" y="0.0" width="212" height="43"/>
+                                                    <rect key="frame" x="60" y="0.0" width="225" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="export_tablet" id="u9Y-e8-svE">
-                                                    <rect key="frame" x="15" y="0.0" width="43" height="43"/>
+                                                    <rect key="frame" x="15" y="6" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -779,14 +779,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Inkscape (SVG)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="a2S-of-Dk2">
-                                                    <rect key="frame" x="73" y="0.0" width="212" height="43"/>
+                                                    <rect key="frame" x="60" y="0.0" width="225" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="inkscape" id="Un7-o0-CnW">
-                                                    <rect key="frame" x="15" y="0.0" width="43" height="43"/>
+                                                    <rect key="frame" x="15" y="6" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </imageView>
                                             </subviews>
@@ -1334,8 +1334,8 @@
         <image name="disque-3" width="75" height="75"/>
         <image name="disque-4" width="75" height="75"/>
         <image name="edit" width="25" height="25"/>
-        <image name="export_tablet" width="150" height="150"/>
-        <image name="inkscape" width="150" height="150"/>
+        <image name="export_tablet" width="30" height="30"/>
+        <image name="inkscape" width="30" height="30"/>
         <image name="play" width="30" height="30"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
