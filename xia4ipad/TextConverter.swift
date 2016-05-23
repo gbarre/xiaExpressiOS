@@ -3,7 +3,20 @@
 //  xia
 //
 //  Created by Guillaume on 23/05/2016.
-//  Copyright © 2016 Guillaume. All rights reserved.
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>
+//
+//
+//  @author : guillaume.barre@ac-versailles.fr
 //
 
 import UIKit
@@ -25,11 +38,13 @@ class TextConverter: NSObject {
     func _text2html(inText: String) -> String {
         var htmlString = inText
         
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
         htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
         htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
         htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
         
         htmlString = pikipikiToHTML(htmlString)
+        htmlString = htmlString.stringByReplacingOccurrencesOfString("}}}", withString: "")
         htmlString = showAudio(htmlString)
         htmlString = showCustomLinks(htmlString)
         htmlString = showPictures(htmlString)
@@ -212,7 +227,7 @@ class TextConverter: NSObject {
         var output = inText
         do {
             // youtu.be
-            let regex = try NSRegularExpression(pattern: "http:\\/{2}youtu\\.be\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}youtu\\.be\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -310,7 +325,7 @@ class TextConverter: NSObject {
             for result in arrayResults {
                 var cleanResult = result.stringByReplacingOccurrencesOfString("{{{", withString: "")
                 cleanResult = cleanResult.stringByReplacingOccurrencesOfString("}}}", withString: "")
-                output = output.stringByReplacingOccurrencesOfString(result, withString: "<pre>\(cleanResult)</pre>")
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "<pre>\n\(cleanResult)</pre>\n")
             }
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -403,7 +418,7 @@ class TextConverter: NSObject {
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
             for result in arrayResults {
                 let autostartRange: NSRange = (result as NSString).rangeOfString(" autostart")
-                let dataState = (autostartRange.length > 0) ? "autotart" : "none"
+                let dataState = (autostartRange.length > 0) ? "autostart" : "none"
                 let mp3Result = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".mp3", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
                 let oggResult = result.stringByReplacingOccurrencesOfString("\\.(mp3|ogg)( autostart)?", withString: ".ogg", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
                 let replaceString = "<center><audio controls data-state=\"\(dataState)\"><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /></audio></center>";
@@ -418,15 +433,15 @@ class TextConverter: NSObject {
     func showCustomLinks(inText: String) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* ((?!\\]).)*\\]", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* *((?!\\]).)*\\]", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
             for result in arrayResults {
                 let text = result.stringByReplacingOccurrencesOfString("\\[|\\]", withString: "", options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
                 let urlEndRange: NSRange = (text as NSString).rangeOfString(" ")
-                let url = text[text.startIndex.advancedBy(0)...text.startIndex.advancedBy(urlEndRange.location - 1)]
-                let linkText = text[text.startIndex.advancedBy(urlEndRange.location+1)...text.endIndex.predecessor()]
+                let url = (urlEndRange.length == 1) ? text[text.startIndex.advancedBy(0)...text.startIndex.advancedBy(urlEndRange.location - 1)] : text
+                let linkText = (urlEndRange.length == 1) ? text[text.startIndex.advancedBy(urlEndRange.location+1)...text.endIndex.predecessor()] : text
                 let replaceString = "<a href=\"\(url)\">\(linkText)</a>";
                 output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
             }
