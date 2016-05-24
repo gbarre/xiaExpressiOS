@@ -61,7 +61,7 @@ class TextConverter: NSObject {
         htmlString = buildYoutubeLinks(htmlString)
         htmlString = buildWebtvLinks(htmlString)
         
-        print(htmlString)
+        //print(htmlString)
         
         return htmlString
     }
@@ -217,7 +217,6 @@ class TextConverter: NSObject {
                 let urlString = "url=\(result)"
                 let datasJson = getJSON(baseURL + urlString)
                 let dictJson = parseJSON(datasJson)
-                print(dictJson)
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "\(dictJson["html"]! as! String)")
             }
         } catch let error as NSError {
