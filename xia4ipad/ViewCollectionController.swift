@@ -90,6 +90,11 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var navBarTitle: UINavigationItem!
     
+    @IBAction func btnSettings(sender: AnyObject) {
+        UIApplication.sharedApplication().openURL(
+            NSURL(string: UIApplicationOpenSettingsURLString)!)
+    }
+    
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     
     @IBOutlet weak var editMode: UIBarButtonItem!

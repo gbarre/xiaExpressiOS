@@ -138,6 +138,12 @@
                                                     </segue>
                                                 </connections>
                                             </barButtonItem>
+                                            <barButtonItem image="settings" id="hQY-xS-y1t">
+                                                <inset key="imageInsets" minX="0.0" minY="0.0" maxX="-20" maxY="0.0"/>
+                                                <connections>
+                                                    <action selector="btnSettings:" destination="BYZ-38-t0r" id="Yz7-GR-ks0"/>
+                                                </connections>
+                                            </barButtonItem>
                                         </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
@@ -1337,11 +1343,12 @@
         <image name="export_tablet" width="30" height="30"/>
         <image name="inkscape" width="30" height="30"/>
         <image name="play" width="30" height="30"/>
+        <image name="settings" width="25" height="25"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="S0D-7G-DJ3"/>
+        <segue reference="kse-sD-zsl"/>
         <segue reference="4uf-YC-Gjx"/>
-        <segue reference="n0o-Cr-euA"/>
-        <segue reference="AUe-5m-BUd"/>
     </inferredMetricsTieBreakers>
 </document>
