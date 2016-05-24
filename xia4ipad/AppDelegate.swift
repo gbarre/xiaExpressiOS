@@ -25,18 +25,16 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var dbg = debug(enable: false)
-    let documentRoot = NSHomeDirectory() + "/Documents"
-
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         // purge Inbox
         let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath("\(documentRoot)/Inbox")
+        let files = fileManager.enumeratorAtPath("\(documentsDirectory)/Inbox")
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
             do {
-                let filePath = "\(documentRoot)/Inbox/\(file)"
+                let filePath = "\(documentsDirectory)/Inbox/\(file)"
                 try fileManager.removeItemAtPath(filePath)
             }
             catch let error as NSError {
@@ -95,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     let image = UIImage(data: imageDataB64!)
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image!, 85)
-                    if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                    if ((imageData?.writeToFile("\(documentsDirectory)/\(now).jpg", atomically: true)) != nil) {
                         dbg.pt("Image imported")
                         errorAtImageImport = false
                     }
@@ -108,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     xmlXIA.addChild(xml["XiaiPad"]["xia"])
                     let xmlString = xmlXIA.xmlString
                     do {
-                        try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                        try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
                         errorAtXMLImport = false
                         dbg.pt("XML imported")
                     }
@@ -126,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     image = UIImage(data: imageDataB64!)!
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image, 85)
-                    if ((imageData?.writeToFile("\(documentRoot)/\(now).jpg", atomically: true)) != nil) {
+                    if ((imageData?.writeToFile("\(documentsDirectory)/\(now).jpg", atomically: true)) != nil) {
                         errorAtImageImport = false
                         dbg.pt("Image imported")
                     }
@@ -483,7 +481,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // Store the xia xml
                     let xmlString = xmlXIA.xmlString
                     do {
-                        try xmlString.writeToFile(documentRoot + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                        try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
                         errorAtSVGImport = false
                     }
                     catch {
@@ -497,11 +495,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         // purge Inbox
         let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath("\(documentRoot)/Inbox")
+        let files = fileManager.enumeratorAtPath("\(documentsDirectory)/Inbox")
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
             do {
-                let filePath = "\(documentRoot)/Inbox/\(file)"
+                let filePath = "\(documentsDirectory)/Inbox/\(file)"
                 try fileManager.removeItemAtPath(filePath)
             }
             catch let error as NSError {
@@ -512,7 +510,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // something was wrong
         if errorAtXMLImport && errorAtSVGImport {
             do {
-                try fileManager.removeItemAtPath("\(documentRoot)/\(now).jpg")
+                try fileManager.removeItemAtPath("\(documentsDirectory)/\(now).jpg")
             }
             catch let error as NSError {
                 dbg.pt(error.localizedDescription)

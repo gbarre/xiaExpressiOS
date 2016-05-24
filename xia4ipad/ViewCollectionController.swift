@@ -25,7 +25,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     var dbg = debug(enable: true)
     
-    let documentsDirectory = NSHomeDirectory() + "/Documents"
     var arrayNames = [String]()
     var arraySortedNames = [String: String]() // Label : FileName
     let cache = NSCache()
@@ -39,11 +38,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     var passName:Bool=false
     let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
-    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     var landscape: Bool = false
     
     var selectedPhotos = [NSIndexPath]()
-    let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1)
     
     @IBOutlet var navBar: UINavigationBar!
     
@@ -258,7 +255,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
        self.arrayNames = []
         // Load all images names
         let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath(self.documentsDirectory)
+        let files = fileManager.enumeratorAtPath(documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
             let ext = file.substringWithRange(file.endIndex.advancedBy(-3)..<file.endIndex.advancedBy(0))
@@ -283,13 +280,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
             let img = UIImage(contentsOfFile: filePath!)
             let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(self.documentsDirectory + "/\(now).jpg", atomically: true)
+            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
             
             // Create associated xml
             let xml = AEXMLDocument()
             let xmlString = xml.createXML("\(now)")
             do {
-                try xmlString.writeToFile(self.documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
             }
             catch {
                 self.dbg.pt("\(error)")
@@ -301,7 +298,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // order thumb by title
         self.arraySortedNames = [:]
         for name in self.arrayNames {
-            let xml = getXML("\(self.documentsDirectory)/\(name).xml")
+            let xml = getXML("\(documentsDirectory)/\(name).xml")
             var title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
             title = "\(title)-\(name)"
             self.arraySortedNames[title!] = name
@@ -397,9 +394,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // Delete the file
         let fileManager = NSFileManager()
         do {
-            var filePath = "\(self.documentsDirectory)/\(fileName).jpg"
+            var filePath = "\(documentsDirectory)/\(fileName).jpg"
             try fileManager.removeItemAtPath(filePath)
-            filePath = "\(self.documentsDirectory)/\(fileName).xml"
+            filePath = "\(documentsDirectory)/\(fileName).xml"
             try fileManager.removeItemAtPath(filePath)
         }
         catch let error as NSError {

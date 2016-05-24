@@ -23,8 +23,6 @@ import UIKit
 
 class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    let dbg = debug(enable: true)
-    
     var readOnlyState: Bool = false
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""

@@ -218,8 +218,17 @@ class TextConvertersTest: XCTestCase {
     
     func test_print_html28( ) {
         let raw = "https://www.instagram.com/p/BFrgVznQfdT/"
-        let expected_output = "<center><img src=\"https://scontent-cdg2-1.cdninstagram.com/t51.2885-15/s640x640/e15/13248888_862328127227573_1296951348_n.jpg?ig_cache_key=MTI1NTIzOTE1NzE2OTY0OTQ5MQ%3D%3D.2\" alt=\"https://scontent-cdg2-1.cdninstagram.com/t51.2885-15/s640x640/e15/13248888_862328127227573_1296951348_n.jpg?ig_cache_key=MTI1NTIzOTE1NzE2OTY0OTQ5MQ%3D%3D.2\" style=\"max-width: 480.0;\" /><p><a href=\"https://www.instagram.com/p/BFrgVznQfdT/\" style=\"color:#000; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none; word-wrap:break-word;\">Thank you thank you thank you!</a></p><p>\(NSLocalizedString("PHOTO_PUBLISHED_BY", comment: "")) <a href=\"https://www.instagram.com/danicapatrick\">@danicapatrick</a></p></center>"
         let output = converter._text2html(raw)
+        var expected_output = "<center><img src=\"###\" alt=\"###\" style=\"max-width: 480.0;\" /><p><a href=\"https://www.instagram.com/p/BFrgVznQfdT/\" style=\"color:#000; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none; word-wrap:break-word;\">Thank you thank you thank you!</a></p><p>\(NSLocalizedString("PHOTO_PUBLISHED_BY", comment: "")) <a href=\"https://www.instagram.com/danicapatrick\">@danicapatrick</a></p></center>"
+        
+        // Replace ### with real src in cdn
+        let baseURL = "https://api.instagram.com/oembed?"
+        let urlString = "url=\(raw)"
+        let datasJson = converter.getJSON(baseURL + urlString + "&omitscript=true")
+        let dictJson = converter.parseJSON(datasJson)
+        let thumbnailURL = dictJson["thumbnail_url"]! as! String
+        expected_output = expected_output.stringByReplacingOccurrencesOfString("###", withString: thumbnailURL)
+        
         XCTAssertEqual(expected_output, output)
     }
     

@@ -101,11 +101,6 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
         }
     }
     
-    let xmlElements: [String] = ["license", "title", "date", "creator",
-        "rights", "publisher", "identifier", "source", "relation", "language",
-        "keywords", "coverage", "contributors", "description"
-    ]
-    
     for element in xmlElements {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
             xml["xia"].addChild(name: element)
@@ -165,7 +160,7 @@ func getXML(path: String, check: Bool = true) -> AEXMLDocument {
         try xml = AEXMLDocument(xmlData: data!)
     }
     catch {
-        print("\(error)")
+        dbg.pt("\(error)")
     }
     return (check) ? checkXML(xml) : xml
 }
@@ -197,7 +192,7 @@ func writeXML(xml: AEXMLDocument, path: String) -> Bool {
         error = false
     }
     catch {
-        print("\(error)")
+        dbg.pt("\(error)")
     }
     return error
 }

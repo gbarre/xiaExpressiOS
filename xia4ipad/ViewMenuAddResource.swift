@@ -23,7 +23,6 @@ import UIKit
 
 class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var dbg = debug(enable: true)
     weak var ViewCollection: ViewCollectionController?
     
     var newMedia: Bool = false
@@ -56,13 +55,13 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         let now: Int = Int(NSDate().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image, 85)
-        imageData?.writeToFile(ViewCollection!.documentsDirectory + "/\(now).jpg", atomically: true)
+        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
         
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.writeToFile(ViewCollection!.documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
             dbg.pt("\(error)")
