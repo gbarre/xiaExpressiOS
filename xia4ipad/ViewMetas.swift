@@ -29,7 +29,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var xml: AEXMLDocument = AEXMLDocument()
     var filePath: String = ""
     var fileName: String = ""
-    var landscape: Bool = false
     var selectedSegment: Int = 0
     weak var ViewCollection: ViewCollectionController?
     weak var ViewCreateDetailsController: ViewCreateDetails?
@@ -156,7 +155,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
-        if landscape && !iPadPro {
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro {
             if showKbd {
                 txtCreator.resignFirstResponder()
                 datePicker.hidden = false
@@ -185,7 +184,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
-        if landscape && !iPadPro {
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro {
             if showKbd {
                 txtLanguages.resignFirstResponder()
                 licensePicker.hidden = false
@@ -311,11 +310,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
         if index == 1 {
             txtCreator.becomeFirstResponder()
-            datePicker.hidden = (landscape && !iPadPro) ? true : false
+            datePicker.hidden = (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro) ? true : false
         }
         if index == 2 {
             txtLanguages.becomeFirstResponder()
-            licensePicker.hidden = (landscape && !iPadPro) ? true : false
+            licensePicker.hidden = (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro) ? true : false
         }
         if index == 3 {
             imgTitle.becomeFirstResponder()

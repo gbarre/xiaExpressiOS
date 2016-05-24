@@ -517,7 +517,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
                 controller.fileName = self.fileName
-                controller.landscape = landscape
                 controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
             }

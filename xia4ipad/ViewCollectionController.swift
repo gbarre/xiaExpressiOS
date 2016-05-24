@@ -198,7 +198,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 controller.xml = xmlToSegue
                 controller.filePath = pathToSegue
                 controller.fileName = nameToSegue
-                controller.landscape = landscape
                 controller.ViewCollection = self
             }
         }

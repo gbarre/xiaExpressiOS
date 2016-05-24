@@ -167,7 +167,7 @@
                         <outlet property="navBarTitle" destination="mpy-Pt-Gc9" id="ZSt-7f-0mb"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="fu4-Qn-UIB" id="4uf-YC-Gjx">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                            <popoverArrowDirection key="popoverArrowDirection" left="YES"/>
                         </segue>
                         <segue destination="ZHU-7B-zUy" kind="popoverPresentation" identifier="export" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="kse-sD-zsl">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
@@ -1340,8 +1340,8 @@
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="AUe-5m-BUd"/>
-        <segue reference="IaL-8D-KRP"/>
+        <segue reference="4uf-YC-Gjx"/>
         <segue reference="n0o-Cr-euA"/>
+        <segue reference="AUe-5m-BUd"/>
     </inferredMetricsTieBreakers>
 </document>
