@@ -56,9 +56,12 @@ class TextConverter: NSObject {
         htmlString = buildInstagramLinks(htmlString)
         htmlString = buildScolawebtvLinks(htmlString)
         htmlString = buildSlideshareLinks(htmlString)
+        htmlString = buildTwitterLinks(htmlString)
         htmlString = buildVimeoLinks(htmlString)
         htmlString = buildYoutubeLinks(htmlString)
         htmlString = buildWebtvLinks(htmlString)
+        
+        print(htmlString)
         
         return htmlString
     }
@@ -184,7 +187,7 @@ class TextConverter: NSObject {
     func buildSlideshareLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|[0-9]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -195,6 +198,27 @@ class TextConverter: NSObject {
                 let datasJson = getJSON(baseURL + urlString + formatString)
                 let dictJson = parseJSON(datasJson)
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(dictJson["html"]! as! String)</center>")
+            }
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        return output
+    }
+    
+    func buildTwitterLinks(inText: String!) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}twitter\\.com\\/([a-z]|[0-9]|-|_)*\\/status\\/[0-9]*", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            let baseURL = "https://api.twitter.com/1/statuses/oembed.json?"
+            for result in arrayResults {
+                let urlString = "url=\(result)"
+                let datasJson = getJSON(baseURL + urlString)
+                let dictJson = parseJSON(datasJson)
+                print(dictJson)
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "\(dictJson["html"]! as! String)")
             }
         } catch let error as NSError {
             print(error.localizedDescription)
