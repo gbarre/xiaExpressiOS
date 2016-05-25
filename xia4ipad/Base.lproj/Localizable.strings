@@ -46,6 +46,7 @@
 "FILES_SELECTED" = "files selected";
 "DELETE_FILE" = "Delete file";
 "DELETE_N_FILES" = "Delete %d files";
+"CREATE_DOCUMENT" = "Create new document";
 "DUPLICATE" = "Duplicate file";
 
 // ViewCreateDetails.swift

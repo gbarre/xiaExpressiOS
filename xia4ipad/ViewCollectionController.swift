@@ -321,23 +321,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         // Add a "create image" if the is no image in Documents directory
         if ( self.arrayNames.count == 0 ) {
-            let now:Int = Int(NSDate().timeIntervalSince1970)
-            let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
-            let img = UIImage(contentsOfFile: filePath!)
-            let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
-            
-            // Create associated xml
-            let xml = AEXMLDocument()
-            let xmlString = xml.createXML("\(now)")
-            do {
-                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                dbg.pt("\(error)")
-            }
-            
-            self.arrayNames.append("\(now)")
+            return 1
         }
         
         // order thumb by title
