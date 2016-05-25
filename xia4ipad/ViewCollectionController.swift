@@ -23,8 +23,6 @@ import UIKit
 
 class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
-    var dbg = debug(enable: true)
-    
     var arrayNames = [String]()
     var arraySortedNames = [String: String]() // Label : FileName
     let cache = NSCache()
@@ -86,6 +84,40 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBAction func btnEditAction(sender: AnyObject) {
         segueIndex = selectedPhotos[0].row
         performSegueWithIdentifier("viewMetas", sender: self)
+    }
+    
+    @IBOutlet var btnCopy: UIBarButtonItem!
+    @IBAction func btnCopyAction(sender: AnyObject) {
+        // Show confirm alert
+        let controller = UIAlertController()
+        let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .Default) { action in
+            // copy file
+            let now:Int = Int(NSDate().timeIntervalSince1970)
+            let selectedPhoto = self.arrayNames[self.selectedPhotos[0].row]
+            
+            let fileManager = NSFileManager.defaultManager()
+            do {
+                try fileManager.copyItemAtPath("\(documentsDirectory)/\(selectedPhoto).jpg", toPath: "\(documentsDirectory)/\(now).jpg")
+                try fileManager.copyItemAtPath("\(documentsDirectory)/\(selectedPhoto).xml", toPath: "\(documentsDirectory)/\(now).xml")
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+            
+            // Exit editing mode
+            self.endEdit()
+            // Rebuild the navbar
+            self.buildLeftNavbarItems()
+            self.arrayNames.append("\(now)")
+            self.CollectionView.reloadData()
+            
+        }
+        controller.addAction(confirmDuplicate)
+        if let ppc = controller.popoverPresentationController {
+            ppc.barButtonItem = btnCopy
+            ppc.permittedArrowDirections = .Up
+        }
+        presentViewController(controller, animated: true, completion: nil)
     }
     
     @IBOutlet var navBarTitle: UINavigationItem!
@@ -237,6 +269,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnExport.tintColor = UIColor.whiteColor()
             btnEdit.enabled = true
             btnEdit.tintColor = UIColor.whiteColor()
+            btnCopy.enabled = true
+            btnCopy.tintColor = UIColor.whiteColor()
             break
         case 2...9999:
             btnTrash.enabled = true
@@ -245,6 +279,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnEdit.enabled = false
             btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnCopy.enabled = false
+            btnCopy.tintColor = buttonColor.colorWithAlphaComponent(0)
             break
         default:
             btnTrash.enabled = false
@@ -253,6 +289,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
             btnEdit.enabled = false
             btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnCopy.enabled = false
+            btnCopy.tintColor = buttonColor.colorWithAlphaComponent(0)
         }
     }
 
@@ -274,7 +312,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                         try fileManager.removeItemAtPath("\(documentsDirectory)/\(file).jpg")
                     }
                     catch {
-                        self.dbg.pt("\(error)")
+                        dbg.pt("\(error)")
                     }
                 }
             }
@@ -294,7 +332,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
             }
             catch {
-                self.dbg.pt("\(error)")
+                dbg.pt("\(error)")
             }
             
             self.arrayNames.append("\(now)")
@@ -405,7 +443,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             try fileManager.removeItemAtPath(filePath)
         }
         catch let error as NSError {
-            self.dbg.pt(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         
         // Update arrays

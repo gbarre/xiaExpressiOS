@@ -44,6 +44,9 @@
 "DOUBLE_CHECK" = "Saisir à nouveau";
 
 /* No comment provided by engineer. */
+"DUPLICATE" = "Dupliquer le fichier";
+
+/* No comment provided by engineer. */
 "EDIT" = "Modifier";
 
 /* No comment provided by engineer. */
@@ -120,4 +123,3 @@
 
 /* No comment provided by engineer. */
 "YES" = "Oui";
-
