@@ -23,8 +23,6 @@ import UIKit
 
 class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
-    var dbg = debug(enable: true)
-    
     var arrayNames = [String]()
     var arraySortedNames = [String: String]() // Label : FileName
     let cache = NSCache()
@@ -184,40 +182,42 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if segueIndex == -1 {
             segueIndex = 0
         }
-        let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
-        let nameToSegue = "\(arrayNames[segueIndex])"
-        let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
-        if (segue.identifier == "viewLargePhoto") {
-            endEdit()
-            if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
-                controller.fileName = nameToSegue
-                controller.filePath = pathToSegue
-                controller.xml = xmlToSegue
+        if arrayNames.count > 0 {
+            let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+            let nameToSegue = "\(arrayNames[segueIndex])"
+            let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
+            if (segue.identifier == "viewLargePhoto") {
+                endEdit()
+                if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
+                    controller.fileName = nameToSegue
+                    controller.filePath = pathToSegue
+                    controller.xml = xmlToSegue
+                }
             }
-        }
-        if (segue.identifier == "viewMetas") {
-            if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
-                controller.xml = xmlToSegue
-                controller.filePath = pathToSegue
-                controller.fileName = nameToSegue
-                controller.ViewCollection = self
+            if (segue.identifier == "viewMetas") {
+                if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
+                    controller.xml = xmlToSegue
+                    controller.filePath = pathToSegue
+                    controller.fileName = nameToSegue
+                    controller.ViewCollection = self
+                }
             }
-        }
-        if (segue.identifier == "playXia") {
-            endEdit()
-            if let controller:PlayXia = segue.destinationViewController as? PlayXia {
-                controller.fileName = nameToSegue
-                controller.filePath = pathToSegue
-                controller.xml = xmlToSegue
-                controller.landscape = landscape
+            if (segue.identifier == "playXia") {
+                endEdit()
+                if let controller:PlayXia = segue.destinationViewController as? PlayXia {
+                    controller.fileName = nameToSegue
+                    controller.filePath = pathToSegue
+                    controller.xml = xmlToSegue
+                    controller.landscape = landscape
+                }
             }
-        }
-        if (segue.identifier == "export") {
-            if let controller:ViewExport = segue.destinationViewController as? ViewExport {
-                controller.filePath = pathToSegue
-                controller.fileName = nameToSegue
-                controller.xml = xmlToSegue
-                controller.ViewCollection = self
+            if (segue.identifier == "export") {
+                if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                    controller.filePath = pathToSegue
+                    controller.fileName = nameToSegue
+                    controller.xml = xmlToSegue
+                    controller.ViewCollection = self
+                }
             }
         }
         if (segue.identifier == "Add") {
@@ -274,30 +274,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                         try fileManager.removeItemAtPath("\(documentsDirectory)/\(file).jpg")
                     }
                     catch {
-                        self.dbg.pt("\(error)")
+                        dbg.pt("\(error)")
                     }
                 }
             }
         }
-        // Create default image if the is no image in Documents directory
+        // Add a "create image" if the is no image in Documents directory
         if ( self.arrayNames.count == 0 ) {
-            let now:Int = Int(NSDate().timeIntervalSince1970)
-            let filePath = NSBundle.mainBundle().pathForResource("default", ofType: "jpg")
-            let img = UIImage(contentsOfFile: filePath!)
-            let imageData = UIImageJPEGRepresentation(img!, 85)
-            imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
-            
-            // Create associated xml
-            let xml = AEXMLDocument()
-            let xmlString = xml.createXML("\(now)")
-            do {
-                try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
-            }
-            catch {
-                self.dbg.pt("\(error)")
-            }
-            
-            self.arrayNames.append("\(now)")
+            return 1
         }
         
         // order thumb by title
@@ -322,34 +306,39 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
         
-        let index = indexPath.item
-        // Load image
-        let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
-        let img = UIImage(contentsOfFile: filePath)
-        cell.setThumbnail(img!)
-        
-        // Load label
-        let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
-        let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
-        cell.setLabel(label)
-        
-        // Show reaod Only Icon
-        let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
-        cell.showRoIcon(roState)
-        
+        if arrayNames.count == 0 {
+            cell.setLabel(NSLocalizedString("CREATE_DOCUMENT", comment: ""))
+            cell.setThumbnail(UIImage(named: "plus")!)
+        }
+        else {
+            let index = indexPath.item
+            // Load image
+            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+            let img = UIImage(contentsOfFile: filePath)
+            cell.setThumbnail(img!)
+            
+            // Load label
+            let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
+            let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
+            cell.setLabel(label)
+            
+            // Show reaod Only Icon
+            let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
+            cell.showRoIcon(roState)
+            
+            if editingMode {
+                if selectedPhotos.contains(indexPath) {
+                    cell.setLabelBkgColor(selectingColor)
+                }
+                else {
+                    cell.setLabelBkgColor(UIColor.clearColor())
+                }
+                cell.wobble(true)
+            }
+        }
         let tap = UITapGestureRecognizer(target: self, action:#selector(ViewCollectionController.handleTap(_:)))
         tap.delegate = self
         cell.addGestureRecognizer(tap)
-        
-        if editingMode {
-            if selectedPhotos.contains(indexPath) {
-                cell.setLabelBkgColor(selectingColor)
-            }
-            else {
-                cell.setLabelBkgColor(UIColor.clearColor())
-            }
-            cell.wobble(true)
-        }
         
         return cell
     }
@@ -405,7 +394,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             try fileManager.removeItemAtPath(filePath)
         }
         catch let error as NSError {
-            self.dbg.pt(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         
         // Update arrays
@@ -426,6 +415,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     changeCellLabelBkgColor(path)
                 }
                 buildLeftNavbarItems(selectedPhotos.count)
+            }
+            else if arrayNames.count == 0 {
+                performSegueWithIdentifier("Add", sender: self)
             }
             else {
                 let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")

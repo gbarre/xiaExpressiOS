@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F0013F811BF61A750000F83A /* default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0013F801BF61A750000F83A /* default.jpg */; };
 		F00C4A8E1CF2F825005B1342 /* TextConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C4A8D1CF2F825005B1342 /* TextConverter.swift */; };
 		F00C4A8F1CF2F825005B1342 /* TextConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00C4A8D1CF2F825005B1342 /* TextConverter.swift */; };
 		F014AB2F1CE1DA5F00AFDC10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F014AB311CE1DA5F00AFDC10 /* InfoPlist.strings */; };
@@ -78,7 +77,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F0013F801BF61A750000F83A /* default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default.jpg; sourceTree = "<group>"; };
 		F00C4A8D1CF2F825005B1342 /* TextConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextConverter.swift; sourceTree = "<group>"; };
 		F014AB301CE1DA5F00AFDC10 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F02FBD851CF479D800BF3022 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -178,7 +176,6 @@
 		F0F15E671BB6FCDF00268F06 /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F0013F801BF61A750000F83A /* default.jpg */,
 				F0F15E741BB6FCDF00268F06 /* Info.plist */,
 				F0725E591BEA87D9007ACE9B /* AEXML.swift */,
 				F0F15E681BB6FCDF00268F06 /* AppDelegate.swift */,
@@ -339,7 +336,6 @@
 				F0F15E701BB6FCDF00268F06 /* Assets.xcassets in Resources */,
 				F0F15E6E1BB6FCDF00268F06 /* Main.storyboard in Resources */,
 				F092D8B41BE78BE000EDB0CE /* images.xcassets in Resources */,
-				F0013F811BF61A750000F83A /* default.jpg in Resources */,
 				F072A5921C84384C00E85F61 /* ipad_noir_80.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

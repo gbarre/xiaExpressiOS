@@ -345,6 +345,11 @@
         <target>Créer un détail...</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
+      <trans-unit id="CREATE_DOCUMENT">
+        <source>CREATE_DOCUMENT</source>
+        <target>Nouveau document</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="CREATOR">
         <source>CREATOR</source>
         <target>Auteur : </target>
