@@ -174,6 +174,7 @@
                         <outlet property="btnCreateState" destination="5Zb-O2-v5O" id="rf2-cb-XVD"/>
                         <outlet property="btnEdit" destination="fu4-Qn-UIB" id="gWV-FJ-Ikf"/>
                         <outlet property="btnExport" destination="Vxz-4Q-6V9" id="RU8-SX-6ze"/>
+                        <outlet property="btnSettingsState" destination="hQY-xS-y1t" id="Pih-R4-Shb"/>
                         <outlet property="btnTrash" destination="cGm-0U-sRw" id="fnU-LC-lJW"/>
                         <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
                         <outlet property="navBar" destination="I15-vY-FYi" id="zAf-Vt-nPo"/>

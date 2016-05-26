@@ -122,6 +122,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var navBarTitle: UINavigationItem!
     
+    @IBOutlet var btnSettingsState: UIBarButtonItem!
     @IBAction func btnSettings(sender: AnyObject) {
         UIApplication.sharedApplication().openURL(
             NSURL(string: UIApplicationOpenSettingsURLString)!)
@@ -149,6 +150,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // Cosmetic...
             btnCreateState.enabled = false
             btnCreateState.tintColor = selectingColor.colorWithAlphaComponent(0)
+            btnSettingsState.enabled = false
+            btnSettingsState.tintColor = selectingColor.colorWithAlphaComponent(0)
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.whiteColor()
@@ -349,6 +352,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if arrayNames.count == 0 {
             cell.setLabel(NSLocalizedString("CREATE_DOCUMENT", comment: ""))
             cell.setThumbnail(UIImage(named: "plus")!)
+            cell.showRoIcon(false)
         }
         else {
             let index = indexPath.item
@@ -412,6 +416,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         CollectionView.reloadData()
         btnCreateState.enabled = true
         btnCreateState.tintColor = UIColor.whiteColor()
+        btnSettingsState.enabled = true
+        btnSettingsState.tintColor = UIColor.whiteColor()
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.whiteColor()
