@@ -22,9 +22,7 @@
 import UIKit
 
 class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWebViewDelegate {
-    
-    var dbg = debug(enable: true)
-    
+        
     var tag: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
     var detail: xiaDetail!

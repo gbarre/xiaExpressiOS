@@ -23,9 +23,7 @@ import UIKit
 import MessageUI
 
 class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
-    
-    var dbg = debug(enable: true)
-    
+        
     var index: Int = 0
     var xml: AEXMLDocument = AEXMLDocument()
     var fileName: String = ""
@@ -51,10 +49,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     var menu: UIAlertController!
     var btnTag: Int = 0
-    
-    let editColor: UIColor = UIColor.redColor()
-    let noEditColor: UIColor = UIColor.greenColor()
-    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
@@ -517,7 +511,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.xml = self.xml
                 controller.filePath = self.filePath
                 controller.fileName = self.fileName
-                controller.landscape = landscape
                 controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
             }
@@ -578,7 +571,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
+            buildShape(true, color: editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
             
             self.stopCreation()
             
@@ -613,7 +606,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
-            buildShape(true, color: self.editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
+            buildShape(true, color: editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
             
             self.stopCreation()
             

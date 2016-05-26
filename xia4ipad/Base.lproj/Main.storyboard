@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="g92-NS-802">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
@@ -124,6 +125,11 @@
                                                     <action selector="btnEditAction:" destination="BYZ-38-t0r" id="vkM-6c-OHY"/>
                                                 </connections>
                                             </barButtonItem>
+                                            <barButtonItem image="copy" id="8Zd-W4-NtK">
+                                                <connections>
+                                                    <action selector="btnCopyAction:" destination="BYZ-38-t0r" id="z1P-Fr-OCz"/>
+                                                </connections>
+                                            </barButtonItem>
                                         </leftBarButtonItems>
                                         <rightBarButtonItems>
                                             <barButtonItem title="Edit" id="S4K-WX-yik">
@@ -136,6 +142,12 @@
                                                     <segue destination="en8-Mw-eGZ" kind="popoverPresentation" identifier="Add" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="sJW-9H-TB2">
                                                         <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
                                                     </segue>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem image="settings" id="hQY-xS-y1t">
+                                                <inset key="imageInsets" minX="0.0" minY="0.0" maxX="-20" maxY="0.0"/>
+                                                <connections>
+                                                    <action selector="btnSettings:" destination="BYZ-38-t0r" id="Yz7-GR-ks0"/>
                                                 </connections>
                                             </barButtonItem>
                                         </rightBarButtonItems>
@@ -158,16 +170,18 @@
                     <navigationItem key="navigationItem" title="Photo Album" id="TDA-2G-8Io"/>
                     <connections>
                         <outlet property="CollectionView" destination="8S7-Cb-jYU" id="nqt-AU-hGg"/>
+                        <outlet property="btnCopy" destination="8Zd-W4-NtK" id="6Ma-M9-fKu"/>
                         <outlet property="btnCreateState" destination="5Zb-O2-v5O" id="rf2-cb-XVD"/>
                         <outlet property="btnEdit" destination="fu4-Qn-UIB" id="gWV-FJ-Ikf"/>
                         <outlet property="btnExport" destination="Vxz-4Q-6V9" id="RU8-SX-6ze"/>
+                        <outlet property="btnSettingsState" destination="hQY-xS-y1t" id="Pih-R4-Shb"/>
                         <outlet property="btnTrash" destination="cGm-0U-sRw" id="fnU-LC-lJW"/>
                         <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
                         <outlet property="navBar" destination="I15-vY-FYi" id="zAf-Vt-nPo"/>
                         <outlet property="navBarTitle" destination="mpy-Pt-Gc9" id="ZSt-7f-0mb"/>
                         <segue destination="fts-Lk-uqf" kind="show" identifier="viewLargePhoto" id="KLL-DE-oz6"/>
                         <segue destination="6f8-Rg-eyD" kind="popoverPresentation" identifier="viewMetas" popoverAnchorBarButtonItem="fu4-Qn-UIB" id="4uf-YC-Gjx">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                            <popoverArrowDirection key="popoverArrowDirection" left="YES"/>
                         </segue>
                         <segue destination="ZHU-7B-zUy" kind="popoverPresentation" identifier="export" popoverAnchorBarButtonItem="Vxz-4Q-6V9" id="kse-sD-zsl">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
@@ -1329,6 +1343,7 @@
     </scenes>
     <resources>
         <image name="Info" width="32" height="32"/>
+        <image name="copy" width="25" height="25"/>
         <image name="delete" width="50" height="50"/>
         <image name="discuss" width="32" height="32"/>
         <image name="disque-3" width="75" height="75"/>
@@ -1337,11 +1352,12 @@
         <image name="export_tablet" width="30" height="30"/>
         <image name="inkscape" width="30" height="30"/>
         <image name="play" width="30" height="30"/>
+        <image name="settings" width="25" height="25"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="AUe-5m-BUd"/>
-        <segue reference="IaL-8D-KRP"/>
-        <segue reference="n0o-Cr-euA"/>
+        <segue reference="S0D-7G-DJ3"/>
+        <segue reference="kse-sD-zsl"/>
+        <segue reference="4uf-YC-Gjx"/>
     </inferredMetricsTieBreakers>
 </document>

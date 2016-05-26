@@ -56,9 +56,12 @@ class TextConverter: NSObject {
         htmlString = buildInstagramLinks(htmlString)
         htmlString = buildScolawebtvLinks(htmlString)
         htmlString = buildSlideshareLinks(htmlString)
+        htmlString = buildTwitterLinks(htmlString)
         htmlString = buildVimeoLinks(htmlString)
         htmlString = buildYoutubeLinks(htmlString)
         htmlString = buildWebtvLinks(htmlString)
+        
+        //dbg.pt(htmlString)
         
         return htmlString
     }
@@ -75,7 +78,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe frameborder=\"0\" width=\"\(videoWidth)\" height=\"120\" src=\"http://www.audio-lingua.eu/spip.php?page=mp3&id_article=\(audioCode)&color=00aaea\"></iframe></center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -92,7 +95,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe frameborder=\"0\" width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"http://www.dailymotion.com/embed/video/\(videoCode)\" allowfullscreen></iframe></center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -117,7 +120,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center><img src=\"\(thumbnailURL)\" alt=\"\(thumbnailURL)\" style=\"max-width: \(videoWidth);\" /><p><a href=\"\(result)\" style=\"color:#000; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none; word-wrap:break-word;\">\(title)</a></p><p>\(NSLocalizedString("PHOTO_PUBLISHED_BY", comment: "")) <a href=\"\(authorURL)\">@\(author)</a></p></center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -146,7 +149,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(html)</center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -176,7 +179,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(html)</center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -184,7 +187,7 @@ class TextConverter: NSObject {
     func buildSlideshareLinks(inText: String!) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
+            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|[0-9]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .CaseInsensitive)
             let nsString = inText as NSString
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
@@ -197,7 +200,27 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(dictJson["html"]! as! String)</center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
+        }
+        return output
+    }
+    
+    func buildTwitterLinks(inText: String!) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "https?:\\/{2}twitter\\.com\\/([a-z]|[0-9]|-|_)*\\/status\\/[0-9]*", options: .CaseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substringWithRange($0.range)}
+            let baseURL = "https://api.twitter.com/1/statuses/oembed.json?"
+            for result in arrayResults {
+                let urlString = "url=\(result)"
+                let datasJson = getJSON(baseURL + urlString)
+                let dictJson = parseJSON(datasJson)
+                output = output.stringByReplacingOccurrencesOfString(result, withString: "\(dictJson["html"]! as! String)")
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -218,7 +241,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(dictJson["html"]! as! String)</center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -245,7 +268,7 @@ class TextConverter: NSObject {
             }
             
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -267,7 +290,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<center>\(html)</center>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -281,7 +304,7 @@ class TextConverter: NSObject {
         do {
             boardsDictionary = try NSJSONSerialization.JSONObjectWithData(inputData, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
         } catch let error as NSError {
-            print(error)
+            dbg.pt(error)
         }
         return boardsDictionary
     }
@@ -299,7 +322,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<b>\(cleanResult)</b>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         
         // Make emphasize
@@ -313,7 +336,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<em>\(cleanResult)</em>")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         
         // Make pre-formatted
@@ -328,7 +351,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<pre>\n\(cleanResult)</pre>\n")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         
         // Make line
@@ -425,7 +448,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -446,7 +469,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -462,7 +485,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: "<img src=\"\(result)\" alt=\"\(result)\" style=\"max-width: \(videoWidth);\" />")
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }
@@ -484,7 +507,7 @@ class TextConverter: NSObject {
                 output = output.stringByReplacingOccurrencesOfString(result, withString: replaceString)
             }
         } catch let error as NSError {
-            print(error.localizedDescription)
+            dbg.pt(error.localizedDescription)
         }
         return output
     }

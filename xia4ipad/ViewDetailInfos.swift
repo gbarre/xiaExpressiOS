@@ -23,9 +23,7 @@ import UIKit
 import Foundation
 
 class ViewDetailInfos: UIViewController, UITextViewDelegate {
-    
-    var dbg = debug(enable: true)
-    
+        
     var tag: Int = 0
     var zoom: Bool = false
     var lock: Bool = false
@@ -167,8 +165,8 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
         attrString.enumerateAttribute(NSUnderlineStyleAttributeName, inRange: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
-                print(r)
-                print(descText)
+                dbg.pt(r)
+                dbg.pt(descText)
                 var startIndex: Int = r.location
                 var endIndex: Int = r.location+r.length
                 if bold {
@@ -179,7 +177,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                 }
                 startIndex += offset
                 descText.insertString("__", atIndex: startIndex)
-                print(descText)
+                dbg.pt(descText)
                 offset += 2
                 endIndex += offset
                 descText.insertString("__", atIndex: endIndex)
@@ -204,7 +202,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         //let attributeUnderline = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
         //try! attributedText.addAttributes(attributeUnderline, delimiter: "__")
         
-        //print(attributedText)
+        //dbg.pt(attributedText)
         
         
         return attributedText

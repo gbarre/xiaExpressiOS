@@ -385,20 +385,9 @@ public class AEXMLDocument: AEXMLElement {
         let xml = xmlFile.addChild(name: "xia")
         
         // Insert default metas
-        xml.addChild(name: "title", value: "", attributes: nil)
-        xml.addChild(name: "description" , value: "", attributes: nil)
-        xml.addChild(name: "creator", value: "", attributes: nil)
-        xml.addChild(name: "rights", value: "", attributes: nil)
-        xml.addChild(name: "license", value: "", attributes: nil)
-        xml.addChild(name: "date", value: "", attributes: nil)
-        xml.addChild(name: "publisher", value: "", attributes: nil)
-        xml.addChild(name: "identifier", value: "", attributes: nil)
-        xml.addChild(name: "source", value: "", attributes: nil)
-        xml.addChild(name: "relation", value: "", attributes: nil)
-        xml.addChild(name: "language", value: "", attributes: nil)
-        xml.addChild(name: "keywords", value: "", attributes: nil)
-        xml.addChild(name: "coverage", value: "", attributes: nil)
-        xml.addChild(name: "contributors", value: "", attributes: nil)
+        for element in xmlElements {
+            xml.addChild(name: element, value: "", attributes: nil)
+        }
         xml.addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
         
         // Add img infos

@@ -23,10 +23,8 @@ import UIKit
 
 class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
-    var dbg = debug(enable: true)
-    
     var xml: AEXMLDocument!
-    let xmlElements: [String: String!] = [
+    let xmlElementsDict: [String: String!] = [
         "license" : NSLocalizedString("LICENSE", comment: ""),
         "title" : NSLocalizedString("TITLE", comment: ""),
         "date" : NSLocalizedString("DATE", comment: ""),
@@ -106,7 +104,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     }
     
     func getElementValue(element: String) -> NSAttributedString! {
-        let key = xmlElements[element]
+        let key = xmlElementsDict[element]
         let keyWidth = key?.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
         let txtSize: CGFloat = 14
@@ -121,7 +119,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     }
     
     func getDescriptionValue() -> NSAttributedString! {
-        let key = xmlElements["description"]
+        let key = xmlElementsDict["description"]
         let keyWidth = key?.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
         attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(18)], range: NSRange(location: 0, length: keyWidth!))
@@ -138,7 +136,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     }
     
     func getLicense() -> NSAttributedString! {
-        let key = xmlElements["license"]
+        let key = xmlElementsDict["license"]
         let keyWidth = key!.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!)
         attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(17)], range: NSRange(location: 0, length: keyWidth))

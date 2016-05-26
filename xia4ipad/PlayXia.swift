@@ -23,8 +23,6 @@ import UIKit
 
 class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
-    var dbg = debug(enable: true)
-    
     var xml: AEXMLDocument = AEXMLDocument()
     let transition = BubbleTransition()
     
@@ -38,12 +36,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var touchBegin = CGPoint(x: 0, y: 0)
     var img: UIImage!
     
-    let screenWidth = UIScreen.mainScreen().bounds.width
-    let screenHeight = UIScreen.mainScreen().bounds.height
     var scale: CGFloat = 1.0
     var landscape: Bool = false
-    
-    let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
     
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet var leftButtonBkgd: UIImageView!

@@ -17,6 +17,9 @@
 "CREATE_DETAIL" = "Créer un détail...";
 
 /* No comment provided by engineer. */
+"CREATE_DOCUMENT" = "Nouveau document";
+
+/* No comment provided by engineer. */
 "CREATOR" = "Auteur : ";
 
 /* No comment provided by engineer. */
@@ -42,6 +45,9 @@
 
 /* No comment provided by engineer. */
 "DOUBLE_CHECK" = "Saisir à nouveau";
+
+/* No comment provided by engineer. */
+"DUPLICATE" = "Dupliquer le fichier";
 
 /* No comment provided by engineer. */
 "EDIT" = "Modifier";
@@ -120,4 +126,3 @@
 
 /* No comment provided by engineer. */
 "YES" = "Oui";
-

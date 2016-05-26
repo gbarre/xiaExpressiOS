@@ -22,11 +22,8 @@
 import UIKit
 
 class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate {
+    
     var docController:UIDocumentInteractionController!
-    
-    let dbg = debug(enable: true)
-    
-    let documentsDirectory = NSHomeDirectory() + "/Documents"
     
     var filePath: String = ""
     var fileName: String = ""
@@ -38,11 +35,6 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var tmpFilePath: String = ""
     let now:Int = Int(NSDate().timeIntervalSince1970)
     weak var ViewCollection: ViewCollectionController?
-    
-    let xmlElements: [String] = ["license", "title", "date", "creator",
-        "rights", "publisher", "identifier", "source", "relation", "language",
-        "keywords", "coverage", "contributors", "description"
-    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
