@@ -207,7 +207,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let detailTitle = (rect["title"].value != nil && rect["title"].value! != "element <title> not found") ? rect["title"].value! : ""
                             let detailDescription = (rect["desc"].value != nil && rect["desc"].value! != "element <desc> not found") ? rect["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "rectangle", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : constraintRectangle, "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -225,7 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let detailTitle = (ellipse["title"].value != nil && ellipse["title"].value! != "element <title> not found") ? ellipse["title"].value! : ""
                             let detailDescription = (ellipse["desc"].value != nil && ellipse["desc"].value! != "element <desc> not found") ? ellipse["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "ellipse", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : constraintEllipse, "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }
@@ -471,7 +471,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let detailTitle = (polygon["title"].value != nil && polygon["title"].value! != "element <title> not found") ? polygon["title"].value! : ""
                             let detailDescription = (polygon["desc"].value != nil && polygon["desc"].value! != "element <desc> not found") ? polygon["desc"].value! : ""
                             
-                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : "polygon", "locked" : "false"]
+                            let attributes = ["tag" : "\(currentDetailTag)", "zoom" : "true", "title" : detailTitle, "path" : thisPath, "constraint" : constraintPolygon, "locked" : "false"]
                             
                             xmlXIA["xia"]["details"].addChild(name: "detail", value: detailDescription, attributes: attributes)
                         }

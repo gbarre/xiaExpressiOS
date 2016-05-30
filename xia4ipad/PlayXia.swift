@@ -102,7 +102,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                         newPoint?.layer.zPosition = -1
                         view.addSubview(newPoint!)
                     }
-                    let drawEllipse: Bool = (detail.attributes["constraint"] == "ellipse") ? true : false
+                    let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false
                     buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                     paths[detailTag] = details["\(detailTag)"]!.bezierPath()
                 }

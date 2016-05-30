@@ -66,7 +66,7 @@ class xiaDetail: NSObject {
     
     func bezierPath(scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
-        if constraint == "ellipse" {
+        if constraint == constraintEllipse {
             path = UIBezierPath(ovalInRect: self.bezierFrame())
         }
         else {
@@ -111,5 +111,32 @@ class xiaDetail: NSObject {
         return imageView
         // remember to add this point to the view afte calling this method :
         // view.addSubview(newPoint)
+    }
+    
+    func makeVirtPoints() -> [Int: UIImageView] {
+        let nbPoints = points.count
+        var virtPoints = [Int: UIImageView]()
+        
+        for i in 0...nbPoints-1 {
+            let j = (i+1)%nbPoints
+            let point1 = CGPointMake(points[i].center.x, points[i].center.y)
+            let point2 = CGPointMake(points[j].center.x, points[j].center.y)
+            // Get distance between point1 & point2
+            let x = point1.x - point2.x
+            let y = point1.y - point2.y
+            let dist = sqrt(x * x + y * y)
+            if dist > 50 {
+                // We can show a virt point
+                let newPoint = CGPointMake((point1.x+point2.x)/2, (point1.y+point2.y)/2)
+                let image = UIImage(named: "corner")
+                let imageView = UIImageView(image: image!)
+                imageView.alpha = 0.2
+                imageView.tag = tag+100
+                imageView.center = newPoint
+                virtPoints[i] = imageView
+            }
+        }
+        
+        return virtPoints
     }
 }

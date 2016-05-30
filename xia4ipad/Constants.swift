@@ -21,7 +21,7 @@
 
 import UIKit
 
-let dbg = debug(enable: false)
+let dbg = debug(enable: true)
 
 let xmlElements: [String] = ["title", "description", "creator",
                              "rights", "license", "date", "publisher",
@@ -38,3 +38,7 @@ let noEditColor: UIColor = UIColor.greenColor()
 
 let screenWidth = UIScreen.mainScreen().bounds.width
 let screenHeight = UIScreen.mainScreen().bounds.height
+
+let constraintRectangle = "rectangle"
+let constraintEllipse = "ellipse"
+let constraintPolygon = "polygon"

@@ -312,11 +312,11 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                 let currentDetail: AEXMLDocument = AEXMLDocument()
                 let detailTitle = (detail.attributes["title"] != nil) ? detail.attributes["title"]! : ""
                 let detailDescription = (detail.value != nil) ? detail.value! : ""
-                var detailType = "polygon"
+                var detailType = constraintPolygon
                 var detailAttributes = [String:String]()
                 
-                if ( detail.attributes["constraint"] == "rectangle" || detail.attributes["constraint"] == "ellipse" ) {
-                    detailType = (detail.attributes["constraint"] == "rectangle") ? "rect" : "ellipse"
+                if ( detail.attributes["constraint"] == constraintRectangle || detail.attributes["constraint"] == constraintEllipse ) {
+                    detailType = (detail.attributes["constraint"] == constraintRectangle) ? "rect" : constraintEllipse
                     var originPoint = CGPointMake(CGFloat.max, CGFloat.max)
                     var maxPoint = CGPointMake(0.0, 0.0)
                     

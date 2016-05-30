@@ -163,9 +163,9 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                             details["\(detailTag)"]?.constraint = constraint
                         }
                         else {
-                            details["\(detailTag)"]?.constraint = "polygon"
+                            details["\(detailTag)"]?.constraint = constraintPolygon
                         }
-                        let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+                        let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
                         details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
                         buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
                         
@@ -276,7 +276,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     if ( distance < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = point
                         switch details["\(currentDetailTag)"]!.constraint {
-                        case "ellipse":
+                        case constraintEllipse:
                             toMove.center = ploc
                             break
                         default:
@@ -338,7 +338,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     toMove.center = location
                     details["\(detailTag)"]?.points[movingPoint] = toMove
                     break
-                case "ellipse":
+                case constraintEllipse:
                     if (movingPoint % 2 == 0) {
                         let middleHeight = (details["\(detailTag)"]!.points[oppositePoint].center.y - location.y)/2 + location.y
                         toMove.center = CGPointMake(ploc!.x, location.y)
@@ -407,7 +407,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     subview.layer.zPosition = 1
                 }
             }
-            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
             buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
         }
     }
@@ -438,8 +438,14 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     subview.layer.zPosition = 1
                 }
             }
-            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == "ellipse") ? true : false
+            let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
             buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
+            if details["\(detailTag)"]?.constraint == constraintPolygon {
+                let virtPoints = details["\(detailTag)"]?.makeVirtPoints()
+                for virtPoint in virtPoints! {
+                    imgView.addSubview(virtPoint.1)
+                }
+            }
             
             // Save the detail in xml
             if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(detailTag)"]) {
@@ -552,7 +558,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let rectangleAction = UIAlertAction(title: NSLocalizedString("RECTANGLE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "rectangle"
+            self.details["\(self.currentDetailTag)"]?.constraint = constraintRectangle
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
@@ -587,7 +593,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let ellipseAction = UIAlertAction(title: NSLocalizedString("ELLIPSE", comment: ""), style: .Default, handler: { action in
             // Create new detail
             self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "ellipse"
+            self.details["\(self.currentDetailTag)"]?.constraint = constraintEllipse
             
             self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
@@ -622,7 +628,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let polygonAction = UIAlertAction(title: NSLocalizedString("POLYGON", comment: ""), style: .Default, handler: { action in
             // Create new detail object
             self.details["\(self.currentDetailTag)"] = newDetail
-            self.details["\(self.currentDetailTag)"]?.constraint = "polygon"
+            self.details["\(self.currentDetailTag)"]?.constraint = constraintPolygon
             self.xml["xia"]["details"].addChild(name: "detail", value: "", attributes: attributes)
             self.createDetail = true
             self.changeDetailColor(self.currentDetailTag)
@@ -682,7 +688,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
             if detail.1.points.count > 2 {
-                let drawEllipse: Bool = (detail.1.constraint == "ellipse") ? true : false
+                let drawEllipse: Bool = (detail.1.constraint == constraintEllipse) ? true : false
                 if thisDetailTag != tag {
                     buildShape(true, color: noEditColor, tag: thisDetailTag!, points: details["\(thisDetailTag!)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(thisDetailTag!)"]!.locked)
                 }
@@ -698,7 +704,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 }
             }
         }
-        if createDetail && details["\(tag)"]?.constraint == "polygon" {
+        if createDetail && details["\(tag)"]?.constraint == constraintPolygon {
             imgTopBarBkgd.backgroundColor = editColor
         }
         else {
@@ -854,7 +860,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
         items.append(fixedSpace)
-        if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == "polygon" && details["\(currentDetailTag)"]?.points.count > 3) {
+        if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == constraintPolygon && details["\(currentDetailTag)"]?.points.count > 3) {
             items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
             items.append(fixedSpace)
         }
@@ -887,7 +893,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     func stopCreation() {
         createDetail = false
         performFullDetailRemove(currentDetailTag)
-        if details["\(currentDetailTag)"]?.constraint == "polygon" {
+        if details["\(currentDetailTag)"]?.constraint == constraintPolygon {
             currentDetailTag = 0
             changeDetailColor(-1)
             imgTopBarBkgd.backgroundColor = blueColor
