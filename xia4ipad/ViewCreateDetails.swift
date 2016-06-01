@@ -42,6 +42,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     var beginTouchLocation = CGPoint(x: 0, y: 0)
     var editDetail = -1
     var moveDetail = false
+    var virtPoints = [Int: UIImageView]()
+    var polygonPointsOrder = [Int]()
     
     var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     var img = UIImage()
@@ -84,23 +86,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
-        
-        // Add gesture on swipe
-        /*if let recognizers = view.gestureRecognizers {
-        for recognizer in recognizers {
-        view.removeGestureRecognizer(recognizer)
-        }
-        }
-        let gbSelector = Selector("goBack")
-        let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
-        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
-        view.addGestureRecognizer(rightSwipe)
-        
-        let gfSelector = Selector("goForward")
-        let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
-        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
-        view.addGestureRecognizer(leftSwipe)
-        */
         
         let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
@@ -145,15 +130,17 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
                     if pointsArray.count > 2 {
                         var attainablePoints: Int = 0
+                        var pointIndex = 0
                         for point in pointsArray {
                             let coords = point.characters.split{$0 == ";"}.map(String.init)
                             if coords.count == 2 {
                                 let x = convertStringToCGFloat(coords[0]) * scale
                                 let y = convertStringToCGFloat(coords[1]) * scale
-                                let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
+                                let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
                                 newPoint?.layer.zPosition = 1
                                 newPoint?.hidden = true
                                 imgView.addSubview(newPoint!)
+                                pointIndex = pointIndex + 1
                                 if imgView.frame.contains((newPoint?.center)!) {
                                     attainablePoints += 1
                                 }
@@ -184,15 +171,14 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.locationInView(self.imgView)
+        let touchedVirtPoint = touchesVirtPoint(location)
         
-        switch createDetail {
-        case true:
+        if createDetail {
             let detailTag = self.currentDetailTag
             let detailPoints = details["\(detailTag)"]?.points.count
             var addPoint = false
             
-            if ( detailPoints != 0 ) { // Points exists
-                
+            if ( detailPoints != 0 && touchedVirtPoint == -1) { // Points exists
                 // Are we in the polygon ?
                 if (detailPoints > 2) {
                     if (pointInPolygon(details["\(detailTag)"]!.points, touchPoint: location)) {
@@ -206,19 +192,15 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     }
                 }
                 
-                var i=0
-                for point in (details["\(detailTag)"]?.points)! { // should we move an existing point or add a new one
+                for (id, point) in (details["\(detailTag)"]?.points)! { // should we move an existing point or add a new one
                     let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc.x)
-                    let yDist: CGFloat = (location.y - ploc.y)
-                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                    
-                    if ( distance < 20 ) { // We are close to an exiting point, move it
+                    let dist = distance(location, point2: ploc)
+                    if ( dist < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = point
                         toMove.center = location
-                        details["\(detailTag)"]?.points[i] = toMove
-                        movingPoint = i
+                        details["\(detailTag)"]?.points[id] = toMove
+                        movingPoint = id
                         moveDetail = false
                         addPoint = false
                         break
@@ -226,16 +208,35 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     else {
                         addPoint = true
                     }
-                    i += 1
                 }
             }
-            if ( (addPoint || detailPoints == 0) && !moveDetail )  {
+            if touchedVirtPoint != -1 {
+                moveDetail = false
+                addPoint = false
+            }
+            if ( (addPoint || detailPoints == 0 || touchedVirtPoint != -1) && !moveDetail )  {
+                if detailPoints == 0 {
+                    polygonPointsOrder = []
+                }
+                let nbPoints = (details["\(detailTag)"]?.points.count)!
+                movingPoint = (touchedVirtPoint == -1) ? nbPoints : (touchedVirtPoint + 1)
+                if touchedVirtPoint != -1 {
+                    // Change indexes of next points
+                    var i = nbPoints
+                    while i > touchedVirtPoint-1 {
+                        details["\(detailTag)"]?.points[i+1] = details["\(detailTag)"]?.points[i]
+                        i = i - 1
+                        if i > touchedVirtPoint {
+                             polygonPointsOrder[i] = polygonPointsOrder[i]+1
+                        }
+                    }
+                }
+                
                 // Add new point
-                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner")
+                let newPoint = details["\(detailTag)"]?.createPoint(location, imageName: "corner", index: movingPoint)
                 newPoint?.layer.zPosition = 1
                 imgView.addSubview(newPoint!)
-                
-                movingPoint = (details["\(detailTag)"]?.points.count)! - 1
+                polygonPointsOrder.append(movingPoint)
                 
                 // Remove old polygon
                 for subview in imgView.subviews {
@@ -245,9 +246,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 }
                 buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, locked: details["\(detailTag)"]!.locked)
             }
-            
-        default:
+        }
+        else {
             var touchedTag: Int = 0
+            
+            // Look if we try to move a detail
             for detail in details {
                 let (detailTag, detailPoints) = detail
                 if (pointInPolygon(detailPoints.points, touchPoint: location)) {
@@ -265,15 +268,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             // Should we move an existing point ?
             if (currentDetailTag != 0 && !details["\(currentDetailTag)"]!.locked) {
                 movingPoint = -1
-                var i=0
-                for point in (details["\(currentDetailTag)"]?.points)! {
+                for (id, point) in (details["\(currentDetailTag)"]?.points)! {
                     let ploc = point.center
                     
-                    let xDist: CGFloat = (location.x - ploc.x)
-                    let yDist: CGFloat = (location.y - ploc.y)
-                    let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-                    
-                    if ( distance < 20 ) { // We are close to an exiting point, move it
+                    let dist = distance(location, point2: ploc)
+                    if ( dist < 20 ) { // We are close to an exiting point, move it
                         let toMove: UIImageView = point
                         switch details["\(currentDetailTag)"]!.constraint {
                         case constraintEllipse:
@@ -283,16 +282,41 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                             toMove.center = location
                             break
                         }
-                        details["\(currentDetailTag)"]?.points[i] = toMove
-                        movingPoint = i
+                        details["\(currentDetailTag)"]?.points[id] = toMove
+                        movingPoint = id
                         moveDetail = false
                         break
                     }
                     else { // No point here, just move the detail
                         moveDetail = (details["\(currentDetailTag)"]!.locked) ? false : true
                     }
-                    i += 1
                 }
+            }
+            
+            // Should we add a virtual point ?
+            if touchedVirtPoint != -1 {
+                moveDetail = false
+                let nbPoints = (details["\(currentDetailTag)"]?.points.count)!
+                movingPoint = touchedVirtPoint + 1
+                // Change indexes of next points
+                var i = nbPoints
+                while i > touchedVirtPoint-1 {
+                    details["\(currentDetailTag)"]?.points[i+1] = details["\(currentDetailTag)"]?.points[i]
+                    i = i - 1
+                }
+                
+                // Add new point
+                let newPoint = details["\(currentDetailTag)"]?.createPoint(location, imageName: "corner", index: movingPoint)
+                newPoint?.layer.zPosition = 1
+                imgView.addSubview(newPoint!)
+                
+                // Remove old polygon
+                for subview in imgView.subviews {
+                    if subview.tag == (currentDetailTag + 100) {
+                        subview.removeFromSuperview()
+                    }
+                }
+                buildShape(true, color: editColor, tag: currentDetailTag, points: details["\(currentDetailTag)"]!.points, parentView: imgView, locked: details["\(currentDetailTag)"]!.locked)
             }
         }
     }
@@ -302,24 +326,12 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         location = touch.locationInView(self.imgView)
         let detailTag = self.currentDetailTag
         
-        /*if (moveDetail || movingPoint != -1) {
-        // Disable swipe gesture
-        if let recognizers = view.gestureRecognizers {
-        for recognizer in recognizers {
-        view.removeGestureRecognizer(recognizer)
-        }
-        }
-        }*/
-        
         if ( movingPoint != -1 && detailTag != 0 && !details["\(detailTag)"]!.locked ) {
-            let ploc = details["\(detailTag)"]?.points[movingPoint].center
+            let ploc = details["\(detailTag)"]?.points[movingPoint]!.center
             
-            let xDist: CGFloat = (location.x - ploc!.x)
-            let yDist: CGFloat = (location.y - ploc!.y)
-            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-            
-            if ( distance < 200 ) {
-                let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]
+            let dist = distance(location, point2: ploc!)
+            if ( dist < 200 ) {
+                let toMove: UIImageView = details["\(detailTag)"]!.points[movingPoint]!
                 let previousPoint: Int = (movingPoint + 3) % 4
                 let nextPoint: Int = (movingPoint + 1) % 4
                 let oppositePoint: Int = (movingPoint + 2) % 4
@@ -328,30 +340,30 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 switch details["\(detailTag)"]!.constraint {
                 case "rectangle":
                     if (movingPoint % 2 == 0) {
-                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint].center.y)
-                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, location.y)
+                        details["\(detailTag)"]!.points[previousPoint]!.center = CGPointMake(location.x, details["\(detailTag)"]!.points[previousPoint]!.center.y)
+                        details["\(detailTag)"]!.points[nextPoint]!.center = CGPointMake(details["\(detailTag)"]!.points[nextPoint]!.center.x, location.y)
                     }
                     else {
-                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, location.y)
-                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(location.x, details["\(detailTag)"]!.points[nextPoint].center.y)
+                        details["\(detailTag)"]!.points[previousPoint]!.center = CGPointMake(details["\(detailTag)"]!.points[previousPoint]!.center.x, location.y)
+                        details["\(detailTag)"]!.points[nextPoint]!.center = CGPointMake(location.x, details["\(detailTag)"]!.points[nextPoint]!.center.y)
                     }
                     toMove.center = location
                     details["\(detailTag)"]?.points[movingPoint] = toMove
                     break
                 case constraintEllipse:
                     if (movingPoint % 2 == 0) {
-                        let middleHeight = (details["\(detailTag)"]!.points[oppositePoint].center.y - location.y)/2 + location.y
+                        let middleHeight = (details["\(detailTag)"]!.points[oppositePoint]!.center.y - location.y)/2 + location.y
                         toMove.center = CGPointMake(ploc!.x, location.y)
-                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(ploc!.x, details["\(detailTag)"]!.points[movingPoint].center.y)
-                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(details["\(detailTag)"]!.points[previousPoint].center.x, middleHeight)
-                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(details["\(detailTag)"]!.points[nextPoint].center.x, middleHeight)
+                        details["\(detailTag)"]?.points[movingPoint]!.center = CGPointMake(ploc!.x, details["\(detailTag)"]!.points[movingPoint]!.center.y)
+                        details["\(detailTag)"]!.points[previousPoint]!.center = CGPointMake(details["\(detailTag)"]!.points[previousPoint]!.center.x, middleHeight)
+                        details["\(detailTag)"]!.points[nextPoint]!.center = CGPointMake(details["\(detailTag)"]!.points[nextPoint]!.center.x, middleHeight)
                     }
                     else {
-                        let middleWidth = (details["\(detailTag)"]!.points[oppositePoint].center.x - location.x)/2 + location.x
+                        let middleWidth = (details["\(detailTag)"]!.points[oppositePoint]!.center.x - location.x)/2 + location.x
                         toMove.center = CGPointMake(location.x, ploc!.y)
-                        details["\(detailTag)"]?.points[movingPoint].center = CGPointMake(details["\(detailTag)"]!.points[movingPoint].center.x, ploc!.y)
-                        details["\(detailTag)"]!.points[previousPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[previousPoint].center.y)
-                        details["\(detailTag)"]!.points[nextPoint].center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[nextPoint].center.y)
+                        details["\(detailTag)"]?.points[movingPoint]!.center = CGPointMake(details["\(detailTag)"]!.points[movingPoint]!.center.x, ploc!.y)
+                        details["\(detailTag)"]!.points[previousPoint]!.center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[previousPoint]!.center.y)
+                        details["\(detailTag)"]!.points[nextPoint]!.center = CGPointMake(middleWidth, details["\(detailTag)"]!.points[nextPoint]!.center.y)
                     }
                     break
                 default:
@@ -362,8 +374,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
         }
         
-        switch createDetail {
-        case true:
+        if createDetail {
             if (moveDetail) {
                 movingPoint = -1
                 let deltaX = location.x - movingCoords.x
@@ -377,9 +388,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 }
                 movingCoords = location
             }
-            break
-            
-        default:
+        }
+        else {
             if ( editDetail != -1) {
                 if (moveDetail) {
                     movingPoint = -1
@@ -418,10 +428,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         
         // did we move after touches began ?
         if ( currentDetailTag != 0 && (moveDetail || details["\(currentDetailTag)"]!.locked) ) {
-            let xDist: CGFloat = (location.x - beginTouchLocation.x)
-            let yDist: CGFloat = (location.y - beginTouchLocation.y)
-            let distance: CGFloat = sqrt((xDist * xDist) + (yDist * yDist))
-            if distance < 1 {
+            let dist = distance(location, point2: beginTouchLocation)
+            if dist < 1 {
                 //performSegueWithIdentifier("viewDetail", sender: self)
             }
         }
@@ -441,8 +449,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
             buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
             if details["\(detailTag)"]?.constraint == constraintPolygon {
-                let virtPoints = details["\(detailTag)"]?.makeVirtPoints()
-                for virtPoint in virtPoints! {
+                virtPoints = details["\(detailTag)"]!.makeVirtPoints()
+                for virtPoint in virtPoints {
                     imgView.addSubview(virtPoint.1)
                 }
             }
@@ -457,12 +465,10 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             let _ = writeXML(xml, path: "\(filePath).xml")
         }
         
-        switch createDetail {
-        case true:
+        if createDetail {
             moveDetail = false
-            break
-            
-        default:
+        }
+        else {
             if (editDetail == -1 && movingPoint == -1) {
                 changeDetailColor(-1)
                 currentDetailTag = 0
@@ -471,27 +477,9 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             else {
                 editDetail = -1
             }
-            break
         }
         
         setBtnsIcons()
-        
-        // Add gesture on swipe
-        /*if let recognizers = view.gestureRecognizers {
-        for recognizer in recognizers {
-        view.removeGestureRecognizer(recognizer)
-        }
-        }
-        let gbSelector = Selector("goBack")
-        let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
-        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
-        view.addGestureRecognizer(rightSwipe)
-        
-        let gfSelector = Selector("goForward")
-        let leftSwipe = UISwipeGestureRecognizer(target: self, action: gfSelector )
-        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
-        view.addGestureRecognizer(leftSwipe)
-        */
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -565,16 +553,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.changeDetailColor(self.currentDetailTag)
             
             // Now build the rectangle
-            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner")
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 30), imageName: "corner", index: 0)
             newPoint0?.layer.zPosition = 1
             self.imgView.addSubview(newPoint0!)
-            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner")
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 30), imageName: "corner", index: 1)
             newPoint1?.layer.zPosition = 1
             self.imgView.addSubview(newPoint1!)
-            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner")
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 150), imageName: "corner", index: 2)
             newPoint2?.layer.zPosition = 1
             self.imgView.addSubview(newPoint2!)
-            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner")
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(100, 150), imageName: "corner", index: 3)
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
             buildShape(true, color: editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, locked: self.details["\(self.currentDetailTag)"]!.locked)
@@ -600,16 +588,16 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             self.changeDetailColor(self.currentDetailTag)
             
             // Now build the rectangle
-            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner")
+            let newPoint0 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 50), imageName: "corner", index: 0)
             newPoint0?.layer.zPosition = 1
             self.imgView.addSubview(newPoint0!)
-            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner")
+            let newPoint1 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(400, 110), imageName: "corner", index: 1)
             newPoint1?.layer.zPosition = 1
             self.imgView.addSubview(newPoint1!)
-            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner")
+            let newPoint2 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(300, 170), imageName: "corner", index: 2)
             newPoint2?.layer.zPosition = 1
             self.imgView.addSubview(newPoint2!)
-            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner")
+            let newPoint3 = self.details["\(self.currentDetailTag)"]?.createPoint(CGPointMake(200, 110), imageName: "corner", index: 3)
             newPoint3?.layer.zPosition = 1
             self.imgView.addSubview(newPoint3!)
             buildShape(true, color: editColor, tag: self.currentDetailTag, points: self.details["\(self.currentDetailTag)"]!.points, parentView: self.imgView, ellipse: true, locked: self.details["\(self.currentDetailTag)"]!.locked)
@@ -663,7 +651,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func changeDetailColor(tag: Int) {
-        let imgName = "corner"
         // Change other details color
         for detail in details {
             let thisDetailTag = NSNumberFormatter().numberFromString(detail.0)?.integerValue
@@ -674,17 +661,13 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     subview.layer.zPosition = -1
                 }
                 if subview.tag == thisDetailTag! { // points
-                    let location = CGPointMake(subview.frame.origin.x + subview.frame.width/2, subview.frame.origin.y + subview.frame.height/2)
-                    details["\(thisDetailTag!)"]?.points.removeFirst()
-                    subview.tag = thisDetailTag! + 200
-                    subview.layer.zPosition = -1
-                    
-                    let newPoint: UIView = (details["\(thisDetailTag!)"]?.createPoint(location, imageName: imgName))!
-                    newPoint.layer.zPosition = 1
+                    subview.layer.zPosition = 1
                     if thisDetailTag != tag {
-                        newPoint.hidden = true
+                        subview.hidden = true
                     }
-                    imgView.addSubview(newPoint)
+                    else {
+                        subview.hidden = false
+                    }
                 }
             }
             if detail.1.points.count > 2 {
@@ -731,6 +714,19 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
+    func touchesVirtPoint(location: CGPoint) -> Int {
+        var touched = -1
+        for virtPoint in virtPoints {
+            let dist = distance(location, point2: virtPoint.1.center)
+            if dist < 20 {
+                touched = virtPoint.0
+                break
+            }
+        }
+        
+        return touched
+    }
+    
     func deleteDetail() {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
@@ -764,6 +760,12 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             currentDetailTag = 0
             performSegueWithIdentifier("ViewDetailInfos", sender: self)
         }
+    }
+    
+    func distance(point1: CGPoint, point2: CGPoint) -> CGFloat {
+        let x = point1.x - point2.x
+        let y = point1.y - point2.y
+        return sqrt(x * x + y * y)
     }
     
     func export() {
@@ -813,8 +815,23 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let detailTag = self.currentDetailTag
         if details["\(detailTag)"]?.points.count > 3 {
             // remove last point
-            details["\(detailTag)"]?.points.last?.removeFromSuperview()
-            details["\(detailTag)"]?.points.removeLast()
+            let lastPoint = polygonPointsOrder.last!
+            details["\(detailTag)"]?.points[lastPoint]?.removeFromSuperview()
+            details["\(detailTag)"]?.points[lastPoint] = nil
+            
+            // Update polygonPointsOrder indexes
+            for id in polygonPointsOrder {
+                if id > lastPoint - 1 {
+                    polygonPointsOrder[id] = polygonPointsOrder[id] - 1
+                }
+            }
+            
+            // Update points index
+            for i in lastPoint...(polygonPointsOrder.count - 1) {
+                details["\(detailTag)"]?.points[i] = details["\(detailTag)"]?.points[i+1]
+            }
+            
+            polygonPointsOrder.removeLast()
             
             // Remove old polygon
             for subview in imgView.subviews {
@@ -858,8 +875,10 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
         items.append(UIBarButtonItem(title: (itemText), style: .Plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil))
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
-        items.append(fixedSpace)
+        if !createDetail {
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
+            items.append(fixedSpace)
+        }
         if (currentDetailTag != 0 && createDetail && details["\(currentDetailTag)"]!.constraint == constraintPolygon && details["\(currentDetailTag)"]?.points.count > 3) {
             items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
             items.append(fixedSpace)
@@ -896,8 +915,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if details["\(currentDetailTag)"]?.constraint == constraintPolygon {
             currentDetailTag = 0
             changeDetailColor(-1)
-            imgTopBarBkgd.backgroundColor = blueColor
         }
+        imgTopBarBkgd.backgroundColor = blueColor
         setBtnsIcons()
         
         // Add double tap gesture

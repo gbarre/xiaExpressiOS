@@ -219,7 +219,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if segueIndex == -1 {
             segueIndex = 0
         }
-        if arrayNames.count > 0 {
+        if (segue.identifier == "Add") {
+            if let controller:ViewMenuAddResource = segue.destinationViewController as? ViewMenuAddResource {
+                controller.ViewCollection = self
+            }
+        }
+        else if arrayNames.count > 0 {
             let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
             let nameToSegue = "\(arrayNames[segueIndex])"
             let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
@@ -255,11 +260,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     controller.xml = xmlToSegue
                     controller.ViewCollection = self
                 }
-            }
-        }
-        if (segue.identifier == "Add") {
-            if let controller:ViewMenuAddResource = segue.destinationViewController as? ViewMenuAddResource {
-                controller.ViewCollection = self
             }
         }
     }

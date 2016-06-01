@@ -30,12 +30,12 @@ class xiaTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
         // Single point detail
-        singlePointDetail.createPoint(CGPointMake(10, 10), imageName: "corner")
+        singlePointDetail.createPoint(CGPointMake(10, 10), imageName: "corner", index: 0)
         
         // Multiple points detail
-        multiplePointsDetail.createPoint(CGPointMake(10, 10), imageName: "corner")
-        multiplePointsDetail.createPoint(CGPointMake(200.5,150), imageName: "corner")
-        multiplePointsDetail.createPoint(CGPointMake(120,150.5), imageName: "corner")
+        multiplePointsDetail.createPoint(CGPointMake(10, 10), imageName: "corner", index: 0)
+        multiplePointsDetail.createPoint(CGPointMake(200.5,150), imageName: "corner", index: 1)
+        multiplePointsDetail.createPoint(CGPointMake(120,150.5), imageName: "corner", index: 2)
     }
     
     override func tearDown() {
@@ -65,7 +65,7 @@ class xiaTests: XCTestCase {
     }
     
     func testXiaDetailCreatePoint() {
-        let output = singlePointDetail.points.first
+        let output = singlePointDetail.points[0]
         let expectedOutput = UIImageView(image: UIImage(named: "corner"))
         expectedOutput.center = CGPointMake(10, 10)
         expectedOutput.tag = 1

@@ -94,12 +94,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                     
                     // Add points to detail
                     let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                    var pointIndex = 0
                     for point in pointsArray {
                         let coords = point.characters.split{$0 == ";"}.map(String.init)
                         let x = convertStringToCGFloat(coords[0]) * scale + xSpace
                         let y = convertStringToCGFloat(coords[1]) * scale + ySpace
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner")
+                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
                         newPoint?.layer.zPosition = -1
+                        pointIndex = pointIndex + 1
                         view.addSubview(newPoint!)
                     }
                     let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false

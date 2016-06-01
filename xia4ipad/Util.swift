@@ -21,13 +21,13 @@
 
 import UIKit
 
-func buildShape(fill: Bool, color: UIColor, tag: Int, points: Array<AnyObject>, parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
+func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView], parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
-    switch fill {
-    case true:
+    if fill {
         shapeArg = (ellipse) ? 3 : 1
-    default:
+    }
+    else {
         shapeArg = (ellipse) ? 2 : 0
     }
     var xMin: CGFloat = UIScreen.mainScreen().bounds.width
@@ -165,17 +165,17 @@ func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     return (check) ? checkXML(xml) : xml
 }
 
-func pointInPolygon(points: AnyObject, touchPoint: CGPoint) -> Bool {
+func pointInPolygon(points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     // translate from C : http://alienryderflex.com/polygon/
     let polyCorners = points.count
     var j = polyCorners - 1
     var oddNodes:Bool = false
     
     for i in 0 ..< polyCorners {
-        if ( (points[i].center.y < touchPoint.y && points[j].center.y >= touchPoint.y
-            || points[j].center.y < touchPoint.y && points[i].center.y >= touchPoint.y)
-            && (points[i].center.x <= touchPoint.x || points[j].center.x <= touchPoint.x) ) {
-                if ( points[i].center.x + (touchPoint.y - points[i].center.y) / (points[j].center.y - points[i].center.y) * (points[j].center.x - points[i].center.x) < touchPoint.x ) {
+        if ( (points[i]!.center.y < touchPoint.y && points[j]!.center.y >= touchPoint.y
+            || points[j]!.center.y < touchPoint.y && points[i]!.center.y >= touchPoint.y)
+            && (points[i]!.center.x <= touchPoint.x || points[j]!.center.x <= touchPoint.x) ) {
+                if ( points[i]!.center.x + (touchPoint.y - points[i]!.center.y) / (points[j]!.center.y - points[i]!.center.y) * (points[j]!.center.x - points[i]!.center.x) < touchPoint.x ) {
                     oddNodes = !oddNodes
                 }
         }

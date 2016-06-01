@@ -24,11 +24,11 @@ import UIKit
 class ShapeView: UIView {
     
     var currentShapeType: Int = 0
-    var arrayPoints = [AnyObject]()
+    var arrayPoints = [Int: UIImageView]()
     var origin: CGPoint = CGPointMake(0, 0)
     var color: UIColor = UIColor.blackColor()
     
-    init(frame: CGRect, shape: Int, points: Array<AnyObject>, color: UIColor) {
+    init(frame: CGRect, shape: Int, points: [Int: UIImageView], color: UIColor) {
         super.init(frame: frame)
         self.currentShapeType = shape
         self.arrayPoints = points
@@ -54,7 +54,7 @@ class ShapeView: UIView {
     func drawLines() {
         let ctx = UIGraphicsGetCurrentContext()
         
-        var beginPoint = arrayPoints[0].center
+        var beginPoint = arrayPoints[0]!.center
         beginPoint.x = beginPoint.x - origin.x
         beginPoint.y = beginPoint.y - origin.y
         let nbPoints = arrayPoints.count
@@ -62,7 +62,7 @@ class ShapeView: UIView {
         CGContextBeginPath(ctx)
         CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
         for i in 1 ..< nbPoints {
-            var point = arrayPoints[i].center
+            var point = arrayPoints[i]!.center
             point.x = point.x - origin.x
             point.y = point.y - origin.y
             CGContextAddLineToPoint(ctx, point.x, point.y)
@@ -79,15 +79,14 @@ class ShapeView: UIView {
     func drawPolygon() {
         let ctx = UIGraphicsGetCurrentContext()
         
-        var beginPoint = arrayPoints[0].center
+        var beginPoint = arrayPoints[0]!.center
         beginPoint.x = beginPoint.x - origin.x
         beginPoint.y = beginPoint.y - origin.y
         let nbPoints = arrayPoints.count
-        
         CGContextBeginPath(ctx)
         CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
         for i in 1 ..< nbPoints {
-            var point = arrayPoints[i].center
+            var point = arrayPoints[i]!.center
             point.x = point.x - origin.x
             point.y = point.y - origin.y
             CGContextAddLineToPoint(ctx, point.x, point.y)
@@ -107,7 +106,7 @@ class ShapeView: UIView {
         CGContextSetStrokeColorWithColor(ctx, alphaColor)
         CGContextSetLineWidth(ctx, 2.5)
         
-        let size = CGSize(width: arrayPoints[1].center.x - arrayPoints[3].center.x, height: arrayPoints[2].center.y - arrayPoints[0].center.y)
+        let size = CGSize(width: arrayPoints[1]!.center.x - arrayPoints[3]!.center.x, height: arrayPoints[2]!.center.y - arrayPoints[0]!.center.y)
         
         let rectangle = CGRectMake(5, 5, abs(size.width), abs(size.height))
         CGContextAddEllipseInRect(ctx, rectangle)
@@ -115,7 +114,7 @@ class ShapeView: UIView {
     }
     
     func drawEllipseFilled() {
-        let size = CGSize(width: arrayPoints[1].center.x - arrayPoints[3].center.x, height: arrayPoints[2].center.y - arrayPoints[0].center.y)
+        let size = CGSize(width: arrayPoints[1]!.center.x - arrayPoints[3]!.center.x, height: arrayPoints[2]!.center.y - arrayPoints[0]!.center.y)
         
         let ovalPath = UIBezierPath(ovalInRect: CGRectMake(5, 5, abs(size.width), abs(size.height)))
         color.colorWithAlphaComponent(0.5).setFill()

@@ -23,7 +23,7 @@ import UIKit
 
 class xiaDetail: NSObject {
 
-    var points = [UIImageView]()
+    var points = [Int: UIImageView]()
     var tag: Int = 0
     var scale: CGFloat = 1.0
     var constraint: String = ""
@@ -31,7 +31,7 @@ class xiaDetail: NSObject {
     
     init(tag: Int, scale: CGFloat){
         self.tag = tag
-        self.points = []
+        self.points = [:]
         self.scale = scale
     }
     
@@ -45,7 +45,7 @@ class xiaDetail: NSObject {
         var yMin: CGFloat = UIScreen.mainScreen().bounds.height
         var yMax: CGFloat = 0
         // Get dimensions of the shape
-        for point in points {
+        for (_,point) in points {
             let xPoint = point.center.x
             let yPoint = point.center.y
             if ( xPoint < xMin ) {
@@ -70,8 +70,9 @@ class xiaDetail: NSObject {
             path = UIBezierPath(ovalInRect: self.bezierFrame())
         }
         else {
-            for point in points {
-                if (point == points.first) {
+            let sortedPoints = points.sort{$0.0 < $1.0}
+            for (_,point) in sortedPoints {
+                if (point == sortedPoints[0].1) {
                     path.moveToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
                 }
                 else {
@@ -90,7 +91,8 @@ class xiaDetail: NSObject {
         else {
             
             var path: String = ""
-            for point in points {
+            let sortedPoints = points.sort{$0.0 < $1.0}
+            for (_,point) in sortedPoints {
                 let x = point.center.x / scale
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
@@ -101,12 +103,12 @@ class xiaDetail: NSObject {
         }
     }
     
-    func createPoint(location: CGPoint, imageName: String) -> UIImageView {
+    func createPoint(location: CGPoint, imageName: String, index: Int) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location
         imageView.tag = tag
-        points.append(imageView)
+        points[index] = imageView
         
         return imageView
         // remember to add this point to the view afte calling this method :
@@ -119,8 +121,8 @@ class xiaDetail: NSObject {
         
         for i in 0...nbPoints-1 {
             let j = (i+1)%nbPoints
-            let point1 = CGPointMake(points[i].center.x, points[i].center.y)
-            let point2 = CGPointMake(points[j].center.x, points[j].center.y)
+            let point1 = CGPointMake(points[i]!.center.x, points[i]!.center.y)
+            let point2 = CGPointMake(points[j]!.center.x, points[j]!.center.y)
             // Get distance between point1 & point2
             let x = point1.x - point2.x
             let y = point1.y - point2.y
