@@ -448,7 +448,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
             let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
             buildShape(true, color: editColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
-            if details["\(detailTag)"]?.constraint == constraintPolygon {
+            let locked = details["\(detailTag)"]!.locked
+            if (details["\(detailTag)"]?.constraint == constraintPolygon && !locked) {
                 virtPoints = details["\(detailTag)"]!.makeVirtPoints()
                 for virtPoint in virtPoints {
                     imgView.addSubview(virtPoint.1)
