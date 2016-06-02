@@ -81,9 +81,6 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         
         var htmlString = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
         // Build the webView
-        htmlString = htmlString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        htmlString = htmlString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        htmlString = htmlString.stringByReplacingOccurrencesOfString("\n", withString: "<br />")
         if !landscape {
             converter.videoWidth = 360
             converter.videoHeight = 210
