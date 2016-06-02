@@ -822,7 +822,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             
             // Update polygonPointsOrder indexes
             for id in polygonPointsOrder {
-                if id > lastPoint - 1 {
+                if id > lastPoint - 1  && id != polygonPointsOrder.count {
                     polygonPointsOrder[id] = polygonPointsOrder[id] - 1
                 }
             }
