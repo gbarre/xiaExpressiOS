@@ -123,8 +123,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var btnSettingsState: UIBarButtonItem!
     @IBAction func btnSettings(_ sender: AnyObject) {
-        UIApplication.shared().openURL(
-            URL(string: UIApplicationOpenSettingsURLString)!)
+        if #available(iOS 10.0, *) {
+            UIApplication.shared().open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+        } else {
+            // Fallback on earlier versions
+            UIApplication.shared().openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+        }
     }
     
     @IBOutlet weak var btnCreateState: UIBarButtonItem!

@@ -208,7 +208,12 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if navigationType == UIWebViewNavigationType.linkClicked {
-            UIApplication.shared().openURL(request.url!)
+            if #available(iOS 10.0, *) {
+                UIApplication.shared().open(request.url!, options: [:], completionHandler: nil)
+            } else {
+                // Fallback on earlier versions
+                UIApplication.shared().openURL(request.url!)
+            }
             return false
         }
         return true
