@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>xia4ipad.xcscheme</key>
+		<key>xia.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,17 +12,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>F0BBA6DB1C11CD3000173A3A</key>
+		<key>F03EA5C41D12EB02008678BC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F0BBA6E91C11CD7400173A3A</key>
+		<key>F03EA5D81D12EB02008678BC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F0F15E641BB6FCDF00268F06</key>
+		<key>F03EA5E31D12EB02008678BC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

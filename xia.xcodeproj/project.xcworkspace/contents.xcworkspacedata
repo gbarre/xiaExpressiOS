@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/guillaume/Documents/swift/ios/xia4ipad/xia.xcodeproj">
+      location = "self:xia.xcodeproj">
    </FileRef>
 </Workspace>
