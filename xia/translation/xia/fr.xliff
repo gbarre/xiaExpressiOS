@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
-  <file original="xia4ipad/Base.lproj/LaunchScreen.storyboard" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="xia/Base.lproj/LaunchScreen.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
     </header>
     <body>
       <trans-unit id="h3g-i8-Bnm.text">
@@ -12,154 +12,154 @@
       </trans-unit>
     </body>
   </file>
-  <file original="xia4ipad/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="xia/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
     </header>
     <body>
       <trans-unit id="0iM-yM-5dr.text">
         <source>Publisher:</source>
-        <target>Éditeur :</target>
+        <target>Publisher:</target>
         <note>Class = "UILabel"; text = "Publisher:"; ObjectID = "0iM-yM-5dr";</note>
       </trans-unit>
       <trans-unit id="1Jo-GE-FsJ.text">
         <source>Rights:</source>
-        <target>Droits :</target>
+        <target>Rights:</target>
         <note>Class = "UILabel"; text = "Rights:"; ObjectID = "1Jo-GE-FsJ";</note>
       </trans-unit>
       <trans-unit id="1eg-c7-9lt.text">
         <source>Enable Zoom :</source>
-        <target>Activer le zoom :</target>
+        <target>Enable Zoom :</target>
         <note>Class = "UILabel"; text = "Enable Zoom :"; ObjectID = "1eg-c7-9lt";</note>
       </trans-unit>
       <trans-unit id="2tJ-dC-njn.text">
         <source>Title:</source>
-        <target>Titre :</target>
+        <target>Title:</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "2tJ-dC-njn";</note>
       </trans-unit>
       <trans-unit id="6ZW-hF-Iyq.text">
         <source>Xia Tablet</source>
-        <target>Xia Tablette</target>
+        <target>Xia Tablet</target>
         <note>Class = "UILabel"; text = "Xia Tablet"; ObjectID = "6ZW-hF-Iyq";</note>
       </trans-unit>
       <trans-unit id="9Qo-Kh-Y2a.text">
         <source>Creator:</source>
-        <target>Auteur :</target>
+        <target>Creator:</target>
         <note>Class = "UILabel"; text = "Creator:"; ObjectID = "9Qo-Kh-Y2a";</note>
       </trans-unit>
       <trans-unit id="72e-zG-aQJ.text">
         <source>Source:</source>
-        <target>Source :</target>
+        <target>Source:</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ";</note>
       </trans-unit>
       <trans-unit id="74f-sH-8RF.title">
         <source>Create new document</source>
-        <target>Créer un nouveau document</target>
+        <target>Create new document</target>
         <note>Class = "UINavigationItem"; title = "Create new document"; ObjectID = "74f-sH-8RF";</note>
       </trans-unit>
       <trans-unit id="AFw-Te-aYH.text">
         <source>Identifier:</source>
-        <target>Identifiant :</target>
+        <target>Identifier:</target>
         <note>Class = "UILabel"; text = "Identifier:"; ObjectID = "AFw-Te-aYH";</note>
       </trans-unit>
       <trans-unit id="Bz9-wZ-fV4.title">
         <source>Title</source>
-        <target>Titre</target>
+        <target>Title</target>
         <note>Class = "UINavigationItem"; title = "Title"; ObjectID = "Bz9-wZ-fV4";</note>
       </trans-unit>
       <trans-unit id="CKh-Gp-nNv.text">
         <source>Relation:</source>
-        <target>Relation :</target>
+        <target>Relation:</target>
         <note>Class = "UILabel"; text = "Relation:"; ObjectID = "CKh-Gp-nNv";</note>
       </trans-unit>
       <trans-unit id="CPm-pq-eaL.text">
         <source>Date:</source>
-        <target>Date :</target>
+        <target>Date:</target>
         <note>Class = "UILabel"; text = "Date:"; ObjectID = "CPm-pq-eaL";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[0]">
         <source>Metas 1</source>
-        <target>Métas 1</target>
+        <target>Metas 1</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "Metas 1"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[1]">
         <source>Metas 2</source>
-        <target>Métas 2</target>
+        <target>Metas 2</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Metas 2"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[2]">
         <source>Metas 3</source>
-        <target>Métas 3</target>
+        <target>Metas 3</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Metas 3"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[3]">
         <source>Image Infos</source>
-        <target>Infos Image</target>
+        <target>Image Infos</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[3] = "Image Infos"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="HaU-RO-jTp.text">
         <source>License:</source>
-        <target>Licence:</target>
+        <target>License:</target>
         <note>Class = "UILabel"; text = "License:"; ObjectID = "HaU-RO-jTp";</note>
       </trans-unit>
       <trans-unit id="OOl-89-UZY.text">
         <source>License :</source>
-        <target>Licence :</target>
+        <target>License :</target>
         <note>Class = "UILabel"; text = "License :"; ObjectID = "OOl-89-UZY";</note>
       </trans-unit>
       <trans-unit id="Pa1-Lr-9JK.text">
         <source>Languages:</source>
-        <target>Langues :</target>
+        <target>Languages:</target>
         <note>Class = "UILabel"; text = "Languages:"; ObjectID = "Pa1-Lr-9JK";</note>
       </trans-unit>
       <trans-unit id="PqV-gI-xQQ.text">
         <source>Identifier:</source>
-        <target>Identifiant :</target>
+        <target>Identifier:</target>
         <note>Class = "UILabel"; text = "Identifier:"; ObjectID = "PqV-gI-xQQ";</note>
       </trans-unit>
       <trans-unit id="Prj-CR-6X0.text">
         <source>Show details:</source>
-        <target>Afficher les détails :</target>
+        <target>Show details:</target>
         <note>Class = "UILabel"; text = "Show details:"; ObjectID = "Prj-CR-6X0";</note>
       </trans-unit>
       <trans-unit id="Qb8-OO-2vj.text">
         <source>Contributors:</source>
-        <target>Collaborateurs :</target>
+        <target>Contributors:</target>
         <note>Class = "UILabel"; text = "Contributors:"; ObjectID = "Qb8-OO-2vj";</note>
       </trans-unit>
       <trans-unit id="RiH-iE-LMf.text">
         <source>Title:</source>
-        <target>Titre :</target>
+        <target>Title:</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "RiH-iE-LMf";</note>
       </trans-unit>
       <trans-unit id="S4K-WX-yik.title">
         <source>Edit</source>
-        <target>Modifier</target>
+        <target>Edit</target>
         <note>Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "S4K-WX-yik";</note>
       </trans-unit>
       <trans-unit id="TDA-2G-8Io.title">
         <source>Photo Album</source>
-        <target>Album Photo</target>
+        <target>Photo Album</target>
         <note>Class = "UINavigationItem"; title = "Photo Album"; ObjectID = "TDA-2G-8Io";</note>
       </trans-unit>
       <trans-unit id="TOp-EQ-Cf2.text">
         <source>Keywords:</source>
-        <target>Mots clés :</target>
+        <target>Keywords:</target>
         <note>Class = "UILabel"; text = "Keywords:"; ObjectID = "TOp-EQ-Cf2";</note>
       </trans-unit>
       <trans-unit id="Ty8-Oi-H75.text">
         <source>Read Only:</source>
-        <target>Lecture seule :</target>
+        <target>Read Only:</target>
         <note>Class = "UILabel"; text = "Read Only:"; ObjectID = "Ty8-Oi-H75";</note>
       </trans-unit>
       <trans-unit id="UCD-k4-NMh.text">
         <source>Title:</source>
-        <target>Titre :</target>
+        <target>Title:</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "UCD-k4-NMh";</note>
       </trans-unit>
       <trans-unit id="V9p-SZ-4yS.text">
         <source>Lock detail :</source>
-        <target>Verrouiller :</target>
+        <target>Lock detail :</target>
         <note>Class = "UILabel"; text = "Lock detail :"; ObjectID = "V9p-SZ-4yS";</note>
       </trans-unit>
       <trans-unit id="VlB-Ig-h1b.text">
@@ -169,7 +169,7 @@
       </trans-unit>
       <trans-unit id="ZHU-7B-zUy.title">
         <source>Share</source>
-        <target>Partager</target>
+        <target>Share</target>
         <note>Class = "UITableViewController"; title = "Share"; ObjectID = "ZHU-7B-zUy";</note>
       </trans-unit>
       <trans-unit id="a2S-of-Dk2.text">
@@ -179,57 +179,57 @@
       </trans-unit>
       <trans-unit id="cwz-uV-RB1.title">
         <source>Detail Info</source>
-        <target>Info</target>
+        <target>Detail Info</target>
         <note>Class = "UIViewController"; title = "Detail Info"; ObjectID = "cwz-uV-RB1";</note>
       </trans-unit>
       <trans-unit id="fgB-2y-w7g.text">
         <source>Rights:</source>
-        <target>Droits :</target>
+        <target>Rights:</target>
         <note>Class = "UILabel"; text = "Rights:"; ObjectID = "fgB-2y-w7g";</note>
       </trans-unit>
       <trans-unit id="gEh-52-awz.text">
         <source>Languages:</source>
-        <target>Langues :</target>
+        <target>Languages:</target>
         <note>Class = "UILabel"; text = "Languages:"; ObjectID = "gEh-52-awz";</note>
       </trans-unit>
       <trans-unit id="gLO-k7-ciw.text">
         <source>Contributors:</source>
-        <target>Collaborateurs :</target>
+        <target>Contributors:</target>
         <note>Class = "UILabel"; text = "Contributors:"; ObjectID = "gLO-k7-ciw";</note>
       </trans-unit>
       <trans-unit id="gsk-9I-6e2.text">
         <source>Keywords:</source>
-        <target>Mots clés :</target>
+        <target>Keywords:</target>
         <note>Class = "UILabel"; text = "Keywords:"; ObjectID = "gsk-9I-6e2";</note>
       </trans-unit>
       <trans-unit id="i3A-TS-Y6z.placeholder">
         <source>Detail title...</source>
-        <target>Titre ...</target>
+        <target>Detail title...</target>
         <note>Class = "UITextField"; placeholder = "Detail title..."; ObjectID = "i3A-TS-Y6z";</note>
       </trans-unit>
       <trans-unit id="jEZ-dQ-SXu.text">
         <source>Source:</source>
-        <target>Source :</target>
+        <target>Source:</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "jEZ-dQ-SXu";</note>
       </trans-unit>
       <trans-unit id="kGq-br-nQL.text">
         <source>Description:</source>
-        <target>Description :</target>
+        <target>Description:</target>
         <note>Class = "UILabel"; text = "Description:"; ObjectID = "kGq-br-nQL";</note>
       </trans-unit>
       <trans-unit id="kQc-PX-Qno.text">
         <source>Coverage:</source>
-        <target>Portée :</target>
+        <target>Coverage:</target>
         <note>Class = "UILabel"; text = "Coverage:"; ObjectID = "kQc-PX-Qno";</note>
       </trans-unit>
       <trans-unit id="kUw-Ha-Bf8.text">
         <source>Date:</source>
-        <target>Date :</target>
+        <target>Date:</target>
         <note>Class = "UILabel"; text = "Date:"; ObjectID = "kUw-Ha-Bf8";</note>
       </trans-unit>
       <trans-unit id="kgj-zc-4Qp.title">
         <source>Share</source>
-        <target>Partager</target>
+        <target>Share</target>
         <note>Class = "UINavigationItem"; title = "Share"; ObjectID = "kgj-zc-4Qp";</note>
       </trans-unit>
       <trans-unit id="mpy-Pt-Gc9.title">
@@ -239,12 +239,12 @@
       </trans-unit>
       <trans-unit id="o0j-WH-kyQ.text">
         <source>Relation:</source>
-        <target>Relation :</target>
+        <target>Relation:</target>
         <note>Class = "UILabel"; text = "Relation:"; ObjectID = "o0j-WH-kyQ";</note>
       </trans-unit>
       <trans-unit id="pK2-BQ-1RC.text">
         <source>Detail description...</source>
-        <target>Description ...</target>
+        <target>Detail description...</target>
         <note>Class = "UITextView"; text = "Detail description..."; ObjectID = "pK2-BQ-1RC";</note>
       </trans-unit>
       <trans-unit id="qNg-bF-MbM.text">
@@ -259,17 +259,17 @@
       </trans-unit>
       <trans-unit id="ubQ-BF-bVa.text">
         <source>Coverage:</source>
-        <target>Portée :</target>
+        <target>Coverage:</target>
         <note>Class = "UILabel"; text = "Coverage:"; ObjectID = "ubQ-BF-bVa";</note>
       </trans-unit>
       <trans-unit id="vBa-jZ-peo.text">
         <source>Publisher:</source>
-        <target>Éditeur :</target>
+        <target>Publisher:</target>
         <note>Class = "UILabel"; text = "Publisher:"; ObjectID = "vBa-jZ-peo";</note>
       </trans-unit>
       <trans-unit id="vF0-pf-13y.text">
         <source>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</source>
-        <target>Texte...</target>
+        <target>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</target>
         <note>Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "vF0-pf-13y";</note>
       </trans-unit>
       <trans-unit id="xod-8C-OKb.title">
@@ -279,24 +279,24 @@
       </trans-unit>
       <trans-unit id="yao-fD-b5p.text">
         <source>Creator:</source>
-        <target>Auteur :</target>
+        <target>Creator:</target>
         <note>Class = "UILabel"; text = "Creator:"; ObjectID = "yao-fD-b5p";</note>
       </trans-unit>
       <trans-unit id="ysm-4r-fEH.text">
         <source>Description:</source>
-        <target>Description :</target>
+        <target>Description:</target>
         <note>Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH";</note>
       </trans-unit>
       <trans-unit id="zXw-1L-ZiN.normalTitle">
         <source>Take a photo</source>
-        <target>Prendre une photo</target>
+        <target>Take a photo</target>
         <note>Class = "UIButton"; normalTitle = "Take a photo"; ObjectID = "zXw-1L-ZiN";</note>
       </trans-unit>
     </body>
   </file>
-  <file original="xia4ipad/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="xia/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
     </header>
     <body>
       <trans-unit id="CFBundleDisplayName">
@@ -306,13 +306,13 @@
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
       <trans-unit id="CFBundleShortVersionString">
-        <source>0.15</source>
+        <source>1.0</source>
       </trans-unit>
     </body>
   </file>
-  <file original="xia4ipad/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="xia/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
     </header>
     <body>
       <trans-unit id="CANCEL">
@@ -393,6 +393,11 @@
       <trans-unit id="DOUBLE_CHECK">
         <source>DOUBLE_CHECK</source>
         <target>Saisir à nouveau</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DUPLICATE">
+        <source>DUPLICATE</source>
+        <target>Dupliquer le fichier</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="EDIT">
@@ -527,9 +532,244 @@
       </trans-unit>
     </body>
   </file>
-  <file original="xia4ipadTests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="xiaTests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="7.3.1" build-num="7D1014"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.0</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="xiaTests/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+    </header>
+    <body>
+      <trans-unit id="CANCEL">
+        <source>CANCEL</source>
+        <target>Annuler</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="COLLECTION">
+        <source>COLLECTION</source>
+        <target>Collection</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="CONTRIBUTORS">
+        <source>CONTRIBUTORS</source>
+        <target>Collaborateurs : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="COVERAGE">
+        <source>COVERAGE</source>
+        <target>Portée : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="CREATE_CODE">
+        <source>CREATE_CODE</source>
+        <target>Créer un code</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="CREATE_DETAIL">
+        <source>CREATE_DETAIL</source>
+        <target>Créer un détail...</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="CREATE_DOCUMENT">
+        <source>CREATE_DOCUMENT</source>
+        <target>Nouveau document</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="CREATOR">
+        <source>CREATOR</source>
+        <target>Auteur : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DATE">
+        <source>DATE</source>
+        <target>Date : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DELETE_DETAIL">
+        <source>DELETE_DETAIL</source>
+        <target>Supprimer le détail ?</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DELETE_FILE">
+        <source>DELETE_FILE</source>
+        <target>Supprimer un fichier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DELETE_N_FILES">
+        <source>DELETE_N_FILES</source>
+        <target>Supprimer %d fichiers</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DESCRIPTION">
+        <source>DESCRIPTION</source>
+        <target>Description : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DESCRIPTION...">
+        <source>DESCRIPTION...</source>
+        <target>Description...</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DONE">
+        <source>DONE</source>
+        <target>Terminer</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DOUBLE_CHECK">
+        <source>DOUBLE_CHECK</source>
+        <target>Saisir à nouveau</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="DUPLICATE">
+        <source>DUPLICATE</source>
+        <target>Dupliquer le fichier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="EDIT">
+        <source>EDIT</source>
+        <target>Modifier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="ELLIPSE">
+        <source>ELLIPSE</source>
+        <target>Ellipse</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="ENTER_CODE">
+        <source>ENTER_CODE</source>
+        <target>Saisir le code</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="ERROR">
+        <source>ERROR</source>
+        <target>Erreur</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="FILES_SELECTED">
+        <source>FILES_SELECTED</source>
+        <target>fichiers sélectionnés</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="FILE_SELECTED">
+        <source>FILE_SELECTED</source>
+        <target>fichier sélectionné</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="IDENTIFIER">
+        <source>IDENTIFIER</source>
+        <target>Identifiant : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="IMAGE_SAVE_FAILED">
+        <source>IMAGE_SAVE_FAILED</source>
+        <target>Impossible de sauver l'image.</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="KEYWORDS">
+        <source>KEYWORDS</source>
+        <target>Mots clés : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="LANGUAGES">
+        <source>LANGUAGES</source>
+        <target>Langues : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="LICENSE">
+        <source>LICENSE</source>
+        <target>Licence : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="NO">
+        <source>NO</source>
+        <target>Non</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="NO_CAMERA">
+        <source>NO_CAMERA</source>
+        <target>Aucun appareil photo disponible.</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="OK">
+        <source>OK</source>
+        <target>Ok</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="PASSWORD">
+        <source>PASSWORD</source>
+        <target>Mot de passe</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="PHOTO_PUBLISHED_BY">
+        <source>PHOTO_PUBLISHED_BY</source>
+        <target>Photo publiée par</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="POLYGON">
+        <source>POLYGON</source>
+        <target>Polygone</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="PUBLISHER">
+        <source>PUBLISHER</source>
+        <target>Éditeur : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="RECTANGLE">
+        <source>RECTANGLE</source>
+        <target>Rectangle</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="RELATION">
+        <source>RELATION</source>
+        <target>Relation : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="RIGHTS">
+        <source>RIGHTS</source>
+        <target>Droits : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="SOURCE">
+        <source>SOURCE</source>
+        <target>Source : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="TITLE">
+        <source>TITLE</source>
+        <target>Titre : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="TRY_AGAIN">
+        <source>TRY_AGAIN</source>
+        <target>Veuillez réessayer...</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="WARNING">
+        <source>WARNING</source>
+        <target>Attention !!</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="YES">
+        <source>YES</source>
+        <target>Oui</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="xiaUITests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
     </header>
     <body>
       <trans-unit id="CFBundleName">
