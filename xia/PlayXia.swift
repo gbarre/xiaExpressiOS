@@ -76,6 +76,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         bkgdImage.image = img
         
         // Get the scale...
+        let screenWidth = UIScreen.main().bounds.width
+        let screenHeight = UIScreen.main().bounds.height
         let scaleX: CGFloat = screenWidth / img!.size.width
         let scaleY: CGFloat = screenHeight / img!.size.height
         scale = min(scaleX, scaleY)
@@ -179,6 +181,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     func animationController(forDismissedController dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.transitionMode = .dismiss
+        let screenWidth = UIScreen.main().bounds.width
+        let screenHeight = UIScreen.main().bounds.height
         transition.startingPoint = CGPoint(x: screenWidth / 2, y: 2 * screenHeight)
         transition.duration = 0.5
         return transition

@@ -36,9 +36,6 @@ let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1
 let editColor: UIColor = UIColor.red()
 let noEditColor: UIColor = UIColor.green()
 
-let screenWidth = UIScreen.main().bounds.width
-let screenHeight = UIScreen.main().bounds.height
-
 let constraintRectangle = "rectangle"
 let constraintEllipse = "ellipse"
 let constraintPolygon = "polygon"
