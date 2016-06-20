@@ -99,14 +99,14 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         
         // Build the imgView frame
         let availableWidth: CGFloat = UIScreen.main().bounds.width
-        let availableHeight: CGFloat = UIScreen.main().bounds.height - (myToolbar.frame.origin.y + myToolbar.frame.height)
+        let availableHeight: CGFloat = UIScreen.main().bounds.height - 64 //(myToolbar.frame.origin.y + myToolbar.frame.height)
         let scaleX: CGFloat = availableWidth / img.size.width
         let scaleY: CGFloat = availableHeight / img.size.height
         scale = min(scaleX, scaleY)
         let imageWidth: CGFloat = scale * img.size.width
         let imageHeight: CGFloat = scale * img.size.height
         let x: CGFloat = (availableWidth - imageWidth) / 2
-        let y: CGFloat = myToolbar.frame.origin.y + myToolbar.frame.height + (availableHeight - imageHeight) / 2
+        let y: CGFloat = 64 + (availableHeight - imageHeight) / 2
         imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
         imgView.contentMode = UIViewContentMode.scaleAspectFill
         imgView.image = img

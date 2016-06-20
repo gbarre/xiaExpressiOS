@@ -435,7 +435,7 @@ class TextConverter: NSObject {
     func showAudio(_ inText: String) -> String {
         var output = inText
         do {
-            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(mp3|ogg)( autostart)?", options: .caseInsensitive)
+            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp3|ogg)( autostart)?", options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
@@ -477,7 +477,7 @@ class TextConverter: NSObject {
     func showPictures(_ inText: String!) -> String {
         var output = inText
         do {
-            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(jpg|jpeg|gif|png)", options: .caseInsensitive)
+            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(jpg|jpeg|gif|png)", options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
@@ -493,7 +493,7 @@ class TextConverter: NSObject {
     func showVideo(_ inText: String) -> String {
         var output = inText
         do {
-            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-)*\\.(mp4|ogv|webm)( autostart)?", options: .caseInsensitive)
+            let regex = try RegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp4|ogv|webm)( autostart)?", options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}

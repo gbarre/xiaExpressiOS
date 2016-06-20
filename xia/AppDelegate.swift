@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let now:Int = Int(Date().timeIntervalSince1970)
         
         //if url != "" {
-            dbg.pt("Try import file...")
+            dbg.pt("Try import file... from \(url)")
             // read file to extract image
             var path = url.path!
             dbg.pt("path : \(path)")
@@ -89,8 +89,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if (xml["XiaiPad"]["image"].value != "element <image> not found") {
                     dbg.pt("Image founded")
                     // convert base64 to image
-                    let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!)
-                    let image = UIImage(data: imageDataB64!)
+                    let imageDataB64 = NSData(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
+                    let image = UIImage(data: imageDataB64! as Data)
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image!, 85)
                     if (((try? imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.dataWritingAtomic])) != nil)) {
@@ -120,8 +120,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 var image = UIImage()
                 if b64Chain != "" {
                     dbg.pt("Image founded")
-                    let imageDataB64 = Data(base64Encoded: b64Chain)
-                    image = UIImage(data: imageDataB64!)!
+                    //let imageDataB64 = Data(base64Encoded: b64Chain)
+                    let imageDataB64 = NSData(base64Encoded: b64Chain, options : .ignoreUnknownCharacters)
+                    image = UIImage(data: imageDataB64! as Data)!
                     // store new image to document directory
                     let imageData = UIImageJPEGRepresentation(image, 85)
                     if (((try? imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.dataWritingAtomic])) != nil)) {
