@@ -494,6 +494,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 break
             }
         //}
+        dbg.pt("cleaning")
         // purge Inbox
         let fileManager = FileManager.default()
         let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
@@ -525,7 +526,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func getElementValue(_ element: AEXMLElement) -> String {
-        if (element.value != nil && element.value! != "element <\(element)> not found") {
+        if (element.value != nil && element.value! != "element <\(element)> not found" && element.value! != "element &lt;\(element)&gt; not found") {
             return element.value!
         }
         else {
@@ -542,15 +543,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if xml["svg"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["image"].attributes["xlink:href"]!
             imgWidth = convertStringToCGFloat(xml["svg"]["image"].attributes["width"]!)
-            title = xml["svg"]["image"]["title"].value!
-            desc = xml["svg"]["image"]["desc"].value!
+            title = (xml["svg"]["image"]["title"].value == "element &lt;title&gt; not found") ? "" : xml["svg"]["image"]["title"].value!
+            desc = (xml["svg"]["image"]["desc"].value == "element &lt;desc&gt; not found") ? "" : xml["svg"]["image"]["desc"].value!
         }
         else if xml["svg"]["g"]["image"].attributes["xlink:href"] != nil {
             b64img = xml["svg"]["g"]["image"].attributes["xlink:href"]!
             group = true
             imgWidth = convertStringToCGFloat(xml["svg"]["g"]["image"].attributes["width"]!)
-            title = xml["svg"]["g"]["image"]["title"].value!
-            desc = xml["svg"]["g"]["image"]["desc"].value!
+            title = (xml["svg"]["g"]["image"]["title"].value == "element &lt;title&gt; not found") ? "" : xml["svg"]["g"]["image"]["title"].value!
+            desc = (xml["svg"]["g"]["desc"]["title"].value == "element &lt;title&gt; not found") ? "" : xml["svg"]["g"]["image"]["desc"].value!
         }
         
         return (b64img.replacingOccurrences(of: "data:image/jpeg;base64,", with: "").replacingOccurrences(of: "data:image/png;base64,", with: "").replacingOccurrences(of: "data:image/jpg;base64,", with: "").replacingOccurrences(of: "data:image/gif;base64,", with: ""), group, imgWidth, title, desc)
