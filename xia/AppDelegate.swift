@@ -70,10 +70,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = try! url.standardized()
         var errorAtImageImport = true
         var errorAtXMLImport = true
-        var errorAtSVGImport = true
+        let errorAtSVGImport = true
         let now:Int = Int(Date().timeIntervalSince1970)
         
-        //if url != "" {
             dbg.pt("Try import file... from \(url)")
             // read file to extract image
             var path = url.path!
@@ -115,7 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 break
-            case "svg":
+            /*case "svg":
                 let (b64Chain, group, imgWidth, imgTitle, imgDesc) = getBackgroundImage(xml)
                 var image = UIImage()
                 if b64Chain != "" {
@@ -489,12 +488,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         dbg.pt("\(error)")
                     }
                 }
-                break
+                break*/
             default:
                 break
             }
-        //}
-        dbg.pt("cleaning")
         // purge Inbox
         let fileManager = FileManager.default()
         let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
@@ -527,6 +524,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func getElementValue(_ element: AEXMLElement) -> String {
         if (element.value != nil && element.value! != "element <\(element)> not found" && element.value! != "element &lt;\(element)&gt; not found") {
+            dbg.pt(element.value!)
             return element.value!
         }
         else {
