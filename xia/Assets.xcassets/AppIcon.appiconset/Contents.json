@@ -3,43 +3,43 @@
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_29.png",
+      "filename" : "ipad_blanc_29.png",
       "scale" : "1x"
     },
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_58.png",
+      "filename" : "ipad_blanc_58.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_40.png",
+      "filename" : "ipad_blanc_40.png",
       "scale" : "1x"
     },
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_80.png",
+      "filename" : "ipad_blanc_80.png",
       "scale" : "2x"
     },
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_76.png",
+      "filename" : "ipad_blanc_76.png",
       "scale" : "1x"
     },
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_152.png",
+      "filename" : "ipad_blanc_152.png",
       "scale" : "2x"
     },
     {
       "size" : "83.5x83.5",
       "idiom" : "ipad",
-      "filename" : "ipad_noir_167.png",
+      "filename" : "ipad_blanc_167.png",
       "scale" : "2x"
     }
   ],

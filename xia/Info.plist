@@ -5,25 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Xia</string>
+	<string>Xia Express</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
-		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array>
-				<string>ipad_noir_80.png</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>svg File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.example.document.svg</string>
-			</array>
-		</dict>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
