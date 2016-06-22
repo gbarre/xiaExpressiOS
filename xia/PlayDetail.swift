@@ -34,12 +34,13 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     
     let transition = BubbleTransition()
     
-    let screenWidth = UIScreen.main().bounds.width
-    let screenHeight = UIScreen.main().bounds.height
     var currentScale: CGFloat = 1.0
     var currentCenter: CGPoint!
     var zoomScale: CGFloat = 1.0
     let transitionDuration: TimeInterval = 0.5
+    var currentDetailFrame: CGRect!
+    var screenWidth = UIScreen.main().bounds.width
+    var screenHeight = UIScreen.main().bounds.height
     
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
@@ -102,16 +103,13 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         imgThumb.isHidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
-        let pathFrameCorners = (tag != 0) ? detail.bezierFrame() : UIScreen.main().bounds
-        let detailScaleX = 190 / pathFrameCorners.width
-        let detailScaleY = 190 / pathFrameCorners.height
-        let detailScale = min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+        let detailScale = getCurrentScale(frame: detail.bezierFrame())
         currentScale = detailScale
 
         imgThumb.transform = imgThumb.transform.scaleBy(x: detailScale, y: detailScale)
         
         // Centering the cropped image in imgArea
-        let pathCenter = CGPoint(x: pathFrameCorners.midX * detailScale, y: pathFrameCorners.midY * detailScale)
+        let pathCenter = CGPoint(x: detail.bezierFrame().midX * detailScale, y: detail.bezierFrame().midY * detailScale)
         let newCenter = CGPoint(x: imgThumb.center.x * detailScale - pathCenter.x + 100, y: imgThumb.center.y * detailScale - pathCenter.y + 100)
         imgThumb.center = newCenter
         
@@ -127,13 +125,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
                     zoomDisable = (d.attributes["zoom"] == "true") ? false : true
                 }
             }
+            currentDetailFrame = getDetailFrame()
         }
         else {
             detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
             detailTitle.sizeToFit()
             detailTitle.numberOfLines = 0
             htmlString = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
-            zoomDisable = false
+            zoomDisable = true
         }
         
         // Build the webView
@@ -152,6 +151,8 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         DispatchQueue.main.after(when: delayTime){
             self.imgThumb.isHidden = false
         }
+        
+        NotificationCenter.default().addObserver(self, selector: #selector(PlayDetail.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
     // Disable round corners on modal view
@@ -159,6 +160,56 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         super.viewWillLayoutSubviews()
         self.view.superview!.layer.cornerRadius  = 0.0
         self.view.superview!.layer.masksToBounds = false
+    }
+    
+    func getCurrentScale(frame: CGRect) -> CGFloat {
+        let detailScaleX = 190 / frame.width
+        let detailScaleY = 190 / frame.height
+        
+        return min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
+    }
+    
+    func getDetailFrame() -> CGRect {
+        var newDetail: xiaDetail!
+        
+        let scaleX: CGFloat = screenWidth / imgThumb!.image!.size.width
+        let scaleY: CGFloat = screenHeight / imgThumb!.image!.size.height
+        let localScale = min(scaleX, scaleY)
+        let xSpace: CGFloat = (screenWidth - imgThumb!.image!.size.width * localScale) / 2
+        let ySpace: CGFloat = (screenHeight - imgThumb!.image!.size.height * localScale) / 2
+        
+        let xmlDetails = xml.root["details"]["detail"].allWithAttributes(["tag" : "\(tag)"])!
+        for detail in xmlDetails {
+            if let path = detail.attributes["path"] {
+                // Add detail object
+                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                newDetail = xiaDetail(tag: detailTag, scale: localScale)
+                //details["\(detailTag)"] = newDetail
+                
+                // Add points to detail
+                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                var pointIndex = 0
+                for point in pointsArray {
+                    let coords = point.characters.split{$0 == ";"}.map(String.init)
+                    let x = convertStringToCGFloat(coords[0]) * localScale + xSpace
+                    let y = convertStringToCGFloat(coords[1]) * localScale + ySpace
+                    let newPoint = newDetail.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
+                    newPoint.layer.zPosition = -1
+                    pointIndex = pointIndex + 1
+                }
+            }
+        }
+        return newDetail.bezierFrame()
+    }
+    
+    func rotated() {
+        screenWidth = UIScreen.main().bounds.width
+        screenHeight = UIScreen.main().bounds.height
+        currentDetailFrame = getDetailFrame()
+        currentScale = getCurrentScale(frame: currentDetailFrame)
+        if tag != 0 {
+            zoomDisable = !zoomDisable
+        }
     }
     
     func showDetail(_ detailImg: UIImageView) {
@@ -171,8 +222,8 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         currentCenter = detailImg.center
         
         // Scale the detail
-        let detailScaleX = (screenWidth - 10) / detail.bezierFrame().width
-        let detailScaleY = (screenHeight - 50) / detail.bezierFrame().height
+        let detailScaleX = (screenWidth - 10) / currentDetailFrame.width
+        let detailScaleY = (screenHeight - 50) / currentDetailFrame.height
         let detailScale = min(detailScaleX, detailScaleY, 3) // 3 is maximum zoom
         zoomScale = detailScale
         
@@ -184,8 +235,8 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         }
         
         // Center the detail
-        let distanceX = screenWidth/2 - detail.bezierFrame().midX
-        let distanceY = screenHeight/2 - detail.bezierFrame().midY
+        let distanceX = screenWidth/2 - currentDetailFrame.midX
+        let distanceY = screenHeight/2 - currentDetailFrame.midY
         
         let xCoord = screenWidth/2 + distanceX * detailScale - getCenter().x + 100
         let yCoord = screenHeight/2 + distanceY * detailScale - getCenter().y + 100
@@ -204,6 +255,17 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         DispatchQueue.main.after(when: delayTime){
             self.imgArea.isHidden = true
         }
+        dbg.ptLine()
+        dbg.pt("currentCenter : \(currentCenter)")
+        dbg.pt("detailScale : \(detailScale)")
+        dbg.pt("currentScale : \(currentScale)")
+        dbg.pt("distanceX : \(distanceX)")
+        dbg.pt("distanceY : \(distanceY)")
+        dbg.pt("currentDetailFrame : \(currentDetailFrame)")
+        dbg.pt("getCenter() : \(getCenter())")
+        dbg.pt("xCoord : \(xCoord)")
+        dbg.pt("yCoord : \(yCoord)")
+        //dbg.pt(" : \()")
     }
     
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {

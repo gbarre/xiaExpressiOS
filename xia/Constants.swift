@@ -21,7 +21,7 @@
 
 import UIKit
 
-let dbg = debug(enable: true)
+let dbg = debug(enable: false)
 
 let xmlElements: [String] = ["title", "description", "creator",
                              "rights", "license", "date", "publisher",

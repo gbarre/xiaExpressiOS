@@ -12,6 +12,7 @@
 			<key>CFBundleTypeIconFiles</key>
 			<array>
 				<string>ipad_noir_80.png</string>
+				<string>ipad_blanc_80</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>xml file</string>

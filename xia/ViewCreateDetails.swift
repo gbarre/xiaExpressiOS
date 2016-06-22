@@ -67,23 +67,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let filePath = "\(self.filePath).jpg"
         img = UIImage(contentsOfFile: filePath)!
         
-        var value: Int
-        if ( img.size.width > img.size.height ) { // turn device to landscape
-            if( !UIDeviceOrientationIsLandscape(UIDevice.current().orientation) )
-            {
-                value = (UIDevice.current().orientation.rawValue == 5) ? 5 : ( (UIDevice.current().orientation.rawValue == 4) ? 4 : 3)
-                UIDevice.current().setValue(value, forKey: "orientation")
-            }
-            landscape = true
-        }
-        else { // turn device to portrait
-            if( !UIDeviceOrientationIsPortrait(UIDevice.current().orientation) )
-            {
-                value = (UIDevice.current().orientation.rawValue == 2) ? 2 : 1
-                UIDevice.current().setValue(value, forKey: "orientation")
-            }
-            landscape = false
-        }
+        landscape = (img.size.width > img.size.height) ? true : false
         
         NotificationCenter.default().addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         
@@ -98,70 +82,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         myToolbar.clipsToBounds = true
         
         // Build the imgView frame
-        let availableWidth: CGFloat = UIScreen.main().bounds.width
-        let availableHeight: CGFloat = UIScreen.main().bounds.height - 64 //(myToolbar.frame.origin.y + myToolbar.frame.height)
-        let scaleX: CGFloat = availableWidth / img.size.width
-        let scaleY: CGFloat = availableHeight / img.size.height
-        scale = min(scaleX, scaleY)
-        let imageWidth: CGFloat = scale * img.size.width
-        let imageHeight: CGFloat = scale * img.size.height
-        let x: CGFloat = (availableWidth - imageWidth) / 2
-        let y: CGFloat = 64 + (availableHeight - imageHeight) / 2
-        imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
-        imgView.contentMode = UIViewContentMode.scaleAspectFill
-        imgView.image = img
-        view.addSubview(imgView)
+        loadBackground(img: img)
         
         // Load xmlDetails from xml
-        if let xmlDetails = xml.root["details"]["detail"].all {
-            for detail in xmlDetails {
-                if let path = detail.attributes["path"] {
-                    // Add detail object
-                    let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
-                    // clean this tag
-                    for subview in imgView.subviews {
-                        if (subview.tag == detailTag || subview.tag == detailTag + 100) {
-                            subview.removeFromSuperview()
-                        }
-                    }
-                    let newDetail = xiaDetail(tag: detailTag, scale: scale)
-                    details["\(detailTag)"] = newDetail
-                    // Add points to detail
-                    let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    if pointsArray.count > 2 {
-                        var attainablePoints: Int = 0
-                        var pointIndex = 0
-                        for point in pointsArray {
-                            let coords = point.characters.split{$0 == ";"}.map(String.init)
-                            if coords.count == 2 {
-                                let x = convertStringToCGFloat(coords[0]) * scale
-                                let y = convertStringToCGFloat(coords[1]) * scale
-                                let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
-                                newPoint?.layer.zPosition = 1
-                                newPoint?.isHidden = true
-                                imgView.addSubview(newPoint!)
-                                pointIndex = pointIndex + 1
-                                if imgView.frame.contains((newPoint?.center)!) {
-                                    attainablePoints += 1
-                                }
-                            }
-                        }
-                        if let constraint = detail.attributes["constraint"] {
-                            details["\(detailTag)"]?.constraint = constraint
-                        }
-                        else {
-                            details["\(detailTag)"]?.constraint = constraintPolygon
-                        }
-                        let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
-                        details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
-                        buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
-                        
-                        if attainablePoints < 2 {
-                            //performFullDetailRemove(detailTag, force: true)
-                        }
-                    }
-                }
-            }
+        if let _ = xml.root["details"]["detail"].all {
+            loadDetails(xml: xml)
         }
         fileTitle = (xml["xia"]["title"].value == nil) ? fileName : xml["xia"]["title"].value!
         cleaningDetails()
@@ -781,6 +706,74 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         performSegue(withIdentifier: "playXia", sender: self)
     }
     
+    func loadDetails(xml: AEXMLDocument) {
+        let xmlDetails = xml.root["details"]["detail"].all!
+        for detail in xmlDetails {
+            if let path = detail.attributes["path"] {
+                // Add detail object
+                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                // clean this tag
+                for subview in imgView.subviews {
+                    if (subview.tag == detailTag || subview.tag == detailTag + 100) {
+                        subview.removeFromSuperview()
+                    }
+                }
+                let newDetail = xiaDetail(tag: detailTag, scale: scale)
+                details["\(detailTag)"] = newDetail
+                // Add points to detail
+                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                if pointsArray.count > 2 {
+                    var attainablePoints: Int = 0
+                    var pointIndex = 0
+                    for point in pointsArray {
+                        let coords = point.characters.split{$0 == ";"}.map(String.init)
+                        if coords.count == 2 {
+                            let x = convertStringToCGFloat(coords[0]) * scale
+                            let y = convertStringToCGFloat(coords[1]) * scale
+                            let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
+                            newPoint?.layer.zPosition = 1
+                            newPoint?.isHidden = true
+                            imgView.addSubview(newPoint!)
+                            pointIndex = pointIndex + 1
+                            if imgView.frame.contains((newPoint?.center)!) {
+                                attainablePoints += 1
+                            }
+                        }
+                    }
+                    if let constraint = detail.attributes["constraint"] {
+                        details["\(detailTag)"]?.constraint = constraint
+                    }
+                    else {
+                        details["\(detailTag)"]?.constraint = constraintPolygon
+                    }
+                    let drawEllipse: Bool = (details["\(detailTag)"]?.constraint == constraintEllipse) ? true : false
+                    details["\(detailTag)"]?.locked = (detail.attributes["locked"] == "true") ? true : false
+                    buildShape(true, color: noEditColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: imgView, ellipse: drawEllipse, locked: details["\(detailTag)"]!.locked)
+                    
+                    if attainablePoints < 2 {
+                        //performFullDetailRemove(detailTag, force: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    func loadBackground(img: UIImage) {
+        let availableWidth: CGFloat = UIScreen.main().bounds.width
+        let availableHeight: CGFloat = UIScreen.main().bounds.height - 64
+        let scaleX: CGFloat = availableWidth / img.size.width
+        let scaleY: CGFloat = availableHeight / img.size.height
+        scale = min(scaleX, scaleY)
+        let imageWidth: CGFloat = scale * img.size.width
+        let imageHeight: CGFloat = scale * img.size.height
+        let x: CGFloat = (availableWidth - imageWidth) / 2
+        let y: CGFloat = 64 + (availableHeight - imageHeight) / 2
+        imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
+        imgView.contentMode = UIViewContentMode.scaleAspectFill
+        imgView.image = img
+        view.addSubview(imgView)
+    }
+    
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: NSError?) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -846,21 +839,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func rotated() {
-        if(UIDeviceOrientationIsLandscape(UIDevice.current().orientation))
-        {
-            if ( !landscape ) {
-                let value = UIInterfaceOrientation.portrait.rawValue
-                UIDevice.current().setValue(value, forKey: "orientation")
-            }
-        }
-        
-        if(UIDeviceOrientationIsPortrait(UIDevice.current().orientation))
-        {
-            if ( landscape ) {
-                let value = UIInterfaceOrientation.landscapeRight.rawValue
-                UIDevice.current().setValue(value, forKey: "orientation")
-            }
-        }
+        loadBackground(img: img)
+        loadDetails(xml: xml)
     }
     
     func setBtnsIcons() {

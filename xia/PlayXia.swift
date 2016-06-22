@@ -75,42 +75,9 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         img = UIImage(contentsOfFile: filePath)
         bkgdImage.image = img
         
-        // Get the scale...
-        let screenWidth = UIScreen.main().bounds.width
-        let screenHeight = UIScreen.main().bounds.height
-        let scaleX: CGFloat = screenWidth / img!.size.width
-        let scaleY: CGFloat = screenHeight / img!.size.height
-        scale = min(scaleX, scaleY)
-        let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
-        let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
-        
         // Load xmlDetails from xml
-        if let xmlDetails = xml.root["details"]["detail"].all {
-            for detail in xmlDetails {
-                if let path = detail.attributes["path"] {
-                    // Add detail object
-                    let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
-                    let newDetail = xiaDetail(tag: detailTag, scale: scale)
-                    details["\(detailTag)"] = newDetail
-                    details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
-                    
-                    // Add points to detail
-                    let pointsArray = path.characters.split{$0 == " "}.map(String.init)
-                    var pointIndex = 0
-                    for point in pointsArray {
-                        let coords = point.characters.split{$0 == ";"}.map(String.init)
-                        let x = convertStringToCGFloat(coords[0]) * scale + xSpace
-                        let y = convertStringToCGFloat(coords[1]) * scale + ySpace
-                        let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
-                        newPoint?.layer.zPosition = -1
-                        pointIndex = pointIndex + 1
-                        view.addSubview(newPoint!)
-                    }
-                    let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false
-                    buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
-                    paths[detailTag] = details["\(detailTag)"]!.bezierPath()
-                }
-            }
+        if let _ = xml.root["details"]["detail"].all {
+            loadDetails(xml: xml)
         }
         showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
         for subview in view.subviews {
@@ -119,9 +86,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
-        if xml["xia"]["readonly"].value! == "true" {
-            NotificationCenter.default().addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
-        }
+        NotificationCenter.default().addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -192,23 +157,53 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         let _ = navigationController?.popViewController(animated: true)
     }
     
-    func rotated() {
-        if(UIDeviceOrientationIsLandscape(UIDevice.current().orientation))
-        {
-            if ( !landscape ) {
-                let value = UIInterfaceOrientation.portrait.rawValue
-                UIDevice.current().setValue(value, forKey: "orientation")
-            }
-            landscape = true
-        }
+    func loadDetails(xml: AEXMLDocument) {
+        // Get the scale...
+        let screenWidth = UIScreen.main().bounds.width
+        let screenHeight = UIScreen.main().bounds.height
+        let scaleX: CGFloat = screenWidth / img!.size.width
+        let scaleY: CGFloat = screenHeight / img!.size.height
+        scale = min(scaleX, scaleY)
+        let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
+        let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
-        if(UIDeviceOrientationIsPortrait(UIDevice.current().orientation))
-        {
-            if ( landscape ) {
-                let value = UIInterfaceOrientation.landscapeRight.rawValue
-                UIDevice.current().setValue(value, forKey: "orientation")
+        let xmlDetails = xml.root["details"]["detail"].all!
+        for detail in xmlDetails {
+            if let path = detail.attributes["path"] {
+                // Add detail object
+                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                let newDetail = xiaDetail(tag: detailTag, scale: scale)
+                details["\(detailTag)"] = newDetail
+                details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
+                
+                // clean this tag
+                for subview in view.subviews {
+                    if (subview.tag == detailTag || subview.tag == detailTag + 100) {
+                        subview.removeFromSuperview()
+                    }
+                }
+                
+                // Add points to detail
+                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                var pointIndex = 0
+                for point in pointsArray {
+                    let coords = point.characters.split{$0 == ";"}.map(String.init)
+                    let x = convertStringToCGFloat(coords[0]) * scale + xSpace
+                    let y = convertStringToCGFloat(coords[1]) * scale + ySpace
+                    let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
+                    newPoint?.layer.zPosition = -1
+                    pointIndex = pointIndex + 1
+                    view.addSubview(newPoint!)
+                }
+                let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false
+                buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
+                paths[detailTag] = details["\(detailTag)"]!.bezierPath()
             }
-            landscape = false
         }
+    }
+    
+    func rotated() {
+        loadDetails(xml: xml)
+        landscape = (UIDeviceOrientationIsLandscape(UIDevice.current().orientation)) ? true : false
     }
 }

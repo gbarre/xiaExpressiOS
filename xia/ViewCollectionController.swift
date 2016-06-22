@@ -327,7 +327,11 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         // Add a "create image" if the is no image in Documents directory
         if ( self.arrayNames.count == 0 ) {
+            editMode.isEnabled = false
             return 1
+        }
+        else {
+            editMode.isEnabled = true
         }
         
         // order thumb by title
@@ -475,23 +479,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     let filePath = "\(documentsDirectory)/\(arrayNames[segueIndex]).jpg"
                     let img = UIImage(contentsOfFile: filePath)!
                     
-                    var value: Int
-                    if ( img.size.width > img.size.height ) { // turn device to landscape
-                        if( !UIDeviceOrientationIsLandscape(UIDevice.current().orientation) )
-                        {
-                            value = (UIDevice.current().orientation.rawValue == 5) ? 5 : 3
-                            UIDevice.current().setValue(value, forKey: "orientation")
-                        }
-                        landscape = true
-                    }
-                    else { // turn device to portrait
-                        if( !UIDeviceOrientationIsPortrait(UIDevice.current().orientation) )
-                        {
-                            value = (UIDevice.current().orientation.rawValue == 2) ? 2 : 1
-                            UIDevice.current().setValue(value, forKey: "orientation")
-                        }
-                        landscape = false
-                    }
+                    landscape = (img.size.width > img.size.height) ? true : false
                     performSegue(withIdentifier: "playXia", sender: self)
                 }
                 else {

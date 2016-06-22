@@ -54,12 +54,12 @@
 		F03EA62F1D12EC68008678BC /* xiaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA6081D12EC2B008678BC /* xiaDetail.swift */; };
 		F03EA6301D12EC89008678BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CF1D12EB02008678BC /* Assets.xcassets */; };
 		F03EA6321D12ECA7008678BC /* TextConvertersTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA6311D12ECA7008678BC /* TextConvertersTest.swift */; };
-		F03EA6341D12ECB5008678BC /* ipad_noir_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F03EA6331D12ECB5008678BC /* ipad_noir_80.png */; };
 		F03EA6361D12ED02008678BC /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03EA6351D12ED02008678BC /* images.xcassets */; };
 		F04543F31D17F93200BBF731 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543F51D17F93200BBF731 /* Localizable.strings */; };
 		F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FA1D17F93200BBF731 /* InfoPlist.strings */; };
 		F04543FD1D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FF1D17F93300BBF731 /* InfoPlist.strings */; };
 		F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04544041D17F93300BBF731 /* InfoPlist.strings */; };
+		F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F0BB83751D19D98F0070140A /* ipad_blanc_80.png */; };
 		F0EAFF0C1D12EDE500366F0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0EAFF0A1D12EDE500366F0E /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -113,7 +113,6 @@
 		F03EA6071D12EC2B008678BC /* ViewMetas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewMetas.swift; sourceTree = "<group>"; };
 		F03EA6081D12EC2B008678BC /* xiaDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = xiaDetail.swift; sourceTree = "<group>"; };
 		F03EA6311D12ECA7008678BC /* TextConvertersTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextConvertersTest.swift; sourceTree = "<group>"; };
-		F03EA6331D12ECB5008678BC /* ipad_noir_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ipad_noir_80.png; path = xia/ipad_noir_80.png; sourceTree = "<group>"; };
 		F03EA6351D12ED02008678BC /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F03EA6371D12ED61008678BC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F03EA6381D12ED61008678BC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -121,6 +120,7 @@
 		F04543F91D17F93200BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F04543FE1D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F04544031D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F0BB83751D19D98F0070140A /* ipad_blanc_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_blanc_80.png; sourceTree = "<group>"; };
 		F0EAFF0B1D12EDE500366F0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = xia/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0EAFF0D1D12EDF800366F0E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = xia/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,7 +153,7 @@
 		F03EA5BC1D12EB02008678BC = {
 			isa = PBXGroup;
 			children = (
-				F03EA6331D12ECB5008678BC /* ipad_noir_80.png */,
+				F0BB83751D19D98F0070140A /* ipad_blanc_80.png */,
 				F03EA5C71D12EB02008678BC /* xia */,
 				F03EA5DC1D12EB02008678BC /* xiaTests */,
 				F03EA5E71D12EB02008678BC /* xiaUITests */,
@@ -342,7 +342,7 @@
 			files = (
 				F03EA6111D12EC2B008678BC /* Settings.bundle in Resources */,
 				F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */,
-				F03EA6341D12ECB5008678BC /* ipad_noir_80.png in Resources */,
+				F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */,
 				F03EA5D31D12EB02008678BC /* LaunchScreen.storyboard in Resources */,
 				F0EAFF0C1D12EDE500366F0E /* Localizable.strings in Resources */,
 				F03EA6361D12ED02008678BC /* images.xcassets in Resources */,
