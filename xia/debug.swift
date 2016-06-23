@@ -33,13 +33,13 @@ class debug: NSObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func pt(_ obj: AnyObject) {
+    func pt(obj: AnyObject) {
         if enable {
             print(obj)
         }
     }
     
-    func ptSubviews(_ view: AnyObject) {
+    func ptSubviews(view: AnyObject) {
         if self.enable {
             print("Subviews of \(view) :")
             for subview in view.subviews {

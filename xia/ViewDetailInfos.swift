@@ -36,23 +36,23 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet var switchZoom: UISwitch!
-    @IBAction func btnZoomAction(_ sender: AnyObject) {
+    @IBAction func btnZoomAction(sender: AnyObject) {
         zoom = !zoom
         switchZoom.isOn = zoom
     }
     @IBOutlet var switchLock: UISwitch!
-    @IBAction func btnLockAction(_ sender: AnyObject) {
+    @IBAction func btnLockAction(sender: AnyObject) {
         lock = !lock
         switchLock.isOn = lock
     }
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
-    @IBAction func btnCancel(_ sender: AnyObject) {
+    @IBAction func btnCancel(sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func btnDone(_ sender: AnyObject) {
+    @IBAction func btnDone(sender: AnyObject) {
         // Save the detail in xml
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
@@ -92,25 +92,25 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         txtTitle.backgroundColor = UIColor.clear()
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
+    func textViewDidBeginEditing(textView: UITextView) {
         if textView.textColor == UIColor.lightGray() {
             textView.text = ""
             textView.textColor = UIColor.black()
         }
     }
     
-    func textViewDidEndEditing(_ textView: UITextView) {
+    func textViewDidEndEditing(textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = NSLocalizedString("DESCRIPTION...", comment: "")
             textView.textColor = UIColor.lightGray()
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         txtDesc.setContentOffset(CGPoint(x: 0, y: -txtDesc.contentInset.top), animated: false)
     }
     
-    func attributedString2pikipiki(_ attrString: AttributedString) -> String {
+    func attributedString2pikipiki(attrString: AttributedString) -> String {
         let descText = NSMutableString()
         descText.append(attrString.string)
         //var text = String()
@@ -188,7 +188,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         return "\(descText)"
     }
     
-    func pikipiki2AttributedString(_ text: String) -> AttributedString {
+    func pikipiki2AttributedString(text: String) -> AttributedString {
         let attributedText = NSMutableAttributedString(string: text)
         let size = [NSFontAttributeName : UIFont.systemFont(ofSize: 15.0)]
         attributedText.addAttributes(size, range: NSRange(location: 0, length: attributedText.length))
@@ -211,7 +211,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
 }
 
 public extension NSMutableAttributedString {
-    func addAttributes(_ attrs: [String : AnyObject], delimiter: String) throws {
+    func addAttributes(attrs: [String : AnyObject], delimiter: String) throws {
         let escaped = RegularExpression.escapedPattern(for: delimiter)
         let regex = try RegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
         

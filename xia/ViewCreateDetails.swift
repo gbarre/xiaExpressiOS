@@ -77,7 +77,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         view.addGestureRecognizer(doubleTapGesture)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         // Remove hairline on toolbar
         myToolbar.clipsToBounds = true
         
@@ -93,7 +93,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         setBtnsIcons()
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.location(in: self.imgView)
         let touchedVirtPoint = touchesVirtPoint(location)
@@ -246,7 +246,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesMoved(touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.location(in: self.imgView)
         let detailTag = self.currentDetailTag
@@ -347,7 +347,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.location(in: self.imgView)
         
@@ -452,7 +452,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func addDetail(_ sender: UIBarButtonItem) {
+    func addDetail(sender: UIBarButtonItem) {
         // Prepare new detail
         let lastDetailTag = self.xml["xia"]["details"]["detail"].last
         if lastDetailTag != nil {
@@ -576,7 +576,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         present(menu, animated: true, completion: nil)
     }
     
-    func changeDetailColor(_ tag: Int) {
+    func changeDetailColor(tag: Int) {
         // Change other details color
         for detail in details {
             let thisDetailTag = NumberFormatter().number(from: detail.0)?.intValue
@@ -640,7 +640,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func touchesVirtPoint(_ location: CGPoint) -> Int {
+    func touchesVirtPoint(location: CGPoint) -> Int {
         var touched = -1
         for virtPoint in virtPoints {
             let dist = distance(location, point2: virtPoint.1.center)
@@ -688,7 +688,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func distance(_ point1: CGPoint, point2: CGPoint) -> CGFloat {
+    func distance(point1: CGPoint, point2: CGPoint) -> CGFloat {
         let x = point1.x - point2.x
         let y = point1.y - point2.y
         return sqrt(x * x + y * y)
@@ -774,7 +774,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         view.addSubview(imgView)
     }
     
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: NSError?) {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -782,7 +782,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         performSegue(withIdentifier: "viewMetas", sender: self)
     }
     
-    func performFullDetailRemove(_ tag: Int, force: Bool = false) {
+    func performFullDetailRemove(tag: Int, force: Bool = false) {
         if (details["\(tag)"]?.points.count < 3 || force) {
             // remove point & polygon
             for subview in imgView.subviews {

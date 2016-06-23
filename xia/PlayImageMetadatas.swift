@@ -44,7 +44,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     var landscape: Bool = true
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
-    @IBAction func Hide(_ sender: AnyObject) {
+    @IBAction func Hide(sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -100,7 +100,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         self.view.superview!.layer.masksToBounds = false
     }
     
-    func getElementValue(_ element: String) -> AttributedString! {
+    func getElementValue(element: String) -> AttributedString! {
         let key = xmlElementsDict[element]
         let keyWidth = key??.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
@@ -150,7 +150,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         return attributedText
     }
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if navigationType == UIWebViewNavigationType.linkClicked {
             if #available(iOS 10.0, *) {
                 UIApplication.shared().open(request.url!, options: [:], completionHandler: nil)

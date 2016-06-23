@@ -97,14 +97,14 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
     /**
     Required by UIViewControllerAnimatedTransitioning
     */
-    public func transitionDuration(_ transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    public func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }
 
     /**
      Required by UIViewControllerAnimatedTransitioning
      */
-    public func animateTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+    public func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView()
         if transitionMode == .present {
             let presentedControllerView = transitionContext.view(forKey: UITransitionContextToViewKey)!
@@ -169,7 +169,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(_ transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, noDetail: Bool = false) -> UIImageView {
+    public func showImage(transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, noDetail: Bool = false) -> UIImageView {
         var path: UIBezierPath!
         if !noDetail {
             path = (myDetail as! xiaDetail).bezierPath()
@@ -206,7 +206,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
 }
 
 private extension BubbleTransition {
-    private func frameForBubble(_ originalCenter: CGPoint, size originalSize: CGSize, start: CGPoint) -> CGRect {
+    private func frameForBubble(originalCenter: CGPoint, size originalSize: CGSize, start: CGPoint) -> CGRect {
         let lengthX = fmax(start.x, originalSize.width - start.x);
         let lengthY = fmax(start.y, originalSize.height - start.y)
         let offset = sqrt(lengthX * lengthX + lengthY * lengthY) * 2;

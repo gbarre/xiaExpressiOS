@@ -50,11 +50,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         "Other"
     ]
     
-    @IBAction func btnCancel(_ sender: AnyObject) {
+    @IBAction func btnCancel(sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func btnDone(_ sender: AnyObject) {
+    @IBAction func btnDone(sender: AnyObject) {
         prepareToWriteXML()
         
         let _ = writeXML(xml, path: "\(filePath).xml")
@@ -68,14 +68,14 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet var segment: UISegmentedControl!
     
-    @IBAction func changeSegment(_ sender: AnyObject) {
+    @IBAction func changeSegment(sender: AnyObject) {
         showSegmentView(segment.selectedSegmentIndex)
     }
     
     // First subview
     @IBOutlet var txtTitle: UITextField!
     @IBOutlet var roSwitch: UISwitch!
-    @IBAction func roBtnAction(_ sender: AnyObject) {
+    @IBAction func roBtnAction(sender: AnyObject) {
         let passTitle = (readOnlyState) ? NSLocalizedString("ENTER_CODE", comment: "") : NSLocalizedString("CREATE_CODE", comment: "")
         let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.alert)
         
@@ -152,7 +152,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtIdentifier: UITextField!
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
-    @IBAction func showDatePicker(_ sender: AnyObject) {
+    @IBAction func showDatePicker(sender: AnyObject) {
         if UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro {
             if showKbd {
                 txtCreator.resignFirstResponder()
@@ -166,7 +166,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
     
     @IBOutlet var datePicker: UIDatePicker!
-    @IBAction func datePicker(_ sender: AnyObject) {
+    @IBAction func datePicker(sender: AnyObject) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.shortStyle
         let strDate = dateFormatter.string(from: datePicker.date)
@@ -181,7 +181,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtRelation: UITextField!
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
-    @IBAction func showLicensePicker(_ sender: AnyObject) {
+    @IBAction func showLicensePicker(sender: AnyObject) {
         if UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro {
             if showKbd {
                 txtLanguages.resignFirstResponder()
@@ -282,20 +282,20 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         imgDescription.layer.cornerRadius = 5
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         txtDescription.setContentOffset(CGPoint(x: 0, y: -txtDescription.contentInset.top), animated: false)
     }
     
-    func keybShow(_ notification: Notification) {
+    func keybShow(notification: Notification) {
         showKbd = true
     }
     
     
-    func keybHide(_ notification: Notification) {
+    func keybHide(notification: Notification) {
         showKbd = false
     }
 
-    func showSegmentView(_ index: Int) {
+    func showSegmentView(index: Int) {
         for subview in view.subviews {
             if subview.tag > 9 {
                 if subview.tag == index + 10 {
@@ -353,16 +353,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return availableLicenses.count
     }
     
     //MARK: Delegates
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return availableLicenses[row]
     }
     
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedLicense = availableLicenses[row]
         txtLicense.setTitle(selectedLicense, for: UIControlState())
     }

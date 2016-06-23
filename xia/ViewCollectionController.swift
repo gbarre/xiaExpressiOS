@@ -42,7 +42,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet var navBar: UINavigationBar!
     
     @IBOutlet var btnTrash: UIBarButtonItem!
-    @IBAction func btnTrashAction(_ sender: AnyObject) {
+    @IBAction func btnTrashAction(sender: AnyObject) {
         // Show confirm alert
         let controller = UIAlertController()
         let title = (selectedPhotos.count == 1) ? NSLocalizedString("DELETE_FILE", comment: "") : String(format: NSLocalizedString("DELETE_N_FILES", comment: ""), selectedPhotos.count)
@@ -74,19 +74,19 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     @IBOutlet var btnExport: UIBarButtonItem!
-    @IBAction func btnExportAction(_ sender: AnyObject) {
+    @IBAction func btnExportAction(sender: AnyObject) {
         segueIndex = selectedPhotos[0].row
         performSegue(withIdentifier: "export", sender: self)
     }
     
     @IBOutlet var btnEdit: UIBarButtonItem!
-    @IBAction func btnEditAction(_ sender: AnyObject) {
+    @IBAction func btnEditAction(sender: AnyObject) {
         segueIndex = selectedPhotos[0].row
         performSegue(withIdentifier: "viewMetas", sender: self)
     }
     
     @IBOutlet var btnCopy: UIBarButtonItem!
-    @IBAction func btnCopyAction(_ sender: AnyObject) {
+    @IBAction func btnCopyAction(sender: AnyObject) {
         // Show confirm alert
         let controller = UIAlertController()
         let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .default) { action in
@@ -122,7 +122,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet var navBarTitle: UINavigationItem!
     
     @IBOutlet var btnSettingsState: UIBarButtonItem!
-    @IBAction func btnSettings(_ sender: AnyObject) {
+    @IBAction func btnSettings(sender: AnyObject) {
         if #available(iOS 10.0, *) {
             UIApplication.shared().open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
         } else {
@@ -134,7 +134,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet weak var btnCreateState: UIBarButtonItem!
     
     @IBOutlet weak var editMode: UIBarButtonItem!
-    @IBAction func btnEdit(_ sender: AnyObject) {
+    @IBAction func btnEdit(sender: AnyObject) {
         selectedPhotos = []
         if editingMode {
             endEdit()
@@ -195,23 +195,23 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         NotificationCenter.default().removeObserver(self)
     }
     
-    func applicationWillEnterForeground(_ notification: Notification) {
+    func applicationWillEnterForeground(notification: Notification) {
         // Put the StatusBar in white
         UIApplication.shared().statusBarStyle = .lightContent
         self.CollectionView.reloadData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         self.navigationController!.hidesBarsOnTap = false
         
         editingMode = false
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         self.CollectionView.reloadData()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared().statusBarStyle = UIStatusBarStyle.default
@@ -267,7 +267,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func buildLeftNavbarItems(_ selectedItems: Int = 0) {
+    func buildLeftNavbarItems(selectedItems: Int = 0) {
         let buttonColor = (isEditing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
@@ -302,7 +302,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
        self.arrayNames = []
         // Load all images names
         let fileManager = FileManager.default()
@@ -353,7 +353,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return arrayNames.count;
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+    func collectionView(collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoThumbnail
         
         if arrayNames.count == 0 {
@@ -394,7 +394,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
     
-    func changeCellLabelBkgColor(_ path: IndexPath) {
+    func changeCellLabelBkgColor(path: IndexPath) {
         var labelColor: UIColor
         if selectedPhotos.contains(path) {
             let indexOfPhoto = selectedPhotos.index(of: path)
@@ -435,7 +435,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         UIApplication.shared().statusBarStyle = .lightContent
     }
     
-    func deleteFiles(_ path: IndexPath) {
+    func deleteFiles(path: IndexPath) {
         let deleteIndex = (path as NSIndexPath).row
         let fileName = arrayNames[deleteIndex]
         // Delete the file
@@ -454,7 +454,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         self.arrayNames.remove(at: deleteIndex)
     }
     
-    func handleTap(_ gestureReconizer: UITapGestureRecognizer) {
+    func handleTap(gestureReconizer: UITapGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.ended {
             return
         }

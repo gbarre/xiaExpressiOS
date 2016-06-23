@@ -40,7 +40,7 @@ class ShapeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(_ rect: CGRect) {
+    override func draw(rect: CGRect) {
         switch currentShapeType {
         case 0: drawLines()
         case 1: drawPolygon()

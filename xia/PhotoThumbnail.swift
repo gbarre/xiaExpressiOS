@@ -31,17 +31,17 @@ class PhotoThumbnail: UICollectionViewCell {
     @IBOutlet weak var imgLabel: UILabel!
     @IBOutlet var roIcon: UIImageView!
     
-    func setLabel(_ text: String) {
+    func setLabel(text: String) {
         self.imgLabel.text = text
     }
     
-    func setLabelBkgColor(_ color: UIColor) {
+    func setLabelBkgColor(color: UIColor) {
         //self.backgroundColor = color
         imgBkgd.isHidden = (color == UIColor.clear()) ? true : false
         imgLabel.textColor = (color == UIColor.clear()) ? blueColor : UIColor.white()
     }
     
-    func setThumbnail(_ thumbnailImage: UIImage) {
+    func setThumbnail(thumbnailImage: UIImage) {
         if thumbnailImage.size.width > thumbnailImage.size.height {
             let newHeight = thumbnailImage.size.height * 200 / thumbnailImage.size.width
             self.imgViewHeight.constant = newHeight
@@ -52,15 +52,15 @@ class PhotoThumbnail: UICollectionViewCell {
         self.imgView.image = thumbnailImage
     }
     
-    func showRoIcon(_ roState: Bool = false) {
+    func showRoIcon(roState: Bool = false) {
         roIcon.isHidden = !roState
     }
     
-    func degreesToRadians(_ x: CGFloat) -> CGFloat {
+    func degreesToRadians(x: CGFloat) -> CGFloat {
         return CGFloat(M_PI) * x / 180.0
     }
     
-    func wobble(_ enable: Bool) {
+    func wobble(enable: Bool) {
         let leftOrRight: CGFloat = 1
         let rightOrLeft: CGFloat = -1
         let leftWobble: CGAffineTransform = CGAffineTransform(rotationAngle: degreesToRadians(animationRotateDegres * leftOrRight))

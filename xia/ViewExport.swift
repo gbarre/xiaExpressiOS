@@ -41,7 +41,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch (indexPath as NSIndexPath).row {
         case 0:
             exportSimpleXML()
@@ -386,7 +386,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         openDocumentInteractionController(tmpFilePath)
     }
     
-    func getElementValue(_ element: String) -> String {
+    func getElementValue(element: String) -> String {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! != "element <\(element)> not found") {
             return xml["xia"][element].value!
         }
@@ -395,14 +395,14 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    func openDocumentInteractionController(_ url: String) {
+    func openDocumentInteractionController(url: String) {
         // Show native export controller
         docController = UIDocumentInteractionController(url: URL(fileURLWithPath: url))
         docController.delegate = self
         docController.presentOptionsMenu(from: self.view.frame, in:self.view, animated:true)
     }
     
-    func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
+    func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
         ViewCollection?.buildLeftNavbarItems()
         ViewCollection?.endEdit()
         self.dismiss(animated: true, completion: nil)

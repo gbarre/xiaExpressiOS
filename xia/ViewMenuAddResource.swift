@@ -28,7 +28,7 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     var newMedia: Bool = false
     let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
     
-    @IBAction func takePhoto(_ sender: AnyObject) {
+    @IBAction func takePhoto(sender: AnyObject) {
         if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
             //load the camera interface
             let picker:UIImagePickerController = UIImagePickerController()
@@ -52,7 +52,7 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         super.viewDidLoad()
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let now: Int = Int(Date().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
@@ -90,7 +90,7 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     
     
     
-    /*func image(_ image: UIImage, didFinishSavingWithError error: NSErrorPointer?, contextInfo:UnsafePointer<Void>) {
+    /*func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer?, contextInfo:UnsafePointer<Void>) {
         if error != nil {
             let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("IMAGE_SAVE_FAILED", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
             
@@ -101,7 +101,7 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         }
     }*/
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
     }
     

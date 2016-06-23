@@ -42,15 +42,15 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet var leftButtonBkgd: UIImageView!
     @IBOutlet var leftButton: UIButton!
-    @IBAction func showMetas(_ sender: AnyObject) {
+    @IBAction func showMetas(sender: AnyObject) {
         performSegue(withIdentifier: "playMetas", sender: self)
     }
-    @IBAction func showImgInfos(_ sender: AnyObject) {
+    @IBAction func showImgInfos(sender: AnyObject) {
         touchedTag = 0
         performSegue(withIdentifier: "openDetail", sender: self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         // hide left button (image infos) if there are no title & description
         // hide left button if details are not showed
         if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
@@ -89,12 +89,12 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         NotificationCenter.default().addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(animated: Bool) {
         // Put the StatusBar in white
         UIApplication.shared().statusBarStyle = .lightContent
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.location(in: self.bkgdImage)
         touchedTag = 0

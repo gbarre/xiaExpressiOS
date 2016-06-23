@@ -21,7 +21,7 @@
 
 import UIKit
 
-func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView], parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
+func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView], parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
     if fill {
@@ -75,7 +75,7 @@ func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageVie
     }
 }
 
-func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
+func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
     for child in xml["xia"].all! {
         // Look for readonly child
         if let readonly = child["readonly"].value {
@@ -116,7 +116,7 @@ func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
     return xml
 }
 
-func convertStringToCGFloat(_ txt: String) -> CGFloat {
+func convertStringToCGFloat(txt: String) -> CGFloat {
     let cgFloat: CGFloat?
     if let double = Double("\(txt)") {
         cgFloat = CGFloat(double)
@@ -128,7 +128,7 @@ func convertStringToCGFloat(_ txt: String) -> CGFloat {
     return cgFloat!
 }
 
-/*func delay(_ delay:Double, closure:()->()) {
+/*func delay(delay:Double, closure:()->()) {
     DispatchQueue.main.after(
         when: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), block: closure)
 }*/
@@ -149,7 +149,7 @@ func getCenter() -> CGPoint{
     return point
 }
 
-func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
+func getXML(path: String, check: Bool = true) -> AEXMLDocument {
     let data = try? Data(contentsOf: URL(fileURLWithPath: path))
     var xml: AEXMLDocument!
     do {
@@ -161,7 +161,7 @@ func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
     return (check) ? checkXML(xml) : xml
 }
 
-func pointInPolygon(_ points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
+func pointInPolygon(points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     // translate from C : http://alienryderflex.com/polygon/
     let polyCorners = points.count
     var j = polyCorners - 1
@@ -181,7 +181,7 @@ func pointInPolygon(_ points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     return oddNodes
 }
 
-func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
+func writeXML(xml: AEXMLDocument, path: String) -> Bool {
     var error = true
     do {
         try xml.xmlString.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)

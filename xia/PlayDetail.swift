@@ -44,7 +44,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
-    @IBAction func close(_ sender: AnyObject) {
+    @IBAction func close(sender: AnyObject) {
         if !showZoom {
             self.dismiss(animated: true, completion: nil)
         }
@@ -58,13 +58,13 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     @IBOutlet var descView: UIWebView!
     @IBOutlet var bkgdzoom: UIImageView!
     
-    @IBAction func btnZoomAction(_ sender: AnyObject) {
+    @IBAction func btnZoomAction(sender: AnyObject) {
         if !zoomDisable && !showZoom {
             showDetail(imgThumb)
         }
     }
     
-    @IBAction func closeZoom(_ sender: AnyObject) {
+    @IBAction func closeZoom(sender: AnyObject) {
         if showZoom {
             // Show / hide elements
             self.imgArea.isHidden = false
@@ -212,7 +212,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         }
     }
     
-    func showDetail(_ detailImg: UIImageView) {
+    func showDetail(detailImg: UIImageView) {
         // Show / hide elements
         self.bkgdzoom.isHidden = false
         self.bkgdzoom.alpha = 0
@@ -268,7 +268,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         //dbg.pt(" : \()")
     }
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    func webView(webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if navigationType == UIWebViewNavigationType.linkClicked {
             if #available(iOS 10.0, *) {
                 UIApplication.shared().open(request.url!, options: [:], completionHandler: nil)
