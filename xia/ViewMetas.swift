@@ -51,7 +51,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     ]
     
     @IBAction func btnCancel(sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func btnDone(sender: AnyObject) {
@@ -62,7 +62,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         ViewCreateDetailsController?.setBtnsIcons()
         ViewCollection?.buildLeftNavbarItems()
         ViewCollection?.endEdit()
-        self.dismiss(animated: true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBOutlet var navBar: UINavigationBar!
@@ -77,17 +77,17 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var roSwitch: UISwitch!
     @IBAction func roBtnAction(sender: AnyObject) {
         let passTitle = (readOnlyState) ? NSLocalizedString("ENTER_CODE", comment: "") : NSLocalizedString("CREATE_CODE", comment: "")
-        let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         
-        controller.addTextField(configurationHandler: {(textField: UITextField!) in
+        controller.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
             textField.placeholder = NSLocalizedString("PASSWORD", comment: "")
-            textField.isSecureTextEntry = true  // setting the secured text for using password
-            textField.keyboardType = UIKeyboardType.decimalPad
+            textField.secureTextEntry = true  // setting the secured text for using password
+            textField.keyboardType = UIKeyboardType.DecimalPad
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
-            self.roSwitch.isOn = self.readOnlyState
+        controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
+            self.roSwitch.on = self.readOnlyState
         }))
-        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
             self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
             let currentPass = controller.textFields!.first!.text
             
@@ -96,26 +96,26 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     self.readOnlyState = !self.readOnlyState
                 }
                 else {
-                    let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.destructive, handler: { action in
-                        self.present(controller, animated: true, completion: nil)
+                    let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Destructive, handler: { action in
+                        self.presentViewController(controller, animated: true, completion: nil)
                     }))
-                    self.present(alert, animated: true, completion: nil)
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             }
             else { // create password
                 // double check
-                let check = UIAlertController(title: NSLocalizedString("DOUBLE_CHECK", comment: ""), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                let check = UIAlertController(title: NSLocalizedString("DOUBLE_CHECK", comment: ""), message: nil, preferredStyle: UIAlertControllerStyle.Alert)
                 
-                check.addTextField(configurationHandler: {(checkPass: UITextField!) in
+                check.addTextFieldWithConfigurationHandler({(checkPass: UITextField!) in
                     checkPass.placeholder = NSLocalizedString("PASSWORD", comment: "")
-                    checkPass.isSecureTextEntry = true  // setting the secured text for using password
-                    checkPass.keyboardType = UIKeyboardType.decimalPad
+                    checkPass.secureTextEntry = true  // setting the secured text for using password
+                    checkPass.keyboardType = UIKeyboardType.DecimalPad
                 })
-                check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
-                    self.roSwitch.isOn = self.readOnlyState
+                check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.Cancel, handler: { action in
+                    self.roSwitch.on = self.readOnlyState
                 }))
-                check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? "" : currentPass!
@@ -127,18 +127,18 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         
                     }
                     else {
-                        let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.destructive, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.Destructive, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
                     }
                     
                 }))
                 
-                self.present(check, animated: true, completion: nil)
+                self.presentViewController(check, animated: true, completion: nil)
             }
         }))
         
-        present(controller, animated: true, completion: nil)
+        presentViewController(controller, animated: true, completion: nil)
     }
     
     @IBOutlet var showDetailSwitch: UISwitch!
@@ -153,13 +153,13 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(sender: AnyObject) {
-        if UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro {
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro {
             if showKbd {
                 txtCreator.resignFirstResponder()
-                datePicker.isHidden = false
+                datePicker.hidden = false
             }
             else {
-                datePicker.isHidden = true
+                datePicker.hidden = true
                 txtCreator.becomeFirstResponder()
             }
         }
@@ -167,10 +167,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     @IBOutlet var datePicker: UIDatePicker!
     @IBAction func datePicker(sender: AnyObject) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.shortStyle
-        let strDate = dateFormatter.string(from: datePicker.date)
-        txtDate.setTitle(strDate, for: UIControlState())
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        let strDate = dateFormatter.stringFromDate(datePicker.date)
+        txtDate.setTitle(strDate, forState: UIControlState())
     }
     
     // Third subview
@@ -182,13 +182,13 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(sender: AnyObject) {
-        if UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro {
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro {
             if showKbd {
                 txtLanguages.resignFirstResponder()
-                licensePicker.isHidden = false
+                licensePicker.hidden = false
             }
             else {
-                licensePicker.isHidden = true
+                licensePicker.hidden = true
                 txtLanguages.becomeFirstResponder()
             }
         }
@@ -205,11 +205,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         showSegmentView(selectedSegment)
         segment.selectedSegmentIndex = selectedSegment
         
-        NotificationCenter.default().addObserver(self, selector: #selector(ViewMetas.keybShow(_:)),
-            name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybShow(_:)),
+            name: UIKeyboardWillHideNotification, object: nil)
         
-        NotificationCenter.default().addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
-            name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
+            name: UIKeyboardWillHideNotification, object: nil)
         
         // Get the device model identifier
         var systemInfo = utsname()
@@ -228,8 +228,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
         navBar.topItem?.title = (txtTitle.text == "") ? fileName : txtTitle.text
         readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
-        roSwitch.isOn = readOnlyState
-        showDetailSwitch.isOn = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        roSwitch.on = readOnlyState
+        showDetailSwitch.on = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
         
         txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
         txtDescription.layer.cornerRadius = 5        
@@ -241,17 +241,17 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtIdentifier.text = (xml["xia"]["identifier"].value != nil) ? xml["xia"]["identifier"].value : ""
         txtSource.text = (xml["xia"]["source"].value != nil) ? xml["xia"]["source"].value : ""
         
-        var detailDate = Date(timeIntervalSinceNow: TimeInterval(0))
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.shortStyle
-        dateFormatter.timeStyle = DateFormatter.Style.noStyle
+        var detailDate = NSDate(timeIntervalSinceNow: NSTimeInterval(0))
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         if ( xml["xia"]["date"].value != nil && xml["xia"]["date"].value! != "element <date> not found"){
-            detailDate = (dateFormatter.date(from: xml["xia"]["date"].value!) != nil) ? dateFormatter.date(from: xml["xia"]["date"].value!)! : detailDate
-            txtDate.setTitle(xml["xia"]["date"].value!, for: UIControlState())
+            detailDate = (dateFormatter.dateFromString(xml["xia"]["date"].value!) != nil) ? dateFormatter.dateFromString(xml["xia"]["date"].value!)! : detailDate
+            txtDate.setTitle(xml["xia"]["date"].value!, forState: UIControlState())
         }
         else {
-            let stringDate: String = dateFormatter.string(from: detailDate)
-            txtDate.setTitle(stringDate, for: UIControlState())
+            let stringDate: String = dateFormatter.stringFromDate(detailDate)
+            txtDate.setTitle(stringDate, forState: UIControlState())
             
         }
         datePicker.setDate(detailDate, animated: false)
@@ -266,14 +266,14 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         let xmlLicense = (xml["xia"]["license"].value != nil) ? xml["xia"]["license"].value! : "CC Attribution-NonCommercial - CC-BY-NC"
         licensePicker.dataSource = self
         licensePicker.delegate = self
-        for (index, namedLicense) in availableLicenses.enumerated()
+        for (index, namedLicense) in availableLicenses.enumerate()
         {
             if namedLicense == xmlLicense
             {
                 licensePicker.selectRow(index, inComponent: 0, animated: true)
             }
         }
-        txtLicense.setTitle(xmlLicense, for: UIControlState())
+        txtLicense.setTitle(xmlLicense, forState: UIControlState())
         selectedLicense = xmlLicense
         
         // Fourth subview
@@ -286,12 +286,12 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtDescription.setContentOffset(CGPoint(x: 0, y: -txtDescription.contentInset.top), animated: false)
     }
     
-    func keybShow(notification: Notification) {
+    func keybShow(notification: NSNotification) {
         showKbd = true
     }
     
     
-    func keybHide(notification: Notification) {
+    func keybHide(notification: NSNotification) {
         showKbd = false
     }
 
@@ -299,20 +299,20 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         for subview in view.subviews {
             if subview.tag > 9 {
                 if subview.tag == index + 10 {
-                    subview.isHidden = false
+                    subview.hidden = false
                 }
                 else {
-                    subview.isHidden = true
+                    subview.hidden = true
                 }
             }
         }
         if index == 1 {
             txtCreator.becomeFirstResponder()
-            datePicker.isHidden = (UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro) ? true : false
+            datePicker.hidden = (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro) ? true : false
         }
         if index == 2 {
             txtLanguages.becomeFirstResponder()
-            licensePicker.isHidden = (UIDeviceOrientationIsLandscape(UIDevice.current().orientation) && !iPadPro) ? true : false
+            licensePicker.hidden = (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !iPadPro) ? true : false
         }
         if index == 3 {
             imgTitle.becomeFirstResponder()
@@ -322,9 +322,9 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     func prepareToWriteXML() {
         // Save metas in xml
         xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["readonly"].value = "\(roSwitch.isOn)"
+        xml["xia"]["readonly"].value = "\(roSwitch.on)"
         xml["xia"]["readonly"].attributes["code"] = pass
-        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.isOn)"
+        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.on)"
         xml["xia"]["description"].value = txtDescription.text
         
         xml["xia"]["creator"].value = txtCreator.text
@@ -332,10 +332,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         xml["xia"]["publisher"].value = txtPublisher.text
         xml["xia"]["identifier"].value = txtIdentifier.text
         xml["xia"]["source"].value = txtSource.text
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.shortStyle
-        dateFormatter.timeStyle = DateFormatter.Style.noStyle
-        xml["xia"]["date"].value = dateFormatter.string(from: datePicker.date)
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        xml["xia"]["date"].value = dateFormatter.stringFromDate(datePicker.date)
         
         xml["xia"]["language"].value = txtLanguages.text
         xml["xia"]["keywords"].value = txtKeywords.text
@@ -350,7 +350,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     //MARK: - Delegates and data sources
     //MARK: Data Sources
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -364,7 +364,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedLicense = availableLicenses[row]
-        txtLicense.setTitle(selectedLicense, for: UIControlState())
+        txtLicense.setTitle(selectedLicense, forState: UIControlState())
     }
     
 }

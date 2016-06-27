@@ -37,16 +37,16 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     var currentScale: CGFloat = 1.0
     var currentCenter: CGPoint!
     var zoomScale: CGFloat = 1.0
-    let transitionDuration: TimeInterval = 0.5
+    let transitionDuration: NSTimeInterval = 0.5
     var currentDetailFrame: CGRect!
-    var screenWidth = UIScreen.main().bounds.width
-    var screenHeight = UIScreen.main().bounds.height
+    var screenWidth = UIScreen.mainScreen().bounds.width
+    var screenHeight = UIScreen.mainScreen().bounds.height
     
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     @IBAction func close(sender: AnyObject) {
         if !showZoom {
-            self.dismiss(animated: true, completion: nil)
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
@@ -67,15 +67,15 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     @IBAction func closeZoom(sender: AnyObject) {
         if showZoom {
             // Show / hide elements
-            self.imgArea.isHidden = false
+            self.imgArea.hidden = false
             self.imgArea.alpha = 0
-            descView.isUserInteractionEnabled = true
-            UIView.animate(withDuration: transitionDuration) { () -> Void in
-                self.imgThumb.transform = self.imgThumb.transform.scaleBy(x: self.currentScale / self.zoomScale, y: self.currentScale / self.zoomScale)
+            descView.userInteractionEnabled = true
+            UIView.animateWithDuration(transitionDuration) { () -> Void in
+                self.imgThumb.transform = CGAffineTransformScale(self.imgThumb.transform, self.currentScale / self.zoomScale, self.currentScale / self.zoomScale)
                 self.imgThumb.center = self.currentCenter
                 self.bkgdzoom.alpha = 0
             }
-            UIView.animate(withDuration: 2 * transitionDuration) { () -> Void in
+            UIView.animateWithDuration(2 * transitionDuration) { () -> Void in
                 self.imgArea.alpha = 1
                 self.titleArea.alpha = 1
             }
@@ -87,26 +87,26 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         super.viewDidLoad()
         
         // background must be larger the popup
-        bkgdzoom.transform = bkgdzoom.transform.scaleBy(x: 3, y: 3)
+        bkgdzoom.transform = CGAffineTransformScale(bkgdzoom.transform, 3, 3)
         
         imgThumb = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
-        imgThumb.contentMode = UIViewContentMode.scaleAspectFit
+        imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
         imgThumb.image = bkgdImage.image
         
         // Cropping image
         let myMask = CAShapeLayer()
         if tag != 0 {
-            myMask.path = path.cgPath
+            myMask.path = path.CGPath
             imgThumb.layer.mask = myMask
         }
         self.view.addSubview(imgThumb)
-        imgThumb.isHidden = true
+        imgThumb.hidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
-        let detailScale = getCurrentScale(frame: detail.bezierFrame())
+        let detailScale = getCurrentScale(detail.bezierFrame())
         currentScale = detailScale
 
-        imgThumb.transform = imgThumb.transform.scaleBy(x: detailScale, y: detailScale)
+        imgThumb.transform = CGAffineTransformScale(imgThumb.transform, detailScale, detailScale)
         
         // Centering the cropped image in imgArea
         let pathCenter = CGPoint(x: detail.bezierFrame().midX * detailScale, y: detail.bezierFrame().midY * detailScale)
@@ -147,12 +147,12 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         descView.delegate = self
         
         // wait 0.5s before showing image (bubbletransition effect)
-        let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 500)) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.after(when: delayTime){
-            self.imgThumb.isHidden = false
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
+                dispatch_after(delayTime, dispatch_get_main_queue()){
+            self.imgThumb.hidden = false
         }
         
-        NotificationCenter.default().addObserver(self, selector: #selector(PlayDetail.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayDetail.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     // Disable round corners on modal view
@@ -182,7 +182,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         for detail in xmlDetails {
             if let path = detail.attributes["path"] {
                 // Add detail object
-                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                 newDetail = xiaDetail(tag: detailTag, scale: localScale)
                 //details["\(detailTag)"] = newDetail
                 
@@ -203,10 +203,10 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     }
     
     func rotated() {
-        screenWidth = UIScreen.main().bounds.width
-        screenHeight = UIScreen.main().bounds.height
+        screenWidth = UIScreen.mainScreen().bounds.width
+        screenHeight = UIScreen.mainScreen().bounds.height
         currentDetailFrame = getDetailFrame()
-        currentScale = getCurrentScale(frame: currentDetailFrame)
+        currentScale = getCurrentScale(currentDetailFrame)
         if tag != 0 {
             zoomDisable = !zoomDisable
         }
@@ -214,9 +214,9 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     
     func showDetail(detailImg: UIImageView) {
         // Show / hide elements
-        self.bkgdzoom.isHidden = false
+        self.bkgdzoom.hidden = false
         self.bkgdzoom.alpha = 0
-        descView.isUserInteractionEnabled = false
+        descView.userInteractionEnabled = false
         showZoom = true
         
         currentCenter = detailImg.center
@@ -227,11 +227,11 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         let detailScale = min(detailScaleX, detailScaleY, 3) // 3 is maximum zoom
         zoomScale = detailScale
         
-        UIView.animate(withDuration: transitionDuration) { () -> Void in
+        UIView.animateWithDuration(transitionDuration) { () -> Void in
             self.bkgdzoom.alpha = 1
             self.titleArea.alpha = 0
             self.imgArea.alpha = 0
-            detailImg.transform = detailImg.transform.scaleBy(x: detailScale / self.currentScale, y: detailScale / self.currentScale)
+            detailImg.transform = CGAffineTransformScale(detailImg.transform, detailScale / self.currentScale, detailScale / self.currentScale)
         }
         
         // Center the detail
@@ -243,17 +243,17 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         
         let newCenter = CGPoint(x: xCoord, y: yCoord)
         
-        UIView.animate(withDuration: transitionDuration) { () -> Void in
+        UIView.animateWithDuration(transitionDuration) { () -> Void in
             detailImg.center = newCenter
         }
         
-        UIView.animate(withDuration: transitionDuration / 10) { () -> Void in
+        UIView.animateWithDuration(transitionDuration / 10) { () -> Void in
             self.imgArea.alpha = 0
         }
         
-        let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 500)) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.after(when: delayTime){
-            self.imgArea.isHidden = true
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
+        dispatch_after(delayTime, dispatch_get_main_queue()){
+            self.imgArea.hidden = true
         }
         dbg.ptLine()
         dbg.pt("currentCenter : \(currentCenter)")
@@ -268,14 +268,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         //dbg.pt(" : \()")
     }
     
-    func webView(webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        if navigationType == UIWebViewNavigationType.linkClicked {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared().open(request.url!, options: [:], completionHandler: nil)
+    func webView(webView: UIWebView, shouldStartLoadWith request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.LinkClicked {
+            /*if #available(iOS 10.0, *) {
+                UIApplication.sharedAppl().open(request.url!, options: [:], completionHandler: nil)
             } else {
-                // Fallback on earlier versions
-                UIApplication.shared().openURL(request.url!)
-            }
+                // Fallback on earlier versions*/
+                UIApplication.sharedApplication().openURL(request.URL!)
+            //}
             return false
         }
         return true

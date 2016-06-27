@@ -26,7 +26,7 @@ class ShapeView: UIView {
     var currentShapeType: Int = 0
     var arrayPoints = [Int: UIImageView]()
     var origin: CGPoint = CGPoint(x: 0, y: 0)
-    var color: UIColor = UIColor.black()
+    var color: UIColor = UIColor.blackColor()
     
     init(frame: CGRect, shape: Int, points: [Int: UIImageView], color: UIColor) {
         super.init(frame: frame)
@@ -40,7 +40,7 @@ class ShapeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(rect: CGRect) {
+    override func drawRect(rect: CGRect) {
         switch currentShapeType {
         case 0: drawLines()
         case 1: drawPolygon()
@@ -59,21 +59,21 @@ class ShapeView: UIView {
         beginPoint.y = beginPoint.y - origin.y
         let nbPoints = arrayPoints.count
         
-        ctx?.beginPath()
-        ctx?.moveTo(x: beginPoint.x, y: beginPoint.y)
+        CGContextBeginPath(ctx)
+        CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
         for i in 1 ..< nbPoints {
             var point = arrayPoints[i]!.center
             point.x = point.x - origin.x
             point.y = point.y - origin.y
-            ctx?.addLineTo(x: point.x, y: point.y)
+            CGContextAddLineToPoint(ctx, point.x, point.y)
         }
-        ctx?.setLineDash(phase: 0, lengths: [5], count: 1)
-        let alphaColor = CGColor(copyWithAlphaColor: color.cgColor, alpha: 0.8)
-        ctx?.setStrokeColor(alphaColor!)
-        ctx?.setLineWidth(2.5)
+        CGContextSetLineDash(ctx, 0, [5], 1)
+        let alphaColor = CGColorCreateCopyWithAlpha(color.CGColor, 0.8)
+        CGContextSetStrokeColorWithColor(ctx, alphaColor)
+        CGContextSetLineWidth(ctx, 2.5)
         
-        ctx?.closePath()
-        ctx?.strokePath()
+        CGContextClosePath(ctx)
+        CGContextStrokePath(ctx)
     }
     
     func drawPolygon() {
@@ -83,62 +83,62 @@ class ShapeView: UIView {
         beginPoint.x = beginPoint.x - origin.x
         beginPoint.y = beginPoint.y - origin.y
         let nbPoints = arrayPoints.count
-        ctx?.beginPath()
-        ctx?.moveTo(x: beginPoint.x, y: beginPoint.y)
+        CGContextBeginPath(ctx)
+        CGContextMoveToPoint(ctx, beginPoint.x, beginPoint.y)
         for i in 1 ..< nbPoints {
             var point = arrayPoints[i]!.center
             point.x = point.x - origin.x
             point.y = point.y - origin.y
-            ctx?.addLineTo(x: point.x, y: point.y)
+            CGContextAddLineToPoint(ctx, point.x, point.y)
         }
-        ctx?.setLineWidth(2)
+        CGContextSetLineWidth(ctx, 2)
         
-        let semiRed = CGColor(copyWithAlphaColor: color.cgColor, alpha: 0.5)
-        ctx?.setFillColor(semiRed!)
-        ctx?.fillPath()
+        let semiRed = CGColorCreateCopyWithAlpha(color.CGColor, 0.5)
+        CGContextSetFillColorWithColor(ctx, semiRed)
+        CGContextFillPath(ctx)
     }
     
     func drawEllipse() {
         let ctx = UIGraphicsGetCurrentContext()
         
-        ctx?.setLineDash(phase: 0, lengths: [5], count: 1)
-        let alphaColor = CGColor(copyWithAlphaColor: color.cgColor, alpha: 0.8)
-        ctx?.setStrokeColor(alphaColor!)
-        ctx?.setLineWidth(2.5)
+        CGContextSetLineDash(ctx, 0, [5], 1)
+        let alphaColor = CGColorCreateCopyWithAlpha(color.CGColor, 0.8)
+        CGContextSetStrokeColorWithColor(ctx, alphaColor)
+        CGContextSetLineWidth(ctx, 2.5)
         
         let size = CGSize(width: arrayPoints[1]!.center.x - arrayPoints[3]!.center.x, height: arrayPoints[2]!.center.y - arrayPoints[0]!.center.y)
         
-        let rectangle = CGRect(x: 5, y: 5, width: abs(size.width), height: abs(size.height))
-        ctx?.addEllipse(inRect: rectangle)
-        ctx?.strokePath()
+        let rectangle = CGRectMake(5, 5, abs(size.width), abs(size.height))
+        CGContextAddEllipseInRect(ctx, rectangle)
+        CGContextStrokePath(ctx)
     }
     
     func drawEllipseFilled() {
         let size = CGSize(width: arrayPoints[1]!.center.x - arrayPoints[3]!.center.x, height: arrayPoints[2]!.center.y - arrayPoints[0]!.center.y)
         
-        let ovalPath = UIBezierPath(ovalIn: CGRect(x: 5, y: 5, width: abs(size.width), height: abs(size.height)))
-        color.withAlphaComponent(0.5).setFill()
+        let ovalPath = UIBezierPath(ovalInRect: CGRectMake(5, 5, abs(size.width), abs(size.height)))
+        color.colorWithAlphaComponent(0.5).setFill()
         ovalPath.fill()
     }
     
     func drawCircle() {
-        let center = CGPoint(x: self.frame.size.width / 2.0, y: self.frame.size.height / 2.0)
+        let center = CGPointMake(self.frame.size.width / 2.0, self.frame.size.height / 2.0)
         let ctx = UIGraphicsGetCurrentContext()
-        ctx?.beginPath()
+        CGContextBeginPath(ctx)
         
         //6
-        ctx?.setLineWidth(1)
+        CGContextSetLineWidth(ctx, 1)
         
         let x:CGFloat = center.x
         let y:CGFloat = center.y
         let radius: CGFloat = 9.0
         let endAngle: CGFloat = CGFloat(2 * M_PI)
         
-        ctx?.addArc(centerX: x, y: y, radius: radius, startAngle: 0, endAngle: endAngle, clockwise: 0)
-
-        ctx?.setFillColor(UIColor.blue().cgColor)
+        CGContextAddArc(ctx, x, y, radius, 0, endAngle, 0)
         
-        ctx?.strokePath()
+        CGContextSetFillColorWithColor(ctx, UIColor.blueColor().CGColor)
+        
+        CGContextStrokePath(ctx)
     }
     
 }

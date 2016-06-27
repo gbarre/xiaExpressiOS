@@ -90,17 +90,17 @@ class xiaTests: XCTestCase {
         multiplePointsDetail.constraint = constraintEllipse
         let outputEllipse = multiplePointsDetail.bezierPath()
         let frame = CGRect(x: 10, y: 10, width: 190.5, height: 140.5)
-        let expectedOutputEllipse = UIBezierPath(ovalIn: frame)
+        let expectedOutputEllipse = UIBezierPath(ovalInRect: frame)
         XCTAssertEqual(outputEllipse, expectedOutputEllipse)
         
         // test polygon path (include rectangle)
         multiplePointsDetail.constraint = constraintPolygon
         let outputPolygon = multiplePointsDetail.bezierPath()
         let expectedOutputPolygon = UIBezierPath()
-        expectedOutputPolygon.move(to: CGPoint(x: 10, y: 10))
-        expectedOutputPolygon.addLine(to: CGPoint(x: 200.5, y: 150))
-        expectedOutputPolygon.addLine(to: CGPoint(x: 120, y: 150.5))
-        expectedOutputPolygon.close()
+        expectedOutputPolygon.moveToPoint(CGPointMake(10, 10))
+        expectedOutputPolygon.addLineToPoint(CGPointMake(200.5, 150))
+        expectedOutputPolygon.addLineToPoint(CGPointMake(120, 150.5))
+        expectedOutputPolygon.closePath()
         XCTAssertEqual(outputPolygon, expectedOutputPolygon)
     }
     

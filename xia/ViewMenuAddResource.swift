@@ -29,22 +29,22 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
     
     @IBAction func takePhoto(sender: AnyObject) {
-        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
+        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
             //load the camera interface
             let picker:UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.camera
+            picker.sourceType = UIImagePickerControllerSourceType.Camera
             picker.delegate = self
             picker.allowsEditing = false
-            self.present(picker, animated: true, completion: nil)
+            self.presentViewController(picker, animated: true, completion: nil)
             self.newMedia = true
         }
         else{
             //no camera available
-            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: {(alertAction)in
-                alert.dismiss(animated: true, completion: nil)
+            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
+                alert.dismissViewControllerAnimated(true, completion: nil)
             }))
-            self.present(alert, animated: true, completion: nil)
+            self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
@@ -54,19 +54,15 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        let now: Int = Int(Date().timeIntervalSince1970)
+        let now: Int = Int(NSDate().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
-        do {
-            try imageData?.write(to: URL(fileURLWithPath: documentsDirectory + "/\(now).jpg"), options: [.dataWritingAtomic])
-        }
-        catch {
-            dbg.pt("\(error)")
-        }
+        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
+        
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
         }
         catch {
             dbg.pt("\(error)")
@@ -78,12 +74,12 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
             //UIImageWriteToSavedPhotosAlbum(image!, self, #selector(ViewMenuAddResource.image(_:didFinishSavingWithError:contextInfo:)), nil)
             UIImageWriteToSavedPhotosAlbum(image!, self, nil, nil)
         }
-        self.dismiss(animated: true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
         ViewCollection!.CollectionView.reloadData()
         
         // Hide the popover after adding the photo in the library
         if newMedia {
-            self.dismiss(animated: true, completion: nil)
+            self.dismissViewControllerAnimated(true, completion: nil)
             newMedia = false
         }
     }
@@ -102,10 +98,10 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     }*/
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         //if segue.destinationViewController.isKind(UIImagePickerController) {
             let picker = segue.destinationViewController as! UIImagePickerController
             picker.delegate = self

@@ -227,7 +227,7 @@ class TextConvertersTest: XCTestCase {
         let datasJson = converter.getJSON(baseURL + urlString + "&omitscript=true")
         let dictJson = converter.parseJSON(datasJson)
         let thumbnailURL = dictJson["thumbnail_url"]! as! String
-        expected_output = expected_output.replacingOccurrences(of: "###", with: thumbnailURL)
+        expected_output = expected_output.stringByReplacingOccurrencesOfString("###", withString: thumbnailURL)
         
         XCTAssertEqual(expected_output, output)
     }

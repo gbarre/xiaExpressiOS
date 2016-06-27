@@ -40,9 +40,9 @@ class xiaDetail: NSObject {
     }
     
     func bezierFrame(scale:CGFloat = 1.0) -> CGRect {
-        var xMin: CGFloat = UIScreen.main().bounds.width
+        var xMin: CGFloat = UIScreen.mainScreen().bounds.width
         var xMax: CGFloat = 0
-        var yMin: CGFloat = UIScreen.main().bounds.height
+        var yMin: CGFloat = UIScreen.mainScreen().bounds.height
         var yMax: CGFloat = 0
         // Get dimensions of the shape
         for (_,point) in points {
@@ -67,19 +67,19 @@ class xiaDetail: NSObject {
     func bezierPath(scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
         if constraint == constraintEllipse {
-            path = UIBezierPath(ovalIn: self.bezierFrame())
+            path = UIBezierPath(ovalInRect: self.bezierFrame())
         }
         else {
-            let sortedPoints = points.sorted{$0.0 < $1.0}
+            let sortedPoints = points.sort{$0.0 < $1.0}
             for (_,point) in sortedPoints {
                 if (point == sortedPoints[0].1) {
-                    path.move(to: CGPoint(x: point.center.x * scale, y: point.center.y * scale))
+                    path.moveToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
                 }
                 else {
-                    path.addLine(to: CGPoint(x: point.center.x * scale, y: point.center.y * scale))
+                    path.addLineToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
                 }
             }
-            path.close()
+            path.closePath()
         }
         return path
     }
@@ -91,13 +91,13 @@ class xiaDetail: NSObject {
         else {
             
             var path: String = ""
-            let sortedPoints = points.sorted{$0.0 < $1.0}
+            let sortedPoints = points.sort{$0.0 < $1.0}
             for (_,point) in sortedPoints {
                 let x = point.center.x / scale
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
-            path = path.substring(with: path.index(path.startIndex, offsetBy: 0)..<path.index(path.endIndex, offsetBy: -1))
+            path = path.substringWithRange(path.startIndex.advancedBy(0)..<path.endIndex.advancedBy(-1))
             
             return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }

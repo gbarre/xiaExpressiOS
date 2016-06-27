@@ -37,8 +37,8 @@ class PhotoThumbnail: UICollectionViewCell {
     
     func setLabelBkgColor(color: UIColor) {
         //self.backgroundColor = color
-        imgBkgd.isHidden = (color == UIColor.clear()) ? true : false
-        imgLabel.textColor = (color == UIColor.clear()) ? blueColor : UIColor.white()
+        imgBkgd.hidden = (color == UIColor.clearColor()) ? true : false
+        imgLabel.textColor = (color == UIColor.clearColor()) ? blueColor : UIColor.whiteColor()
     }
     
     func setThumbnail(thumbnailImage: UIImage) {
@@ -53,7 +53,7 @@ class PhotoThumbnail: UICollectionViewCell {
     }
     
     func showRoIcon(roState: Bool = false) {
-        roIcon.isHidden = !roState
+        roIcon.hidden = !roState
     }
     
     func degreesToRadians(x: CGFloat) -> CGFloat {
@@ -63,23 +63,23 @@ class PhotoThumbnail: UICollectionViewCell {
     func wobble(enable: Bool) {
         let leftOrRight: CGFloat = 1
         let rightOrLeft: CGFloat = -1
-        let leftWobble: CGAffineTransform = CGAffineTransform(rotationAngle: degreesToRadians(animationRotateDegres * leftOrRight))
-        let rightWobble: CGAffineTransform = CGAffineTransform(rotationAngle: degreesToRadians(animationRotateDegres * rightOrLeft))
+        let leftWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * leftOrRight))
+        let rightWobble: CGAffineTransform = CGAffineTransformMakeRotation(degreesToRadians(animationRotateDegres * rightOrLeft))
         
         transform = rightWobble // starting point
         
         if enable {
-            let delay = Double(arc4random()).truncatingRemainder(dividingBy: 50) / 100
-            UIView.animate(withDuration: 0.12 + delay / 20, delay: delay, options: [.allowUserInteraction, .repeat, .autoreverse], animations: { () -> Void in
+            let delay = Double(arc4random()) % 50 / 100
+            UIView.animateWithDuration(0.12 + delay / 20, delay: delay, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
                 self.transform = leftWobble
                 }, completion: nil)
-            UIView.animate(withDuration: 0.12 - delay / 10, delay: delay, options: [.allowUserInteraction, .repeat, .autoreverse], animations: { () -> Void in
+            UIView.animateWithDuration(0.12 - delay / 10, delay: delay, options: [.AllowUserInteraction, .Repeat, .Autoreverse], animations: { () -> Void in
                 self.center = CGPoint(x: self.center.x, y: self.center.y+3)
                 }, completion: nil)
         }
         else {
             self.layer.removeAllAnimations()
-            self.transform = CGAffineTransform(rotationAngle: 0)// reset to original state
+            self.transform = CGAffineTransformMakeRotation(0)// reset to original state
         }
     }
 }

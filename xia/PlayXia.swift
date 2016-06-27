@@ -37,17 +37,18 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var img: UIImage!
     
     var scale: CGFloat = 1.0
+    
     var landscape: Bool = false
     
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet var leftButtonBkgd: UIImageView!
     @IBOutlet var leftButton: UIButton!
     @IBAction func showMetas(sender: AnyObject) {
-        performSegue(withIdentifier: "playMetas", sender: self)
+        performSegueWithIdentifier("playMetas", sender: self)
     }
     @IBAction func showImgInfos(sender: AnyObject) {
         touchedTag = 0
-        performSegue(withIdentifier: "openDetail", sender: self)
+        performSegueWithIdentifier("openDetail", sender: self)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -56,8 +57,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
             (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == ""))
             ) {
-            leftButton.isHidden = true
-            leftButtonBkgd.isHidden = true
+            leftButton.hidden = true
+            leftButtonBkgd.hidden = true
         }
     }
     
@@ -67,7 +68,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         // Add gestures on swipe
         let gbSelector = #selector(PlayXia.goBack)
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
-        rightSwipe.direction = UISwipeGestureRecognizerDirection.right
+        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
@@ -77,40 +78,40 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         
         // Load xmlDetails from xml
         if let _ = xml.root["details"]["detail"].all {
-            loadDetails(xml: xml)
+            loadDetails(xml)
         }
         showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
         for subview in view.subviews {
             if subview.tag > 199 {
-                subview.isHidden = !showDetails
+                subview.hidden = !showDetails
             }
         }
         
-        NotificationCenter.default().addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayXia.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
         // Put the StatusBar in white
-        UIApplication.shared().statusBarStyle = .lightContent
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
     }
     
-    override func touchesEnded(touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch: UITouch = touches.first!
-        location = touch.location(in: self.bkgdImage)
+        location = touch.locationInView(self.bkgdImage)
         touchedTag = 0
         
         // Get tag of the touched detail
         for detail in details {
             let (detailTag, detailPoints) = detail
             if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                touchedTag = (NumberFormatter().number(from: detailTag)?.intValue)!
-                performSegue(withIdentifier: "openDetail", sender: self)
+                touchedTag = (NSNumberFormatter().numberFromString(detailTag)?.integerValue)!
+                performSegueWithIdentifier("openDetail", sender: self)
                 break
             }
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "playMetas") {
             if let controller:PlayImageMetadatas = segue.destinationViewController as? PlayImageMetadatas {
                 controller.xml = self.xml
@@ -120,7 +121,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         if (segue.identifier == "openDetail") {
             if let controller:PlayDetail = segue.destinationViewController as? PlayDetail {
                 controller.transitioningDelegate = self
-                controller.modalPresentationStyle = .formSheet
+                controller.modalPresentationStyle = .FormSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
                 controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
@@ -131,11 +132,11 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
-    func animationController(forPresentedController presented: UIViewController, presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.transitionMode = .present
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Present
         transition.startingPoint = location
         transition.bubbleColor = blueColor
-        transition.detailFrame = (touchedTag != 0) ? details["\(touchedTag)"]?.bezierFrame() : UIScreen.main().bounds
+        transition.detailFrame = (touchedTag != 0) ? details["\(touchedTag)"]?.bezierFrame() : UIScreen.mainScreen().bounds
         transition.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
         transition.theDetail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
         transition.bkgdImage = bkgdImage
@@ -144,23 +145,23 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         return transition
     }
     
-    func animationController(forDismissedController dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.transitionMode = .dismiss
-        let screenWidth = UIScreen.main().bounds.width
-        let screenHeight = UIScreen.main().bounds.height
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.transitionMode = .Dismiss
+        let screenWidth = UIScreen.mainScreen().bounds.width
+        let screenHeight = UIScreen.mainScreen().bounds.height
         transition.startingPoint = CGPoint(x: screenWidth / 2, y: 2 * screenHeight)
         transition.duration = 0.5
         return transition
     }
     
     func goBack() {
-        let _ = navigationController?.popViewController(animated: true)
+        let _ = navigationController?.popViewControllerAnimated(true)
     }
     
     func loadDetails(xml: AEXMLDocument) {
         // Get the scale...
-        let screenWidth = UIScreen.main().bounds.width
-        let screenHeight = UIScreen.main().bounds.height
+        let screenWidth = UIScreen.mainScreen().bounds.width
+        let screenHeight = UIScreen.mainScreen().bounds.height
         let scaleX: CGFloat = screenWidth / img!.size.width
         let scaleY: CGFloat = screenHeight / img!.size.height
         scale = min(scaleX, scaleY)
@@ -171,7 +172,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         for detail in xmlDetails {
             if let path = detail.attributes["path"] {
                 // Add detail object
-                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
                 let newDetail = xiaDetail(tag: detailTag, scale: scale)
                 details["\(detailTag)"] = newDetail
                 details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
@@ -203,7 +204,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     func rotated() {
-        loadDetails(xml: xml)
-        landscape = (UIDeviceOrientationIsLandscape(UIDevice.current().orientation)) ? true : false
+        loadDetails(xml)
+        landscape = (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation)) ? true : false
     }
 }

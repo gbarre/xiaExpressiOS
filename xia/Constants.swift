@@ -33,8 +33,8 @@ let documentsDirectory = NSHomeDirectory() + "/Documents"
 
 let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
 let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1)
-let editColor: UIColor = UIColor.red()
-let noEditColor: UIColor = UIColor.green()
+let editColor: UIColor = UIColor.redColor()
+let noEditColor: UIColor = UIColor.greenColor()
 
 let constraintRectangle = "rectangle"
 let constraintEllipse = "ellipse"

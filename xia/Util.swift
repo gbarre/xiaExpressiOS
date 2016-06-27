@@ -30,9 +30,9 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView]
     else {
         shapeArg = (ellipse) ? 2 : 0
     }
-    var xMin: CGFloat = UIScreen.main().bounds.width
+    var xMin: CGFloat = UIScreen.mainScreen().bounds.width
     var xMax: CGFloat = 0
-    var yMin: CGFloat = UIScreen.main().bounds.height
+    var yMin: CGFloat = UIScreen.mainScreen().bounds.height
     var yMax: CGFloat = 0
     // Get dimensions of the shape
     for subview in parentView.subviews {
@@ -80,12 +80,12 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
         // Look for readonly child
         if let readonly = child["readonly"].value {
             if (readonly != "true" && readonly != "false") {
-                let _ = xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+                let _ = xml["xia"].addChild("readonly", value: "false", attributes: ["code" : "1234"])
             }
         }
         // Look for image child (to store image title & description)
         if child["image"].attributes["title"] == nil {
-            let _ = xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
+            let _ = xml["xia"].addChild("image", value: "", attributes: ["title" : "", "desctription" : ""])
         }
         // Look for the default show details attributes
         if child["details"].attributes["show"] == nil {
@@ -103,7 +103,7 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
     
     for element in xmlElements {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
-            let _ = xml["xia"].addChild(name: element)
+            let _ = xml["xia"].addChild(element)
             if (element == "creator" && xml["xia"]["author"].value != nil) {
                 xml["xia"][element].value = xml["xia"]["author"].value!
                 if xml["xia"]["author"].value! != "element <author> not found" {
@@ -122,7 +122,7 @@ func convertStringToCGFloat(txt: String) -> CGFloat {
         cgFloat = CGFloat(double)
     }
     else {
-        let d = txt.replacingOccurrences(of: ",", with: ".")
+        let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
         cgFloat = (Double("\(d)") == nil) ? -12345.6789 : CGFloat(Double("\(d)")!)
     }
     return cgFloat!
@@ -135,8 +135,8 @@ func convertStringToCGFloat(txt: String) -> CGFloat {
 
 func getCenter() -> CGPoint{
     var point = CGPoint(x: 0, y: 0)
-    let screenWidth = UIScreen.main().bounds.width
-    let screenHeight = UIScreen.main().bounds.height
+    let screenWidth = UIScreen.mainScreen().bounds.width
+    let screenHeight = UIScreen.mainScreen().bounds.height
 
     if ( screenHeight == 1024 && screenWidth != 1366 ) { // device is portrait and not iPad Pro
         point.x = (screenWidth - 540) / 2 + 100
@@ -150,7 +150,7 @@ func getCenter() -> CGPoint{
 }
 
 func getXML(path: String, check: Bool = true) -> AEXMLDocument {
-    let data = try? Data(contentsOf: URL(fileURLWithPath: path))
+    let data = NSData(contentsOfFile: path)
     var xml: AEXMLDocument!
     do {
         try xml = AEXMLDocument(xmlData: data!)
@@ -184,7 +184,7 @@ func pointInPolygon(points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
 func writeXML(xml: AEXMLDocument, path: String) -> Bool {
     var error = true
     do {
-        try xml.xmlString.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+        try xml.xmlString.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding)
         error = false
     }
     catch {
