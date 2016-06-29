@@ -255,7 +255,7 @@ class TextConverter: NSObject {
             let results = regex.matchesInString(inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substringWithRange($0.range)}
             for result in arrayResults {
-                let videoCode = result.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+                let videoCode = result.stringByReplacingOccurrencesOfString("http://youtu.be/", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil).stringByReplacingOccurrencesOfString("https://youtu.be/", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
                 output = output?.stringByReplacingOccurrencesOfString(result, withString: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"https://www.youtube.com/embed/\(videoCode)\" frameborder=\"0\" allowfullscreen></iframe></center>")
             }
             // youtube.com/embed
