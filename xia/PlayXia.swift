@@ -80,12 +80,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         if let _ = xml.root["details"]["detail"].all {
             loadDetails(xml)
         }
-        showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
-        for subview in view.subviews {
-            if subview.tag > 199 {
-                subview.hidden = !showDetails
-            }
-        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayXia.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
@@ -199,6 +193,13 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false
                 buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
                 paths[detailTag] = details["\(detailTag)"]!.bezierPath()
+            }
+        }
+        
+        showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        for subview in view.subviews {
+            if subview.tag > 199 {
+                subview.hidden = !showDetails
             }
         }
     }
