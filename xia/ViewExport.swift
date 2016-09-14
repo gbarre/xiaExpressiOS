@@ -48,7 +48,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         case 1:
             exportSVG()
         default:
-            dbg.pt("oups..." as AnyObject)
+            dbg.pt("oups...")
         }
     }
     
@@ -69,7 +69,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
             try xmlSimpleXML.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)" as AnyObject)
+            dbg.pt(error.localizedDescription)
         }
         
         openDocumentInteractionController(tmpFilePath)
@@ -380,7 +380,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
             try xmlSVG.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)" as AnyObject)
+            dbg.pt(error.localizedDescription)
         }
         
         openDocumentInteractionController(tmpFilePath)

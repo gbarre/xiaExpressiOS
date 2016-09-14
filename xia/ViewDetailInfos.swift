@@ -165,8 +165,8 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
         attrString.enumerateAttribute(NSUnderlineStyleAttributeName, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
-                dbg.pt(r as AnyObject)
-                dbg.pt(descText)
+                dbg.pt("\(r)")
+                dbg.pt(descText as String)
                 var startIndex: Int = r.location
                 var endIndex: Int = r.location+r.length
                 if bold {
@@ -177,7 +177,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                 }
                 startIndex += offset
                 descText.insert("__", at: startIndex)
-                dbg.pt(descText)
+                dbg.pt(descText as String)
                 offset += 2
                 endIndex += offset
                 descText.insert("__", at: endIndex)

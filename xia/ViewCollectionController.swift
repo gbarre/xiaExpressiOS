@@ -117,7 +117,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 try fileManager.copyItem(atPath: "\(documentsDirectory)/\(selectedPhoto).xml", toPath: "\(documentsDirectory)/\(now).xml")
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription as AnyObject)
+                dbg.pt(error.localizedDescription)
             }
             
             // Exit editing mode
@@ -203,7 +203,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 try fileManager.removeItem(atPath: filePath)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription as AnyObject)
+                dbg.pt(error.localizedDescription)
             }
         }
     }
@@ -340,7 +340,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                         try fileManager.removeItem(atPath: "\(documentsDirectory)/\(file).jpg")
                     }
                     catch {
-                        dbg.pt("\(error)" as AnyObject)
+                        dbg.pt(error.localizedDescription)
                     }
                 }
             }
@@ -467,7 +467,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             try fileManager.removeItem(atPath: filePath)
         }
         catch let error as NSError {
-            dbg.pt(error.localizedDescription as AnyObject)
+            dbg.pt(error.localizedDescription)
         }
         
         // Update arrays
@@ -519,11 +519,11 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             var errorAtXMLImport = true
             let now:Int = Int(Date().timeIntervalSince1970)
             
-            dbg.pt("Try import file... from \(path)" as AnyObject)
+            dbg.pt("Try import file... from \(path)")
             // read file to extract image
             let xml = getXML(path, check: false)
             if (xml["XiaiPad"]["image"].value != "element <image> not found") {
-                dbg.pt("Image founded" as AnyObject)
+                dbg.pt("Image founded")
                 // convert base64 to image
                 let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
                 let image = UIImage(data: imageDataB64!)
@@ -531,27 +531,27 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 let imageData = UIImageJPEGRepresentation(image!, 85)
                 do {
                     try imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.atomicWrite])
-                    dbg.pt("Image imported" as AnyObject)
+                    dbg.pt("Image imported")
                     errorAtImageImport = false
                 }
                 catch {
-                    dbg.pt(error.localizedDescription as AnyObject)
+                    dbg.pt(error.localizedDescription)
                 }
             }
             
             // store the xia xml
             if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
-                dbg.pt("Try to import xia elements" as AnyObject)
+                dbg.pt("Try to import xia elements")
                 let xmlXIA = AEXMLDocument()
                 let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
                 let xmlString = xmlXIA.xmlString
                 do {
                     try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
                     errorAtXMLImport = false
-                    dbg.pt("XML imported" as AnyObject)
+                    dbg.pt("XML imported")
                 }
                 catch {
-                    dbg.pt(error.localizedDescription as AnyObject)
+                    dbg.pt(error.localizedDescription)
                 }
             }
             
@@ -561,11 +561,11 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     try fileManager.removeItem(atPath: "\(documentsDirectory)/\(now).jpg")
                 }
                 catch let error as NSError {
-                    dbg.pt(error.localizedDescription as AnyObject)
+                    dbg.pt(error.localizedDescription)
                 }
             }
             else {
-                dbg.pt("import done" as AnyObject)
+                dbg.pt("import done")
             }
             
             // Remove the xml file, regardless of whether the import failed
@@ -573,7 +573,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 try fileManager.removeItem(atPath: path)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription as AnyObject)
+                dbg.pt(error.localizedDescription)
             }
         }
     }

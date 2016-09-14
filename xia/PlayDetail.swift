@@ -256,15 +256,15 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
             self.imgArea.isHidden = true
         }
         dbg.ptLine()
-        dbg.pt("currentCenter : \(currentCenter)" as AnyObject)
-        dbg.pt("detailScale : \(detailScale)" as AnyObject)
-        dbg.pt("currentScale : \(currentScale)" as AnyObject)
-        dbg.pt("distanceX : \(distanceX)" as AnyObject)
-        dbg.pt("distanceY : \(distanceY)" as AnyObject)
-        dbg.pt("currentDetailFrame : \(currentDetailFrame)" as AnyObject)
-        dbg.pt("getCenter() : \(getCenter())" as AnyObject)
-        dbg.pt("xCoord : \(xCoord)" as AnyObject)
-        dbg.pt("yCoord : \(yCoord)" as AnyObject)
+        dbg.pt("currentCenter : \(currentCenter)")
+        dbg.pt("detailScale : \(detailScale)")
+        dbg.pt("currentScale : \(currentScale)")
+        dbg.pt("distanceX : \(distanceX)")
+        dbg.pt("distanceY : \(distanceY)")
+        dbg.pt("currentDetailFrame : \(currentDetailFrame)")
+        dbg.pt("getCenter() : \(getCenter())")
+        dbg.pt("xCoord : \(xCoord)")
+        dbg.pt("yCoord : \(yCoord)")
         //dbg.pt(" : \()")
     }
     

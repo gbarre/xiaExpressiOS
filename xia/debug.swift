@@ -33,7 +33,7 @@ class debug: NSObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func pt(_ obj: AnyObject) {
+    func pt(_ obj: String) {
         if enable {
             print(obj)
         }

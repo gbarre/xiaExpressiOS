@@ -65,7 +65,7 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
             try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)" as AnyObject)
+            dbg.pt(error.localizedDescription)
         }
         ViewCollection!.arrayNames.append("\(now)")
         

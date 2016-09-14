@@ -156,7 +156,7 @@ func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
         try xml = AEXMLDocument(xmlData: data!)
     }
     catch {
-        dbg.pt("\(error)" as AnyObject)
+        dbg.pt(error.localizedDescription)
     }
     return (check) ? checkXML(xml) : xml
 }
@@ -188,7 +188,7 @@ func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
         error = false
     }
     catch {
-        dbg.pt("\(error)" as AnyObject)
+        dbg.pt(error.localizedDescription)
     }
     return error
 }

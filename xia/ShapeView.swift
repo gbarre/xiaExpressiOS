@@ -47,7 +47,7 @@ class ShapeView: UIView {
         case 2: drawEllipse()
         case 3: drawEllipseFilled()
         case 4: drawCircle()
-        default: dbg.pt("default" as AnyObject)
+        default: dbg.pt("default")
         }
     }
     
