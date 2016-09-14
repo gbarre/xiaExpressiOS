@@ -215,12 +215,15 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     func applicationWillEnterForeground(_ notification: Notification) {
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
+        importXML()
         self.CollectionView.reloadData()
     }
     
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController!.hidesBarsOnTap = false
-        
+        importXML()
         editingMode = false
     }
     
@@ -502,6 +505,75 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 else {
                     performSegue(withIdentifier: "viewLargePhoto", sender: self)
                 }
+            }
+        }
+    }
+    
+    func importXML() {
+        let fileManager = FileManager.default
+        let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            let path = "\(documentsDirectory)/Inbox/\(file)"
+            var errorAtImageImport = true
+            var errorAtXMLImport = true
+            let now:Int = Int(Date().timeIntervalSince1970)
+            
+            dbg.pt("Try import file... from \(path)" as AnyObject)
+            // read file to extract image
+            let xml = getXML(path, check: false)
+            if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+                dbg.pt("Image founded" as AnyObject)
+                // convert base64 to image
+                let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
+                let image = UIImage(data: imageDataB64!)
+                // store new image to document directory
+                let imageData = UIImageJPEGRepresentation(image!, 85)
+                do {
+                    try imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.atomicWrite])
+                    dbg.pt("Image imported" as AnyObject)
+                    errorAtImageImport = false
+                }
+                catch {
+                    dbg.pt(error.localizedDescription as AnyObject)
+                }
+            }
+            
+            // store the xia xml
+            if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+                dbg.pt("Try to import xia elements" as AnyObject)
+                let xmlXIA = AEXMLDocument()
+                let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
+                let xmlString = xmlXIA.xmlString
+                do {
+                    try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+                    errorAtXMLImport = false
+                    dbg.pt("XML imported" as AnyObject)
+                }
+                catch {
+                    dbg.pt(error.localizedDescription as AnyObject)
+                }
+            }
+            
+            // something were wrong, clean it !
+            if errorAtXMLImport {
+                do {
+                    try fileManager.removeItem(atPath: "\(documentsDirectory)/\(now).jpg")
+                }
+                catch let error as NSError {
+                    dbg.pt(error.localizedDescription as AnyObject)
+                }
+            }
+            else {
+                dbg.pt("import done" as AnyObject)
+            }
+            
+            // Remove the xml file, regardless of whether the import failed
+            do {
+                try fileManager.removeItem(atPath: path)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription as AnyObject)
             }
         }
     }
