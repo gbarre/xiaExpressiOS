@@ -39,10 +39,10 @@ class xiaDetail: NSObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bezierFrame(scale:CGFloat = 1.0) -> CGRect {
-        var xMin: CGFloat = UIScreen.mainScreen().bounds.width
+    func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
+        var xMin: CGFloat = UIScreen.main.bounds.width
         var xMax: CGFloat = 0
-        var yMin: CGFloat = UIScreen.mainScreen().bounds.height
+        var yMin: CGFloat = UIScreen.main.bounds.height
         var yMax: CGFloat = 0
         // Get dimensions of the shape
         for (_,point) in points {
@@ -64,22 +64,22 @@ class xiaDetail: NSObject {
         return CGRect(x: xMin * scale, y: yMin * scale, width: (xMax - xMin) * scale, height: (yMax - yMin) * scale)
     }
     
-    func bezierPath(scale:CGFloat = 1.0) -> UIBezierPath {
+    func bezierPath(_ scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
         if constraint == constraintEllipse {
-            path = UIBezierPath(ovalInRect: self.bezierFrame())
+            path = UIBezierPath(ovalIn: self.bezierFrame())
         }
         else {
-            let sortedPoints = points.sort{$0.0 < $1.0}
+            let sortedPoints = points.sorted{$0.0 < $1.0}
             for (_,point) in sortedPoints {
                 if (point == sortedPoints[0].1) {
-                    path.moveToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
+                    path.move(to: CGPoint(x: point.center.x * scale, y: point.center.y * scale))
                 }
                 else {
-                    path.addLineToPoint(CGPointMake(point.center.x * scale, point.center.y * scale))
+                    path.addLine(to: CGPoint(x: point.center.x * scale, y: point.center.y * scale))
                 }
             }
-            path.closePath()
+            path.close()
         }
         return path
     }
@@ -91,19 +91,19 @@ class xiaDetail: NSObject {
         else {
             
             var path: String = ""
-            let sortedPoints = points.sort{$0.0 < $1.0}
+            let sortedPoints = points.sorted{$0.0 < $1.0}
             for (_,point) in sortedPoints {
                 let x = point.center.x / scale
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
-            path = path.substringWithRange(path.startIndex.advancedBy(0)..<path.endIndex.advancedBy(-1))
+            path = path.substring(with: path.characters.index(path.startIndex, offsetBy: 0)..<path.characters.index(path.endIndex, offsetBy: -1))
             
             return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }
     }
     
-    func createPoint(location: CGPoint, imageName: String, index: Int) -> UIImageView {
+    func createPoint(_ location: CGPoint, imageName: String, index: Int) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location

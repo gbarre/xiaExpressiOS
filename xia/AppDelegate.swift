@@ -26,91 +26,95 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // purge Inbox
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath("\(documentsDirectory)/Inbox")
+        let fileManager = FileManager.default
+        let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
             do {
                 let filePath = "\(documentsDirectory)/Inbox/\(file)"
-                try fileManager.removeItemAtPath(filePath)
+                try fileManager.removeItem(atPath: filePath)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                dbg.pt(error.localizedDescription as AnyObject)
             }
         }
         return true
     }
     
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
     
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
     
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
     
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
     
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        let url = url.standardizedURL
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        let url = url.standardized
         var errorAtImageImport = true
         var errorAtXMLImport = true
         let errorAtSVGImport = true
-        let now:Int = Int(NSDate().timeIntervalSince1970)
+        let now:Int = Int(Date().timeIntervalSince1970)
         
-        dbg.pt("Try import file... from \(url)")
+        dbg.pt("Try import file... from \(url)" as AnyObject)
         // read file to extract image
-        var path = url!.path!
-        dbg.pt("path : \(path)")
+        var path = url.path
+        dbg.pt("path : \(path)" as AnyObject)
         dbg.ptLine()
-        path = path.stringByReplacingOccurrencesOfString("/private", withString: "")
-        dbg.pt("path : \(path)")
+        path = path.replacingOccurrences(of: "/private", with: "")
+        dbg.pt("path : \(path)" as AnyObject)
         let xml = getXML(path, check: false)
-        let ext = path.substringWithRange(path.endIndex.advancedBy(-3)..<path.endIndex.advancedBy(0))
-        dbg.pt("File type is : \(ext)")
+        let ext = path.substring(with: path.characters.index(path.endIndex, offsetBy: -3)..<path.characters.index(path.endIndex, offsetBy: 0))
+        dbg.pt("File type is : \(ext)" as AnyObject)
         switch (ext) {
         case "xml": // The document was created by a tablet
             if (xml["XiaiPad"]["image"].value != "element <image> not found") {
-                dbg.pt("Image founded")
+                dbg.pt("Image founded" as AnyObject)
                 // convert base64 to image
-                let imageDataB64 = NSData(base64EncodedString: xml["XiaiPad"]["image"].value!, options : .IgnoreUnknownCharacters)
+                let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
                 let image = UIImage(data: imageDataB64!)
                 // store new image to document directory
                 let imageData = UIImageJPEGRepresentation(image!, 85)
-                if ((imageData?.writeToFile("\(documentsDirectory)/\(now).jpg", atomically: true)) != nil) {
-                    dbg.pt("Image imported")
+                do {
+                    try imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.atomicWrite])
+                    dbg.pt("Image imported" as AnyObject)
                     errorAtImageImport = false
+                }
+                catch {
+                    dbg.pt("\(error)" as AnyObject)
                 }
             }
             
             // store the xia xml
             if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
-                dbg.pt("Try to import xia elements")
+                dbg.pt("Try to import xia elements" as AnyObject)
                 let xmlXIA = AEXMLDocument()
                 let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
                 let xmlString = xmlXIA.xmlString
                 do {
-                    try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+                    try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
                     errorAtXMLImport = false
-                    dbg.pt("XML imported")
+                    dbg.pt("XML imported" as AnyObject)
                 }
                 catch {
-                    dbg.pt("\(error)")
+                    dbg.pt("\(error)" as AnyObject)
                 }
             }
             break
@@ -493,38 +497,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             break
         }
         // purge Inbox
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath("\(documentsDirectory)/Inbox")
+        let fileManager = FileManager.default
+        let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
             do {
                 let filePath = "\(documentsDirectory)/Inbox/\(file)"
-                try fileManager.removeItemAtPath(filePath)
+                try fileManager.removeItem(atPath: filePath)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                dbg.pt(error.localizedDescription as AnyObject)
             }
         }
         
         // something was wrong
         if errorAtXMLImport && errorAtSVGImport {
             do {
-                try fileManager.removeItemAtPath("\(documentsDirectory)/\(now).jpg")
+                try fileManager.removeItem(atPath: "\(documentsDirectory)/\(now).jpg")
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                dbg.pt(error.localizedDescription as AnyObject)
             }
         }
         else {
-            dbg.pt("import done")
+            dbg.pt("import done" as AnyObject)
         }
         
         return true
     }
     
-    func getElementValue(element: AEXMLElement) -> String {
+    func getElementValue(_ element: AEXMLElement) -> String {
         if (element.value != nil && element.value! != "element <\(element)> not found" && element.value! != "element &lt;\(element)&gt; not found") {
-            dbg.pt(element.value!)
+            dbg.pt(element.value! as AnyObject)
             return element.value!
         }
         else {
@@ -532,7 +536,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func getBackgroundImage(xml: AEXMLDocument) -> (String, Bool, CGFloat, String, String) {
+    func getBackgroundImage(_ xml: AEXMLDocument) -> (String, Bool, CGFloat, String, String) {
         var b64img = ""
         var group = false
         var imgWidth:CGFloat = 1024.0
@@ -552,7 +556,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             desc = (xml["svg"]["g"]["desc"]["title"].value == "element &lt;title&gt; not found") ? "" : xml["svg"]["g"]["image"]["desc"].value!
         }
         
-        return (b64img.stringByReplacingOccurrencesOfString("data:image/jpeg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/png;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/jpg;base64,", withString: "").stringByReplacingOccurrencesOfString("data:image/gif;base64,", withString: ""), group, imgWidth, title, desc)
+        return (b64img.replacingOccurrences(of: "data:image/jpeg;base64,", with: "").replacingOccurrences(of: "data:image/png;base64,", with: "").replacingOccurrences(of: "data:image/jpg;base64,", with: "").replacingOccurrences(of: "data:image/gif;base64,", with: ""), group, imgWidth, title, desc)
     }
     
 }

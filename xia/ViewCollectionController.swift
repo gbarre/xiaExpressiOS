@@ -37,16 +37,16 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     var newMedia: Bool?
     var landscape: Bool = false
     
-    var selectedPhotos = [NSIndexPath]()
+    var selectedPhotos = [IndexPath]()
     
     @IBOutlet var navBar: UINavigationBar!
     
     @IBOutlet var btnTrash: UIBarButtonItem!
-    @IBAction func btnTrashAction(sender: AnyObject) {
+    @IBAction func btnTrashAction(_ sender: AnyObject) {
         // Show confirm alert
         let controller = UIAlertController()
         let title = (selectedPhotos.count == 1) ? NSLocalizedString("DELETE_FILE", comment: "") : String(format: NSLocalizedString("DELETE_N_FILES", comment: ""), selectedPhotos.count)
-        let confirmDelete = UIAlertAction(title: title, style: .Destructive) { action in
+        let confirmDelete = UIAlertAction(title: title, style: .destructive) { action in
             // Reorder paths to delete from the end
             
             // Valid for swift 3, do not touch !!!
@@ -64,17 +64,17 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }*/ // End swift 3
             
             // Valid for swift 2.2
-            var indexes = [NSIndexPath:Int]()
+            var indexes = [IndexPath:Int]()
             for path in self.selectedPhotos {
-                indexes[path] = path.row
+                indexes[path] = (path as NSIndexPath).row
             }
-            let sortedPath = (indexes as NSDictionary).keysSortedByValueUsingComparator{
+            let sortedPath = (indexes as NSDictionary).keysSortedByValue(comparator: {
                 ($1 as! NSNumber).compare($0 as! NSNumber)
-            }
+            })
             
             // Delete files
             for path in sortedPath {
-                self.deleteFiles(path as! NSIndexPath)
+                self.deleteFiles(path as! IndexPath)
             }// end swift 2.2
             
             // Exit editing mode
@@ -85,39 +85,39 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         controller.addAction(confirmDelete)
         if let ppc = controller.popoverPresentationController {
             ppc.barButtonItem = btnTrash
-            ppc.permittedArrowDirections = .Up
+            ppc.permittedArrowDirections = .up
         }
-        presentViewController(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion: nil)
     }
     
     @IBOutlet var btnExport: UIBarButtonItem!
-    @IBAction func btnExportAction(sender: AnyObject) {
-        segueIndex = selectedPhotos[0].row
-        performSegueWithIdentifier("export", sender: self)
+    @IBAction func btnExportAction(_ sender: AnyObject) {
+        segueIndex = (selectedPhotos[0] as NSIndexPath).row
+        performSegue(withIdentifier: "export", sender: self)
     }
     
     @IBOutlet var btnEdit: UIBarButtonItem!
-    @IBAction func btnEditAction(sender: AnyObject) {
-        segueIndex = selectedPhotos[0].row
-        performSegueWithIdentifier("viewMetas", sender: self)
+    @IBAction func btnEditAction(_ sender: AnyObject) {
+        segueIndex = (selectedPhotos[0] as NSIndexPath).row
+        performSegue(withIdentifier: "viewMetas", sender: self)
     }
     
     @IBOutlet var btnCopy: UIBarButtonItem!
-    @IBAction func btnCopyAction(sender: AnyObject) {
+    @IBAction func btnCopyAction(_ sender: AnyObject) {
         // Show confirm alert
         let controller = UIAlertController()
-        let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .Default) { action in
+        let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .default) { action in
             // copy file
-            let now:Int = Int(NSDate().timeIntervalSince1970)
-            let selectedPhoto = self.arrayNames[self.selectedPhotos[0].row]
+            let now:Int = Int(Date().timeIntervalSince1970)
+            let selectedPhoto = self.arrayNames[(self.selectedPhotos[0] as NSIndexPath).row]
             
-            let fileManager = NSFileManager.defaultManager()
+            let fileManager = FileManager.default
             do {
-                try fileManager.copyItemAtPath("\(documentsDirectory)/\(selectedPhoto).jpg", toPath: "\(documentsDirectory)/\(now).jpg")
-                try fileManager.copyItemAtPath("\(documentsDirectory)/\(selectedPhoto).xml", toPath: "\(documentsDirectory)/\(now).xml")
+                try fileManager.copyItem(atPath: "\(documentsDirectory)/\(selectedPhoto).jpg", toPath: "\(documentsDirectory)/\(now).jpg")
+                try fileManager.copyItem(atPath: "\(documentsDirectory)/\(selectedPhoto).xml", toPath: "\(documentsDirectory)/\(now).xml")
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                dbg.pt(error.localizedDescription as AnyObject)
             }
             
             // Exit editing mode
@@ -131,27 +131,27 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         controller.addAction(confirmDuplicate)
         if let ppc = controller.popoverPresentationController {
             ppc.barButtonItem = btnCopy
-            ppc.permittedArrowDirections = .Up
+            ppc.permittedArrowDirections = .up
         }
-        presentViewController(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion: nil)
     }
     
     @IBOutlet var navBarTitle: UINavigationItem!
     
     var btnSettingsState: UIBarButtonItem!
-    func btnSettings(sender: AnyObject) {
+    func btnSettings(_ sender: AnyObject) {
         /*if #available(iOS 10.0, *) {
             UIApplication.shared().open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
         } else {
             // Fallback on earlier versions*/
-            UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+            UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
         //}
     }
     
     weak var btnCreateState: UIBarButtonItem!
     
     weak var editMode: UIBarButtonItem!
-    func btnEdit(sender: AnyObject) {
+    func btnEdit(_ sender: AnyObject) {
         selectedPhotos = []
         if editingMode {
             endEdit()
@@ -161,22 +161,22 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // Change button title
             self.editMode.title = NSLocalizedString("DONE", comment: "")
             // Start cell wobbling
-            for cell in CollectionView.visibleCells() {
+            for cell in CollectionView.visibleCells {
                 let customCell: PhotoThumbnail = cell as! PhotoThumbnail
                 customCell.wobble(true)
             }
             CollectionView.allowsMultipleSelection = true
-            CollectionView.selectItemAtIndexPath(nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
+            CollectionView.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
             // Cosmetic...
-            btnCreateState.enabled = false
-            btnCreateState.tintColor = selectingColor.colorWithAlphaComponent(0)
-            btnSettingsState.enabled = false
-            btnSettingsState.tintColor = selectingColor.colorWithAlphaComponent(0)
+            btnCreateState.isEnabled = false
+            btnCreateState.tintColor = selectingColor.withAlphaComponent(0)
+            btnSettingsState.isEnabled = false
+            btnSettingsState.tintColor = selectingColor.withAlphaComponent(0)
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
-            navBar.tintColor = UIColor.whiteColor()
+            navBar.tintColor = UIColor.white
             navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
-            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         }
         buildLeftNavbarItems(selectedPhotos.count)
     }
@@ -188,59 +188,59 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // Hide left navbar buttons
         buildLeftNavbarItems()
         // Put the StatusBar in white
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        UIApplication.shared.statusBarStyle = .lightContent
         
         // add observer to detect enter foreground and rebuild collection
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         // purge tmp
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath("\(NSHomeDirectory())/tmp")
+        let fileManager = FileManager.default
+        let files = fileManager.enumerator(atPath: "\(NSHomeDirectory())/tmp")
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
             do {
                 let filePath = "\(NSHomeDirectory())/tmp/\(file)"
-                try fileManager.removeItemAtPath(filePath)
+                try fileManager.removeItem(atPath: filePath)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                dbg.pt(error.localizedDescription as AnyObject)
             }
         }
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    func applicationWillEnterForeground(notification: NSNotification) {
+    func applicationWillEnterForeground(_ notification: Notification) {
         // Put the StatusBar in white
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        UIApplication.shared.statusBarStyle = .lightContent
         self.CollectionView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.navigationController!.hidesBarsOnTap = false
         
         editingMode = false
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         self.CollectionView.reloadData()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segueIndex == -1 {
             segueIndex = 0
         }
         if (segue.identifier == "Add") {
-            if let controller:ViewMenuAddResource = segue.destinationViewController as? ViewMenuAddResource {
+            if let controller:ViewMenuAddResource = segue.destination as? ViewMenuAddResource {
                 controller.ViewCollection = self
             }
         }
@@ -250,14 +250,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
             if (segue.identifier == "viewLargePhoto") {
                 endEdit()
-                if let controller:ViewCreateDetails = segue.destinationViewController as? ViewCreateDetails {
+                if let controller:ViewCreateDetails = segue.destination as? ViewCreateDetails {
                     controller.fileName = nameToSegue
                     controller.filePath = pathToSegue
                     controller.xml = xmlToSegue
                 }
             }
             if (segue.identifier == "viewMetas") {
-                if let controller:ViewMetas = segue.destinationViewController as? ViewMetas {
+                if let controller:ViewMetas = segue.destination as? ViewMetas {
                     controller.xml = xmlToSegue
                     controller.filePath = pathToSegue
                     controller.fileName = nameToSegue
@@ -266,7 +266,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
             if (segue.identifier == "playXia") {
                 endEdit()
-                if let controller:PlayXia = segue.destinationViewController as? PlayXia {
+                if let controller:PlayXia = segue.destination as? PlayXia {
                     controller.fileName = nameToSegue
                     controller.filePath = pathToSegue
                     controller.xml = xmlToSegue
@@ -274,7 +274,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 }
             }
             if (segue.identifier == "export") {
-                if let controller:ViewExport = segue.destinationViewController as? ViewExport {
+                if let controller:ViewExport = segue.destination as? ViewExport {
                     controller.filePath = pathToSegue
                     controller.fileName = nameToSegue
                     controller.xml = xmlToSegue
@@ -284,71 +284,71 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func buildLeftNavbarItems(selectedItems: Int = 0) {
-        let buttonColor = (editing) ? selectingColor : blueColor
+    func buildLeftNavbarItems(_ selectedItems: Int = 0) {
+        let buttonColor = (isEditing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
-            btnTrash.enabled = true
-            btnTrash.tintColor = UIColor.whiteColor()
-            btnExport.enabled = true
-            btnExport.tintColor = UIColor.whiteColor()
-            btnEdit.enabled = true
-            btnEdit.tintColor = UIColor.whiteColor()
-            btnCopy.enabled = true
-            btnCopy.tintColor = UIColor.whiteColor()
+            btnTrash.isEnabled = true
+            btnTrash.tintColor = UIColor.white
+            btnExport.isEnabled = true
+            btnExport.tintColor = UIColor.white
+            btnEdit.isEnabled = true
+            btnEdit.tintColor = UIColor.white
+            btnCopy.isEnabled = true
+            btnCopy.tintColor = UIColor.white
             break
         case 2...9999:
-            btnTrash.enabled = true
-            btnTrash.tintColor = UIColor.whiteColor()
-            btnExport.enabled = false
-            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
-            btnEdit.enabled = false
-            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
-            btnCopy.enabled = false
-            btnCopy.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnTrash.isEnabled = true
+            btnTrash.tintColor = UIColor.white
+            btnExport.isEnabled = false
+            btnExport.tintColor = buttonColor.withAlphaComponent(0)
+            btnEdit.isEnabled = false
+            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
+            btnCopy.isEnabled = false
+            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
             break
         default:
-            btnTrash.enabled = false
-            btnTrash.tintColor = buttonColor.colorWithAlphaComponent(0)
-            btnExport.enabled = false
-            btnExport.tintColor = buttonColor.colorWithAlphaComponent(0)
-            btnEdit.enabled = false
-            btnEdit.tintColor = buttonColor.colorWithAlphaComponent(0)
-            btnCopy.enabled = false
-            btnCopy.tintColor = buttonColor.colorWithAlphaComponent(0)
+            btnTrash.isEnabled = false
+            btnTrash.tintColor = buttonColor.withAlphaComponent(0)
+            btnExport.isEnabled = false
+            btnExport.tintColor = buttonColor.withAlphaComponent(0)
+            btnEdit.isEnabled = false
+            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
+            btnCopy.isEnabled = false
+            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
         }
     }
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
        self.arrayNames = []
         // Load all images names
-        let fileManager = NSFileManager.defaultManager()
-        let files = fileManager.enumeratorAtPath(documentsDirectory)
+        let fileManager = FileManager.default
+        let files = fileManager.enumerator(atPath: documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            let ext = file.substringWithRange(file.endIndex.advancedBy(-3)..<file.endIndex.advancedBy(0))
+            let ext = file.substring(with: file.characters.index(file.endIndex, offsetBy: -3)..<file.characters.index(file.endIndex, offsetBy: 0))
             if (ext != "xml" && file != "Inbox") {
-                file = file.substringWithRange(file.startIndex.advancedBy(0)..<file.endIndex.advancedBy(-4)) // remove .xyz
-                if fileManager.fileExistsAtPath("\(documentsDirectory)/\(file).xml") {
+                file = file.substring(with: file.characters.index(file.startIndex, offsetBy: 0)..<file.characters.index(file.endIndex, offsetBy: -4)) // remove .xyz
+                if fileManager.fileExists(atPath: "\(documentsDirectory)/\(file).xml") {
                     self.arrayNames.append(file)
                 }
                 else {
                     do {
-                        try fileManager.removeItemAtPath("\(documentsDirectory)/\(file).jpg")
+                        try fileManager.removeItem(atPath: "\(documentsDirectory)/\(file).jpg")
                     }
                     catch {
-                        dbg.pt("\(error)")
+                        dbg.pt("\(error)" as AnyObject)
                     }
                 }
             }
         }
         // Add a "create image" if the is no image in Documents directory
         if ( self.arrayNames.count == 0 ) {
-            editMode.enabled = false
+            editMode.isEnabled = false
             return 1
         }
         else {
-            editMode.enabled = true
+            editMode.isEnabled = true
         }
         
         // order thumb by title
@@ -360,7 +360,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             self.arraySortedNames[title!] = name
         }
         
-        let orderedTitles = self.arraySortedNames.keys.sort()
+        let orderedTitles = self.arraySortedNames.keys.sorted()
         self.arrayNames = []
         for title in orderedTitles {
             self.arrayNames.append(self.arraySortedNames[title]!)
@@ -370,8 +370,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return arrayNames.count;
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
-        let cell: PhotoThumbnail = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoThumbnail
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        let cell: PhotoThumbnail = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoThumbnail
         
         if arrayNames.count == 0 {
             cell.setLabel(NSLocalizedString("CREATE_DOCUMENT", comment: ""))
@@ -399,7 +399,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     cell.setLabelBkgColor(selectingColor)
                 }
                 else {
-                    cell.setLabelBkgColor(UIColor.clearColor())
+                    cell.setLabelBkgColor(UIColor.clear)
                 }
                 cell.wobble(true)
             }
@@ -411,18 +411,18 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
     
-    func changeCellLabelBkgColor(path: NSIndexPath) {
+    func changeCellLabelBkgColor(_ path: IndexPath) {
         var labelColor: UIColor
         if selectedPhotos.contains(path) {
-            let indexOfPhoto = selectedPhotos.indexOf(path)
-            selectedPhotos.removeAtIndex(indexOfPhoto!)
-            labelColor = UIColor.clearColor()
+            let indexOfPhoto = selectedPhotos.index(of: path)
+            selectedPhotos.remove(at: indexOfPhoto!)
+            labelColor = UIColor.clear
         }
         else {
             selectedPhotos.append(path)
             labelColor = selectingColor
         }
-        if let cell = CollectionView.cellForItemAtIndexPath(path) {
+        if let cell = CollectionView.cellForItem(at: path) {
             let customCell: PhotoThumbnail = cell as! PhotoThumbnail
             customCell.setLabelBkgColor(labelColor)
             navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
@@ -432,52 +432,52 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     func endEdit() {
         editingMode = false
         editMode.title = NSLocalizedString("EDIT", comment: "")
-        for cell in CollectionView.visibleCells() {
+        for cell in CollectionView.visibleCells {
             let customCell: PhotoThumbnail = cell as! PhotoThumbnail
             customCell.wobble(false)
-            customCell.setLabelBkgColor(UIColor.clearColor())
+            customCell.setLabelBkgColor(UIColor.clear)
         }
         CollectionView.reloadData()
-        btnCreateState.enabled = true
-        btnCreateState.tintColor = UIColor.whiteColor()
-        btnSettingsState.enabled = true
-        btnSettingsState.tintColor = UIColor.whiteColor()
+        btnCreateState.isEnabled = true
+        btnCreateState.tintColor = UIColor.white
+        btnSettingsState.isEnabled = true
+        btnSettingsState.tintColor = UIColor.white
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
-        navBar.tintColor = UIColor.whiteColor()
+        navBar.tintColor = UIColor.white
         navBarTitle.title = "Xia"
-        navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         
         // Put the StatusBar in white
-        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
-    func deleteFiles(path: NSIndexPath) {
+    func deleteFiles(_ path: IndexPath) {
         let deleteIndex = (path as NSIndexPath).row
         let fileName = arrayNames[deleteIndex]
         // Delete the file
-        let fileManager = NSFileManager()
+        let fileManager = FileManager()
         do {
             var filePath = "\(documentsDirectory)/\(fileName).jpg"
-            try fileManager.removeItemAtPath(filePath)
+            try fileManager.removeItem(atPath: filePath)
             filePath = "\(documentsDirectory)/\(fileName).xml"
-            try fileManager.removeItemAtPath(filePath)
+            try fileManager.removeItem(atPath: filePath)
         }
         catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            dbg.pt(error.localizedDescription as AnyObject)
         }
         
         // Update arrays
-        self.arrayNames.removeAtIndex(deleteIndex)
+        self.arrayNames.remove(at: deleteIndex)
     }
     
-    func handleTap(gestureReconizer: UITapGestureRecognizer) {
-        if gestureReconizer.state != UIGestureRecognizerState.Ended {
+    func handleTap(_ gestureReconizer: UITapGestureRecognizer) {
+        if gestureReconizer.state != UIGestureRecognizerState.ended {
             return
         }
         
-        let p = gestureReconizer.locationInView(CollectionView)
-        let indexPath = CollectionView.indexPathForItemAtPoint(p)
+        let p = gestureReconizer.location(in: CollectionView)
+        let indexPath = CollectionView.indexPathForItem(at: p)
         if let path = indexPath {
             segueIndex = (path as NSIndexPath).row
             if editingMode {
@@ -487,7 +487,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 buildLeftNavbarItems(selectedPhotos.count)
             }
             else if arrayNames.count == 0 {
-                performSegueWithIdentifier("Add", sender: self)
+                performSegue(withIdentifier: "Add", sender: self)
             }
             else {
                 let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
@@ -497,10 +497,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     let img = UIImage(contentsOfFile: filePath)!
                     
                     landscape = (img.size.width > img.size.height) ? true : false
-                    performSegueWithIdentifier("playXia", sender: self)
+                    performSegue(withIdentifier: "playXia", sender: self)
                 }
                 else {
-                    performSegueWithIdentifier("viewLargePhoto", sender: self)
+                    performSegue(withIdentifier: "viewLargePhoto", sender: self)
                 }
             }
         }

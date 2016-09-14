@@ -227,7 +227,7 @@ class TextConvertersTest: XCTestCase {
         let datasJson = converter.getJSON(baseURL + urlString + "&omitscript=true")
         let dictJson = converter.parseJSON(datasJson)
         let thumbnailURL = dictJson["thumbnail_url"]! as! String
-        expected_output = expected_output.stringByReplacingOccurrencesOfString("###", withString: thumbnailURL)
+        expected_output = expected_output.replacingOccurrences(of: "###", with: thumbnailURL)
         
         XCTAssertEqual(expected_output, output)
     }
@@ -262,7 +262,7 @@ class TextConvertersTest: XCTestCase {
     
     func test_print_html33( ) {
         let raw = "https://youtu.be/oes3P0sbl5w"
-        let expected_output = "<center><iframe width=\"480.0\" height=\"270.0\" src=\"https://www.youtube.com/embed/https://youtu.be/oes3P0sbl5w\" frameborder=\"0\" allowfullscreen></iframe></center>"
+        let expected_output = "<center><iframe width=\"480.0\" height=\"270.0\" src=\"https://www.youtube.com/embed/oes3P0sbl5w\" frameborder=\"0\" allowfullscreen></iframe></center>"
         let output = converter._text2html(raw)
         XCTAssertEqual(expected_output, output)
     }

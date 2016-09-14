@@ -37,16 +37,16 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     var currentScale: CGFloat = 1.0
     var currentCenter: CGPoint!
     var zoomScale: CGFloat = 1.0
-    let transitionDuration: NSTimeInterval = 0.5
+    let transitionDuration: TimeInterval = 0.5
     var currentDetailFrame: CGRect!
-    var screenWidth = UIScreen.mainScreen().bounds.width
-    var screenHeight = UIScreen.mainScreen().bounds.height
+    var screenWidth = UIScreen.main.bounds.width
+    var screenHeight = UIScreen.main.bounds.height
     
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
-    @IBAction func close(sender: AnyObject) {
+    @IBAction func close(_ sender: AnyObject) {
         if !showZoom {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -58,27 +58,27 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     @IBOutlet var descView: UIWebView!
     @IBOutlet var bkgdzoom: UIImageView!
     
-    @IBAction func btnZoomAction(sender: AnyObject) {
+    @IBAction func btnZoomAction(_ sender: AnyObject) {
         if !zoomDisable && !showZoom {
             showDetail(imgThumb)
         }
     }
     
-    @IBAction func closeZoom(sender: AnyObject) {
+    @IBAction func closeZoom(_ sender: AnyObject) {
         if showZoom {
             // Show / hide elements
-            self.imgArea.hidden = false
+            self.imgArea.isHidden = false
             self.imgArea.alpha = 0
-            descView.userInteractionEnabled = true
-            UIView.animateWithDuration(transitionDuration) { () -> Void in
-                self.imgThumb.transform = CGAffineTransformScale(self.imgThumb.transform, self.currentScale / self.zoomScale, self.currentScale / self.zoomScale)
+            descView.isUserInteractionEnabled = true
+            UIView.animate(withDuration: transitionDuration, animations: { () -> Void in
+                self.imgThumb.transform = self.imgThumb.transform.scaledBy(x: self.currentScale / self.zoomScale, y: self.currentScale / self.zoomScale)
                 self.imgThumb.center = self.currentCenter
                 self.bkgdzoom.alpha = 0
-            }
-            UIView.animateWithDuration(2 * transitionDuration) { () -> Void in
+            }) 
+            UIView.animate(withDuration: 2 * transitionDuration, animations: { () -> Void in
                 self.imgArea.alpha = 1
                 self.titleArea.alpha = 1
-            }
+            }) 
             showZoom = false
         }
     }
@@ -87,26 +87,26 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         super.viewDidLoad()
         
         // background must be larger the popup
-        bkgdzoom.transform = CGAffineTransformScale(bkgdzoom.transform, 3, 3)
+        bkgdzoom.transform = bkgdzoom.transform.scaledBy(x: 3, y: 3)
         
         imgThumb = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
-        imgThumb.contentMode = UIViewContentMode.ScaleAspectFit
+        imgThumb.contentMode = UIViewContentMode.scaleAspectFit
         imgThumb.image = bkgdImage.image
         
         // Cropping image
         let myMask = CAShapeLayer()
         if tag != 0 {
-            myMask.path = path.CGPath
+            myMask.path = path.cgPath
             imgThumb.layer.mask = myMask
         }
         self.view.addSubview(imgThumb)
-        imgThumb.hidden = true
+        imgThumb.isHidden = true
         
         // Scaling cropped image to fit in the 200 x 200 square
         let detailScale = getCurrentScale(detail.bezierFrame())
         currentScale = detailScale
 
-        imgThumb.transform = CGAffineTransformScale(imgThumb.transform, detailScale, detailScale)
+        imgThumb.transform = imgThumb.transform.scaledBy(x: detailScale, y: detailScale)
         
         // Centering the cropped image in imgArea
         let pathCenter = CGPoint(x: detail.bezierFrame().midX * detailScale, y: detail.bezierFrame().midY * detailScale)
@@ -147,9 +147,9 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         descView.delegate = self
         
         // wait 0.5s before showing image (bubbletransition effect)
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
-                dispatch_after(delayTime, dispatch_get_main_queue()){
-            self.imgThumb.hidden = false
+        let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 500)) / Double(NSEC_PER_SEC)
+                DispatchQueue.main.asyncAfter(deadline: delayTime){
+            self.imgThumb.isHidden = false
         }
         
         //NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayDetail.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
@@ -162,7 +162,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         self.view.superview!.layer.masksToBounds = false
     }
     
-    func getCurrentScale(frame: CGRect) -> CGFloat {
+    func getCurrentScale(_ frame: CGRect) -> CGFloat {
         let detailScaleX = 190 / frame.width
         let detailScaleY = 190 / frame.height
         
@@ -182,7 +182,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         for detail in xmlDetails {
             if let path = detail.attributes["path"] {
                 // Add detail object
-                let detailTag = (NSNumberFormatter().numberFromString(detail.attributes["tag"]!)?.integerValue)!
+                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
                 newDetail = xiaDetail(tag: detailTag, scale: localScale)
                 //details["\(detailTag)"] = newDetail
                 
@@ -203,8 +203,8 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
     }
     
     func rotated() {
-        screenWidth = UIScreen.mainScreen().bounds.width
-        screenHeight = UIScreen.mainScreen().bounds.height
+        screenWidth = UIScreen.main.bounds.width
+        screenHeight = UIScreen.main.bounds.height
         currentDetailFrame = getDetailFrame()
         currentScale = getCurrentScale(currentDetailFrame)
         if tag != 0 {
@@ -212,11 +212,11 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         }
     }
     
-    func showDetail(detailImg: UIImageView) {
+    func showDetail(_ detailImg: UIImageView) {
         // Show / hide elements
-        self.bkgdzoom.hidden = false
+        self.bkgdzoom.isHidden = false
         self.bkgdzoom.alpha = 0
-        descView.userInteractionEnabled = false
+        descView.isUserInteractionEnabled = false
         showZoom = true
         
         currentCenter = detailImg.center
@@ -227,12 +227,12 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         let detailScale = min(detailScaleX, detailScaleY, 3) // 3 is maximum zoom
         zoomScale = detailScale
         
-        UIView.animateWithDuration(transitionDuration) { () -> Void in
+        UIView.animate(withDuration: transitionDuration, animations: { () -> Void in
             self.bkgdzoom.alpha = 1
             self.titleArea.alpha = 0
             self.imgArea.alpha = 0
-            detailImg.transform = CGAffineTransformScale(detailImg.transform, detailScale / self.currentScale, detailScale / self.currentScale)
-        }
+            detailImg.transform = detailImg.transform.scaledBy(x: detailScale / self.currentScale, y: detailScale / self.currentScale)
+        }) 
         
         // Center the detail
         let distanceX = screenWidth/2 - currentDetailFrame.midX
@@ -243,38 +243,38 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         
         let newCenter = CGPoint(x: xCoord, y: yCoord)
         
-        UIView.animateWithDuration(transitionDuration) { () -> Void in
+        UIView.animate(withDuration: transitionDuration, animations: { () -> Void in
             detailImg.center = newCenter
-        }
+        }) 
         
-        UIView.animateWithDuration(transitionDuration / 10) { () -> Void in
+        UIView.animate(withDuration: transitionDuration / 10, animations: { () -> Void in
             self.imgArea.alpha = 0
-        }
+        }) 
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 500))
-        dispatch_after(delayTime, dispatch_get_main_queue()){
-            self.imgArea.hidden = true
+        let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 500)) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime){
+            self.imgArea.isHidden = true
         }
         dbg.ptLine()
-        dbg.pt("currentCenter : \(currentCenter)")
-        dbg.pt("detailScale : \(detailScale)")
-        dbg.pt("currentScale : \(currentScale)")
-        dbg.pt("distanceX : \(distanceX)")
-        dbg.pt("distanceY : \(distanceY)")
-        dbg.pt("currentDetailFrame : \(currentDetailFrame)")
-        dbg.pt("getCenter() : \(getCenter())")
-        dbg.pt("xCoord : \(xCoord)")
-        dbg.pt("yCoord : \(yCoord)")
+        dbg.pt("currentCenter : \(currentCenter)" as AnyObject)
+        dbg.pt("detailScale : \(detailScale)" as AnyObject)
+        dbg.pt("currentScale : \(currentScale)" as AnyObject)
+        dbg.pt("distanceX : \(distanceX)" as AnyObject)
+        dbg.pt("distanceY : \(distanceY)" as AnyObject)
+        dbg.pt("currentDetailFrame : \(currentDetailFrame)" as AnyObject)
+        dbg.pt("getCenter() : \(getCenter())" as AnyObject)
+        dbg.pt("xCoord : \(xCoord)" as AnyObject)
+        dbg.pt("yCoord : \(yCoord)" as AnyObject)
         //dbg.pt(" : \()")
     }
     
-    func webView(webView: UIWebView, shouldStartLoadWith request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        if navigationType == UIWebViewNavigationType.LinkClicked {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if navigationType == UIWebViewNavigationType.linkClicked {
             /*if #available(iOS 10.0, *) {
                 UIApplication.sharedAppl().open(request.url!, options: [:], completionHandler: nil)
             } else {
                 // Fallback on earlier versions*/
-                UIApplication.sharedApplication().openURL(request.URL!)
+                UIApplication.shared.openURL(request.url!)
             //}
             return false
         }

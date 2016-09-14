@@ -298,12 +298,14 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4S6NJ45954;
 						DevelopmentTeamName = "Academie de Versailles";
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					F03EA5D81D12EB02008678BC = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4S6NJ45954;
 						DevelopmentTeamName = "Academie de Versailles";
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 						TestTargetID = F03EA5C41D12EB02008678BC;
 					};

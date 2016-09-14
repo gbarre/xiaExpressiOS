@@ -33,7 +33,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
     var xmlSVG: AEXMLDocument = AEXMLDocument()
     var tmpFilePath: String = ""
-    let now:Int = Int(NSDate().timeIntervalSince1970)
+    let now:Int = Int(Date().timeIntervalSince1970)
     weak var ViewCollection: ViewCollectionController?
     
     override func viewDidLoad() {
@@ -41,22 +41,22 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch (indexPath as NSIndexPath).row {
         case 0:
             exportSimpleXML()
         case 1:
             exportSVG()
         default:
-            dbg.pt("oups...")
+            dbg.pt("oups..." as AnyObject)
         }
     }
     
     func exportSimpleXML() {
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
-        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
+        let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
+        let trimmedBase64String = base64String.replacingOccurrences(of: "\n", with: "")
         
         // prepare xml
         let _ = xmlSimpleXML.addChild("XiaiPad")
@@ -66,10 +66,10 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // write xml to temp directory
         tmpFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
         do {
-            try xmlSimpleXML.xmlString.writeToFile(tmpFilePath, atomically: false, encoding: NSUTF8StringEncoding)
+            try xmlSimpleXML.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)")
+            dbg.pt("\(error)" as AnyObject)
         }
         
         openDocumentInteractionController(tmpFilePath)
@@ -78,8 +78,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     func exportSVG() {
        // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding76CharacterLineLength)
-        let trimmedBase64String = base64String.stringByReplacingOccurrencesOfString("\n", withString: "")
+        let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
+        let trimmedBase64String = base64String.replacingOccurrences(of: "\n", with: "")
         
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
@@ -317,7 +317,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                 
                 if ( detail.attributes["constraint"] == constraintRectangle || detail.attributes["constraint"] == constraintEllipse ) {
                     detailType = (detail.attributes["constraint"] == constraintRectangle) ? "rect" : constraintEllipse
-                    var originPoint = CGPointMake(CGFloat.max, CGFloat.max)
+                    var originPoint = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
                     var maxPoint = CGPoint(x: 0.0, y: 0.0)
                     
                     for point in pointsArray {
@@ -361,7 +361,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                     detailType = "path"
                     detailAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
                                         "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                                        "d" : "M \(path!.stringByReplacingOccurrencesOfString(";", withString: ",")) Z",
+                                        "d" : "M \(path!.replacingOccurrences(of: ";", with: ",")) Z",
                                         "inkscape:connector-curvature" : "0"
                     ]
                 }
@@ -377,16 +377,16 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // write xml to temp directory
         tmpFilePath = NSHomeDirectory() + "/tmp/\(now).svg"
         do {
-            try xmlSVG.xmlString.writeToFile(tmpFilePath, atomically: false, encoding: NSUTF8StringEncoding)
+            try xmlSVG.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)")
+            dbg.pt("\(error)" as AnyObject)
         }
         
         openDocumentInteractionController(tmpFilePath)
     }
     
-    func getElementValue(element: String) -> String {
+    func getElementValue(_ element: String) -> String {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! != "element <\(element)> not found") {
             return xml["xia"][element].value!
         }
@@ -395,16 +395,16 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    func openDocumentInteractionController(url: String) {
+    func openDocumentInteractionController(_ url: String) {
         // Show native export controller
-        docController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: url))
+        docController = UIDocumentInteractionController(url: URL(fileURLWithPath: url))
         docController.delegate = self
-        docController.presentOptionsMenuFromRect(self.view.frame, inView:self.view, animated:true)
+        docController.presentOptionsMenu(from: self.view.frame, in:self.view, animated:true)
     }
     
-    func documentInteractionControllerDidDismissOptionsMenu(controller: UIDocumentInteractionController) {
+    func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
         ViewCollection?.buildLeftNavbarItems()
         ViewCollection?.endEdit()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }

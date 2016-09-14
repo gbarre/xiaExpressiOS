@@ -21,7 +21,7 @@
 
 import UIKit
 
-func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView], parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
+func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView], parentView: AnyObject, ellipse: Bool = false, locked: Bool = false) {
     var shapeArg: Int = 0
     let shapeTag = tag + 100
     if fill {
@@ -30,9 +30,9 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView]
     else {
         shapeArg = (ellipse) ? 2 : 0
     }
-    var xMin: CGFloat = UIScreen.mainScreen().bounds.width
+    var xMin: CGFloat = UIScreen.main.bounds.width
     var xMax: CGFloat = 0
-    var yMin: CGFloat = UIScreen.mainScreen().bounds.height
+    var yMin: CGFloat = UIScreen.main.bounds.height
     var yMax: CGFloat = 0
     // Get dimensions of the shape
     for subview in parentView.subviews {
@@ -75,7 +75,7 @@ func buildShape(fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageView]
     }
 }
 
-func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
+func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
     for child in xml["xia"].all! {
         // Look for readonly child
         if let readonly = child["readonly"].value {
@@ -116,13 +116,13 @@ func checkXML (xml: AEXMLDocument) -> AEXMLDocument {
     return xml
 }
 
-func convertStringToCGFloat(txt: String) -> CGFloat {
+func convertStringToCGFloat(_ txt: String) -> CGFloat {
     let cgFloat: CGFloat?
     if let double = Double("\(txt)") {
         cgFloat = CGFloat(double)
     }
     else {
-        let d = txt.stringByReplacingOccurrencesOfString(",", withString: ".")
+        let d = txt.replacingOccurrences(of: ",", with: ".")
         cgFloat = (Double("\(d)") == nil) ? -12345.6789 : CGFloat(Double("\(d)")!)
     }
     return cgFloat!
@@ -135,8 +135,8 @@ func convertStringToCGFloat(txt: String) -> CGFloat {
 
 func getCenter() -> CGPoint{
     var point = CGPoint(x: 0, y: 0)
-    let screenWidth = UIScreen.mainScreen().bounds.width
-    let screenHeight = UIScreen.mainScreen().bounds.height
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
 
     if ( screenHeight == 1024 && screenWidth != 1366 ) { // device is portrait and not iPad Pro
         point.x = (screenWidth - 540) / 2 + 100
@@ -149,19 +149,19 @@ func getCenter() -> CGPoint{
     return point
 }
 
-func getXML(path: String, check: Bool = true) -> AEXMLDocument {
-    let data = NSData(contentsOfFile: path)
+func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
+    let data = try? Data(contentsOf: URL(fileURLWithPath: path))
     var xml: AEXMLDocument!
     do {
         try xml = AEXMLDocument(xmlData: data!)
     }
     catch {
-        dbg.pt("\(error)")
+        dbg.pt("\(error)" as AnyObject)
     }
     return (check) ? checkXML(xml) : xml
 }
 
-func pointInPolygon(points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
+func pointInPolygon(_ points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     // translate from C : http://alienryderflex.com/polygon/
     let polyCorners = points.count
     var j = polyCorners - 1
@@ -181,14 +181,14 @@ func pointInPolygon(points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     return oddNodes
 }
 
-func writeXML(xml: AEXMLDocument, path: String) -> Bool {
+func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
     var error = true
     do {
-        try xml.xmlString.writeToFile(path, atomically: true, encoding: NSUTF8StringEncoding)
+        try xml.xmlString.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
         error = false
     }
     catch {
-        dbg.pt("\(error)")
+        dbg.pt("\(error)" as AnyObject)
     }
     return error
 }

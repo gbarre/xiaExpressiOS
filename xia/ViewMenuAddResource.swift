@@ -28,23 +28,23 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     var newMedia: Bool = false
     let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
     
-    @IBAction func takePhoto(sender: AnyObject) {
-        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)){
+    @IBAction func takePhoto(_ sender: AnyObject) {
+        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
             //load the camera interface
             let picker:UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.Camera
+            picker.sourceType = UIImagePickerControllerSourceType.camera
             picker.delegate = self
             picker.allowsEditing = false
-            self.presentViewController(picker, animated: true, completion: nil)
+            self.present(picker, animated: true, completion: nil)
             self.newMedia = true
         }
         else{
             //no camera available
-            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Default, handler: {(alertAction)in
-                alert.dismissViewControllerAnimated(true, completion: nil)
+            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: {(alertAction)in
+                alert.dismiss(animated: true, completion: nil)
             }))
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -52,20 +52,20 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         super.viewDidLoad()
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        let now: Int = Int(NSDate().timeIntervalSince1970)
+        let now: Int = Int(Date().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
-        imageData?.writeToFile(documentsDirectory + "/\(now).jpg", atomically: true)
+        try? imageData?.write(to: URL(fileURLWithPath: documentsDirectory + "/\(now).jpg"), options: [.atomic])
         
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.writeToFile(documentsDirectory + "/\(now).xml", atomically: false, encoding: NSUTF8StringEncoding)
+            try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt("\(error)")
+            dbg.pt("\(error)" as AnyObject)
         }
         ViewCollection!.arrayNames.append("\(now)")
         
@@ -74,12 +74,12 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
             //UIImageWriteToSavedPhotosAlbum(image!, self, #selector(ViewMenuAddResource.image(_:didFinishSavingWithError:contextInfo:)), nil)
             UIImageWriteToSavedPhotosAlbum(image!, self, nil, nil)
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         ViewCollection!.CollectionView.reloadData()
         
         // Hide the popover after adding the photo in the library
         if newMedia {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
             newMedia = false
         }
     }
@@ -97,13 +97,13 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         }
     }*/
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //if segue.destinationViewController.isKind(UIImagePickerController) {
-            let picker = segue.destinationViewController as! UIImagePickerController
+            let picker = segue.destination as! UIImagePickerController
             picker.delegate = self
         //}
     }

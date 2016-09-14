@@ -36,28 +36,28 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet var switchZoom: UISwitch!
-    @IBAction func btnZoomAction(sender: AnyObject) {
+    @IBAction func btnZoomAction(_ sender: AnyObject) {
         zoom = !zoom
-        switchZoom.on = zoom
+        switchZoom.isOn = zoom
     }
     @IBOutlet var switchLock: UISwitch!
-    @IBAction func btnLockAction(sender: AnyObject) {
+    @IBAction func btnLockAction(_ sender: AnyObject) {
         lock = !lock
-        switchLock.on = lock
+        switchLock.isOn = lock
     }
     @IBOutlet weak var txtTitle: UITextField!
     @IBOutlet weak var txtDesc: UITextView!
     
-    @IBAction func btnCancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func btnCancel(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func btnDone(sender: AnyObject) {
+    @IBAction func btnDone(_ sender: AnyObject) {
         // Save the detail in xml
         if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
             for d in detail {
-                d.attributes["zoom"] = "\(switchZoom.on)"
-                d.attributes["locked"] = "\(switchLock.on)"
+                d.attributes["zoom"] = "\(switchZoom.isOn)"
+                d.attributes["locked"] = "\(switchLock.isOn)"
                 d.attributes["title"] = txtTitle.text
                 //d.value = attributedString2pikipiki(txtDesc.attributedText)
                 d.value = txtDesc.text
@@ -67,21 +67,21 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         txtDesc.layer.cornerRadius = 5
-        switchZoom.on = zoom
-        switchLock.on = lock
+        switchZoom.isOn = zoom
+        switchLock.isOn = lock
         txtTitle.text = self.detailTitle
         
         txtDesc.delegate = self
         if self.detailDescription == "" {// Add placeholder
             txtDesc.text = NSLocalizedString("DESCRIPTION...", comment: "")
-            txtDesc.textColor = UIColor.lightGrayColor()
+            txtDesc.textColor = UIColor.lightGray
         }
         else {
             txtDesc.text = self.detailDescription
@@ -89,69 +89,69 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
         // autofocus
         txtTitle.becomeFirstResponder()
-        txtTitle.backgroundColor = UIColor.clearColor()
+        txtTitle.backgroundColor = UIColor.clear
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
-        if textView.textColor == UIColor.lightGrayColor() {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
             textView.text = ""
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = NSLocalizedString("DESCRIPTION...", comment: "")
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         txtDesc.setContentOffset(CGPoint(x: 0, y: -txtDesc.contentInset.top), animated: false)
     }
     
-    func attributedString2pikipiki(attrString: NSAttributedString) -> String {
+    func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
         let descText = NSMutableString()
-        descText.appendString(attrString.string)
+        descText.append(attrString.string)
         //var text = String()
         var offset: Int = 0
         var bold: Bool = false
         var italic: Bool = false
         
-        attrString.enumerateAttribute(NSFontAttributeName, inRange: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
+        attrString.enumerateAttribute(NSFontAttributeName, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
                 var startIndex: Int = r.location
                 var endIndex: Int = r.location+r.length
                 let tmpAttr = "\(value!)"
-                if (tmpAttr.rangeOfString("bold") != nil && tmpAttr.rangeOfString("italic") != nil) {
+                if (tmpAttr.range(of: "bold") != nil && tmpAttr.range(of: "italic") != nil) {
                     startIndex += offset
-                    descText.insertString("*****", atIndex: startIndex)
+                    descText.insert("*****", at: startIndex)
                     offset += 5
                     endIndex += offset
-                    descText.insertString("*****", atIndex: endIndex)
+                    descText.insert("*****", at: endIndex)
                     offset += 5
                     bold = true
                     italic = true
                 }
                 else {
-                    if (tmpAttr.rangeOfString("bold") != nil) {
+                    if (tmpAttr.range(of: "bold") != nil) {
                         startIndex += offset
-                        descText.insertString("***", atIndex: startIndex)
+                        descText.insert("***", at: startIndex)
                         offset += 3
                         endIndex += offset
-                        descText.insertString("***", atIndex: endIndex)
+                        descText.insert("***", at: endIndex)
                         offset += 3
                         bold = true
                     }
                     else {
                         bold = false
                     }
-                    if (tmpAttr.rangeOfString("italic") != nil) {
+                    if (tmpAttr.range(of: "italic") != nil) {
                         startIndex += offset
-                        descText.insertString("**", atIndex: startIndex)
+                        descText.insert("**", at: startIndex)
                         offset += 2
                         endIndex += offset
-                        descText.insertString("**", atIndex: endIndex)
+                        descText.insert("**", at: endIndex)
                         offset += 2
                         italic = true
                     }
@@ -163,9 +163,9 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
             //text = "\(descText)"
         }
         
-        attrString.enumerateAttribute(NSUnderlineStyleAttributeName, inRange: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
+        attrString.enumerateAttribute(NSUnderlineStyleAttributeName, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
-                dbg.pt(r)
+                dbg.pt(r as AnyObject)
                 dbg.pt(descText)
                 var startIndex: Int = r.location
                 var endIndex: Int = r.location+r.length
@@ -176,11 +176,11 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                     offset -= 2
                 }
                 startIndex += offset
-                descText.insertString("__", atIndex: startIndex)
+                descText.insert("__", at: startIndex)
                 dbg.pt(descText)
                 offset += 2
                 endIndex += offset
-                descText.insertString("__", atIndex: endIndex)
+                descText.insert("__", at: endIndex)
                 offset += 2
             }
         }
@@ -188,15 +188,15 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         return "\(descText)"
     }
     
-    func pikipiki2AttributedString(text: String) -> NSAttributedString {
+    func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
-        let size = [NSFontAttributeName : UIFont.systemFontOfSize(15.0)]
+        let size = [NSFontAttributeName : UIFont.systemFont(ofSize: 15.0)]
         attributedText.addAttributes(size, range: NSRange(location: 0, length: attributedText.length))
         
-        let attributeBold = [NSFontAttributeName: UIFont.boldSystemFontOfSize(15)]
+        let attributeBold = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 15)]
         try! attributedText.addAttributes(attributeBold, delimiter: "***")
         
-        let attributeItalic = [NSFontAttributeName: UIFont.italicSystemFontOfSize(15)]
+        let attributeItalic = [NSFontAttributeName: UIFont.italicSystemFont(ofSize: 15)]
         try! attributedText.addAttributes(attributeItalic, delimiter: "**")
         
         //let attributeUnderline = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
@@ -211,20 +211,20 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
 }
 
 public extension NSMutableAttributedString {
-    func addAttributes(attrs: [String : AnyObject], delimiter: String) throws {
-        let escaped = NSRegularExpression.escapedPatternForString(delimiter)
+    func addAttributes(_ attrs: [String : AnyObject], delimiter: String) throws {
+        let escaped = NSRegularExpression.escapedPattern(for: delimiter)
         let regex = try NSRegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
         
         var offset = 0
-        regex.enumerateMatchesInString(string, options: [], range: NSRange(location: 0, length: string.characters.count)) { (result, flags, stop) -> Void in
+        regex.enumerateMatches(in: string, options: [], range: NSRange(location: 0, length: string.characters.count)) { (result, flags, stop) -> Void in
             guard let result = result else {
                 return
             }
             
             let range = NSRange(location: result.range.location + offset, length: result.range.length)
             self.addAttributes(attrs, range: range)
-            let replacement = regex.replacementStringForResult(result, inString: self.string, offset: offset, template: "$1")
-            self.replaceCharactersInRange(range, withString: replacement)
+            let replacement = regex.replacementString(for: result, in: self.string, offset: offset, template: "$1")
+            self.replaceCharacters(in: range, with: replacement)
             offset -= (2 * delimiter.characters.count)
         }
     }
