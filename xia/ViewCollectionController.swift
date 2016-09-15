@@ -138,16 +138,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var navBarTitle: UINavigationItem!
     
-    var btnSettingsState: UIBarButtonItem!
-    func btnSettings(_ sender: AnyObject) {
-        /*if #available(iOS 10.0, *) {
-            UIApplication.shared().open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
-        } else {
-            // Fallback on earlier versions*/
-            UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
-        //}
-    }
-    
     weak var btnCreateState: UIBarButtonItem!
     
     weak var editMode: UIBarButtonItem!
@@ -170,8 +160,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // Cosmetic...
             btnCreateState.isEnabled = false
             btnCreateState.tintColor = selectingColor.withAlphaComponent(0)
-            btnSettingsState.isEnabled = false
-            btnSettingsState.tintColor = selectingColor.withAlphaComponent(0)
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.white
@@ -443,8 +431,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         CollectionView.reloadData()
         btnCreateState.isEnabled = true
         btnCreateState.tintColor = UIColor.white
-        btnSettingsState.isEnabled = true
-        btnSettingsState.tintColor = UIColor.white
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.white

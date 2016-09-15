@@ -29,12 +29,12 @@
                                     <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <imageView key="backgroundView" userInteractionEnabled="NO" alpha="0.050000000000000003" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="xia_filigrane" id="7ln-D2-c5U">
-                                    <rect key="frame" x="0.0" y="0.0" width="1024" height="704"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="383" height="603"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </imageView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" preservesSuperviewLayoutMargins="YES" reuseIdentifier="PhotoCell" id="Wwi-7K-K0l" customClass="PhotoThumbnail" customModule="xia" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="10" width="200" height="250"/>
+                                        <rect key="frame" x="92" y="10" width="200" height="250"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="200" height="250"/>
@@ -140,12 +140,6 @@
                                                     </segue>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem image="settings" id="hQY-xS-y1t">
-                                                <inset key="imageInsets" minX="0.0" minY="0.0" maxX="-20" maxY="0.0"/>
-                                                <connections>
-                                                    <action selector="btnSettings:" destination="BYZ-38-t0r" id="Yz7-GR-ks0"/>
-                                                </connections>
-                                            </barButtonItem>
                                         </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
@@ -170,7 +164,6 @@
                         <outlet property="btnCreateState" destination="5Zb-O2-v5O" id="rf2-cb-XVD"/>
                         <outlet property="btnEdit" destination="fu4-Qn-UIB" id="gWV-FJ-Ikf"/>
                         <outlet property="btnExport" destination="Vxz-4Q-6V9" id="RU8-SX-6ze"/>
-                        <outlet property="btnSettingsState" destination="hQY-xS-y1t" id="Pih-R4-Shb"/>
                         <outlet property="btnTrash" destination="cGm-0U-sRw" id="fnU-LC-lJW"/>
                         <outlet property="editMode" destination="S4K-WX-yik" id="vbf-s7-muM"/>
                         <outlet property="navBar" destination="I15-vY-FYi" id="zAf-Vt-nPo"/>
@@ -1347,7 +1340,6 @@
         <image name="export_tablet" width="30" height="30"/>
         <image name="inkscape" width="30" height="30"/>
         <image name="play" width="30" height="30"/>
-        <image name="settings" width="25" height="25"/>
         <image name="xia_filigrane" width="400" height="400"/>
     </resources>
     <inferredMetricsTieBreakers>
