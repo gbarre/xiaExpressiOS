@@ -860,7 +860,9 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     func rotated() {
         loadBackground(img)
-        loadDetails(xml)
+        if let _ = xml.root["details"]["detail"].all {
+            loadDetails(xml)
+        }
     }
     
     func setBtnsIcons() {
