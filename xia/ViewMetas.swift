@@ -33,7 +33,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     var pass: String = ""
     var selectedLicense: String = ""
-    var showKbd: Bool = false
+    var showKbd: Bool = true
     var iPadPro: Bool = false
     
     let availableLicenses = [
