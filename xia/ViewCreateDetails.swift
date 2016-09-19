@@ -698,6 +698,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     func detailInfos() {
         moveDetail = false
         movingPoint = -1
+        stopCreation()
         if currentDetailTag == 0 {
             performSegue(withIdentifier: "viewMetas", sender: self)
         }
