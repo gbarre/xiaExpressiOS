@@ -37,7 +37,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -48,9 +48,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string> </string>
+	<string>Camera Access</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string> </string>
+	<string>Photos Access</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
