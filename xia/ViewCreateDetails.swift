@@ -764,7 +764,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                         }
                     }
                     if let constraint = detail.attributes["constraint"] {
-                        details["\(detailTag)"]?.constraint = constraint
+                        details["\(detailTag)"]?.constraint = (constraint != constraintPolygon && pointsArray.count != 4) ? constraintPolygon : constraint
                     }
                     else {
                         details["\(detailTag)"]?.constraint = constraintPolygon

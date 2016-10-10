@@ -89,7 +89,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         UIApplication.shared.statusBarStyle = .lightContent
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
         location = touch.location(in: self.bkgdImage)
         touchedTag = 0
