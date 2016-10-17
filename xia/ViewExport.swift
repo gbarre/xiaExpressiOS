@@ -33,7 +33,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
     var xmlSVG: AEXMLDocument = AEXMLDocument()
     var tmpFilePath: String = ""
-    let now:Int = Int(Date().timeIntervalSince1970)
+    //let now:Int = Int(Date().timeIntervalSince1970)
     weak var ViewCollection: ViewCollectionController?
     
     override func viewDidLoad() {
@@ -64,7 +64,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         let _ = xmlSimpleXML["XiaiPad"].addChild("image", value: trimmedBase64String, attributes: nil)
         
         // write xml to temp directory
-        tmpFilePath = NSHomeDirectory() + "/tmp/\(now).xml"
+        let tempTitle = cleanInput(getElementValue("title"))
+        tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).xml"
         do {
             try xmlSimpleXML.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
@@ -84,6 +85,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
         
+        let tempTitle = cleanInput(getElementValue("title"))
+        
         // prepare xml
         let xmlAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
                              "xmlns:cc" : "http://creativecommons.org/ns#",
@@ -99,7 +102,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                              "width" : "\(img.size.width)",
                              "height" : "\(img.size.height)",
                              "viewBox" : "0 0 \(img.size.width) \(img.size.height)",
-                             "sodipodi:docname" : "\(now).svg"]
+                             "sodipodi:docname" : "\(tempTitle).svg"]
         let _ = xmlSVG.addChild("svg", value: "", attributes: xmlAttributes)
         
         
@@ -375,7 +378,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
         
         // write xml to temp directory
-        tmpFilePath = NSHomeDirectory() + "/tmp/\(now).svg"
+        tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).svg"
         do {
             try xmlSVG.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
