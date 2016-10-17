@@ -116,6 +116,35 @@ func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
     return xml
 }
 
+
+func cleanInput(_ strIn: String) -> String {
+    // Replace invalid characters with empty strings.
+    var out: String = strIn
+    out = out.replacingOccurrences(of: " ", with: "_")
+    do {
+        let regex = try NSRegularExpression(pattern: "[^\\w\\.\\-\\_]", options: .caseInsensitive)
+        let nsString = strIn as NSString
+        let results = regex.matches(in: strIn, options: [], range: NSMakeRange(0, nsString.length))
+        let arrayResults = results.map {nsString.substring(with: $0.range)}
+        for result in arrayResults {
+            out = out.replacingOccurrences(of: result, with: "")
+        }
+    }
+    catch let error as NSError {
+        dbg.pt(error.localizedDescription)
+    }
+    
+    // Truncate to 45 characters
+    if out.characters.count > 45 {
+        let lastIndex = out.index(out.startIndex, offsetBy: 45)
+        return out.substring(to: lastIndex)
+    }
+    else {
+        return out
+    }
+    
+}
+
 func convertStringToCGFloat(_ txt: String) -> CGFloat {
     let cgFloat: CGFloat?
     if let double = Double("\(txt)") {
