@@ -55,6 +55,8 @@
 		F03EA6301D12EC89008678BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CF1D12EB02008678BC /* Assets.xcassets */; };
 		F03EA6321D12ECA7008678BC /* TextConvertersTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA6311D12ECA7008678BC /* TextConvertersTest.swift */; };
 		F03EA6361D12ED02008678BC /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03EA6351D12ED02008678BC /* images.xcassets */; };
+		F044685F1DE5D9EB00ADBA55 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F044685E1DE5D9EB00ADBA55 /* Reachability.swift */; };
+		F04468601DE5D9EB00ADBA55 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F044685E1DE5D9EB00ADBA55 /* Reachability.swift */; };
 		F04543F31D17F93200BBF731 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543F51D17F93200BBF731 /* Localizable.strings */; };
 		F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FA1D17F93200BBF731 /* InfoPlist.strings */; };
 		F04543FD1D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FF1D17F93300BBF731 /* InfoPlist.strings */; };
@@ -116,6 +118,7 @@
 		F03EA6351D12ED02008678BC /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		F03EA6371D12ED61008678BC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F03EA6381D12ED61008678BC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		F044685E1DE5D9EB00ADBA55 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		F04543F41D17F93200BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F04543F91D17F93200BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F04543FE1D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -186,6 +189,7 @@
 				F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */,
 				F03EA5FC1D12EC2B008678BC /* PlayImageMetadatas.swift */,
 				F03EA5FD1D12EC2B008678BC /* PlayXia.swift */,
+				F044685E1DE5D9EB00ADBA55 /* Reachability.swift */,
 				F03EA5FF1D12EC2B008678BC /* ShapeView.swift */,
 				F03EA6001D12EC2B008678BC /* TextConverter.swift */,
 				F03EA6011D12EC2B008678BC /* Util.swift */,
@@ -398,6 +402,7 @@
 				F03EA60B1D12EC2B008678BC /* Constants.swift in Sources */,
 				F03EA60E1D12EC2B008678BC /* PlayDetail.swift in Sources */,
 				F03EA6151D12EC2B008678BC /* ViewCollectionController.swift in Sources */,
+				F044685F1DE5D9EB00ADBA55 /* Reachability.swift in Sources */,
 				F03EA61B1D12EC2B008678BC /* xiaDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,6 +429,7 @@
 				F03EA62B1D12EC5E008678BC /* ViewDetailInfos.swift in Sources */,
 				F03EA5DE1D12EB02008678BC /* xiaTests.swift in Sources */,
 				F03EA62D1D12EC63008678BC /* ViewMenuAddResource.swift in Sources */,
+				F04468601DE5D9EB00ADBA55 /* Reachability.swift in Sources */,
 				F03EA62C1D12EC60008678BC /* ViewExport.swift in Sources */,
 				F03EA6271D12EC53008678BC /* TextConverter.swift in Sources */,
 				F03EA62F1D12EC68008678BC /* xiaDetail.swift in Sources */,
