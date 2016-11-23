@@ -46,21 +46,28 @@ class TextConverter: NSObject {
         
         htmlString = pikipikiToHTML(htmlString)
         htmlString = htmlString.replacingOccurrences(of: "}}}", with: "")
-        htmlString = showAudio(htmlString)
-        htmlString = showCustomLinks(htmlString)
-        htmlString = showPictures(htmlString)
-        htmlString = showVideo(htmlString)
         
-        htmlString = buildAudiolinguaLinks(htmlString)
-        htmlString = buildDailymotionLinks(htmlString)
-        htmlString = buildFlickrLinks(htmlString)
-        htmlString = buildInstagramLinks(htmlString)
-        htmlString = buildScolawebtvLinks(htmlString)
-        htmlString = buildSlideshareLinks(htmlString)
-        htmlString = buildTwitterLinks(htmlString)
-        htmlString = buildVimeoLinks(htmlString)
-        htmlString = buildYoutubeLinks(htmlString)
-        htmlString = buildWebtvLinks(htmlString)
+        let defaults = UserDefaults.standard
+        let offline = defaults.bool(forKey: "offline")
+        
+        if Reachability.isConnectedToNetwork() && !offline {
+            // we have "Internet", have fun !
+            htmlString = showAudio(htmlString)
+            htmlString = showCustomLinks(htmlString)
+            htmlString = showPictures(htmlString)
+            htmlString = showVideo(htmlString)
+            
+            htmlString = buildAudiolinguaLinks(htmlString)
+            htmlString = buildDailymotionLinks(htmlString)
+            htmlString = buildFlickrLinks(htmlString)
+            htmlString = buildInstagramLinks(htmlString)
+            htmlString = buildScolawebtvLinks(htmlString)
+            htmlString = buildSlideshareLinks(htmlString)
+            htmlString = buildTwitterLinks(htmlString)
+            htmlString = buildVimeoLinks(htmlString)
+            htmlString = buildYoutubeLinks(htmlString)
+            htmlString = buildWebtvLinks(htmlString)
+        }
         
         //dbg.pt(htmlString)
         

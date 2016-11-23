@@ -14,7 +14,7 @@
 			<key>Key</key>
 			<string>version</string>
 			<key>DefaultValue</key>
-			<string>1.4</string>
+			<string>1.5</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -23,6 +23,22 @@
 			<string>License</string>
 			<key>File</key>
 			<string>License</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Offline</string>
+			<key>Key</key>
+			<string>offline</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>

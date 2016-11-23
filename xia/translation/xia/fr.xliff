@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
   <file original="xia/Base.lproj/LaunchScreen.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="h3g-i8-Bnm.text">
@@ -14,152 +14,152 @@
   </file>
   <file original="xia/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="0iM-yM-5dr.text">
         <source>Publisher:</source>
-        <target>Publisher:</target>
+        <target>Éditeur :</target>
         <note>Class = "UILabel"; text = "Publisher:"; ObjectID = "0iM-yM-5dr";</note>
       </trans-unit>
       <trans-unit id="1Jo-GE-FsJ.text">
         <source>Rights:</source>
-        <target>Rights:</target>
+        <target>Droits :</target>
         <note>Class = "UILabel"; text = "Rights:"; ObjectID = "1Jo-GE-FsJ";</note>
       </trans-unit>
       <trans-unit id="1eg-c7-9lt.text">
         <source>Enable Zoom :</source>
-        <target>Enable Zoom :</target>
+        <target>Activer le zoom :</target>
         <note>Class = "UILabel"; text = "Enable Zoom :"; ObjectID = "1eg-c7-9lt";</note>
       </trans-unit>
       <trans-unit id="2tJ-dC-njn.text">
         <source>Title:</source>
-        <target>Title:</target>
+        <target>Titre :</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "2tJ-dC-njn";</note>
       </trans-unit>
       <trans-unit id="6ZW-hF-Iyq.text">
         <source>Xia Tablet</source>
-        <target>Xia Tablet</target>
+        <target>Xia Tablette</target>
         <note>Class = "UILabel"; text = "Xia Tablet"; ObjectID = "6ZW-hF-Iyq";</note>
       </trans-unit>
       <trans-unit id="9Qo-Kh-Y2a.text">
         <source>Creator:</source>
-        <target>Creator:</target>
+        <target>Auteur :</target>
         <note>Class = "UILabel"; text = "Creator:"; ObjectID = "9Qo-Kh-Y2a";</note>
       </trans-unit>
       <trans-unit id="72e-zG-aQJ.text">
         <source>Source:</source>
-        <target>Source:</target>
+        <target>Source :</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ";</note>
       </trans-unit>
       <trans-unit id="74f-sH-8RF.title">
         <source>Create new document</source>
-        <target>Create new document</target>
+        <target>Créer un nouveau document</target>
         <note>Class = "UINavigationItem"; title = "Create new document"; ObjectID = "74f-sH-8RF";</note>
       </trans-unit>
       <trans-unit id="AFw-Te-aYH.text">
         <source>Identifier:</source>
-        <target>Identifier:</target>
+        <target>Identifiant :</target>
         <note>Class = "UILabel"; text = "Identifier:"; ObjectID = "AFw-Te-aYH";</note>
       </trans-unit>
       <trans-unit id="Bz9-wZ-fV4.title">
         <source>Title</source>
-        <target>Title</target>
+        <target>Titre</target>
         <note>Class = "UINavigationItem"; title = "Title"; ObjectID = "Bz9-wZ-fV4";</note>
       </trans-unit>
       <trans-unit id="CKh-Gp-nNv.text">
         <source>Relation:</source>
-        <target>Relation:</target>
+        <target>Relation :</target>
         <note>Class = "UILabel"; text = "Relation:"; ObjectID = "CKh-Gp-nNv";</note>
       </trans-unit>
       <trans-unit id="CPm-pq-eaL.text">
         <source>Date:</source>
-        <target>Date:</target>
+        <target>Date :</target>
         <note>Class = "UILabel"; text = "Date:"; ObjectID = "CPm-pq-eaL";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[0]">
         <source>Metas 1</source>
-        <target>Metas 1</target>
+        <target>Métas 1</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[0] = "Metas 1"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[1]">
         <source>Metas 2</source>
-        <target>Metas 2</target>
+        <target>Métas 2</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[1] = "Metas 2"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[2]">
         <source>Metas 3</source>
-        <target>Metas 3</target>
+        <target>Métas 3</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[2] = "Metas 3"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="EUE-hm-iSr.segmentTitles[3]">
         <source>Image Infos</source>
-        <target>Image Infos</target>
+        <target>Infos Image</target>
         <note>Class = "UISegmentedControl"; EUE-hm-iSr.segmentTitles[3] = "Image Infos"; ObjectID = "EUE-hm-iSr";</note>
       </trans-unit>
       <trans-unit id="HaU-RO-jTp.text">
         <source>License:</source>
-        <target>License:</target>
+        <target>Licence :</target>
         <note>Class = "UILabel"; text = "License:"; ObjectID = "HaU-RO-jTp";</note>
       </trans-unit>
       <trans-unit id="OOl-89-UZY.text">
         <source>License :</source>
-        <target>License :</target>
+        <target>Licence :</target>
         <note>Class = "UILabel"; text = "License :"; ObjectID = "OOl-89-UZY";</note>
       </trans-unit>
       <trans-unit id="Pa1-Lr-9JK.text">
         <source>Languages:</source>
-        <target>Languages:</target>
+        <target>Langues :</target>
         <note>Class = "UILabel"; text = "Languages:"; ObjectID = "Pa1-Lr-9JK";</note>
       </trans-unit>
       <trans-unit id="PqV-gI-xQQ.text">
         <source>Identifier:</source>
-        <target>Identifier:</target>
+        <target>Identifiant :</target>
         <note>Class = "UILabel"; text = "Identifier:"; ObjectID = "PqV-gI-xQQ";</note>
       </trans-unit>
       <trans-unit id="Prj-CR-6X0.text">
         <source>Show details:</source>
-        <target>Show details:</target>
+        <target>Afficher les détails :</target>
         <note>Class = "UILabel"; text = "Show details:"; ObjectID = "Prj-CR-6X0";</note>
       </trans-unit>
       <trans-unit id="Qb8-OO-2vj.text">
         <source>Contributors:</source>
-        <target>Contributors:</target>
+        <target>Collaborateurs :</target>
         <note>Class = "UILabel"; text = "Contributors:"; ObjectID = "Qb8-OO-2vj";</note>
       </trans-unit>
       <trans-unit id="RiH-iE-LMf.text">
         <source>Title:</source>
-        <target>Title:</target>
+        <target>Titre :</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "RiH-iE-LMf";</note>
       </trans-unit>
       <trans-unit id="S4K-WX-yik.title">
         <source>Edit</source>
-        <target>Edit</target>
+        <target>Modifier</target>
         <note>Class = "UIBarButtonItem"; title = "Edit"; ObjectID = "S4K-WX-yik";</note>
       </trans-unit>
       <trans-unit id="TDA-2G-8Io.title">
         <source>Photo Album</source>
-        <target>Photo Album</target>
+        <target>Album Photo</target>
         <note>Class = "UINavigationItem"; title = "Photo Album"; ObjectID = "TDA-2G-8Io";</note>
       </trans-unit>
       <trans-unit id="TOp-EQ-Cf2.text">
         <source>Keywords:</source>
-        <target>Keywords:</target>
+        <target>Mots clés :</target>
         <note>Class = "UILabel"; text = "Keywords:"; ObjectID = "TOp-EQ-Cf2";</note>
       </trans-unit>
       <trans-unit id="Ty8-Oi-H75.text">
         <source>Read Only:</source>
-        <target>Read Only:</target>
+        <target>Lecture seule :</target>
         <note>Class = "UILabel"; text = "Read Only:"; ObjectID = "Ty8-Oi-H75";</note>
       </trans-unit>
       <trans-unit id="UCD-k4-NMh.text">
         <source>Title:</source>
-        <target>Title:</target>
+        <target>Titre :</target>
         <note>Class = "UILabel"; text = "Title:"; ObjectID = "UCD-k4-NMh";</note>
       </trans-unit>
       <trans-unit id="V9p-SZ-4yS.text">
         <source>Lock detail :</source>
-        <target>Lock detail :</target>
+        <target>Verrouiller :</target>
         <note>Class = "UILabel"; text = "Lock detail :"; ObjectID = "V9p-SZ-4yS";</note>
       </trans-unit>
       <trans-unit id="VlB-Ig-h1b.text">
@@ -169,7 +169,7 @@
       </trans-unit>
       <trans-unit id="ZHU-7B-zUy.title">
         <source>Share</source>
-        <target>Share</target>
+        <target>Partager</target>
         <note>Class = "UITableViewController"; title = "Share"; ObjectID = "ZHU-7B-zUy";</note>
       </trans-unit>
       <trans-unit id="a2S-of-Dk2.text">
@@ -179,57 +179,57 @@
       </trans-unit>
       <trans-unit id="cwz-uV-RB1.title">
         <source>Detail Info</source>
-        <target>Detail Info</target>
+        <target>Info</target>
         <note>Class = "UIViewController"; title = "Detail Info"; ObjectID = "cwz-uV-RB1";</note>
       </trans-unit>
       <trans-unit id="fgB-2y-w7g.text">
         <source>Rights:</source>
-        <target>Rights:</target>
+        <target>Droits :</target>
         <note>Class = "UILabel"; text = "Rights:"; ObjectID = "fgB-2y-w7g";</note>
       </trans-unit>
       <trans-unit id="gEh-52-awz.text">
         <source>Languages:</source>
-        <target>Languages:</target>
+        <target>Langues :</target>
         <note>Class = "UILabel"; text = "Languages:"; ObjectID = "gEh-52-awz";</note>
       </trans-unit>
       <trans-unit id="gLO-k7-ciw.text">
         <source>Contributors:</source>
-        <target>Contributors:</target>
+        <target>Collaborateurs :</target>
         <note>Class = "UILabel"; text = "Contributors:"; ObjectID = "gLO-k7-ciw";</note>
       </trans-unit>
       <trans-unit id="gsk-9I-6e2.text">
         <source>Keywords:</source>
-        <target>Keywords:</target>
+        <target>Mots clés :</target>
         <note>Class = "UILabel"; text = "Keywords:"; ObjectID = "gsk-9I-6e2";</note>
       </trans-unit>
       <trans-unit id="i3A-TS-Y6z.placeholder">
         <source>Detail title...</source>
-        <target>Detail title...</target>
+        <target>Titre ...</target>
         <note>Class = "UITextField"; placeholder = "Detail title..."; ObjectID = "i3A-TS-Y6z";</note>
       </trans-unit>
       <trans-unit id="jEZ-dQ-SXu.text">
         <source>Source:</source>
-        <target>Source:</target>
+        <target>Source :</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "jEZ-dQ-SXu";</note>
       </trans-unit>
       <trans-unit id="kGq-br-nQL.text">
         <source>Description:</source>
-        <target>Description:</target>
+        <target>Description :</target>
         <note>Class = "UILabel"; text = "Description:"; ObjectID = "kGq-br-nQL";</note>
       </trans-unit>
       <trans-unit id="kQc-PX-Qno.text">
         <source>Coverage:</source>
-        <target>Coverage:</target>
+        <target>Portée :</target>
         <note>Class = "UILabel"; text = "Coverage:"; ObjectID = "kQc-PX-Qno";</note>
       </trans-unit>
       <trans-unit id="kUw-Ha-Bf8.text">
         <source>Date:</source>
-        <target>Date:</target>
+        <target>Date :</target>
         <note>Class = "UILabel"; text = "Date:"; ObjectID = "kUw-Ha-Bf8";</note>
       </trans-unit>
       <trans-unit id="kgj-zc-4Qp.title">
         <source>Share</source>
-        <target>Share</target>
+        <target>Partager</target>
         <note>Class = "UINavigationItem"; title = "Share"; ObjectID = "kgj-zc-4Qp";</note>
       </trans-unit>
       <trans-unit id="mpy-Pt-Gc9.title">
@@ -239,12 +239,12 @@
       </trans-unit>
       <trans-unit id="o0j-WH-kyQ.text">
         <source>Relation:</source>
-        <target>Relation:</target>
+        <target>Relation :</target>
         <note>Class = "UILabel"; text = "Relation:"; ObjectID = "o0j-WH-kyQ";</note>
       </trans-unit>
       <trans-unit id="pK2-BQ-1RC.text">
         <source>Detail description...</source>
-        <target>Detail description...</target>
+        <target>Description ...</target>
         <note>Class = "UITextView"; text = "Detail description..."; ObjectID = "pK2-BQ-1RC";</note>
       </trans-unit>
       <trans-unit id="qNg-bF-MbM.text">
@@ -259,17 +259,17 @@
       </trans-unit>
       <trans-unit id="ubQ-BF-bVa.text">
         <source>Coverage:</source>
-        <target>Coverage:</target>
+        <target>Portée :</target>
         <note>Class = "UILabel"; text = "Coverage:"; ObjectID = "ubQ-BF-bVa";</note>
       </trans-unit>
       <trans-unit id="vBa-jZ-peo.text">
         <source>Publisher:</source>
-        <target>Publisher:</target>
+        <target>Éditeur :</target>
         <note>Class = "UILabel"; text = "Publisher:"; ObjectID = "vBa-jZ-peo";</note>
       </trans-unit>
       <trans-unit id="vF0-pf-13y.text">
         <source>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</source>
-        <target>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</target>
+        <target>Texte...</target>
         <note>Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "vF0-pf-13y";</note>
       </trans-unit>
       <trans-unit id="xod-8C-OKb.title">
@@ -279,40 +279,40 @@
       </trans-unit>
       <trans-unit id="yao-fD-b5p.text">
         <source>Creator:</source>
-        <target>Creator:</target>
+        <target>Auteur :</target>
         <note>Class = "UILabel"; text = "Creator:"; ObjectID = "yao-fD-b5p";</note>
       </trans-unit>
       <trans-unit id="ysm-4r-fEH.text">
         <source>Description:</source>
-        <target>Description:</target>
+        <target>Description :</target>
         <note>Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH";</note>
       </trans-unit>
       <trans-unit id="zXw-1L-ZiN.normalTitle">
         <source>Take a photo</source>
-        <target>Take a photo</target>
+        <target>Prendre une photo</target>
         <note>Class = "UIButton"; normalTitle = "Take a photo"; ObjectID = "zXw-1L-ZiN";</note>
       </trans-unit>
     </body>
   </file>
   <file original="xia/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="CFBundleDisplayName">
-        <source>Xia</source>
+        <source>Xia Express</source>
       </trans-unit>
       <trans-unit id="CFBundleName">
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
       <trans-unit id="CFBundleShortVersionString">
-        <source>1.0</source>
+        <source>1.5</source>
       </trans-unit>
     </body>
   </file>
   <file original="xia/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="CANCEL">
@@ -534,7 +534,7 @@
   </file>
   <file original="xiaTests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="CFBundleName">
@@ -547,7 +547,7 @@
   </file>
   <file original="xiaTests/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="CANCEL">
@@ -769,7 +769,7 @@
   </file>
   <file original="xiaUITests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.0" build-num="8S128d"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
     </header>
     <body>
       <trans-unit id="CFBundleName">
