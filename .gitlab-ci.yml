@@ -7,7 +7,7 @@ stages:
 build_project:
   stage: build
   script:
-          - xcodebuild clean -project xia.xcodeproj -scheme xia | xcpretty -s
+    - xcodebuild clean -project xia.xcodeproj -scheme xia | xcpretty -s
     - xcodebuild test -project xia.xcodeproj -scheme xia -destination 'platform=iOS Simulator,name=iPad Air 2,OS=10.1' | xcpretty -s
   tags:
     - ios_10
