@@ -248,7 +248,7 @@ class TextConvertersTest: XCTestCase {
     
     func test_print_html31( ) {
         let raw = "http://fr.slideshare.net/haraldf/business-quotes-for-2011"
-        let expected_output = "<center><iframe src=\"https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY\" width=\"427\" height=\"356\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" style=\"border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;\" allowfullscreen> </iframe> <div style=\"margin-bottom:5px\"> <strong> <a href=\"https://www.slideshare.net/haraldf/business-quotes-for-2011\" title=\"Business Quotes for 2011\" target=\"_blank\">Business Quotes for 2011</a> </strong> from <strong><a href=\"http://www.slideshare.net/haraldf\" target=\"_blank\">Harald Felgner (PhD)</a></strong> </div>\n\n</center>"
+        let expected_output = "<center><iframe src=\"https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY\" width=\"427\" height=\"356\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" style=\"border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;\" allowfullscreen> </iframe> <div style=\"margin-bottom:5px\"> <strong> <a href=\"https://www.slideshare.net/haraldf/business-quotes-for-2011\" title=\"Business Quotes for 2011\" target=\"_blank\">Business Quotes for 2011</a> </strong> from <strong><a target=\"_blank\" href=\"http://www.slideshare.net/haraldf\">Harald Felgner (PhD)</a></strong> </div>\n\n</center>"
         let output = converter._text2html(raw)
         XCTAssertEqual(expected_output, output)
     }

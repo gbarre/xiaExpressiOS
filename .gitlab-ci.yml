@@ -1,0 +1,15 @@
+# This file is a template, and might need editing before it works on your project.
+# Lifted from: https://about.gitlab.com/2016/03/10/setting-up-gitlab-ci-for-ios-projects/
+# This file assumes an own GitLab CI runner, setup on an OS X system.
+stages:
+  - build
+
+build_project:
+  stage: build
+  script:
+          - xcodebuild clean -project xia.xcodeproj -scheme xia | xcpretty -s
+    - xcodebuild test -project xia.xcodeproj -scheme xia -destination 'platform=iOS Simulator,name=iPad Air 2,OS=10.1' | xcpretty -s
+  tags:
+    - ios_10
+    - xcode_8
+    - osx_10-12
