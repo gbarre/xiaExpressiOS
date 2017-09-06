@@ -1,0 +1,10 @@
+language: objective-c  
+osx_image: xcode8.3  
+#script: xcodebuild -project ProjectName.xcodeproj -scheme ProjectName -sdk iphonesimulator10.3 -destination 'platform=iOS Simulator,OS=9.1,name=iPhone 6' -configuration Debug build test  
+
+script:
+    - xcodebuild clean -project xia.xcodeproj -scheme xia
+    - xcodebuild test -project xia.xcodeproj -scheme xia -destination 'platform=iOS Simulator,name=iPad Air 2,OS=10.3'
+tags:
+    - ios_10
+    - xcode_8
