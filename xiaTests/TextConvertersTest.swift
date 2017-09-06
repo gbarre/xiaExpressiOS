@@ -248,7 +248,7 @@ class TextConvertersTest: XCTestCase {
     
     func test_print_html31( ) {
         let raw = "http://fr.slideshare.net/haraldf/business-quotes-for-2011"
-        let expected_output = "<center><iframe src=\"https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY\" width=\"427\" height=\"356\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" style=\"border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;\" allowfullscreen> </iframe> <div style=\"margin-bottom:5px\"> <strong> <a href=\"https://www.slideshare.net/haraldf/business-quotes-for-2011\" title=\"Business Quotes for 2011\" target=\"_blank\">Business Quotes for 2011</a> </strong> from <strong><a target=\"_blank\" href=\"http://www.slideshare.net/haraldf\">Harald Felgner (PhD)</a></strong> </div>\n\n</center>"
+        let expected_output = "<center><iframe src=\"https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY\" width=\"427\" height=\"356\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"no\" style=\"border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;\" allowfullscreen> </iframe> <div style=\"margin-bottom:5px\"> <strong> <a href=\"https://www.slideshare.net/haraldf/business-quotes-for-2011\" title=\"Business Quotes for 2011\" target=\"_blank\">Business Quotes for 2011</a> </strong> from <strong><a href=\"https://www.slideshare.net/haraldf\" target=\"_blank\">Harald Felgner, PhD</a></strong> </div>\n\n</center>"
         let output = converter._text2html(raw)
         XCTAssertEqual(expected_output, output)
     }
@@ -268,13 +268,6 @@ class TextConvertersTest: XCTestCase {
     }
     
     func test_print_html34( ) {
-        let raw = "https://scolawebtv.crdp-versailles.fr/?id=10125"
-        let expected_output = "<center><iframe src=\"https://scolawebtv.crdp-versailles.fr/?iframe&id=10125\" width=\"480.0\" height=\"269.6\" frameborder=\"0\" allowfullscreen></iframe></center>"
-        let output = converter._text2html(raw)
-        XCTAssertEqual(expected_output, output)
-    }
-    
-    func test_print_html35( ) {
         let raw = "https://twitter.com/ChrisFiasson/status/707570099369148416"
         let expected_output = "<blockquote class=\"twitter-tweet\"><p lang=\"fr\" dir=\"ltr\">Présentation en exclusivité pour <a href=\"https://twitter.com/hashtag/educatectice?src=hash\">#educatectice</a> de la version tablette de <a href=\"https://twitter.com/hashtag/xia?src=hash\">#xia</a> ! <a href=\"https://twitter.com/hashtag/beta?src=hash\">#beta</a> <a href=\"https://twitter.com/hashtag/iPad?src=hash\">#iPad</a> <a href=\"https://twitter.com/DANEVersailles\">@DANEVersailles</a> <a href=\"https://t.co/KluLREhnI3\">pic.twitter.com/KluLREhnI3</a></p>&mdash; Christine FIASSON (@ChrisFiasson) <a href=\"https://twitter.com/ChrisFiasson/status/707570099369148416\">March 9, 2016</a></blockquote>\n<script async src=\"//platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>"
         let output = converter._text2html(raw)

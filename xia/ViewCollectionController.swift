@@ -347,7 +347,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         for name in self.arrayNames {
             let xml = getXML("\(documentsDirectory)/\(name).xml")
             var title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
-            title = "\(title)-\(name)"
+            title = "\(String(describing: title))-\(name)"
             self.arraySortedNames[title!] = name
         }
         

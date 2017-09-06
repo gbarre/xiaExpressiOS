@@ -57,7 +57,7 @@ class PhotoThumbnail: UICollectionViewCell {
     }
     
     func degreesToRadians(_ x: CGFloat) -> CGFloat {
-        return CGFloat(M_PI) * x / 180.0
+        return .pi * x / 180.0
     }
     
     func wobble(_ enable: Bool) {

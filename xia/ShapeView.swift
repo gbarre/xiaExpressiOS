@@ -132,7 +132,7 @@ class ShapeView: UIView {
         let x:CGFloat = center.x
         let y:CGFloat = center.y
         let radius: CGFloat = 9.0
-        let endAngle: CGFloat = CGFloat(2 * M_PI)
+        let endAngle: CGFloat = 2 * .pi
         
         ctx.addArc(center: CGPoint(x: x, y: y), radius: radius, startAngle: 0, endAngle: endAngle, clockwise: false)
         
