@@ -23,10 +23,10 @@ import UIKit
 
 class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    weak var ViewCollection: ViewCollectionController?
+    @objc weak var ViewCollection: ViewCollectionController?
     
-    var newMedia: Bool = false
-    let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
+    @objc var newMedia: Bool = false
+    @objc let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
     
     @IBAction func takePhoto(_ sender: AnyObject) {
         if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){

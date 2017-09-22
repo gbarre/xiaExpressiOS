@@ -35,25 +35,25 @@ open class AEXMLElement: NSObject {
     // MARK: Properties
     
     /// Every `AEXMLElement` should have its parent element instead of `AEXMLDocument` which parent is `nil`.
-    open fileprivate(set) weak var parent: AEXMLElement?
+    @objc open fileprivate(set) weak var parent: AEXMLElement?
     
     /// Child XML elements.
-    open fileprivate(set) var children: [AEXMLElement] = [AEXMLElement]()
+    @objc open fileprivate(set) var children: [AEXMLElement] = [AEXMLElement]()
     
     /// XML Element name (defaults to empty string).
-    open var name: String
+    @objc open var name: String
     
     /// XML Element value.
-    open var value: String?
+    @objc open var value: String?
     
     /// XML Element attributes (defaults to empty dictionary).
-    open var attributes: [String : String]
+    @objc open var attributes: [String : String]
     
     /// String representation of `value` property (if `value` is `nil` this is empty String).
-    open var stringValue: String { return value ?? String() }
+    @objc open var stringValue: String { return value ?? String() }
     
     /// String representation of `value` property with special characters escaped (if `value` is `nil` this is empty String).
-    open var escapedStringValue: String {
+    @objc open var escapedStringValue: String {
         // we need to make sure "&" is escaped first. Not doing this may break escaping the other characters
         var escapedString = stringValue.replacingOccurrences(of: "&", with: "&amp;", options: .literal)
         
@@ -67,13 +67,13 @@ open class AEXMLElement: NSObject {
     }
     
     /// Boolean representation of `value` property (if `value` is "true" or 1 this is `True`, otherwise `False`).
-    open var boolValue: Bool { return stringValue.lowercased() == "true" || Int(stringValue) == 1 ? true : false }
+    @objc open var boolValue: Bool { return stringValue.lowercased() == "true" || Int(stringValue) == 1 ? true : false }
     
     /// Integer representation of `value` property (this is **0** if `value` can't be represented as Integer).
-    open var intValue: Int { return Int(stringValue) ?? 0 }
+    @objc open var intValue: Int { return Int(stringValue) ?? 0 }
     
     /// Double representation of `value` property (this is **0.00** if `value` can't be represented as Double).
-    open var doubleValue: Double { return (stringValue as NSString).doubleValue }
+    @objc open var doubleValue: Double { return (stringValue as NSString).doubleValue }
     
     fileprivate struct Defaults {
         static let name = String()
@@ -91,7 +91,7 @@ open class AEXMLElement: NSObject {
     
     :returns: An initialized `AEXMLElement` object.
     */
-    public init(name: String? = nil, value: String? = nil, attributes: [String : String]? = nil) {
+    @objc public init(name: String? = nil, value: String? = nil, attributes: [String : String]? = nil) {
         self.name = name ?? Defaults.name
         self.value = value
         self.attributes = attributes ?? Defaults.attributes
@@ -100,10 +100,10 @@ open class AEXMLElement: NSObject {
     // MARK: XML Read
     
     /// This element name is used when unable to find element.
-    open static let errorElementName = "AEXMLError"
+    @objc open static let errorElementName = "AEXMLError"
     
     // The first element with given name **(AEXMLError element if not exists)**.
-    open subscript(key: String) -> AEXMLElement {
+    @objc open subscript(key: String) -> AEXMLElement {
         if name == AEXMLElement.errorElementName {
             return self
         } else {
@@ -113,16 +113,16 @@ open class AEXMLElement: NSObject {
     }
     
     /// Returns all of the elements with equal name as `self` **(nil if not exists)**.
-    open var all: [AEXMLElement]? { return parent?.children.filter { $0.name == self.name } }
+    @objc open var all: [AEXMLElement]? { return parent?.children.filter { $0.name == self.name } }
     
     /// Returns the first element with equal name as `self` **(nil if not exists)**.
-    open var first: AEXMLElement? { return all?.first }
+    @objc open var first: AEXMLElement? { return all?.first }
     
     /// Returns the last element with equal name as `self` **(nil if not exists)**.
-    open var last: AEXMLElement? { return all?.last }
+    @objc open var last: AEXMLElement? { return all?.last }
     
     /// Returns number of all elements with equal name as `self`.
-    open var count: Int { return all?.count ?? 0 }
+    @objc open var count: Int { return all?.count ?? 0 }
     
     fileprivate func allWithCondition(_ fulfillCondition: (_ element: AEXMLElement) -> Bool) -> [AEXMLElement]? {
         var found = [AEXMLElement]()
@@ -145,7 +145,7 @@ open class AEXMLElement: NSObject {
      
      :returns: Optional Array of found XML elements.
      */
-    open func allWithValue(_ value: String) -> [AEXMLElement]? {
+    @objc open func allWithValue(_ value: String) -> [AEXMLElement]? {
         let found = allWithCondition { (element) -> Bool in
             return element.value == value
         }
@@ -159,7 +159,7 @@ open class AEXMLElement: NSObject {
      
      :returns: Optional Array of found XML elements.
      */
-    open func allWithAttributes(_ attributes: [String : String]) -> [AEXMLElement]? {
+    @objc open func allWithAttributes(_ attributes: [String : String]) -> [AEXMLElement]? {
         let found = allWithCondition { (element) -> Bool in
             var countAttributes = 0
             for (key, value) in attributes {
@@ -181,7 +181,7 @@ open class AEXMLElement: NSObject {
     
     :returns: Child XML element with `self` as `parent`.
     */
-    open func addChild(_ child: AEXMLElement) -> AEXMLElement {
+    @objc open func addChild(_ child: AEXMLElement) -> AEXMLElement {
         child.parent = self
         children.append(child)
         return child
@@ -196,13 +196,13 @@ open class AEXMLElement: NSObject {
      
      :returns: Child XML element with `self` as `parent`.
      */
-    open func addChild(_ name: String, value: String? = nil, attributes: [String : String]? = nil) -> AEXMLElement {
+    @objc open func addChild(_ name: String, value: String? = nil, attributes: [String : String]? = nil) -> AEXMLElement {
         let child = AEXMLElement(name: name, value: value, attributes: attributes)
         return addChild(child)
     }
     
     /// Removes `self` from `parent` XML element.
-    open func removeFromParent() {
+    @objc open func removeFromParent() {
         parent?.removeChild(self)
     }
     
@@ -233,7 +233,7 @@ open class AEXMLElement: NSObject {
     }
     
     /// Complete hierarchy of `self` and `children` in **XML** escaped and formatted String
-    open var xmlString: String {
+    @objc open var xmlString: String {
         var xml = String()
         
         // open element
@@ -287,16 +287,16 @@ open class AEXMLDocument: AEXMLElement {
     // MARK: Properties
     
     /// This is only used for XML Document header (default value is 1.0).
-    open let version: Double
+    @objc open let version: Double
     
     /// This is only used for XML Document header (default value is "utf-8").
-    open let encoding: String
+    @objc open let encoding: String
     
     /// This is only used for XML Document header (default value is "no").
-    open let standalone: String
+    @objc open let standalone: String
     
     /// Root (the first child element) element of XML Document **(AEXMLError element if not exists)**.
-    open var root: AEXMLElement { return children.count == 1 ? children.first! : AEXMLElement(name: AEXMLElement.errorElementName, value: "XML Document must have root element.") }
+    @objc open var root: AEXMLElement { return children.count == 1 ? children.first! : AEXMLElement(name: AEXMLElement.errorElementName, value: "XML Document must have root element.") }
     
     fileprivate struct Defaults {
         static let version = 1.0
@@ -317,7 +317,7 @@ open class AEXMLDocument: AEXMLElement {
     
     :returns: An initialized XML Document object.
     */
-    public init(version: Double = Defaults.version, encoding: String = Defaults.encoding, standalone: String = Defaults.standalone, root: AEXMLElement? = nil) {
+    @objc public init(version: Double = 1.0, encoding: String = "utf-8", standalone: String = "no", root: AEXMLElement? = nil) {
         // set document properties
         self.version = version
         self.encoding = encoding
@@ -346,7 +346,7 @@ open class AEXMLDocument: AEXMLElement {
      
      :returns: An initialized XML Document object containing the parsed data. Returns `nil` if the data could not be parsed.
      */
-    public convenience init(version: Double = Defaults.version, encoding: String = Defaults.encoding, standalone: String = Defaults.standalone, xmlData: Data) throws {
+    @objc public convenience init(version: Double = 1.0, encoding: String = "utf-8", standalone: String = "no", xmlData: Data) throws {
         self.init(version: version, encoding: encoding, standalone: standalone)
         try loadXMLData(xmlData)
     }
@@ -360,7 +360,7 @@ open class AEXMLDocument: AEXMLElement {
     
     :returns: `NSError` if parsing is not successfull, otherwise `nil`.
     */
-    open func loadXMLData(_ data: Data) throws {
+    @objc open func loadXMLData(_ data: Data) throws {
         children.removeAll(keepingCapacity: false)
         let xmlParser = AEXMLParser(xmlDocument: self, xmlData: data)
         try xmlParser.parse()
@@ -378,7 +378,7 @@ open class AEXMLDocument: AEXMLElement {
     }
     
     // MARK: Create xml file
-    open func createXML (_ name: String) -> String {
+    @objc open func createXML (_ name: String) -> String {
         let xmlFile = AEXMLDocument()
         
         // Create root xml with attributes
@@ -406,17 +406,17 @@ private class AEXMLParser: NSObject, XMLParserDelegate {
     
     // MARK: Properties
     
-    let xmlDocument: AEXMLDocument
-    let xmlData: Data
+    @objc let xmlDocument: AEXMLDocument
+    @objc let xmlData: Data
     
-    var currentParent: AEXMLElement?
-    var currentElement: AEXMLElement?
-    var currentValue = String()
-    var parseError: NSError?
+    @objc var currentParent: AEXMLElement?
+    @objc var currentElement: AEXMLElement?
+    @objc var currentValue = String()
+    @objc var parseError: NSError?
     
     // MARK: Lifecycle
     
-    init(xmlDocument: AEXMLDocument, xmlData: Data) {
+    @objc init(xmlDocument: AEXMLDocument, xmlData: Data) {
         self.xmlDocument = xmlDocument
         self.xmlData = xmlData
         currentParent = xmlDocument
@@ -425,7 +425,7 @@ private class AEXMLParser: NSObject, XMLParserDelegate {
     
     // MARK: XML Parse
     
-    func parse() throws {
+    @objc func parse() throws {
         let parser = XMLParser(data: xmlData)
         parser.delegate = self
         let success = parser.parse()

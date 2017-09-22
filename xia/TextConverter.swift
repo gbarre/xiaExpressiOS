@@ -24,19 +24,19 @@ import UIKit
 
 class TextConverter: NSObject {
     
-    var videoWidth: CGFloat = 480
-    var videoHeight: CGFloat = 270
+    @objc var videoWidth: CGFloat = 480
+    @objc var videoHeight: CGFloat = 270
     
-    init(videoWidth: CGFloat, videoHeight: CGFloat){
+    @objc init(videoWidth: CGFloat, videoHeight: CGFloat){
         self.videoWidth = videoWidth
         self.videoHeight = videoHeight
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    @objc required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func _text2html(_ inText: String) -> String {
+    @objc func _text2html(_ inText: String) -> String {
         var htmlString = inText
         
         htmlString = htmlString.replacingOccurrences(of: "&", with: "&amp;")
@@ -74,7 +74,7 @@ class TextConverter: NSObject {
         return htmlString
     }
     
-    func buildAudiolinguaLinks(_ inText: String!) -> String {
+    @objc func buildAudiolinguaLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}www\\.audio-lingua\\.eu\\/spip\\.php\\?article([0-9]*)", options: .caseInsensitive)
@@ -91,7 +91,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildDailymotionLinks(_ inText: String!) -> String {
+    @objc func buildDailymotionLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "http:\\/{2}dai\\.ly\\/(\\w|-|_)*", options: .caseInsensitive)
@@ -108,7 +108,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildInstagramLinks(_ inText: String!) -> String {
+    @objc func buildInstagramLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https:\\/{2}www\\.instagram\\.com\\/p\\/(\\w|-|_)*\\/", options: .caseInsensitive)
@@ -133,7 +133,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildFlickrLinks(_ inText: String!) -> String {
+    @objc func buildFlickrLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https:\\/{2}flic\\.kr\\/p\\/(\\w|-|_)*", options: .caseInsensitive)
@@ -162,7 +162,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildScolawebtvLinks(_ inText: String!) -> String {
+    @objc func buildScolawebtvLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}scolawebtv\\.crdp-versailles\\.fr\\/\\?id=?[0-9]*", options: .caseInsensitive)
@@ -192,7 +192,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildSlideshareLinks(_ inText: String!) -> String {
+    @objc func buildSlideshareLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|[0-9]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .caseInsensitive)
@@ -213,7 +213,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildTwitterLinks(_ inText: String!) -> String {
+    @objc func buildTwitterLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}twitter\\.com\\/([a-z]|[0-9]|-|_)*\\/status\\/[0-9]*", options: .caseInsensitive)
@@ -233,7 +233,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildVimeoLinks(_ inText: String!) -> String {
+    @objc func buildVimeoLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https:\\/{2}vimeo\\.com\\/(\\w|\\/|-|_)*", options: .caseInsensitive)
@@ -254,7 +254,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildYoutubeLinks(_ inText: String!) -> String {
+    @objc func buildYoutubeLinks(_ inText: String!) -> String {
         var output = inText
         do {
             // youtu.be
@@ -281,7 +281,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func buildWebtvLinks(_ inText: String!) -> String {
+    @objc func buildWebtvLinks(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}webtv\\.ac-versailles\\.fr\\/(spip\\.php)?(\\?)?article[0-9]*", options: .caseInsensitive)
@@ -303,12 +303,12 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func getJSON(_ urlToRequest: String) -> Data{
+    @objc func getJSON(_ urlToRequest: String) -> Data{
         return (try! Data(contentsOf: URL(string: urlToRequest)!))
         //return (try! Data(contentsOf: URL(string: urlToRequest)!))
     }
     
-    func parseJSON(_ inputData: Data) -> NSDictionary{
+    @objc func parseJSON(_ inputData: Data) -> NSDictionary{
         var boardsDictionary = NSDictionary()
         do {
             boardsDictionary = try JSONSerialization.jsonObject(with: inputData, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
@@ -318,7 +318,7 @@ class TextConverter: NSObject {
         return boardsDictionary
     }
     
-    func pikipikiToHTML(_ text: String) -> String {
+    @objc func pikipikiToHTML(_ text: String) -> String {
         var output = text
         // Make bold
         do {
@@ -441,7 +441,7 @@ class TextConverter: NSObject {
         return output
     }
     
-    func showAudio(_ inText: String) -> String {
+    @objc func showAudio(_ inText: String) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp3|ogg)( autostart)?", options: .caseInsensitive)
@@ -462,7 +462,7 @@ class TextConverter: NSObject {
         return output
     }
     
-    func showCustomLinks(_ inText: String) -> String {
+    @objc func showCustomLinks(_ inText: String) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* *((?!\\]).)*\\]", options: .caseInsensitive)
@@ -472,8 +472,8 @@ class TextConverter: NSObject {
             for result in arrayResults {
                 let text = result.replacingOccurrences(of: "\\[|\\]", with: "", options:NSString.CompareOptions.regularExpression, range: nil)
                 let urlEndRange: NSRange = (text as NSString).range(of: " ")
-                let url = (urlEndRange.length == 1) ? text[text.characters.index(text.startIndex, offsetBy: 0)...text.characters.index(text.startIndex, offsetBy: urlEndRange.location - 1)] : text
-                let linkText = (urlEndRange.length == 1) ? text[text.characters.index(text.startIndex, offsetBy: urlEndRange.location+1)...text.characters.index(before: text.endIndex)] : text
+                let url = (urlEndRange.length == 1) ? String(text[text.characters.index(text.startIndex, offsetBy: 0)...text.characters.index(text.startIndex, offsetBy: urlEndRange.location - 1)]) : text
+                let linkText = (urlEndRange.length == 1) ? String(text[text.characters.index(text.startIndex, offsetBy: urlEndRange.location+1)...text.characters.index(before: text.endIndex)]) : text
                 let replaceString = "<a href=\"\(url)\">\(linkText)</a>";
                 output = output.replacingOccurrences(of: result, with: replaceString)
             }
@@ -483,7 +483,7 @@ class TextConverter: NSObject {
         return output
     }
     
-    func showPictures(_ inText: String!) -> String {
+    @objc func showPictures(_ inText: String!) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(jpg|jpeg|gif|png)", options: .caseInsensitive)
@@ -499,7 +499,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    func showVideo(_ inText: String) -> String {
+    @objc func showVideo(_ inText: String) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp4|ogv|webm)( autostart)?", options: .caseInsensitive)
@@ -521,7 +521,7 @@ class TextConverter: NSObject {
         return output
     }
     
-    func solveSrcPb(_ intext: String, s: String = "") -> String {
+    @objc func solveSrcPb(_ intext: String, s: String = "") -> String {
         return intext.replacingOccurrences(of: "src=\"//", with: "src=\"http\(s)://")
     }
 }

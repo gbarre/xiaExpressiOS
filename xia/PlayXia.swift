@@ -23,22 +23,22 @@ import UIKit
 
 class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
-    var xml: AEXMLDocument = AEXMLDocument()
-    let transition = BubbleTransition()
+    @objc var xml: AEXMLDocument = AEXMLDocument()
+    @objc let transition = BubbleTransition()
     
-    var fileName: String = ""
-    var filePath: String = ""
-    var details = [String: xiaDetail]()
-    var location = CGPoint(x: 0, y: 0)
-    var touchedTag: Int = 0
-    var paths = [Int: UIBezierPath]()
-    var showDetails: Bool = false
-    var touchBegin = CGPoint(x: 0, y: 0)
-    var img: UIImage!
+    @objc var fileName: String = ""
+    @objc var filePath: String = ""
+    @objc var details = [String: xiaDetail]()
+    @objc var location = CGPoint(x: 0, y: 0)
+    @objc var touchedTag: Int = 0
+    @objc var paths = [Int: UIBezierPath]()
+    @objc var showDetails: Bool = false
+    @objc var touchBegin = CGPoint(x: 0, y: 0)
+    @objc var img: UIImage!
     
-    var scale: CGFloat = 1.0
+    @objc var scale: CGFloat = 1.0
     
-    var landscape: Bool = false
+    @objc var landscape: Bool = false
     
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet var leftButtonBkgd: UIImageView!
@@ -148,11 +148,11 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         return transition
     }
     
-    func goBack() {
+    @objc func goBack() {
         let _ = navigationController?.popViewController(animated: true)
     }
     
-    func loadDetails(_ xml: AEXMLDocument) {
+    @objc func loadDetails(_ xml: AEXMLDocument) {
         // Get the scale...
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
@@ -204,7 +204,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
-    func rotated() {
+    @objc func rotated() {
         loadDetails(xml)
         landscape = (UIDeviceOrientationIsLandscape(UIDevice.current.orientation)) ? true : false
     }

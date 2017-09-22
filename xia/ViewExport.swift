@@ -23,18 +23,18 @@ import UIKit
 
 class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate {
     
-    var docController:UIDocumentInteractionController!
+    @objc var docController:UIDocumentInteractionController!
     
-    var filePath: String = ""
-    var fileName: String = ""
-    var xml: AEXMLDocument = AEXMLDocument()
-    var img = UIImage()
+    @objc var filePath: String = ""
+    @objc var fileName: String = ""
+    @objc var xml: AEXMLDocument = AEXMLDocument()
+    @objc var img = UIImage()
     
-    var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
-    var xmlSVG: AEXMLDocument = AEXMLDocument()
-    var tmpFilePath: String = ""
+    @objc var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
+    @objc var xmlSVG: AEXMLDocument = AEXMLDocument()
+    @objc var tmpFilePath: String = ""
     //let now:Int = Int(Date().timeIntervalSince1970)
-    weak var ViewCollection: ViewCollectionController?
+    @objc weak var ViewCollection: ViewCollectionController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    func exportSimpleXML() {
+    @objc func exportSimpleXML() {
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
@@ -76,7 +76,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         openDocumentInteractionController(tmpFilePath)
     }
     
-    func exportSVG() {
+    @objc func exportSVG() {
        // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
@@ -389,7 +389,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         openDocumentInteractionController(tmpFilePath)
     }
     
-    func getElementValue(_ element: String) -> String {
+    @objc func getElementValue(_ element: String) -> String {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! != "element <\(element)> not found") {
             return xml["xia"][element].value!
         }
@@ -398,7 +398,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    func openDocumentInteractionController(_ url: String) {
+    @objc func openDocumentInteractionController(_ url: String) {
         // Show native export controller
         docController = UIDocumentInteractionController(url: URL(fileURLWithPath: url))
         docController.delegate = self

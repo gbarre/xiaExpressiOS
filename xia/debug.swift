@@ -23,23 +23,23 @@ import UIKit
 
 class debug: NSObject {
     
-    var enable: Bool = false
+    @objc var enable: Bool = false
     
-    init(enable: Bool){
+    @objc init(enable: Bool){
         self.enable = enable
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    @objc required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func pt(_ obj: String) {
+    @objc func pt(_ obj: String) {
         if enable {
             print(obj)
         }
     }
     
-    func ptSubviews(_ view: AnyObject) {
+    @objc func ptSubviews(_ view: AnyObject) {
         if self.enable {
             print("Subviews of \(view) :")
             for subview in view.subviews {
@@ -48,7 +48,7 @@ class debug: NSObject {
         }
     }
     
-    func ptLine() {
+    @objc func ptLine() {
         if enable {
             print("===============================================================")
         }

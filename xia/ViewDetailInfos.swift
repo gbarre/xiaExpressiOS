@@ -24,16 +24,16 @@ import Foundation
 
 class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
-    var tag: Int = 0
-    var zoom: Bool = false
-    var lock: Bool = false
-    var detailTitle: String = ""
-    var detailDescription: String = ""
-    var xml: AEXMLDocument = AEXMLDocument()
-    var index: Int = 0
-    var fileName: String = ""
-    var filePath: String = ""
-    weak var ViewCreateDetailsController: ViewCreateDetails?
+    @objc var tag: Int = 0
+    @objc var zoom: Bool = false
+    @objc var lock: Bool = false
+    @objc var detailTitle: String = ""
+    @objc var detailDescription: String = ""
+    @objc var xml: AEXMLDocument = AEXMLDocument()
+    @objc var index: Int = 0
+    @objc var fileName: String = ""
+    @objc var filePath: String = ""
+    @objc weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet var switchZoom: UISwitch!
     @IBAction func btnZoomAction(_ sender: AnyObject) {
@@ -110,7 +110,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         txtDesc.setContentOffset(CGPoint(x: 0, y: -txtDesc.contentInset.top), animated: false)
     }
     
-    func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
+    @objc func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
         let descText = NSMutableString()
         descText.append(attrString.string)
         //var text = String()
@@ -118,7 +118,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         var bold: Bool = false
         var italic: Bool = false
         
-        attrString.enumerateAttribute(NSFontAttributeName, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
+        attrString.enumerateAttribute(NSAttributedStringKey.font, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
                 var startIndex: Int = r.location
                 var endIndex: Int = r.location+r.length
@@ -163,7 +163,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
             //text = "\(descText)"
         }
         
-        attrString.enumerateAttribute(NSUnderlineStyleAttributeName, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
+        attrString.enumerateAttribute(NSAttributedStringKey.underlineStyle, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
             if (value != nil) {
                 dbg.pt("\(r)")
                 dbg.pt(descText as String)
@@ -188,15 +188,15 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         return "\(descText)"
     }
     
-    func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
+    /*@objc func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
-        let size = [NSFontAttributeName : UIFont.systemFont(ofSize: 15.0)]
+        let size = [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 15.0)]
         attributedText.addAttributes(size, range: NSRange(location: 0, length: attributedText.length))
         
-        let attributeBold = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 15)]
+        let attributeBold = [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 15)]
         try! attributedText.addAttributes(attributeBold, delimiter: "***")
         
-        let attributeItalic = [NSFontAttributeName: UIFont.italicSystemFont(ofSize: 15)]
+        let attributeItalic = [NSAttributedStringKey.font: UIFont.italicSystemFont(ofSize: 15)]
         try! attributedText.addAttributes(attributeItalic, delimiter: "**")
         
         //let attributeUnderline = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
@@ -206,12 +206,12 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
         
         return attributedText
-    }
+    }*/
     
 }
 
 public extension NSMutableAttributedString {
-    func addAttributes(_ attrs: [String : AnyObject], delimiter: String) throws {
+    @objc func addAttributes(_ attrs: [NSAttributedStringKey : Any], delimiter: String) throws {
         let escaped = NSRegularExpression.escapedPattern(for: delimiter)
         let regex = try NSRegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
         

@@ -23,21 +23,21 @@ import UIKit
 
 class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
-    var arrayNames = [String]()
-    var arraySortedNames = [String: String]() // Label : FileName
-    var segueIndex: Int = -1
-    var editingMode: Bool = false
-    var showHelp = false
+    @objc var arrayNames = [String]()
+    @objc var arraySortedNames = [String: String]() // Label : FileName
+    @objc var segueIndex: Int = -1
+    @objc var editingMode: Bool = false
+    @objc var showHelp = false
 
-    var b64IMG:String = ""
-    var currentElement:String = ""
-    var passData:Bool=false
-    var passName:Bool=false
-    let reuseIdentifier = "PhotoCell"
+    @objc var b64IMG:String = ""
+    @objc var currentElement:String = ""
+    @objc var passData:Bool=false
+    @objc var passName:Bool=false
+    @objc let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
-    var landscape: Bool = false
+    @objc var landscape: Bool = false
     
-    var selectedPhotos = [IndexPath]()
+    @objc var selectedPhotos = [IndexPath]()
     
     @IBOutlet var navBar: UINavigationBar!
     
@@ -138,10 +138,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet var navBarTitle: UINavigationItem!
     
-    weak var btnCreateState: UIBarButtonItem!
+    @objc weak var btnCreateState: UIBarButtonItem!
     
-    weak var editMode: UIBarButtonItem!
-    func btnEdit(_ sender: AnyObject) {
+    @objc weak var editMode: UIBarButtonItem!
+    @objc func btnEdit(_ sender: AnyObject) {
         selectedPhotos = []
         if editingMode {
             endEdit()
@@ -164,12 +164,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.white
             navBarTitle.title = "\(selectedPhotos.count) " + ((selectedPhotos.count > 1) ? NSLocalizedString("FILES_SELECTED", comment: "") : NSLocalizedString("FILE_SELECTED", comment: ""))
-            navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         }
         buildLeftNavbarItems(selectedPhotos.count)
     }
     
-    weak var CollectionView: UICollectionView!
+    @objc weak var CollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -200,7 +200,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         NotificationCenter.default.removeObserver(self)
     }
     
-    func applicationWillEnterForeground(_ notification: Notification) {
+    @objc func applicationWillEnterForeground(_ notification: Notification) {
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
         importXML()
@@ -275,7 +275,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func buildLeftNavbarItems(_ selectedItems: Int = 0) {
+    @objc func buildLeftNavbarItems(_ selectedItems: Int = 0) {
         let buttonColor = (isEditing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
@@ -317,9 +317,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let files = fileManager.enumerator(atPath: documentsDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            let ext = file.substring(with: file.characters.index(file.endIndex, offsetBy: -3)..<file.characters.index(file.endIndex, offsetBy: 0))
+            let ext = String(file.suffix(3))
             if (ext != "xml" && file != "Inbox") {
-                file = file.substring(with: file.characters.index(file.startIndex, offsetBy: 0)..<file.characters.index(file.endIndex, offsetBy: -4)) // remove .xyz
+                file = String(file.prefix(file.count - 4)) // remove .xyz
                 if fileManager.fileExists(atPath: "\(documentsDirectory)/\(file).xml") {
                     self.arrayNames.append(file)
                 }
@@ -402,7 +402,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
     
-    func changeCellLabelBkgColor(_ path: IndexPath) {
+    @objc func changeCellLabelBkgColor(_ path: IndexPath) {
         var labelColor: UIColor
         if selectedPhotos.contains(path) {
             let indexOfPhoto = selectedPhotos.index(of: path)
@@ -420,7 +420,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func endEdit() {
+    @objc func endEdit() {
         editingMode = false
         editMode.title = NSLocalizedString("EDIT", comment: "")
         for cell in CollectionView.visibleCells {
@@ -435,13 +435,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.white
         navBarTitle.title = "Xia"
-        navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
     }
     
-    func deleteFiles(_ path: IndexPath) {
+    @objc func deleteFiles(_ path: IndexPath) {
         let deleteIndex = (path as NSIndexPath).row
         let fileName = arrayNames[deleteIndex]
         // Delete the file
@@ -460,7 +460,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         self.arrayNames.remove(at: deleteIndex)
     }
     
-    func handleTap(_ gestureReconizer: UITapGestureRecognizer) {
+    @objc func handleTap(_ gestureReconizer: UITapGestureRecognizer) {
         if gestureReconizer.state != UIGestureRecognizerState.ended {
             return
         }
@@ -495,7 +495,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func importXML() {
+    @objc func importXML() {
         let fileManager = FileManager.default
         let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
         while let fileObject = files?.nextObject() {

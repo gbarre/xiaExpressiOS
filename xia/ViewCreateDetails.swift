@@ -44,33 +44,33 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         
-    var index: Int = 0
-    var xml: AEXMLDocument = AEXMLDocument()
-    var fileName: String = ""
-    var filePath: String = ""
-    var fileTitle: String = ""
+    @objc var index: Int = 0
+    @objc var xml: AEXMLDocument = AEXMLDocument()
+    @objc var fileName: String = ""
+    @objc var filePath: String = ""
+    @objc var fileTitle: String = ""
     
-    var location = CGPoint(x: 0, y: 0)
-    var movingPoint = -1 // Id of point
-    var movingCoords = CGPoint(x: 0, y: 0)
-    var landscape = false
+    @objc var location = CGPoint(x: 0, y: 0)
+    @objc var movingPoint = -1 // Id of point
+    @objc var movingCoords = CGPoint(x: 0, y: 0)
+    @objc var landscape = false
     
-    var details = [String: xiaDetail]()
-    var currentDetailTag: Int = 0
-    var detailToSegue: Int = 0
-    var createDetail: Bool = false
-    var beginTouchLocation = CGPoint(x: 0, y: 0)
-    var editDetail = -1
-    var moveDetail = false
-    var virtPoints = [Int: UIImageView]()
-    var polygonPointsOrder = [Int]()
+    @objc var details = [String: xiaDetail]()
+    @objc var currentDetailTag: Int = 0
+    @objc var detailToSegue: Int = 0
+    @objc var createDetail: Bool = false
+    @objc var beginTouchLocation = CGPoint(x: 0, y: 0)
+    @objc var editDetail = -1
+    @objc var moveDetail = false
+    @objc var virtPoints = [Int: UIImageView]()
+    @objc var polygonPointsOrder = [Int]()
     
-    var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-    var img = UIImage()
-    var scale: CGFloat = 1.0
+    @objc var imgView: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    @objc var img = UIImage()
+    @objc var scale: CGFloat = 1.0
     
-    var menu: UIAlertController!
-    var btnTag: Int = 0
+    @objc var menu: UIAlertController!
+    @objc var btnTag: Int = 0
     
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
@@ -472,7 +472,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func addDetail(_ sender: UIBarButtonItem) {
+    @objc func addDetail(_ sender: UIBarButtonItem) {
         // Prepare new detail
         let lastDetailTag = self.xml["xia"]["details"]["detail"].last
         if lastDetailTag != nil {
@@ -576,8 +576,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
         })
         let attributedTitle = NSAttributedString(string: NSLocalizedString("CREATE_DETAIL", comment: ""), attributes: [
-            NSFontAttributeName : UIFont.boldSystemFont(ofSize: 18),
-            NSForegroundColorAttributeName : UIColor.black
+            NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 18),
+            NSAttributedStringKey.foregroundColor : UIColor.black
             ])
         menu.setValue(attributedTitle, forKey: "attributedTitle")
         
@@ -596,7 +596,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         present(menu, animated: true, completion: nil)
     }
     
-    func changeDetailColor(_ tag: Int) {
+    @objc func changeDetailColor(_ tag: Int) {
         // Change other details color
         for detail in details {
             let thisDetailTag = NumberFormatter().number(from: detail.0)?.intValue
@@ -642,7 +642,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         cleanOldViews()
     }
     
-    func cleaningDetails() {
+    @objc func cleaningDetails() {
         for detail in details {
             let detailTag = NumberFormatter().number(from: detail.0)!.intValue
             if ( detailTag != 0 && detail.1.points.count < 3 ) {
@@ -651,7 +651,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func cleanOldViews() {
+    @objc func cleanOldViews() {
         // Remove old (hidden) subviews
         for subview in imgView.subviews {
             if subview.tag > 299 {
@@ -660,7 +660,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func touchesVirtPoint(_ location: CGPoint) -> Int {
+    @objc func touchesVirtPoint(_ location: CGPoint) -> Int {
         var touched = -1
         for virtPoint in virtPoints {
             let dist = distance(location, point2: virtPoint.1.center)
@@ -673,7 +673,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         return touched
     }
     
-    func deleteDetail() {
+    @objc func deleteDetail() {
         let detailTag = self.currentDetailTag
         if ( detailTag != 0 ) {
             // Alert
@@ -695,7 +695,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func detailInfos() {
+    @objc func detailInfos() {
         moveDetail = false
         movingPoint = -1
         let tmpDetailTag = currentDetailTag
@@ -711,25 +711,25 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func distance(_ point1: CGPoint, point2: CGPoint) -> CGFloat {
+    @objc func distance(_ point1: CGPoint, point2: CGPoint) -> CGFloat {
         let x = point1.x - point2.x
         let y = point1.y - point2.y
         return sqrt(x * x + y * y)
     }
     
-    func export() {
+    @objc func export() {
         performSegue(withIdentifier: "viewExport", sender: self)
     }
     
-    func goBack() {
+    @objc func goBack() {
         let _ = navigationController?.popToRootViewController(animated: true)
     }
     
-    func goForward() {
+    @objc func goForward() {
         performSegue(withIdentifier: "playXia", sender: self)
     }
     
-    func loadDetails(_ xml: AEXMLDocument) {
+    @objc func loadDetails(_ xml: AEXMLDocument) {
         let xmlDetails = xml.root["details"]["detail"].all!
         for detail in xmlDetails {
             if let path = detail.attributes["path"] {
@@ -781,7 +781,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func loadBackground(_ img: UIImage) {
+    @objc func loadBackground(_ img: UIImage) {
         let availableWidth: CGFloat = UIScreen.main.bounds.width
         let availableHeight: CGFloat = UIScreen.main.bounds.height - 64
         let scaleX: CGFloat = availableWidth / img.size.width
@@ -801,11 +801,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func openMetas() {
+    @objc func openMetas() {
         performSegue(withIdentifier: "viewMetas", sender: self)
     }
     
-    func performFullDetailRemove(_ tag: Int, force: Bool = false) {
+    @objc func performFullDetailRemove(_ tag: Int, force: Bool = false) {
         if (details["\(tag)"]?.points.count < 3 || force) {
             // remove point & polygon
             for subview in imgView.subviews {
@@ -828,7 +828,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         }
     }
     
-    func polygonUndo() {
+    @objc func polygonUndo() {
         let detailTag = self.currentDetailTag
         if details["\(detailTag)"]?.points.count > 3 {
             // remove last point
@@ -861,14 +861,14 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         setBtnsIcons()
     }
     
-    func rotated() {
+    @objc func rotated() {
         loadBackground(img)
         if let _ = xml.root["details"]["detail"].all {
             loadDetails(xml)
         }
     }
     
-    func setBtnsIcons() {
+    @objc func setBtnsIcons() {
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: self, action: nil)
         fixedSpace.width = 15.0
         var items = [UIBarButtonItem]()
@@ -915,7 +915,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         myToolbar.items = items
     }
     
-    func stopCreation() {
+    @objc func stopCreation() {
         createDetail = false
         performFullDetailRemove(currentDetailTag)
         if details["\(currentDetailTag)"]?.constraint == constraintPolygon {

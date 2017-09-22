@@ -43,7 +43,7 @@ open class BubbleTransition: NSObject {
      The point that originates the bubble. The bubble starts from this point
      and shrinks to it on dismiss
      */
-    open var startingPoint = CGPoint.zero {
+    @objc open var startingPoint = CGPoint.zero {
         didSet {
             bubble.center = startingPoint
         }
@@ -53,18 +53,18 @@ open class BubbleTransition: NSObject {
      The transition duration. The same value is used in both the Present or Dismiss actions
      Defaults to `1.0`
      */
-    open var duration = 1.0
+    @objc open var duration = 1.0
     
     /**
      The transition direction. Possible values `.Present`, `.Dismiss` or `.Pop`
      Defaults to `.Present`
      */
-    open var transitionMode: BubbleTransitionMode = .present
+    @objc open var transitionMode: BubbleTransitionMode = .present
     
     /**
      The color of the bubble. Make sure that it matches the destination controller's background color.
      */
-    open var bubbleColor: UIColor = UIColor.white
+    @objc open var bubbleColor: UIColor = UIColor.white
     
     fileprivate var bubble = UIView()
     
@@ -81,10 +81,10 @@ open class BubbleTransition: NSObject {
     
     // Modifs GB
     open var detailFrame: CGRect!
-    open var path: UIBezierPath!
-    open var bkgdImage: UIImageView!
-    open var noDetailStatus: Bool = false
-    var theDetail: xiaDetail!
+    @objc open var path: UIBezierPath!
+    @objc open var bkgdImage: UIImageView!
+    @objc open var noDetailStatus: Bool = false
+    @objc var theDetail: xiaDetail!
     
     fileprivate var detail = UIImageView()
     
@@ -169,7 +169,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
     }
     
-    public func showImage(_ transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, noDetail: Bool = false) -> UIImageView {
+    @objc public func showImage(_ transitionContext: UIViewControllerContextTransitioning, fullImage: UIImageView, myDetail: NSObject, noDetail: Bool = false) -> UIImageView {
         var path: UIBezierPath!
         if !noDetail {
             path = (myDetail as! xiaDetail).bezierPath()

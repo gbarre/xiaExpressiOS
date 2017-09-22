@@ -23,23 +23,23 @@ import UIKit
 
 class xiaDetail: NSObject {
 
-    var points = [Int: UIImageView]()
-    var tag: Int = 0
-    var scale: CGFloat = 1.0
-    var constraint: String = ""
-    var locked: Bool = false
+    @objc var points = [Int: UIImageView]()
+    @objc var tag: Int = 0
+    @objc var scale: CGFloat = 1.0
+    @objc var constraint: String = ""
+    @objc var locked: Bool = false
     
-    init(tag: Int, scale: CGFloat){
+    @objc init(tag: Int, scale: CGFloat){
         self.tag = tag
         self.points = [:]
         self.scale = scale
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    @objc required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
+    @objc func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
         var xMin: CGFloat = UIScreen.main.bounds.width
         var xMax: CGFloat = 0
         var yMin: CGFloat = UIScreen.main.bounds.height
@@ -64,7 +64,7 @@ class xiaDetail: NSObject {
         return CGRect(x: xMin * scale, y: yMin * scale, width: (xMax - xMin) * scale, height: (yMax - yMin) * scale)
     }
     
-    func bezierPath(_ scale:CGFloat = 1.0) -> UIBezierPath {
+    @objc func bezierPath(_ scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
         if constraint == constraintEllipse {
             path = UIBezierPath(ovalIn: self.bezierFrame())
@@ -84,7 +84,7 @@ class xiaDetail: NSObject {
         return path
     }
     
-    func createPath() -> String {
+    @objc func createPath() -> String {
         if (points.count < 2) {
             return "0;0"
         }
@@ -97,13 +97,13 @@ class xiaDetail: NSObject {
                 let y = point.center.y / scale
                 path += "\(x);\(y) "
             }
-            path = path.substring(with: path.characters.index(path.startIndex, offsetBy: 0)..<path.characters.index(path.endIndex, offsetBy: -1))
+            path = String(path.prefix(path.count - 1))
             
             return path // return X1.xxx;Y1.yyy X2.xxx;Y2.yyy X3.xxx;Y3.yyy ...
         }
     }
     
-    func createPoint(_ location: CGPoint, imageName: String, index: Int) -> UIImageView {
+    @objc func createPoint(_ location: CGPoint, imageName: String, index: Int) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location
@@ -115,7 +115,7 @@ class xiaDetail: NSObject {
         // view.addSubview(newPoint)
     }
     
-    func makeVirtPoints() -> [Int: UIImageView] {
+    @objc func makeVirtPoints() -> [Int: UIImageView] {
         let nbPoints = points.count
         var virtPoints = [Int: UIImageView]()
         

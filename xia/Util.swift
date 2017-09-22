@@ -136,8 +136,7 @@ func cleanInput(_ strIn: String) -> String {
     
     // Truncate to 45 characters
     if out.characters.count > 45 {
-        let lastIndex = out.index(out.startIndex, offsetBy: 45)
-        return out.substring(to: lastIndex)
+        return String(out.prefix(45))
     }
     else {
         return out

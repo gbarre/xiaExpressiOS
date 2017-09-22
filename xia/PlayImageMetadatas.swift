@@ -23,7 +23,7 @@ import UIKit
 
 class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
-    var xml: AEXMLDocument!
+    @objc var xml: AEXMLDocument!
     let xmlElementsDict: [String: String?] = [
         "license" : NSLocalizedString("LICENSE", comment: ""),
         "title" : NSLocalizedString("TITLE", comment: ""),
@@ -41,8 +41,8 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         "description" : NSLocalizedString("DESCRIPTION", comment: "")
     ]
     
-    var landscape: Bool = true
-    let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
+    @objc var landscape: Bool = true
+    @objc let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     @IBAction func Hide(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
@@ -100,12 +100,12 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         self.view.superview!.layer.masksToBounds = false
     }
     
-    func getElementValue(_ element: String) -> NSAttributedString! {
+    @objc func getElementValue(_ element: String) -> NSAttributedString! {
         let key = xmlElementsDict[element]
         let keyWidth = key??.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         let txtSize: CGFloat = 14
-        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml["xia"][element].value != nil && xml["xia"][element].value != "element <\(element)> not found") {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"][element].value!)
@@ -115,28 +115,28 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         return attributedText
     }
     
-    func getDescriptionValue() -> NSAttributedString! {
+    @objc func getDescriptionValue() -> NSAttributedString! {
         let key = xmlElementsDict["description"]
         let keyWidth = key??.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
-        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"]["description"].value!)
             attributedText.append(attributedValue)
             let descWidth = xml["xia"]["description"].value!.characters.count
-            attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
+            attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
 
         }
         
         return attributedText
     }
     
-    func getLicense() -> NSAttributedString! {
+    @objc func getLicense() -> NSAttributedString! {
         let key = xmlElementsDict["license"]
         let keyWidth = key!?.characters.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
-        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml["xia"]["license"].value != nil && xml["xia"]["license"].value != "element <license> not found") {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: " \(xml["xia"]["license"].value!)")

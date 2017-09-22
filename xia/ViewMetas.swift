@@ -23,20 +23,20 @@ import UIKit
 
 class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    var readOnlyState: Bool = false
-    var xml: AEXMLDocument = AEXMLDocument()
-    var filePath: String = ""
-    var fileName: String = ""
-    var selectedSegment: Int = 0
-    weak var ViewCollection: ViewCollectionController?
-    weak var ViewCreateDetailsController: ViewCreateDetails?
+    @objc var readOnlyState: Bool = false
+    @objc var xml: AEXMLDocument = AEXMLDocument()
+    @objc var filePath: String = ""
+    @objc var fileName: String = ""
+    @objc var selectedSegment: Int = 0
+    @objc weak var ViewCollection: ViewCollectionController?
+    @objc weak var ViewCreateDetailsController: ViewCreateDetails?
     
-    var pass: String = ""
-    var selectedLicense: String = ""
-    var showKbd: Bool = true
-    var iPadPro: Bool = false
+    @objc var pass: String = ""
+    @objc var selectedLicense: String = ""
+    @objc var showKbd: Bool = true
+    @objc var iPadPro: Bool = false
     
-    let availableLicenses = [
+    @objc let availableLicenses = [
         "Proprietary - CC-Zero",
         "CC Attribution - CC-BY",
         "CC Attribution-ShareALike - CC-BY-SA",
@@ -286,16 +286,16 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         txtDescription.setContentOffset(CGPoint(x: 0, y: -txtDescription.contentInset.top), animated: false)
     }
     
-    func keybShow(_ notification: Notification) {
+    @objc func keybShow(_ notification: Notification) {
         showKbd = true
     }
     
     
-    func keybHide(_ notification: Notification) {
+    @objc func keybHide(_ notification: Notification) {
         showKbd = false
     }
 
-    func showSegmentView(_ index: Int) {
+    @objc func showSegmentView(_ index: Int) {
         for subview in view.subviews {
             if subview.tag > 9 {
                 if subview.tag == index + 10 {
@@ -319,7 +319,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
     }
     
-    func prepareToWriteXML() {
+    @objc func prepareToWriteXML() {
         // Save metas in xml
         xml["xia"]["title"].value = txtTitle.text
         xml["xia"]["readonly"].value = "\(roSwitch.isOn)"
