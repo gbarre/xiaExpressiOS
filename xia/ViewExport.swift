@@ -38,7 +38,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        img = UIImage(contentsOfFile: "\(documentsDirectory)/\(fileName).jpg")!
+        img = UIImage(contentsOfFile: "\(imagesDirectory)/\(fileName).jpg")!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

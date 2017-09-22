@@ -30,6 +30,8 @@ let xmlElements: [String] = ["title", "description", "creator",
 ]
 
 let documentsDirectory = NSHomeDirectory() + "/Documents"
+let imagesDirectory = documentsDirectory + "/images"
+let xmlDirectory = documentsDirectory + "/xml"
 
 let blueColor = UIColor(red: 0, green: 153/255, blue: 204/255, alpha: 1)
 let selectingColor = UIColor(red: 255/255, green: 131/255, blue: 0/255, alpha: 1)

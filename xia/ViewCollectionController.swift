@@ -113,8 +113,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             
             let fileManager = FileManager.default
             do {
-                try fileManager.copyItem(atPath: "\(documentsDirectory)/\(selectedPhoto).jpg", toPath: "\(documentsDirectory)/\(now).jpg")
-                try fileManager.copyItem(atPath: "\(documentsDirectory)/\(selectedPhoto).xml", toPath: "\(documentsDirectory)/\(now).xml")
+                try fileManager.copyItem(atPath: "\(imagesDirectory)/\(selectedPhoto).jpg", toPath: "\(imagesDirectory)/\(now).jpg")
+                try fileManager.copyItem(atPath: "\(xmlDirectory)/\(selectedPhoto).xml", toPath: "\(xmlDirectory)/\(now).xml")
             }
             catch let error as NSError {
                 dbg.pt(error.localizedDescription)
@@ -173,6 +173,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        migrateDatas()
         // Hide left navbar buttons
         buildLeftNavbarItems()
         // Put the StatusBar in white
@@ -236,9 +237,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         else if arrayNames.count > 0 {
-            let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+            let xmlToSegue = getXML("\(xmlDirectory)/\(arrayNames[segueIndex]).xml")
             let nameToSegue = "\(arrayNames[segueIndex])"
-            let pathToSegue = "\(documentsDirectory)/\(nameToSegue)"
+            let pathToSegue = "\(xmlDirectory)/\(nameToSegue)"
             if (segue.identifier == "viewLargePhoto") {
                 endEdit()
                 if let controller:ViewCreateDetails = segue.destination as? ViewCreateDetails {
@@ -314,22 +315,19 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
        self.arrayNames = []
         // Load all images names
         let fileManager = FileManager.default
-        let files = fileManager.enumerator(atPath: documentsDirectory)
+        let files = fileManager.enumerator(atPath: imagesDirectory)
         while let fileObject = files?.nextObject() {
             var file = fileObject as! String
-            let ext = String(file.suffix(3))
-            if (ext != "xml" && file != "Inbox") {
-                file = String(file.prefix(file.count - 4)) // remove .xyz
-                if fileManager.fileExists(atPath: "\(documentsDirectory)/\(file).xml") {
-                    self.arrayNames.append(file)
+            file = String(file.prefix(file.count - 4)) // remove .xyz
+            if fileManager.fileExists(atPath: "\(xmlDirectory)/\(file).xml") {
+                self.arrayNames.append(file)
+            }
+            else {
+                do {
+                    try fileManager.removeItem(atPath: "\(imagesDirectory)/\(file).jpg")
                 }
-                else {
-                    do {
-                        try fileManager.removeItem(atPath: "\(documentsDirectory)/\(file).jpg")
-                    }
-                    catch {
-                        dbg.pt(error.localizedDescription)
-                    }
+                catch {
+                    dbg.pt(error.localizedDescription)
                 }
             }
         }
@@ -345,7 +343,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // order thumb by title
         self.arraySortedNames = [:]
         for name in self.arrayNames {
-            let xml = getXML("\(documentsDirectory)/\(name).xml")
+            let xml = getXML("\(xmlDirectory)/\(name).xml")
             var title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
             title = "\(String(describing: title))-\(name)"
             self.arraySortedNames[title!] = name
@@ -372,12 +370,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         else {
             let index = (indexPath as NSIndexPath).item
             // Load image
-            let filePath = "\(documentsDirectory)/\(arrayNames[index]).jpg"
+            let filePath = "\(imagesDirectory)/\(arrayNames[index]).jpg"
             let img = UIImage(contentsOfFile: filePath)
             cell.setThumbnail(img!)
             
             // Load label
-            let xml = getXML("\(documentsDirectory)/\(arrayNames[index]).xml")
+            let xml = getXML("\(xmlDirectory)/\(arrayNames[index]).xml")
             let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
             cell.setLabel(label)
             
@@ -447,9 +445,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // Delete the file
         let fileManager = FileManager()
         do {
-            var filePath = "\(documentsDirectory)/\(fileName).jpg"
+            var filePath = "\(imagesDirectory)/\(fileName).jpg"
             try fileManager.removeItem(atPath: filePath)
-            filePath = "\(documentsDirectory)/\(fileName).xml"
+            filePath = "\(xmlDirectory)/\(fileName).xml"
             try fileManager.removeItem(atPath: filePath)
         }
         catch let error as NSError {
@@ -479,10 +477,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 performSegue(withIdentifier: "Add", sender: self)
             }
             else {
-                let xmlToSegue = getXML("\(documentsDirectory)/\(arrayNames[segueIndex]).xml")
+                let xmlToSegue = getXML("\(xmlDirectory)/\(arrayNames[segueIndex]).xml")
                 if xmlToSegue["xia"]["readonly"].value! == "true" {
                     // look for orientation before segue
-                    let filePath = "\(documentsDirectory)/\(arrayNames[segueIndex]).jpg"
+                    let filePath = "\(imagesDirectory)/\(arrayNames[segueIndex]).jpg"
                     let img = UIImage(contentsOfFile: filePath)!
                     
                     landscape = (img.size.width > img.size.height) ? true : false
@@ -516,7 +514,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 // store new image to document directory
                 let imageData = UIImageJPEGRepresentation(image!, 85)
                 do {
-                    try imageData?.write(to: URL(fileURLWithPath: "\(documentsDirectory)/\(now).jpg"), options: [.atomicWrite])
+                    try imageData?.write(to: URL(fileURLWithPath: "\(imagesDirectory)/\(now).jpg"), options: [.atomicWrite])
                     dbg.pt("Image imported")
                     errorAtImageImport = false
                 }
@@ -532,7 +530,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
                 let xmlString = xmlXIA.xmlString
                 do {
-                    try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+                    try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
                     errorAtXMLImport = false
                     dbg.pt("XML imported")
                 }
@@ -544,7 +542,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // something were wrong, clean it !
             if errorAtXMLImport {
                 do {
-                    try fileManager.removeItem(atPath: "\(documentsDirectory)/\(now).jpg")
+                    try fileManager.removeItem(atPath: "\(imagesDirectory)/\(now).jpg")
                 }
                 catch let error as NSError {
                     dbg.pt(error.localizedDescription)
@@ -560,6 +558,47 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
             catch let error as NSError {
                 dbg.pt(error.localizedDescription)
+            }
+        }
+    }
+    
+    func migrateDatas() {
+        // check if directories images & xml
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let url = URL(fileURLWithPath: path)
+        let fileManager = FileManager.default
+        
+        let imagesPath = url.appendingPathComponent("images").path
+        let xmlPath = url.appendingPathComponent("xml").path
+        if (!fileManager.fileExists(atPath: imagesPath)) {
+            do { // create directories if necessary
+                try fileManager.createDirectory(atPath: imagesPath, withIntermediateDirectories: false, attributes: nil)
+                try fileManager.createDirectory(atPath: xmlPath, withIntermediateDirectories: false, attributes: nil)
+                dbg.pt("create directories")
+            } catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        // move files to their directory
+        let files = fileManager.enumerator(atPath: documentsDirectory)
+        while let fileObject = files?.nextObject() {
+            let file = fileObject as! String
+            if (String(file.prefix(6)) != "images" && String(file.prefix(3)) != "xml") {
+                let ext = String(file.suffix(3))
+                do {
+                    switch (ext) {
+                    case "xml":
+                        try fileManager.moveItem(atPath: documentsDirectory + "/" + file, toPath: xmlPath + "/" + file)
+                        break;
+                    case "jpg":
+                        try fileManager.moveItem(atPath: documentsDirectory + "/" + file, toPath: imagesPath + "/" + file)
+                        break;
+                    default:
+                        break;
+                    }
+                } catch let error as NSError {
+                    dbg.pt(error.localizedDescription)
+                }
             }
         }
     }

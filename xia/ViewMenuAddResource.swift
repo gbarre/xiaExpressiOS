@@ -56,13 +56,13 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let now: Int = Int(Date().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
-        try? imageData?.write(to: URL(fileURLWithPath: documentsDirectory + "/\(now).jpg"), options: [.atomic])
+        try? imageData?.write(to: URL(fileURLWithPath: imagesDirectory + "/\(now).jpg"), options: [.atomic])
         
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.write(toFile: documentsDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+            try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
             dbg.pt(error.localizedDescription)
