@@ -1,12 +1,12 @@
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9
 script:
 - xcodebuild clean -project xia.xcodeproj -scheme xia
 - xcodebuild test -project xia.xcodeproj -scheme xia -destination 'platform=iOS Simulator,name=iPad
-  Air 2,OS=10.3.1'
+  Air 2,OS=11.0'
 tags:
-- ios_10
-- xcode_8
+- ios_11
+- xcode_9
 notifications:
   slack:
     secure: aIf7/C6DHYnPQKroRriFcRKWCHxPwWxUviZ1pZyf0JRdrgT+TQpj/jBvSjwrEYT9Ia87Ftjs9B+QWOX5qqHRgWyR5sprfFob1qbuMW4T+iMv1mfkFs2HkNeod0DpjG2Uw3TNprcIUhYL775oin0Km4hCr/0kC5Zdy3P93VUeWR+5bsByNFFQVa09K/vAccuitDgdq23BSOJxhZqM4U3IPnsMsHZbrwHeKtYdhlwOeEFsYH7Q9I06oiCuhh7i7MAokfjM1bupQMsfuWwj+4bFLiM70ojTrsG2Z92MeQ9N4pv9f+/Tcc+kc3+FJnHTsz1kHCsic0AwzTLS4qr89OPzd1OzdyGTVyZvXxfIen+GuH4gM8pGXvNpX4otudNxVla5uUhEHXUw73eGspD2PqJtPjtHlPEsBMgPhwXLgkrUkLSCxtbHRcWji9JelFuuGYcI3l3/+Mvo989OK7kPfLFuJdX+SA/sM3hQ7F4huIjrk+ZcMvPNZa3rkzbgtQabqJUwMPxLka9rdvgrd8r3vxdNlHWNR/2AG/ilaIjx5T4zGOaTBIwD8lV4DAxTWYipYFuvGlDULtrqeSUmNcwlUmmgChy28dzL93palNUHwH3jxW/BWC2w0a/00sscGE4JtICX+OKRR7V+E9LteRiz/phCrGO0HdVFbEM3FRSNd+Jw8Ag=
