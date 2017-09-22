@@ -239,19 +239,16 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         else if arrayNames.count > 0 {
             let xmlToSegue = getXML("\(xmlDirectory)/\(arrayNames[segueIndex]).xml")
             let nameToSegue = "\(arrayNames[segueIndex])"
-            let pathToSegue = "\(xmlDirectory)/\(nameToSegue)"
             if (segue.identifier == "viewLargePhoto") {
                 endEdit()
                 if let controller:ViewCreateDetails = segue.destination as? ViewCreateDetails {
                     controller.fileName = nameToSegue
-                    controller.filePath = pathToSegue
                     controller.xml = xmlToSegue
                 }
             }
             if (segue.identifier == "viewMetas") {
                 if let controller:ViewMetas = segue.destination as? ViewMetas {
                     controller.xml = xmlToSegue
-                    controller.filePath = pathToSegue
                     controller.fileName = nameToSegue
                     controller.ViewCollection = self
                 }
@@ -260,14 +257,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 endEdit()
                 if let controller:PlayXia = segue.destination as? PlayXia {
                     controller.fileName = nameToSegue
-                    controller.filePath = pathToSegue
                     controller.xml = xmlToSegue
                     controller.landscape = landscape
                 }
             }
             if (segue.identifier == "export") {
                 if let controller:ViewExport = segue.destination as? ViewExport {
-                    controller.filePath = pathToSegue
                     controller.fileName = nameToSegue
                     controller.xml = xmlToSegue
                     controller.ViewCollection = self

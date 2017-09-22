@@ -25,7 +25,6 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     @objc var docController:UIDocumentInteractionController!
     
-    @objc var filePath: String = ""
     @objc var fileName: String = ""
     @objc var xml: AEXMLDocument = AEXMLDocument()
     @objc var img = UIImage()

@@ -47,7 +47,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     @objc var index: Int = 0
     @objc var xml: AEXMLDocument = AEXMLDocument()
     @objc var fileName: String = ""
-    @objc var filePath: String = ""
     @objc var fileTitle: String = ""
     
     @objc var location = CGPoint(x: 0, y: 0)
@@ -84,8 +83,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         imgTopBarBkgd.isHidden = false
         
         // Load image
-        let filePath = "\(self.filePath).jpg"
-        img = UIImage(contentsOfFile: filePath)!
+        let imagePath = imagesDirectory + "/\(self.fileName).jpg"
+        img = UIImage(contentsOfFile: imagePath)!
         
         landscape = (img.size.width > img.size.height) ? true : false
         
@@ -408,7 +407,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = details["\(detailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(xml, path: "\(filePath).xml")
+            let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
         }
         
         if createDetail {
@@ -440,7 +439,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.tag = self.detailToSegue
                         controller.xml = self.xml
                         controller.index = self.index
-                        controller.filePath = filePath
+                        controller.fileName = fileName
                         controller.ViewCreateDetailsController = self
                     }
                 }
@@ -449,7 +448,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if (segue.identifier == "viewMetas") {
             if let controller:ViewMetas = segue.destination as? ViewMetas {
                 controller.xml = self.xml
-                controller.filePath = self.filePath
                 controller.fileName = self.fileName
                 controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
@@ -458,14 +456,12 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         if (segue.identifier == "playXia") {
             if let controller:PlayXia = segue.destination as? PlayXia {
                 controller.fileName = fileName
-                controller.filePath = filePath
                 controller.xml = self.xml
                 controller.landscape = landscape
             }
         }
         if (segue.identifier == "viewExport") {
             if let controller:ViewExport = segue.destination as? ViewExport {
-                controller.filePath = filePath
                 controller.fileName = fileName
                 controller.xml = self.xml
             }
@@ -522,7 +518,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+            let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
         })
         let ellipseAction = UIAlertAction(title: NSLocalizedString("ELLIPSE", comment: ""), style: .default, handler: { action in
             // Create new detail
@@ -557,7 +553,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+            let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
         })
         let polygonAction = UIAlertAction(title: NSLocalizedString("POLYGON", comment: ""), style: .default, handler: { action in
             // Create new detail object
@@ -823,7 +819,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.removeFromParent()
                 }
             }
-            let _ = writeXML(xml, path: "\(filePath).xml")
+            let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
             currentDetailTag = 0
         }
     }

@@ -27,7 +27,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     @objc let transition = BubbleTransition()
     
     @objc var fileName: String = ""
-    @objc var filePath: String = ""
     @objc var details = [String: xiaDetail]()
     @objc var location = CGPoint(x: 0, y: 0)
     @objc var touchedTag: Int = 0
@@ -72,8 +71,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let filePath = "\(self.filePath).jpg"
-        img = UIImage(contentsOfFile: filePath)
+        let imagePath = imagesDirectory + "/\(self.fileName).jpg"
+        img = UIImage(contentsOfFile: imagePath)
         bkgdImage.image = img
         
         // Load xmlDetails from xml

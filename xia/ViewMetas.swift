@@ -25,7 +25,6 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     @objc var readOnlyState: Bool = false
     @objc var xml: AEXMLDocument = AEXMLDocument()
-    @objc var filePath: String = ""
     @objc var fileName: String = ""
     @objc var selectedSegment: Int = 0
     @objc weak var ViewCollection: ViewCollectionController?
@@ -57,7 +56,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBAction func btnDone(_ sender: AnyObject) {
         prepareToWriteXML()
         
-        let _ = writeXML(xml, path: "\(filePath).xml")
+        let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
         ViewCreateDetailsController?.setBtnsIcons()
         ViewCollection?.buildLeftNavbarItems()
@@ -123,7 +122,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         
                         // save to xml
                         self.prepareToWriteXML()
-                        let _ = writeXML(self.xml, path: "\(self.filePath).xml")
+                        let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
                         
                     }
                     else {

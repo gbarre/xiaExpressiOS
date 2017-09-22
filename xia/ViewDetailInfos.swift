@@ -32,7 +32,6 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     @objc var xml: AEXMLDocument = AEXMLDocument()
     @objc var index: Int = 0
     @objc var fileName: String = ""
-    @objc var filePath: String = ""
     @objc weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet var switchZoom: UISwitch!
@@ -63,7 +62,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                 d.value = txtDesc.text
             }
         }
-        let _ = writeXML(xml, path: "\(filePath).xml")
+        let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()
