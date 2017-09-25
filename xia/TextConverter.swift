@@ -51,8 +51,11 @@ class TextConverter: NSObject {
         let offline = defaults.bool(forKey: "offline")
         
         if Reachability.isConnectedToNetwork() && !offline {
+            
             // we have "Internet", have fun !
-            htmlString = showAudio(htmlString)
+            htmlString = replaceURL(inText: htmlString)
+            
+            /*htmlString = showAudio(htmlString)
             htmlString = showCustomLinks(htmlString)
             htmlString = showPictures(htmlString)
             htmlString = showVideo(htmlString)
@@ -66,12 +69,48 @@ class TextConverter: NSObject {
             htmlString = buildTwitterLinks(htmlString)
             htmlString = buildVimeoLinks(htmlString)
             htmlString = buildYoutubeLinks(htmlString)
-            htmlString = buildWebtvLinks(htmlString)
+            htmlString = buildWebtvLinks(htmlString)*/
         }
         
-        //dbg.pt(htmlString)
+        dbg.pt(htmlString)
         
         return htmlString
+    }
+    
+    func replaceURL(inText: String!) -> String {
+        var output = inText
+        do {
+            let regex = try NSRegularExpression(pattern: "(^|\\ |\\<br \\/\\>)(https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", options: .caseInsensitive)
+            let nsString = inText as NSString
+            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
+            let arrayResults = results.map {nsString.substring(with: $0.range)}
+            let baseURL = "https://oembedproxy.funraiders.io/?"
+            for result in arrayResults { // browse all urls
+                var cleanResult = result.replacingOccurrences(of: "<br />", with: "")
+                cleanResult = cleanResult.replacingOccurrences(of: " ", with: "")
+                dbg.pt("found " + cleanResult)
+                
+                let urlString = "url=\(cleanResult)"
+                let datasJson = getJSON(baseURL + urlString)
+                let dictJson = parseJSON(datasJson)
+                var html = dictJson["html"]! as! String
+
+                dbg.pt("will replace " + cleanResult + " with " + html)
+                if (html != "Please insert correct URL") {
+                    html = html.replacingOccurrences(of: "src=\"//", with: "src=\"https://")
+                    output = output?.replacingOccurrences(of: cleanResult, with: html)
+                } else {
+                    output = showAudio(output!)
+                    output = showCustomLinks(output!)
+                    output = showPictures(output!)
+                    output = showVideo(output!)
+                }
+                
+            }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
+        }
+        return output!
     }
     
     @objc func buildAudiolinguaLinks(_ inText: String!) -> String {
@@ -304,8 +343,13 @@ class TextConverter: NSObject {
     }
     
     @objc func getJSON(_ urlToRequest: String) -> Data{
-        return (try! Data(contentsOf: URL(string: urlToRequest)!))
-        //return (try! Data(contentsOf: URL(string: urlToRequest)!))
+        do {
+            let data = try Data(contentsOf: URL(string: urlToRequest)!)
+            return data
+        } catch {
+            let string = "{\"html\": \"Please insert correct URL\"}"
+            return string.data(using: .utf8)!
+        }
     }
     
     @objc func parseJSON(_ inputData: Data) -> NSDictionary{
