@@ -140,7 +140,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
             converter.videoWidth = 360
             converter.videoHeight = 210
         }
-        htmlString = converter._text2html(htmlString)
+        htmlString = converter._text2html(inText: htmlString)
         
         descView.loadHTMLString(htmlString, baseURL: nil)
         descView.allowsInlineMediaPlayback = true

@@ -24,19 +24,19 @@ import UIKit
 
 class TextConverter: NSObject {
     
-    @objc var videoWidth: CGFloat = 480
-    @objc var videoHeight: CGFloat = 270
+    var videoWidth: CGFloat = 480
+    var videoHeight: CGFloat = 270
     
-    @objc init(videoWidth: CGFloat, videoHeight: CGFloat){
+    init(videoWidth: CGFloat, videoHeight: CGFloat){
         self.videoWidth = videoWidth
         self.videoHeight = videoHeight
     }
     
-    @objc required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func _text2html(_ inText: String) -> String {
+    func _text2html(inText: String) -> String {
         var htmlString = inText
         
         htmlString = htmlString.replacingOccurrences(of: "&", with: "&amp;")
@@ -44,7 +44,8 @@ class TextConverter: NSObject {
         htmlString = htmlString.replacingOccurrences(of: ">", with: "&gt;")
         htmlString = htmlString.replacingOccurrences(of: "\n", with: "<br />")
         
-        htmlString = pikipikiToHTML(htmlString)
+        htmlString = pikipikiToHTML(text: htmlString)
+        
         htmlString = htmlString.replacingOccurrences(of: "}}}", with: "")
         
         let defaults = UserDefaults.standard
@@ -54,25 +55,10 @@ class TextConverter: NSObject {
             
             // we have "Internet", have fun !
             htmlString = replaceURL(inText: htmlString)
-            
-            /*htmlString = showAudio(htmlString)
-            htmlString = showCustomLinks(htmlString)
-            htmlString = showPictures(htmlString)
-            htmlString = showVideo(htmlString)
-            
-            htmlString = buildAudiolinguaLinks(htmlString)
-            htmlString = buildDailymotionLinks(htmlString)
-            htmlString = buildFlickrLinks(htmlString)
-            htmlString = buildInstagramLinks(htmlString)
-            htmlString = buildScolawebtvLinks(htmlString)
-            htmlString = buildSlideshareLinks(htmlString)
-            htmlString = buildTwitterLinks(htmlString)
-            htmlString = buildVimeoLinks(htmlString)
-            htmlString = buildYoutubeLinks(htmlString)
-            htmlString = buildWebtvLinks(htmlString)*/
         }
         
-        dbg.pt(htmlString)
+        htmlString = showCustomLinks(inText: htmlString)
+        //dbg.pt(htmlString)
         
         return htmlString
     }
@@ -88,24 +74,46 @@ class TextConverter: NSObject {
             for result in arrayResults { // browse all urls
                 var cleanResult = result.replacingOccurrences(of: "<br />", with: "")
                 cleanResult = cleanResult.replacingOccurrences(of: " ", with: "")
-                dbg.pt("found " + cleanResult)
                 
                 let urlString = "url=\(cleanResult)"
-                let datasJson = getJSON(baseURL + urlString)
-                let dictJson = parseJSON(datasJson)
-                var html = dictJson["html"]! as! String
-
-                dbg.pt("will replace " + cleanResult + " with " + html)
-                if (html != "Please insert correct URL") {
-                    html = html.replacingOccurrences(of: "src=\"//", with: "src=\"https://")
-                    output = output?.replacingOccurrences(of: cleanResult, with: html)
-                } else {
-                    output = showAudio(output!)
-                    output = showCustomLinks(output!)
-                    output = showPictures(output!)
-                    output = showVideo(output!)
+                let datasJson = getJSON(urlToRequest: baseURL + urlString)
+                let dictJson = parseJSON(inputData: datasJson)
+                var htmlCode = dictJson["html"]! as! String
+                
+                if (htmlCode != "Please insert correct URL") {
+                    let providerName = dictJson["provider_name"]! as! String
+                    htmlCode = solveSrcPb(htmlCode)
+                    // video / image resizing
+                    if (providerName != "Instagram" && providerName != "Twitter") {
+                        var jsonWidth: CGFloat;
+                        var jsonHeight: CGFloat;
+                        if (providerName.contains("WebTV de") || providerName.contains("Audio Lingua") || providerName.contains("Flickr")) {
+                            jsonWidth = convertStringToCGFloat(dictJson["width"]! as! String)
+                            jsonHeight = convertStringToCGFloat(dictJson["height"]! as! String)
+                        } else {
+                            jsonWidth = dictJson["width"]! as! CGFloat
+                            jsonHeight = dictJson["height"]! as! CGFloat
+                        }
+                        let scaleX = videoWidth / jsonWidth
+                        let scaleY = videoHeight / jsonHeight
+                        let scale = min(min(scaleX, scaleY), 1)
+                        let newWidth = Int(jsonWidth * scale)
+                        let newHeight = Int(jsonHeight * scale)
+                        htmlCode = htmlCode.replacingOccurrences(of: "width=\"\(jsonWidth)\"", with: "width=\"\(newWidth)\"");
+                        htmlCode = htmlCode.replacingOccurrences(of: "height=\"\(jsonHeight)\"", with: "height=\"\(newHeight)\"");
+                    }
+                    // center iframe
+                    htmlCode = "<center>" + htmlCode + "</center>"
+                    output = output?.replacingOccurrences(of: cleanResult, with: htmlCode)
+                } else if (cleanResult.range(of: "\\.(mp3|ogg|m4a)", options: .regularExpression) != nil) {
+                    let audioUrl = showAudio(url: cleanResult)
+                    output = output?.replacingOccurrences(of: cleanResult, with: audioUrl)
+                } else if (cleanResult.range(of: "\\.(jpg|jpeg|gif|png)", options: .regularExpression) != nil) {
+                    output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"\(cleanResult)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
+                } else if (cleanResult.range(of: "\\.(mp4|ogv|webm)", options: .regularExpression) != nil) {
+                    let videoUrl = showVideo(url: cleanResult)
+                    output = output?.replacingOccurrences(of: cleanResult, with: videoUrl)
                 }
-                
             }
         } catch let error as NSError {
             dbg.pt(error.localizedDescription)
@@ -113,236 +121,7 @@ class TextConverter: NSObject {
         return output!
     }
     
-    @objc func buildAudiolinguaLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}www\\.audio-lingua\\.eu\\/spip\\.php\\?article([0-9]*)", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                let audioCode = result.replacingOccurrences(of: "http://www.audio-lingua.eu/spip.php?article", with: "", options: NSString.CompareOptions.caseInsensitive, range: nil)
-                output = output?.replacingOccurrences(of: result, with: "<center><iframe frameborder=\"0\" width=\"\(videoWidth)\" height=\"120\" src=\"http://www.audio-lingua.eu/spip.php?page=mp3&id_article=\(audioCode)&color=00aaea\"></iframe></center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildDailymotionLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "http:\\/{2}dai\\.ly\\/(\\w|-|_)*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                let videoCode = result.replacingOccurrences(of: "http://dai.ly/", with: "", options: NSString.CompareOptions.caseInsensitive, range: nil)
-                output = output?.replacingOccurrences(of: result, with: "<center><iframe frameborder=\"0\" width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"http://www.dailymotion.com/embed/video/\(videoCode)\" allowfullscreen></iframe></center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildInstagramLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https:\\/{2}www\\.instagram\\.com\\/p\\/(\\w|-|_)*\\/", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://api.instagram.com/oembed?"
-            for result in arrayResults {
-                let urlString = "url=\(result)"
-                
-                let datasJson = getJSON(baseURL + urlString + "&omitscript=true")
-                let dictJson = parseJSON(datasJson)
-                let author = dictJson["author_name"]! as! String
-                let authorURL = dictJson["author_url"]! as! String
-                let thumbnailURL = dictJson["thumbnail_url"]! as! String
-                let title = dictJson["title"]! as! String
-                output = output?.replacingOccurrences(of: result, with: "<center><img src=\"\(thumbnailURL)\" alt=\"\(thumbnailURL)\" style=\"max-width: \(videoWidth);\" /><p><a href=\"\(result)\" style=\"color:#000; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none; word-wrap:break-word;\">\(title)</a></p><p>\(NSLocalizedString("PHOTO_PUBLISHED_BY", comment: "")) <a href=\"\(authorURL)\">@\(author)</a></p></center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildFlickrLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https:\\/{2}flic\\.kr\\/p\\/(\\w|-|_)*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://www.flickr.com/services/oembed/?format=json&callback=?"
-            let callbackString = "&jsoncallback="
-            for result in arrayResults {
-                let urlString = "&url=\(result)"
-                let datasJson = getJSON(baseURL + callbackString + urlString)
-                let dictJson = parseJSON(datasJson)
-                let width = convertStringToCGFloat(dictJson["width"]! as! String)
-                let height = convertStringToCGFloat(dictJson["height"]! as! String)
-                let scaleX = videoWidth / width
-                let scaleY = videoHeight / height
-                let scale = min(scaleX, scaleY, 1)
-                let newWidth = width * scale
-                let newHeight = height * scale
-                let html = (dictJson["html"]! as! String).replacingOccurrences(of: "width=\"\(Int(width))\" height=\"\(Int(height))\"", with: "width=\"\(newWidth)\" height=\"\(newHeight)\"")
-                output = output?.replacingOccurrences(of: result, with: "<center>\(html)</center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildScolawebtvLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}scolawebtv\\.crdp-versailles\\.fr\\/\\?id=?[0-9]*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "http://scolawebtv.crdp-versailles.fr/oembed.api/?"
-            let formatString = "format=json"
-            for result in arrayResults {
-                let urlString = "&url=\(result)"
-                let datasJson = getJSON(baseURL + formatString + urlString)
-                let dictJson = parseJSON(datasJson)
-                let width = dictJson["width"]! as! CGFloat
-                let height = dictJson["height"]! as! CGFloat
-                let scaleX = videoWidth / width
-                let scaleY = videoHeight / height
-                let scale = min(scaleX, scaleY, 1)
-                let newWidth = width * scale
-                let newHeight = height * scale
-                var html = (dictJson["html"]! as! String).replacingOccurrences(of: "width=\"\(Int(width))\" height=\"\(Int(height))\"", with: "width=\"\(newWidth)\" height=\"\(newHeight)\"")
-                html = solveSrcPb(html, s: "s")
-                output = output?.replacingOccurrences(of: result, with: "<center>\(html)</center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildSlideshareLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "http:\\/{2}([a-z]|[0-9]|-|_)*\\.slideshare\\.net\\/\\w*\\/(\\w|-|_)*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "http://www.slideshare.net/api/oembed/2?"
-            let formatString = "&format=json"
-            for result in arrayResults {
-                let urlString = "url=\(result)"
-                let datasJson = getJSON(baseURL + urlString + formatString)
-                let dictJson = parseJSON(datasJson)
-                output = output?.replacingOccurrences(of: result, with: "<center>\(dictJson["html"]! as! String)</center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildTwitterLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}twitter\\.com\\/([a-z]|[0-9]|-|_)*\\/status\\/[0-9]*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://api.twitter.com/1/statuses/oembed.json?"
-            for result in arrayResults {
-                let urlString = "url=\(result)"
-                let datasJson = getJSON(baseURL + urlString)
-                let dictJson = parseJSON(datasJson)
-                output = output?.replacingOccurrences(of: result, with: "\(dictJson["html"]! as! String)")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildVimeoLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https:\\/{2}vimeo\\.com\\/(\\w|\\/|-|_)*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://vimeo.com/api/oembed.json?"
-            let maxWidth = "&width=\(Int(videoWidth))"
-            for result in arrayResults {
-                let urlString = "url=\(result)"
-                let datasJson = getJSON(baseURL + urlString + maxWidth)
-                let dictJson = parseJSON(datasJson)
-                output = output?.replacingOccurrences(of: result, with: "<center>\(dictJson["html"]! as! String)</center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildYoutubeLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            // youtu.be
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}youtu\\.be\\/(\\w|-|_)*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                let videoCode = result.replacingOccurrences(of: "http://youtu.be/", with: "", options: NSString.CompareOptions.caseInsensitive, range: nil).replacingOccurrences(of: "https://youtu.be/", with: "", options: NSString.CompareOptions.caseInsensitive, range: nil)
-                output = output?.replacingOccurrences(of: result, with: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"https://www.youtube.com/embed/\(videoCode)\" frameborder=\"0\" allowfullscreen></iframe></center>")
-            }
-            // youtube.com/embed
-            let regex2 = try NSRegularExpression(pattern: "http:\\/{2}youtube\\.com\\/embed\\/(\\w|-|_)*", options: .caseInsensitive)
-            let nsString2 = inText as NSString
-            let results2 = regex2.matches(in: inText, options: [], range: NSMakeRange(0, nsString2.length))
-            let arrayResults2 = results2.map {nsString2.substring(with: $0.range)}
-            for result in arrayResults2 {
-                output = output?.replacingOccurrences(of: result, with: "<center><iframe width=\"\(videoWidth)\" height=\"\(videoHeight)\" src=\"\(result)\" frameborder=\"0\" allowfullscreen></iframe></center>")
-            }
-            
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func buildWebtvLinks(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}webtv\\.ac-versailles\\.fr\\/(spip\\.php)?(\\?)?article[0-9]*", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "http://webtv.ac-versailles.fr/oembed.api/?"
-            let formatString = "format=json"
-            for result in arrayResults {
-                let urlString = "&url=\(result)"
-                let datasJson = getJSON(baseURL + formatString + urlString)
-                let dictJson = parseJSON(datasJson)
-                let html = solveSrcPb(dictJson["html"]! as! String, s: "s")
-                output = output?.replacingOccurrences(of: result, with: "<center>\(html)</center>")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
-    }
-    
-    @objc func getJSON(_ urlToRequest: String) -> Data{
+    func getJSON(urlToRequest: String) -> Data{
         do {
             let data = try Data(contentsOf: URL(string: urlToRequest)!)
             return data
@@ -352,7 +131,7 @@ class TextConverter: NSObject {
         }
     }
     
-    @objc func parseJSON(_ inputData: Data) -> NSDictionary{
+    func parseJSON(inputData: Data) -> NSDictionary{
         var boardsDictionary = NSDictionary()
         do {
             boardsDictionary = try JSONSerialization.jsonObject(with: inputData, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
@@ -362,7 +141,7 @@ class TextConverter: NSObject {
         return boardsDictionary
     }
     
-    @objc func pikipikiToHTML(_ text: String) -> String {
+    func pikipikiToHTML(text: String) -> String {
         var output = text
         // Make bold
         do {
@@ -485,28 +264,15 @@ class TextConverter: NSObject {
         return output
     }
     
-    @objc func showAudio(_ inText: String) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp3|ogg)( autostart)?", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                let autostartRange: NSRange = (result as NSString).range(of: " autostart")
-                let dataState = (autostartRange.length > 0) ? "autostart" : "none"
-                let mp3Result = result.replacingOccurrences(of: "\\.(mp3|ogg)( autostart)?", with: ".mp3", options:NSString.CompareOptions.regularExpression, range: nil)
-                let oggResult = result.replacingOccurrences(of: "\\.(mp3|ogg)( autostart)?", with: ".ogg", options:NSString.CompareOptions.regularExpression, range: nil)
-                let replaceString = "<center><audio controls data-state=\"\(dataState)\"><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /></audio></center>";
-                output = output.replacingOccurrences(of: result, with: replaceString)
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output
+    func showAudio(url: String) -> String {
+        let mp3Result = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".mp3", options:NSString.CompareOptions.regularExpression, range: nil)
+        let oggResult = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".ogg", options:NSString.CompareOptions.regularExpression, range: nil)
+        let m4aResult = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".m4a", options:NSString.CompareOptions.regularExpression, range: nil)
+        
+        return "<center><audio controls><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /><source type=\"audio/m4a\" src=\"\(m4aResult)\" /></audio></center>"
     }
     
-    @objc func showCustomLinks(_ inText: String) -> String {
+    func showCustomLinks(inText: String) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* *((?!\\]).)*\\]", options: .caseInsensitive)
@@ -527,45 +293,14 @@ class TextConverter: NSObject {
         return output
     }
     
-    @objc func showPictures(_ inText: String!) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(jpg|jpeg|gif|png)", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                output = output?.replacingOccurrences(of: result, with: "<img src=\"\(result)\" alt=\"\(result)\" style=\"max-width: \(videoWidth);\" />")
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output!
+    func showVideo(url: String) -> String {
+        let mp4Result = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".mp4", options:NSString.CompareOptions.regularExpression, range: nil)
+        let ogvResult = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".ogv", options:NSString.CompareOptions.regularExpression, range: nil)
+        let webmResult = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".webm", options:NSString.CompareOptions.regularExpression, range: nil)
+        return "<center><video controls preload=\"none\" width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"\(mp4Result)\" /><source type=\"video/ogg\" src=\"\(ogvResult)\" /><source type=\"video/webm\" src=\"\(webmResult)\" /></video></center>";
     }
     
-    @objc func showVideo(_ inText: String) -> String {
-        var output = inText
-        do {
-            let regex = try NSRegularExpression(pattern: "https?:\\/{2}(\\w|\\/|\\.|-|\\%|\\#)*\\.(mp4|ogv|webm)( autostart)?", options: .caseInsensitive)
-            let nsString = inText as NSString
-            let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
-            let arrayResults = results.map {nsString.substring(with: $0.range)}
-            for result in arrayResults {
-                let autostartRange: NSRange = (result as NSString).range(of: " autostart")
-                let dataState = (autostartRange.length > 0) ? "autostart" : "none"
-                let mp4Result = result.replacingOccurrences(of: "\\.(mp4|ogv|webm)( autostart)?", with: ".mp4", options:NSString.CompareOptions.regularExpression, range: nil)
-                let ogvResult = result.replacingOccurrences(of: "\\.(mp4|ogv|webm)( autostart)?", with: ".ogv", options:NSString.CompareOptions.regularExpression, range: nil)
-                let webmResult = result.replacingOccurrences(of: "\\.(mp4|ogv|webm)( autostart)?", with: ".webm", options:NSString.CompareOptions.regularExpression, range: nil)
-                let replaceString = "<center><video controls preload=\"none\" data-state=\"\(dataState)\" width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"\(mp4Result)\" /><source type=\"video/ogg\" src=\"\(ogvResult)\" /><source type=\"video/webm\" src=\"\(webmResult)\" /></video></center>";
-                output = output.replacingOccurrences(of: result, with: replaceString)
-            }
-        } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
-        }
-        return output
-    }
-    
-    @objc func solveSrcPb(_ intext: String, s: String = "") -> String {
+    func solveSrcPb(_ intext: String, s: String = "s") -> String {
         return intext.replacingOccurrences(of: "src=\"//", with: "src=\"http\(s)://")
     }
 }

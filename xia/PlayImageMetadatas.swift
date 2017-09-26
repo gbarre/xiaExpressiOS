@@ -85,7 +85,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
             converter.videoWidth = 360
             converter.videoHeight = 210
         }
-        htmlString = converter._text2html(htmlString)
+        htmlString = converter._text2html(inText: htmlString)
         
         documentDescription.loadHTMLString(htmlString, baseURL: nil)
         documentDescription.allowsInlineMediaPlayback = true
