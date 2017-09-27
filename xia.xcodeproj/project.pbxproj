@@ -62,6 +62,9 @@
 		F04543FD1D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FF1D17F93300BBF731 /* InfoPlist.strings */; };
 		F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04544041D17F93300BBF731 /* InfoPlist.strings */; };
 		F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F0BB83751D19D98F0070140A /* ipad_blanc_80.png */; };
+		F0D5EEB31F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
+		F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
+		F0D5EEB51F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
 		F0EAFF0C1D12EDE500366F0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0EAFF0A1D12EDE500366F0E /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -124,6 +127,7 @@
 		F04543FE1D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F04544031D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F0BB83751D19D98F0070140A /* ipad_blanc_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_blanc_80.png; sourceTree = "<group>"; };
+		F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jsonDB.swift; sourceTree = "<group>"; };
 		F0EAFF0B1D12EDE500366F0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = xia/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0EAFF0D1D12EDF800366F0E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = xia/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,6 +189,7 @@
 				F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */,
 				F03EA5F81D12EC2B008678BC /* Constants.swift */,
 				F03EA5F91D12EC2B008678BC /* debug.swift */,
+				F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */,
 				F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */,
 				F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */,
 				F03EA5FC1D12EC2B008678BC /* PlayImageMetadatas.swift */,
@@ -399,6 +404,7 @@
 				F03EA6141D12EC2B008678BC /* Util.swift in Sources */,
 				F03EA5C91D12EB02008678BC /* AppDelegate.swift in Sources */,
 				F03EA6091D12EC2B008678BC /* AEXML.swift in Sources */,
+				F0D5EEB31F7BF9440043D9CD /* jsonDB.swift in Sources */,
 				F03EA60B1D12EC2B008678BC /* Constants.swift in Sources */,
 				F03EA60E1D12EC2B008678BC /* PlayDetail.swift in Sources */,
 				F03EA6151D12EC2B008678BC /* ViewCollectionController.swift in Sources */,
@@ -414,6 +420,7 @@
 				F03EA6241D12EC4A008678BC /* PlayXia.swift in Sources */,
 				F03EA61F1D12EC3D008678BC /* Constants.swift in Sources */,
 				F03EA6201D12EC40008678BC /* debug.swift in Sources */,
+				F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */,
 				F03EA6211D12EC43008678BC /* PhotoThumbnail.swift in Sources */,
 				F03EA61E1D12EC3A008678BC /* BubbleTransition.swift in Sources */,
 				F03EA6261D12EC50008678BC /* ShapeView.swift in Sources */,
@@ -441,6 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F03EA5E91D12EB02008678BC /* xiaUITests.swift in Sources */,
+				F0D5EEB51F7BF9440043D9CD /* jsonDB.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

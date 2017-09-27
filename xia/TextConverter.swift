@@ -71,13 +71,24 @@ class TextConverter: NSObject {
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
             let baseURL = "https://oembedproxy.funraiders.io/?"
+            
+            // init local db
+            let db = jsonDB(p: dbPath)
+            db.getDict()
+            
             for result in arrayResults { // browse all urls
                 var cleanResult = result.replacingOccurrences(of: "<br />", with: "")
                 cleanResult = cleanResult.replacingOccurrences(of: " ", with: "")
                 
                 let urlString = "url=\(cleanResult)"
-                let datasJson = getJSON(urlToRequest: baseURL + urlString)
-                let dictJson = parseJSON(inputData: datasJson)
+                // look in local db for json
+                var dictJson = db.getJson(url: cleanResult)
+                if (dictJson == ["nothing": "here"]) {
+                    let datasJson = getJSON(urlToRequest: baseURL + urlString)
+                    dictJson = parseJSON(inputData: datasJson)
+                    db.insert(url: cleanResult, json: dictJson)
+                }
+                
                 var htmlCode = dictJson["html"]! as! String
                 
                 if (htmlCode != "Please insert correct URL") {
