@@ -1,6 +1,6 @@
 //
 //  ViewDetailInfo.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 18/11/2015.
 //

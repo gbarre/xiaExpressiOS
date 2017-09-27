@@ -1,6 +1,6 @@
 //
 //  PhotoThumbnail.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 05/10/15.
 //

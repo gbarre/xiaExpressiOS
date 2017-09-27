@@ -1,6 +1,6 @@
 //
 //  PlayDetail.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 17/01/2016.
 //

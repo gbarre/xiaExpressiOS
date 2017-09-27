@@ -1,6 +1,6 @@
 //
 //  PlayXia.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 25/11/2015.
 //

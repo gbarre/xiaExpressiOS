@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 26/09/2015.
 //
@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        //dbg.enable = true
         return true
     }
     

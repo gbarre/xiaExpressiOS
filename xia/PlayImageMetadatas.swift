@@ -1,6 +1,6 @@
 //
 //  PlayImageMetadatas.swift
-//  xia4ipad
+//  xia
 //
 //  Created by Guillaume on 12/12/2015.
 //
