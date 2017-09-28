@@ -38,12 +38,15 @@ class jsonDB: NSObject {
         // check if file exist
         let fileManager = FileManager.default
         if (!fileManager.fileExists(atPath: path)) {
-            // create it if necessary
-            fileManager.createFile(atPath: path, contents: nil, attributes: nil)
-            dict = ["End": ["Of": "Dict"]]
-        } else {
-            dict = NSDictionary(contentsOfFile: path)! as! [String: NSDictionary]
+            do {
+                let pathToBundleDB = Bundle.main.path(forResource: "oembed", ofType: "plist")!
+                try fileManager.copyItem(atPath: pathToBundleDB, toPath: path)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
         }
+        dict = NSDictionary(contentsOfFile: path)! as! [String: NSDictionary]
     }
     
     func writeDB() {

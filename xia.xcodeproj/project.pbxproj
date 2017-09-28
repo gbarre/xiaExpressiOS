@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F03439E61F7D0A6900F49714 /* oembed.plist in Resources */ = {isa = PBXBuildFile; fileRef = F03439E51F7D0A6900F49714 /* oembed.plist */; };
+		F03439E71F7D0A6900F49714 /* oembed.plist in Resources */ = {isa = PBXBuildFile; fileRef = F03439E51F7D0A6900F49714 /* oembed.plist */; };
+		F03439E81F7D0A6900F49714 /* oembed.plist in Resources */ = {isa = PBXBuildFile; fileRef = F03439E51F7D0A6900F49714 /* oembed.plist */; };
 		F03EA5C91D12EB02008678BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5C81D12EB02008678BC /* AppDelegate.swift */; };
 		F03EA5CE1D12EB02008678BC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CC1D12EB02008678BC /* Main.storyboard */; };
 		F03EA5D01D12EB02008678BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CF1D12EB02008678BC /* Assets.xcassets */; };
@@ -86,6 +89,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F03439E51F7D0A6900F49714 /* oembed.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = oembed.plist; sourceTree = "<group>"; };
 		F03EA5C51D12EB02008678BC /* xia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = xia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F03EA5C81D12EB02008678BC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F03EA5CD1D12EB02008678BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -181,9 +185,9 @@
 		F03EA5C71D12EB02008678BC /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F04544041D17F93300BBF731 /* InfoPlist.strings */,
 				F03EA5FE1D12EC2B008678BC /* Settings.bundle */,
 				F03EA5D41D12EB02008678BC /* Info.plist */,
+				F03439E51F7D0A6900F49714 /* oembed.plist */,
 				F03EA5F61D12EC2B008678BC /* AEXML.swift */,
 				F03EA5C81D12EB02008678BC /* AppDelegate.swift */,
 				F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */,
@@ -207,6 +211,7 @@
 				F03EA6081D12EC2B008678BC /* xiaDetail.swift */,
 				F03EA5CF1D12EB02008678BC /* Assets.xcassets */,
 				F03EA6351D12ED02008678BC /* images.xcassets */,
+				F04544041D17F93300BBF731 /* InfoPlist.strings */,
 				F03EA5D11D12EB02008678BC /* LaunchScreen.storyboard */,
 				F0EAFF0A1D12EDE500366F0E /* Localizable.strings */,
 				F03EA5CC1D12EB02008678BC /* Main.storyboard */,
@@ -353,6 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F03EA6111D12EC2B008678BC /* Settings.bundle in Resources */,
+				F03439E61F7D0A6900F49714 /* oembed.plist in Resources */,
 				F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */,
 				F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */,
 				F03EA5D31D12EB02008678BC /* LaunchScreen.storyboard in Resources */,
@@ -370,6 +376,7 @@
 				F03EA6301D12EC89008678BC /* Assets.xcassets in Resources */,
 				F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */,
 				F04543F31D17F93200BBF731 /* Localizable.strings in Resources */,
+				F03439E71F7D0A6900F49714 /* oembed.plist in Resources */,
 				F03EA6251D12EC4E008678BC /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,6 +385,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F03439E81F7D0A6900F49714 /* oembed.plist in Resources */,
 				F04543FD1D17F93300BBF731 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
