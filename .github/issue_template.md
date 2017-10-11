@@ -10,13 +10,8 @@
 
 #### Device infos :
 - Modèle : 
-- Version de l'API : 
-- Résolution utilisée : 
-- Densité de pixel : 
-- PackageName :
-- VersionCode : 
-- VersionName : 
-
+- Version d'iOS : 
+- Version de l'application : 
 
 #### Informations supplémentaires :
 
