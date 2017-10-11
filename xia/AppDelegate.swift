@@ -48,6 +48,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        let defaults = UserDefaults.standard
+        // update version in settings
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        defaults.set(version, forKey: "version")
+        // Empty oembed.plist if useCache is not enable
+        let useCache = defaults.bool(forKey: "useCache")
+        if (!useCache) {
+            let fileManager = FileManager.default
+            do {
+                let pathToBundleDB = Bundle.main.path(forResource: "oembed", ofType: "plist")!
+                try fileManager.removeItem(atPath: dbPath)
+                try fileManager.copyItem(atPath: pathToBundleDB, toPath: dbPath)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

@@ -50,11 +50,12 @@ class TextConverter: NSObject {
         
         let defaults = UserDefaults.standard
         let offline = defaults.bool(forKey: "offline")
+        let useCache = defaults.bool(forKey: "useCache")
         
         if Reachability.isConnectedToNetwork() && !offline {
             
             // we have "Internet", have fun !
-            htmlString = replaceURL(inText: htmlString)
+            htmlString = replaceURL(inText: htmlString, updateDB: useCache)
         }
         
         htmlString = showCustomLinks(inText: htmlString)
@@ -63,7 +64,7 @@ class TextConverter: NSObject {
         return htmlString
     }
     
-    func replaceURL(inText: String!) -> String {
+    func replaceURL(inText: String!, updateDB: Bool) -> String {
         var output = inText
         do {
             let regex = try NSRegularExpression(pattern: "(^|\\ |\\<br \\/\\>)(https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", options: .caseInsensitive)
@@ -86,7 +87,9 @@ class TextConverter: NSObject {
                 if (dictJson == ["nothing": "here"]) {
                     let datasJson = getJSON(urlToRequest: baseURL + urlString)
                     dictJson = parseJSON(inputData: datasJson)
-                    db.insert(url: cleanResult, json: dictJson)
+                    if (updateDB) {
+                        db.insert(url: cleanResult, json: dictJson)
+                    }
                 }
                 
                 var htmlCode = dictJson["html"]! as! String
