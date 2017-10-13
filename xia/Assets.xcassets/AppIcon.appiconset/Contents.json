@@ -1,13 +1,15 @@
 {
   "images" : [
     {
-      "idiom" : "ipad",
       "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "ipad_blanc_20.png",
       "scale" : "1x"
     },
     {
-      "idiom" : "ipad",
       "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "ipad_blanc_40-1.png",
       "scale" : "2x"
     },
     {
@@ -51,6 +53,12 @@
       "idiom" : "ipad",
       "filename" : "ipad_blanc_167.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "ipad_blanc_1024.png",
+      "scale" : "1x"
     }
   ],
   "info" : {
