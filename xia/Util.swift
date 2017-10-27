@@ -221,4 +221,31 @@ func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
     return error
 }
 
-
+extension UIImage {
+    
+    func getMediumBackgroundColor() -> UIColor {
+        let p0: CGPoint = CGPoint(x: 0, y: 0)
+        let p1: CGPoint = CGPoint(x: (self.size.width-1), y: 0)
+        let p2: CGPoint = CGPoint(x: (self.size.width-1), y: (self.size.height-1))
+        let p3: CGPoint = CGPoint(x: 0, y: (self.size.height-1))
+        let corners:[CGPoint] = [p0, p1, p2, p3]
+        
+        let pixelData = self.cgImage!.dataProvider!.data
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        for point in corners {
+            let pixelsIndex = ((Int(self.size.width) * Int(point.y)) + Int(point.x)) * 4
+            red = red + CGFloat(data[pixelsIndex]) / CGFloat(255.0)
+            green = green + CGFloat(data[pixelsIndex+1]) / CGFloat(255.0)
+            blue = blue + CGFloat(data[pixelsIndex+2]) / CGFloat(255.0)
+            alpha = alpha + CGFloat(data[pixelsIndex+3]) / CGFloat(255.0)
+        }
+        
+        return UIColor(red: red/4, green: green/4, blue: blue/4, alpha: alpha/4)
+    }
+    
+}

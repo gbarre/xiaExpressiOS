@@ -73,6 +73,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
+    @IBOutlet var backView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -791,6 +792,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         imgView.contentMode = UIViewContentMode.scaleAspectFill
         imgView.image = img
         view.addSubview(imgView)
+        backView.backgroundColor = img.getMediumBackgroundColor()
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {

@@ -74,6 +74,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         let imagePath = imagesDirectory + "/\(self.fileName).jpg"
         img = UIImage(contentsOfFile: imagePath)
         bkgdImage.image = img
+        bkgdImage.backgroundColor = img.getMediumBackgroundColor()
         
         // Load xmlDetails from xml
         if let _ = xml.root["details"]["detail"].all {
