@@ -212,7 +212,7 @@ class TextConverter: NSObject {
         var previousLine = ""
         for line in outputArray {
             var replace = line
-            if line.characters.count > 6 && line[line.characters.index(line.startIndex, offsetBy: 0)...line.characters.index(line.startIndex, offsetBy: 5)] != "<br />" {
+            if line.count > 6 && line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 5)] != "<br />" {
                 replace = line.replacingOccurrences(of: "<br />", with: "")
                 if onLine == nbLines {
                     if (levelList[1] == true) {
@@ -224,19 +224,19 @@ class TextConverter: NSObject {
                         output = output + "</li>\n\t</ul>\n" + line
                     }
                 }
-                if line[line.characters.index(line.startIndex, offsetBy: 0)...line.characters.index(line.startIndex, offsetBy: 2)] != " * " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] != " * " {
                     if (levelList[1] == true) {
                         levelList[1] = false
                         replace = "</li>\n\t</ul>\n" + line
                     }
                 }
-                if line[line.characters.index(line.startIndex, offsetBy: 0)...line.characters.index(line.startIndex, offsetBy: 1)] != "* " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] != "* " {
                     if (levelList[0] == true && levelList[1] == false) {
                         levelList[0] = false
                         replace = "</li></ul>\n" + line
                     }
                 }
-                if line[line.characters.index(line.startIndex, offsetBy: 0)...line.characters.index(line.startIndex, offsetBy: 1)] == "* " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] == "* " {
                     if (levelList[0] == nil) {
                         levelList[0] = true
                         replace = "<ul>\n\t<li>"
@@ -244,9 +244,9 @@ class TextConverter: NSObject {
                     else {
                         replace = "</li>\n<li>"
                     }
-                    replace = replace + line[line.characters.index(line.startIndex, offsetBy: 2)...line.characters.index(before: line.endIndex)]
+                    replace = replace + line[line.index(line.startIndex, offsetBy: 2)...line.index(before: line.endIndex)]
                 }
-                if line[line.characters.index(line.startIndex, offsetBy: 0)...line.characters.index(line.startIndex, offsetBy: 2)] == " * " { // 4
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] == " * " {
                     if (levelList[1] == nil) {
                         levelList[1] = true
                         replace = "<ul>\n\t<li>"
@@ -254,7 +254,7 @@ class TextConverter: NSObject {
                     else {
                         replace = "\t<li>"
                     }
-                    replace = replace + line[line.characters.index(line.startIndex, offsetBy: 3)...line.characters.index(before: line.endIndex)]
+                    replace = replace + line[line.index(line.startIndex, offsetBy: 3)...line.index(before: line.endIndex)]
                 }
                 output = output.replacingOccurrences(of: line, with: replace)
                 previousLine = replace
@@ -296,8 +296,8 @@ class TextConverter: NSObject {
             for result in arrayResults {
                 let text = result.replacingOccurrences(of: "\\[|\\]", with: "", options:NSString.CompareOptions.regularExpression, range: nil)
                 let urlEndRange: NSRange = (text as NSString).range(of: " ")
-                let url = (urlEndRange.length == 1) ? String(text[text.characters.index(text.startIndex, offsetBy: 0)...text.characters.index(text.startIndex, offsetBy: urlEndRange.location - 1)]) : text
-                let linkText = (urlEndRange.length == 1) ? String(text[text.characters.index(text.startIndex, offsetBy: urlEndRange.location+1)...text.characters.index(before: text.endIndex)]) : text
+                let url = (urlEndRange.length == 1) ? String(text[text.index(text.startIndex, offsetBy: 0)...text.index(text.startIndex, offsetBy: urlEndRange.location - 1)]) : text
+                let linkText = (urlEndRange.length == 1) ? String(text[text.index(text.startIndex, offsetBy: urlEndRange.location+1)...text.index(before: text.endIndex)]) : text
                 let replaceString = "<a href=\"\(url)\">\(linkText)</a>";
                 output = output.replacingOccurrences(of: result, with: replaceString)
             }

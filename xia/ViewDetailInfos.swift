@@ -215,7 +215,7 @@ public extension NSMutableAttributedString {
         let regex = try NSRegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
         
         var offset = 0
-        regex.enumerateMatches(in: string, options: [], range: NSRange(location: 0, length: string.characters.count)) { (result, flags, stop) -> Void in
+        regex.enumerateMatches(in: string, options: [], range: NSRange(location: 0, length: string.count)) { (result, flags, stop) -> Void in
             guard let result = result else {
                 return
             }
@@ -224,7 +224,7 @@ public extension NSMutableAttributedString {
             self.addAttributes(attrs, range: range)
             let replacement = regex.replacementString(for: result, in: self.string, offset: offset, template: "$1")
             self.replaceCharacters(in: range, with: replacement)
-            offset -= (2 * delimiter.characters.count)
+            offset -= (2 * delimiter.count)
         }
     }
 }

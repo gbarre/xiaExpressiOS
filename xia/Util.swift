@@ -135,7 +135,7 @@ func cleanInput(_ strIn: String) -> String {
     }
     
     // Truncate to 45 characters
-    if out.characters.count > 45 {
+    if out.count > 45 {
         return String(out.prefix(45))
     }
     else {
