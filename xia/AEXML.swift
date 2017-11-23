@@ -443,9 +443,11 @@ private class AEXMLParser: NSObject, XMLParserDelegate {
     }
     
     @objc func parser(_ parser: XMLParser, foundCharacters string: String) {
-        currentValue += string
+        /*currentValue += string
         let newValue = currentValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        currentElement?.value = newValue == String() ? nil : newValue
+        currentElement?.value = newValue == String() ? nil : newValue*/
+        currentValue.append(string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))
+        currentElement?.value = currentValue.isEmpty ? nil : currentValue
     }
     
     @objc func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
