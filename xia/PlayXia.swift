@@ -178,10 +178,10 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
                 
                 // Add points to detail
-                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                let pointsArray = path.split{$0 == " "}.map(String.init)
                 var pointIndex = 0
                 for point in pointsArray {
-                    let coords = point.characters.split{$0 == ";"}.map(String.init)
+                    let coords = point.split{$0 == ";"}.map(String.init)
                     let x = convertStringToCGFloat(coords[0]) * scale + xSpace
                     let y = convertStringToCGFloat(coords[1]) * scale + ySpace
                     let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)

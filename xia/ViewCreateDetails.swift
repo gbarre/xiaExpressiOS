@@ -740,12 +740,12 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 let newDetail = xiaDetail(tag: detailTag, scale: scale)
                 details["\(detailTag)"] = newDetail
                 // Add points to detail
-                let pointsArray = path.characters.split{$0 == " "}.map(String.init)
+                let pointsArray = path.split{$0 == " "}.map(String.init)
                 if pointsArray.count > 2 {
                     var attainablePoints: Int = 0
                     var pointIndex = 0
                     for point in pointsArray {
-                        let coords = point.characters.split{$0 == ";"}.map(String.init)
+                        let coords = point.split{$0 == ";"}.map(String.init)
                         if coords.count == 2 {
                             let x = convertStringToCGFloat(coords[0]) * scale
                             let y = convertStringToCGFloat(coords[1]) * scale
@@ -872,8 +872,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         items.append(UIBarButtonItem(title: NSLocalizedString("COLLECTION", comment: ""), style: .plain, target: self, action: #selector(ViewCreateDetails.goBack)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil))
         var itemText = (fileTitle == "") ? fileName : fileTitle
-        if itemText.characters.count > 47 {
-            itemText = itemText[itemText.characters.index(itemText.startIndex, offsetBy: 0)...itemText.characters.index(itemText.startIndex, offsetBy: 46)] + "..."
+        if itemText.count > 47 {
+            itemText = itemText[itemText.index(itemText.startIndex, offsetBy: 0)...itemText.index(itemText.startIndex, offsetBy: 46)] + "..."
         }
         items.append(UIBarButtonItem(title: (itemText), style: .plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
         items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil))

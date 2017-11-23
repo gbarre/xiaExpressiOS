@@ -102,7 +102,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
     @objc func getElementValue(_ element: String) -> NSAttributedString! {
         let key = xmlElementsDict[element]
-        let keyWidth = key??.characters.count
+        let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         let txtSize: CGFloat = 14
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
@@ -117,14 +117,14 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
     @objc func getDescriptionValue() -> NSAttributedString! {
         let key = xmlElementsDict["description"]
-        let keyWidth = key??.characters.count
+        let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"]["description"].value!)
             attributedText.append(attributedValue)
-            let descWidth = xml["xia"]["description"].value!.characters.count
+            let descWidth = xml["xia"]["description"].value!.count
             attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
 
         }
@@ -134,7 +134,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
     @objc func getLicense() -> NSAttributedString! {
         let key = xmlElementsDict["license"]
-        let keyWidth = key!?.characters.count
+        let keyWidth = key!?.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
         
