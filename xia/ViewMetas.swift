@@ -23,19 +23,19 @@ import UIKit
 
 class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    @objc var readOnlyState: Bool = false
-    @objc var xml: AEXMLDocument = AEXMLDocument()
-    @objc var fileName: String = ""
-    @objc var selectedSegment: Int = 0
-    @objc weak var ViewCollection: ViewCollectionController?
-    @objc weak var ViewCreateDetailsController: ViewCreateDetails?
+    var readOnlyState: Bool = false
+    var xml: AEXMLDocument = AEXMLDocument()
+    var fileName: String = ""
+    var selectedSegment: Int = 0
+    weak var ViewCollection: ViewCollectionController?
+    weak var ViewCreateDetailsController: ViewCreateDetails?
     
-    @objc var pass: String = ""
-    @objc var selectedLicense: String = ""
-    @objc var showKbd: Bool = true
-    @objc var iPadPro: Bool = false
+    var pass: String = ""
+    var selectedLicense: String = ""
+    var showKbd: Bool = true
+    var iPadPro: Bool = false
     
-    @objc let availableLicenses = [
+    let availableLicenses = [
         "Proprietary - CC-Zero",
         "CC Attribution - CC-BY",
         "CC Attribution-ShareALike - CC-BY-SA",
@@ -294,7 +294,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         showKbd = false
     }
 
-    @objc func showSegmentView(_ index: Int) {
+    func showSegmentView(_ index: Int) {
         for subview in view.subviews {
             if subview.tag > 9 {
                 if subview.tag == index + 10 {
@@ -318,7 +318,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
     }
     
-    @objc func prepareToWriteXML() {
+    func prepareToWriteXML() {
         // Save metas in xml
         xml["xia"]["title"].value = txtTitle.text
         xml["xia"]["readonly"].value = "\(roSwitch.isOn)"

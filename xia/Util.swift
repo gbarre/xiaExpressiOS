@@ -80,12 +80,12 @@ func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
         // Look for readonly child
         if let readonly = child["readonly"].value {
             if (readonly != "true" && readonly != "false") {
-                let _ = xml["xia"].addChild("readonly", value: "false", attributes: ["code" : "1234"])
+                let _ = xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
             }
         }
         // Look for image child (to store image title & description)
         if child["image"].attributes["title"] == nil {
-            let _ = xml["xia"].addChild("image", value: "", attributes: ["title" : "", "desctription" : ""])
+            let _ = xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
         }
         // Look for the default show details attributes
         if child["details"].attributes["show"] == nil {
@@ -103,7 +103,7 @@ func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
     
     for element in xmlElements {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
-            let _ = xml["xia"].addChild(element)
+            let _ = xml["xia"].addChild(name: element)
             if (element == "creator" && xml["xia"]["author"].value != nil) {
                 xml["xia"][element].value = xml["xia"]["author"].value!
                 if xml["xia"]["author"].value! != "element <author> not found" {
@@ -181,7 +181,7 @@ func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
     let data = try? Data(contentsOf: URL(fileURLWithPath: path))
     var xml: AEXMLDocument!
     do {
-        try xml = AEXMLDocument(xmlData: data!)
+        try xml = AEXMLDocument(xml: data!)
     }
     catch {
         dbg.pt(error.localizedDescription)
@@ -212,7 +212,7 @@ func pointInPolygon(_ points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
 func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
     var error = true
     do {
-        try xml.xmlString.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+        try xml.xml.write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
         error = false
     }
     catch {

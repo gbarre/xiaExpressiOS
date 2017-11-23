@@ -23,26 +23,26 @@ import UIKit
 
 class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWebViewDelegate {
         
-    @objc var tag: Int = 0
-    @objc var xml: AEXMLDocument = AEXMLDocument()
-    @objc var detail: xiaDetail!
-    @objc var path: UIBezierPath!
-    @objc var bkgdImage: UIImageView!
-    @objc var zoomDisable: Bool = true
-    @objc var showZoom: Bool = false
-    @objc var landscape: Bool = true
+    var tag: Int = 0
+    var xml: AEXMLDocument = AEXMLDocument()
+    var detail: xiaDetail!
+    var path: UIBezierPath!
+    var bkgdImage: UIImageView!
+    var zoomDisable: Bool = true
+    var showZoom: Bool = false
+    var landscape: Bool = true
     
-    @objc let transition = BubbleTransition()
+    let transition = BubbleTransition()
     
-    @objc var currentScale: CGFloat = 1.0
+    var currentScale: CGFloat = 1.0
     var currentCenter: CGPoint!
-    @objc var zoomScale: CGFloat = 1.0
-    @objc let transitionDuration: TimeInterval = 0.5
+    var zoomScale: CGFloat = 1.0
+    let transitionDuration: TimeInterval = 0.5
     var currentDetailFrame: CGRect!
-    @objc var screenWidth = UIScreen.main.bounds.width
-    @objc var screenHeight = UIScreen.main.bounds.height
+    var screenWidth = UIScreen.main.bounds.width
+    var screenHeight = UIScreen.main.bounds.height
     
-    @objc let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
+    let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     @IBAction func close(_ sender: AnyObject) {
         if !showZoom {
@@ -116,7 +116,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         // Show text
         var htmlString: String = ""
         if tag != 0 {
-            if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+            if let detail = xml["xia"]["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"]) {
                 for d in detail {
                     detailTitle.text = d.attributes["title"]
                     detailTitle.sizeToFit()
@@ -162,14 +162,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         self.view.superview!.layer.masksToBounds = false
     }
     
-    @objc func getCurrentScale(_ frame: CGRect) -> CGFloat {
+    func getCurrentScale(_ frame: CGRect) -> CGFloat {
         let detailScaleX = 190 / frame.width
         let detailScaleY = 190 / frame.height
         
         return min(detailScaleX, detailScaleY, 1) // 1 avoid to zoom if the detail is smaller than 200 x 200
     }
     
-    @objc func getDetailFrame() -> CGRect {
+    func getDetailFrame() -> CGRect {
         var newDetail: xiaDetail!
         
         let scaleX: CGFloat = screenWidth / imgThumb!.image!.size.width
@@ -178,7 +178,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         let xSpace: CGFloat = (screenWidth - imgThumb!.image!.size.width * localScale) / 2
         let ySpace: CGFloat = (screenHeight - imgThumb!.image!.size.height * localScale) / 2
         
-        let xmlDetails = xml.root["details"]["detail"].allWithAttributes(["tag" : "\(tag)"])!
+        let xmlDetails = xml.root["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"])!
         for detail in xmlDetails {
             if let path = detail.attributes["path"] {
                 // Add detail object
@@ -202,7 +202,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         return newDetail.bezierFrame()
     }
     
-    @objc func rotated() {
+    func rotated() {
         screenWidth = UIScreen.main.bounds.width
         screenHeight = UIScreen.main.bounds.height
         currentDetailFrame = getDetailFrame()
@@ -212,7 +212,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         }
     }
     
-    @objc func showDetail(_ detailImg: UIImageView) {
+    func showDetail(_ detailImg: UIImageView) {
         // Show / hide elements
         self.bkgdzoom.isHidden = false
         self.bkgdzoom.alpha = 0
@@ -255,17 +255,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         DispatchQueue.main.asyncAfter(deadline: delayTime){
             self.imgArea.isHidden = true
         }
-        dbg.ptLine()
-        dbg.pt("currentCenter : \(currentCenter)")
-        dbg.pt("detailScale : \(detailScale)")
-        dbg.pt("currentScale : \(currentScale)")
-        dbg.pt("distanceX : \(distanceX)")
-        dbg.pt("distanceY : \(distanceY)")
-        dbg.pt("currentDetailFrame : \(currentDetailFrame)")
-        dbg.pt("getCenter() : \(getCenter())")
-        dbg.pt("xCoord : \(xCoord)")
-        dbg.pt("yCoord : \(yCoord)")
-        //dbg.pt(" : \()")
     }
     
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {

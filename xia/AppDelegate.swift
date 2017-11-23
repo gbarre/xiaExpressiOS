@@ -70,5 +70,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        let url = url.standardizedFileURL  // this will strip out the private from your url
+        
+        // moving the file out of the inbox to your destination URL in your case the documents directory appending the url.lastPathComponent
+        let path = "\(documentsDirectory)/importFile.xml"
+        let fileManager = FileManager.default
+        do {
+            let destinationURL = URL(fileURLWithPath: path)
+            if fileManager.fileExists(atPath: path) {
+                try fileManager.removeItem(atPath: path)
+            }
+            try fileManager.moveItem(at: url, to: destinationURL)
+        } catch {
+            print(error)
+            return false
+        }
+        
+        var errorAtImageImport = true
+        var errorAtXMLImport = true
+        let now:Int = Int(Date().timeIntervalSince1970)
+        
+        dbg.pt("Try import file... from \(path)")
+        // read file to extract image
+        let xml = getXML(path, check: false)
+        if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+            dbg.pt("Image founded")
+            // convert base64 to image
+            let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
+            let image = UIImage(data: imageDataB64!)
+            // store new image to document directory
+            let imageData = UIImageJPEGRepresentation(image!, 85)
+            do {
+                try imageData?.write(to: URL(fileURLWithPath: "\(imagesDirectory)/\(now).jpg"), options: [.atomicWrite])
+                dbg.pt("Image imported")
+                errorAtImageImport = false
+            }
+            catch {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        // store the xia xml
+        if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+            dbg.pt("Try to import xia elements")
+            let xmlXIA = AEXMLDocument()
+            let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
+            let xmlString = xmlXIA.xml
+            do {
+                try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+                errorAtXMLImport = false
+                dbg.pt("XML imported")
+            }
+            catch {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        // something were wrong, clean it !
+        if errorAtXMLImport {
+            do {
+                try fileManager.removeItem(atPath: "\(imagesDirectory)/\(now).jpg")
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        else {
+            dbg.pt("import done")
+        }
+        
+        return true
+    }
 }
 

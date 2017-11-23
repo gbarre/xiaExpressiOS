@@ -24,15 +24,15 @@ import Foundation
 
 class ViewDetailInfos: UIViewController, UITextViewDelegate {
         
-    @objc var tag: Int = 0
-    @objc var zoom: Bool = false
-    @objc var lock: Bool = false
-    @objc var detailTitle: String = ""
-    @objc var detailDescription: String = ""
-    @objc var xml: AEXMLDocument = AEXMLDocument()
-    @objc var index: Int = 0
-    @objc var fileName: String = ""
-    @objc weak var ViewCreateDetailsController: ViewCreateDetails?
+    var tag: Int = 0
+    var zoom: Bool = false
+    var lock: Bool = false
+    var detailTitle: String = ""
+    var detailDescription: String = ""
+    var xml: AEXMLDocument = AEXMLDocument()
+    var index: Int = 0
+    var fileName: String = ""
+    weak var ViewCreateDetailsController: ViewCreateDetails?
 
     @IBOutlet var switchZoom: UISwitch!
     @IBAction func btnZoomAction(_ sender: AnyObject) {
@@ -53,7 +53,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     @IBAction func btnDone(_ sender: AnyObject) {
         // Save the detail in xml
-        if let detail = xml["xia"]["details"]["detail"].allWithAttributes(["tag" : "\(tag)"]) {
+        if let detail = xml["xia"]["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"]) {
             for d in detail {
                 d.attributes["zoom"] = "\(switchZoom.isOn)"
                 d.attributes["locked"] = "\(switchLock.isOn)"
@@ -109,7 +109,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         txtDesc.setContentOffset(CGPoint(x: 0, y: -txtDesc.contentInset.top), animated: false)
     }
     
-    @objc func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
+    func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
         let descText = NSMutableString()
         descText.append(attrString.string)
         //var text = String()
@@ -187,7 +187,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         return "\(descText)"
     }
     
-    /*@objc func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
+    /*func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
         let size = [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 15.0)]
         attributedText.addAttributes(size, range: NSRange(location: 0, length: attributedText.length))
@@ -210,7 +210,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
 }
 
 public extension NSMutableAttributedString {
-    @objc func addAttributes(_ attrs: [NSAttributedStringKey : Any], delimiter: String) throws {
+    func addAttributes(_ attrs: [NSAttributedStringKey : Any], delimiter: String) throws {
         let escaped = NSRegularExpression.escapedPattern(for: delimiter)
         let regex = try NSRegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
         

@@ -23,17 +23,17 @@ import UIKit
 
 class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate {
     
-    @objc var docController:UIDocumentInteractionController!
+    var docController:UIDocumentInteractionController!
     
-    @objc var fileName: String = ""
-    @objc var xml: AEXMLDocument = AEXMLDocument()
-    @objc var img = UIImage()
+    var fileName: String = ""
+    var xml: AEXMLDocument = AEXMLDocument()
+    var img = UIImage()
     
-    @objc var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
-    @objc var xmlSVG: AEXMLDocument = AEXMLDocument()
-    @objc var tmpFilePath: String = ""
+    var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
+    var xmlSVG: AEXMLDocument = AEXMLDocument()
+    var tmpFilePath: String = ""
     //let now:Int = Int(Date().timeIntervalSince1970)
-    @objc weak var ViewCollection: ViewCollectionController?
+    weak var ViewCollection: ViewCollectionController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,22 +51,23 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    @objc func exportSimpleXML() {
+    func exportSimpleXML() {
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
-        let trimmedBase64String = base64String.replacingOccurrences(of: "\n", with: "")
+        let trimmedBase64String: String = base64String.replacingOccurrences(of: "\n", with: "")
         
         // prepare xml
-        let _ = xmlSimpleXML.addChild("XiaiPad")
+        let _ = xmlSimpleXML.addChild(name: "XiaiPad")
         let _ = xmlSimpleXML["XiaiPad"].addChild(xml["xia"])
-        let _ = xmlSimpleXML["XiaiPad"].addChild("image", value: trimmedBase64String, attributes: nil)
+        let _ = xmlSimpleXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String)
         
         // write xml to temp directory
-        let tempTitle = cleanInput(getElementValue("title"))
+        let tmpTitle = cleanInput(getElementValue("title"))
+        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle;
         tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).xml"
         do {
-            try xmlSimpleXML.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
+            try xmlSimpleXML.xml.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
             dbg.pt(error.localizedDescription)
@@ -75,7 +76,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         openDocumentInteractionController(tmpFilePath)
     }
     
-    @objc func exportSVG() {
+    func exportSVG() {
        // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
@@ -84,7 +85,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
         
-        let tempTitle = cleanInput(getElementValue("title"))
+        let tmpTitle = cleanInput(getElementValue("title"))
+        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle;
         
         // prepare xml
         let xmlAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
@@ -102,53 +104,53 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                              "height" : "\(img.size.height)",
                              "viewBox" : "0 0 \(img.size.width) \(img.size.height)",
                              "sodipodi:docname" : "\(tempTitle).svg"]
-        let _ = xmlSVG.addChild("svg", value: "", attributes: xmlAttributes)
+        let _ = xmlSVG.addChild(name: "svg", value: "", attributes: xmlAttributes)
         
         
-        let _ = xmlSVG["svg"].addChild("title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+1)"])
+        let _ = xmlSVG["svg"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+1)"])
         
         // Metas
-        let _ = xmlSVG["svg"].addChild("metadata", value: "", attributes: ["id" : "metadata\(svgID+2)"])
-        let _ = xmlSVG["svg"]["metadata"].addChild("rdf:RDF")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild("cc:Work", value: "", attributes: ["rdf:about" : ""])
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:format", value: "image/svg+xml", attributes: nil)
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:type", value: "", attributes: ["rdf:resource" : "http://purl.org/dc/dcmitype/StillImage"])
+        let _ = xmlSVG["svg"].addChild(name: "metadata", value: "", attributes: ["id" : "metadata\(svgID+2)"])
+        let _ = xmlSVG["svg"]["metadata"].addChild(name: "rdf:RDF")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:Work", value: "", attributes: ["rdf:about" : ""])
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:format", value: "image/svg+xml")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:type", value: "", attributes: ["rdf:resource" : "http://purl.org/dc/dcmitype/StillImage"])
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:title", value: getElementValue("title"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:title", value: getElementValue("title"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:date", value: getElementValue("date"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:date", value: getElementValue("date"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:creator")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"].addChild("cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"]["cc:Agent"].addChild("dc:title", value: getElementValue("creator"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:creator")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"].addChild(name: "cc:Agent")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("creator"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:rights")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"].addChild("cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"]["cc:Agent"].addChild("dc:title", value: getElementValue("rights"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:rights")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"].addChild(name: "cc:Agent")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("rights"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:publisher")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"].addChild("cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"]["cc:Agent"].addChild("dc:title", value: getElementValue("publisher"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:publisher")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"].addChild(name: "cc:Agent")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("publisher"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:identifier", value: getElementValue("identifier"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:identifier", value: getElementValue("identifier"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:source", value: getElementValue("source"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:source", value: getElementValue("source"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:relation", value: getElementValue("relation"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:relation", value: getElementValue("relation"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:language", value: getElementValue("language"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:language", value: getElementValue("language"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:subject")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"].addChild("rdf:Bag")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"]["rdf:Bag"].addChild("rdf:li", value: getElementValue("keywords"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:subject")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"].addChild(name: "rdf:Bag")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"]["rdf:Bag"].addChild(name: "rdf:li", value: getElementValue("keywords"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:coverage", value: getElementValue("coverage"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:coverage", value: getElementValue("coverage"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:description", value: getElementValue("description"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:description", value: getElementValue("description"))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("dc:contributor")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"].addChild("cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"]["cc:Agent"].addChild("dc:title", value: getElementValue("contributor"), attributes: nil)
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:contributor")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"].addChild(name: "cc:Agent")
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("contributor"))
         
         let license = getElementValue("license")
         var addPermits: Bool = false
@@ -244,16 +246,16 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         case "Open Font License":
             rdfResource = "http://scripts.sil.org/OFL"
             addPermits = false
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild("cc:license", value: "", attributes: ["rdf:about" : rdfResource])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Reproduction"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Distribution"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Embedding"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeWorks"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Notice"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Attribution"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/ShareAlike"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeRenaming"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/BundlingWhenSelling"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:license", value: "", attributes: ["rdf:about" : rdfResource])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Reproduction"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Distribution"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Embedding"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeWorks"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Notice"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Attribution"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/ShareAlike"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeRenaming"])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/BundlingWhenSelling"])
             break
         case "Other":
             rdfResource = ""
@@ -264,17 +266,17 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
             addPermits = false
             break
         }
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild("cc:license", value: "", attributes: ["rdf:resource" : rdfResource])
+        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "cc:license", value: "", attributes: ["rdf:resource" : rdfResource])
         if addPermits {
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild("cc:license", value: "", attributes: ["rdf:about" : rdfResource])
+            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:license", value: "", attributes: ["rdf:about" : rdfResource])
             for (permit, state) in permits {
                 if state != "none" {
-                    let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild("cc:\(state)", value: "", attributes: ["rdf:resource" : "http://creativecommons.org/ns#\(permit)"])
+                    let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:\(state)", value: "", attributes: ["rdf:resource" : "http://creativecommons.org/ns#\(permit)"])
                 }
             }
         }
         
-        let _ = xmlSVG["svg"].addChild("defs", value: "", attributes: ["id" : "defs\(svgID+3)"])
+        let _ = xmlSVG["svg"].addChild(name: "defs", value: "", attributes: ["id" : "defs\(svgID+3)"])
         
         let sodipodiAttributes = ["pagecolor" : "#ffffff",
                                   "bordercolor" : "#666666",
@@ -293,7 +295,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                                   "inkscape:cy" : "480",
                                   "inkscape:current-layer" : "svg\(svgID+5)"
         ]
-        let _ = xmlSVG["svg"].addChild("sodipodi:namedview", value: "", attributes: sodipodiAttributes)
+        let _ = xmlSVG["svg"].addChild(name: "sodipodi:namedview", value: "", attributes: sodipodiAttributes)
         
         let imageAttributes = ["width" : "\(img.size.width)",
                                "height" : "\(img.size.height)",
@@ -301,10 +303,10 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                                "xlink:href" : "data:image/jpeg;base64,\(trimmedBase64String)",
                                "id" : "image\(svgID+6)"
         ]
-        let _ = xmlSVG["svg"].addChild("image", value: "", attributes: imageAttributes)
+        let _ = xmlSVG["svg"].addChild(name: "image", value: "", attributes: imageAttributes)
         
-        let _ = xmlSVG["svg"]["image"].addChild("desc", value: getElementValue("description"), attributes: ["id" : "desc\(svgID+7)"])
-        let _ = xmlSVG["svg"]["image"].addChild("title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+8)"])
+        let _ = xmlSVG["svg"]["image"].addChild(name: "desc", value: getElementValue("description"), attributes: ["id" : "desc\(svgID+7)"])
+        let _ = xmlSVG["svg"]["image"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+8)"])
         
         if let xmlDetails = xml.root["details"]["detail"].all {
             for detail in xmlDetails {
@@ -368,9 +370,9 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                     ]
                 }
                 
-                let _ = currentDetail.addChild(detailType, value: "", attributes: detailAttributes)
-                let _ = currentDetail[detailType].addChild("desc", value: detailDescription, attributes: ["id" : "desc\(Int(svgID) + Int(detail.attributes["tag"]!)! + 100)"])
-                let _ = currentDetail[detailType].addChild("title", value: detailTitle, attributes: ["id" : "title\(Int(svgID) + Int(detail.attributes["tag"]!)! + 200)"])
+                let _ = currentDetail.addChild(name: detailType, attributes: detailAttributes)
+                let _ = currentDetail[detailType].addChild(name: "desc", value: detailDescription, attributes: ["id" : "desc\(Int(svgID) + Int(detail.attributes["tag"]!)! + 100)"])
+                let _ = currentDetail[detailType].addChild(name: "title", value: detailTitle, attributes: ["id" : "title\(Int(svgID) + Int(detail.attributes["tag"]!)! + 200)"])
                 
                 let _ = xmlSVG["svg"].addChild(currentDetail[detailType])
             }
@@ -379,7 +381,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // write xml to temp directory
         tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).svg"
         do {
-            try xmlSVG.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
+            try xmlSVG.xml.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
             dbg.pt(error.localizedDescription)
@@ -388,7 +390,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         openDocumentInteractionController(tmpFilePath)
     }
     
-    @objc func getElementValue(_ element: String) -> String {
+    func getElementValue(_ element: String) -> String {
         if (xml["xia"][element].value != nil && xml["xia"][element].value! != "element <\(element)> not found") {
             return xml["xia"][element].value!
         }
@@ -397,7 +399,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    @objc func openDocumentInteractionController(_ url: String) {
+    func openDocumentInteractionController(_ url: String) {
         // Show native export controller
         docController = UIDocumentInteractionController(url: URL(fileURLWithPath: url))
         docController.delegate = self

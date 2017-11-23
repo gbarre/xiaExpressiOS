@@ -23,7 +23,7 @@ import UIKit
 
 class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     
-    @objc var xml: AEXMLDocument!
+    var xml: AEXMLDocument!
     let xmlElementsDict: [String: String?] = [
         "license" : NSLocalizedString("LICENSE", comment: ""),
         "title" : NSLocalizedString("TITLE", comment: ""),
@@ -41,8 +41,8 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         "description" : NSLocalizedString("DESCRIPTION", comment: "")
     ]
     
-    @objc var landscape: Bool = true
-    @objc let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
+    var landscape: Bool = true
+    let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     @IBAction func Hide(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
@@ -100,7 +100,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         self.view.superview!.layer.masksToBounds = false
     }
     
-    @objc func getElementValue(_ element: String) -> NSAttributedString! {
+    func getElementValue(_ element: String) -> NSAttributedString! {
         let key = xmlElementsDict[element]
         let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
@@ -115,7 +115,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         return attributedText
     }
     
-    @objc func getDescriptionValue() -> NSAttributedString! {
+    func getDescriptionValue() -> NSAttributedString! {
         let key = xmlElementsDict["description"]
         let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
@@ -132,7 +132,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         return attributedText
     }
     
-    @objc func getLicense() -> NSAttributedString! {
+    func getLicense() -> NSAttributedString! {
         let key = xmlElementsDict["license"]
         let keyWidth = key!?.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)

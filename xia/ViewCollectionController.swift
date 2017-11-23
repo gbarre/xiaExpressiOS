@@ -204,15 +204,28 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @objc func applicationWillEnterForeground(_ notification: Notification) {
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
-        importXML()
+        refreshForImport()
         self.CollectionView.reloadData()
     }
     
-    
+    func refreshForImport() {
+        let path = "\(documentsDirectory)/importFile.xml"
+        let fileManager = FileManager.default
+        // import file exist, remove it & refresh collection
+        if fileManager.fileExists(atPath: path) {
+            do {
+                try fileManager.removeItem(atPath: path)
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+            CollectionView.reloadData()
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController!.hidesBarsOnTap = false
-        importXML()
+        refreshForImport()
         editingMode = false
     }
     
@@ -484,75 +497,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 else {
                     performSegue(withIdentifier: "viewLargePhoto", sender: self)
                 }
-            }
-        }
-    }
-    
-    @objc func importXML() {
-        let fileManager = FileManager.default
-        let files = fileManager.enumerator(atPath: "\(documentsDirectory)/Inbox")
-        while let fileObject = files?.nextObject() {
-            let file = fileObject as! String
-            let path = "\(documentsDirectory)/Inbox/\(file)"
-            var errorAtImageImport = true
-            var errorAtXMLImport = true
-            let now:Int = Int(Date().timeIntervalSince1970)
-            
-            dbg.pt("Try import file... from \(path)")
-            // read file to extract image
-            let xml = getXML(path, check: false)
-            if (xml["XiaiPad"]["image"].value != "element <image> not found") {
-                dbg.pt("Image founded")
-                // convert base64 to image
-                let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
-                let image = UIImage(data: imageDataB64!)
-                // store new image to document directory
-                let imageData = UIImageJPEGRepresentation(image!, 85)
-                do {
-                    try imageData?.write(to: URL(fileURLWithPath: "\(imagesDirectory)/\(now).jpg"), options: [.atomicWrite])
-                    dbg.pt("Image imported")
-                    errorAtImageImport = false
-                }
-                catch {
-                    dbg.pt(error.localizedDescription)
-                }
-            }
-            
-            // store the xia xml
-            if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
-                dbg.pt("Try to import xia elements")
-                let xmlXIA = AEXMLDocument()
-                let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
-                let xmlString = xmlXIA.xmlString
-                do {
-                    try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
-                    errorAtXMLImport = false
-                    dbg.pt("XML imported")
-                }
-                catch {
-                    dbg.pt(error.localizedDescription)
-                }
-            }
-            
-            // something were wrong, clean it !
-            if errorAtXMLImport {
-                do {
-                    try fileManager.removeItem(atPath: "\(imagesDirectory)/\(now).jpg")
-                }
-                catch let error as NSError {
-                    dbg.pt(error.localizedDescription)
-                }
-            }
-            else {
-                dbg.pt("import done")
-            }
-            
-            // Remove the xml file, regardless of whether the import failed
-            do {
-                try fileManager.removeItem(atPath: path)
-            }
-            catch let error as NSError {
-                dbg.pt(error.localizedDescription)
             }
         }
     }
