@@ -77,5 +77,18 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>NSUbiquitousContainers</key>
+    
+    <dict>
+        <key>iCloud.fr.ac-versailles.dane.xia</key>
+        <dict>
+            <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+            <true/>
+            <key>NSUbiquitousContainerSupportedFolderLevels</key>
+            <string>Any</string>
+            <key>NSUbiquitousContainerName</key>
+            <string>xia</string>
+        </dict>
+    </dict>
 </dict>
 </plist>
