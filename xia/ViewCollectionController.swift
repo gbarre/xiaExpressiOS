@@ -28,7 +28,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @objc var segueIndex: Int = -1
     @objc var editingMode: Bool = false
     @objc var showHelp = false
-
+    
     @objc var b64IMG:String = ""
     @objc var currentElement:String = ""
     @objc var passData:Bool=false
@@ -51,17 +51,17 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             
             // Valid for swift 3, do not touch !!!
             /*var indexes = [Int:IndexPath]()
-            for path in self.selectedPhotos {
-                indexes[(path as NSIndexPath).row] =  path
-            }
-            let sortedIndexes = indexes.keys.sorted()
-            var i = self.arrayNames.count - 1
-            while i >= sortedIndexes.first {
-                if sortedIndexes.contains(i) {
-                    self.deleteFiles(indexes[i]!)
-                }
-                i = i - 1
-            }*/ // End swift 3
+             for path in self.selectedPhotos {
+             indexes[(path as NSIndexPath).row] =  path
+             }
+             let sortedIndexes = indexes.keys.sorted()
+             var i = self.arrayNames.count - 1
+             while i >= sortedIndexes.first {
+             if sortedIndexes.contains(i) {
+             self.deleteFiles(indexes[i]!)
+             }
+             i = i - 1
+             }*/ // End swift 3
             
             // Valid for swift 2.2
             var indexes = [IndexPath:Int]()
@@ -204,28 +204,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @objc func applicationWillEnterForeground(_ notification: Notification) {
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
-        refreshForImport()
+        startImport()
         self.CollectionView.reloadData()
-    }
-    
-    func refreshForImport() {
-        let path = "\(documentsDirectory)/importFile.xml"
-        let fileManager = FileManager.default
-        // import file exist, remove it & refresh collection
-        if fileManager.fileExists(atPath: path) {
-            do {
-                try fileManager.removeItem(atPath: path)
-            }
-            catch let error as NSError {
-                dbg.pt(error.localizedDescription)
-            }
-            CollectionView.reloadData()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController!.hidesBarsOnTap = false
-        refreshForImport()
+        startImport()
         editingMode = false
     }
     
@@ -318,9 +303,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnCopy.tintColor = buttonColor.withAlphaComponent(0)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-       self.arrayNames = []
+        self.arrayNames = []
         // Load all images names
         let fileManager = FileManager.default
         let files = fileManager.enumerator(atPath: imagesDirectory)
@@ -366,7 +351,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         
         return arrayNames.count;
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         let cell: PhotoThumbnail = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoThumbnail
         
@@ -501,6 +486,121 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
+    func displayAlert(title: String, message: String) {
+        let refreshAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        refreshAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: { (action: UIAlertAction!) in
+        }))
+        
+        present(refreshAlert, animated: true, completion: nil)
+    }
+    
+    func startImport() {
+        // Wait 2 seconds before looking for import
+        let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 2000)) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime){
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: importPath) {
+                var importingPath = ""
+                // move file to avoid multiple imports of the same file on collection display
+                var i = 0
+                var fileNotExist = true
+                while fileNotExist {
+                    importingPath = "\(documentsDirectory)/importing\(i).xml"
+                    if fileManager.fileExists(atPath: importingPath) {
+                        i = i + 1
+                    } else {
+                        do {
+                            try fileManager.moveItem(atPath: importPath, toPath: importingPath)
+                            fileNotExist = false
+                        } catch {
+                            dbg.pt(error.localizedDescription)
+                        }
+                    }
+                }
+                // Start to import the file
+                if fileManager.fileExists(atPath: importingPath) {
+                    self.displayAlert(title: "Import", message: "Starting import... Continue to work")
+                    DispatchQueue.global(qos: .background).async {
+                        let importResult = self.importXML(importFilePath: importingPath)
+                        
+                        DispatchQueue.main.async {
+                            if importResult {
+                                self.displayAlert(title: "Import", message: "Import successfull")
+                                self.CollectionView.reloadData()
+                            } else {
+                                self.displayAlert(title: "Import", message: "Error at import")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func importXML(importFilePath: String) -> Bool {
+        let fileManager = FileManager.default
+        var errorAtImageImport = true
+        var errorAtXMLImport = true
+        let now:Int = Int(Date().timeIntervalSince1970)
+        
+        dbg.pt("Try import file... from \(importFilePath)")
+        // read file to extract image
+        let xml = getXML(importFilePath, check: false)
+        if (xml["XiaiPad"]["image"].value != "element <image> not found") {
+            dbg.pt("Image founded")
+            // convert base64 to image
+            let imageDataB64 = Data(base64Encoded: xml["XiaiPad"]["image"].value!, options : .ignoreUnknownCharacters)
+            let image = UIImage(data: imageDataB64!)
+            // store new image to document directory
+            let imageData = UIImageJPEGRepresentation(image!, 85)
+            do {
+                try imageData?.write(to: URL(fileURLWithPath: "\(imagesDirectory)/\(now).jpg"), options: [.atomicWrite])
+                dbg.pt("Image imported")
+                errorAtImageImport = false
+            }
+            catch {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        // store the xia xml
+        if (xml["XiaiPad"]["xia"].value != "element <xia> not found" && !errorAtImageImport) {
+            dbg.pt("Try to import xia elements")
+            let xmlXIA = AEXMLDocument()
+            let _ = xmlXIA.addChild(xml["XiaiPad"]["xia"])
+            let xmlString = xmlXIA.xml
+            do {
+                try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+                errorAtXMLImport = false
+                dbg.pt("XML imported")
+            }
+            catch {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        
+        // something were wrong, clean it !
+        if errorAtXMLImport {
+            do {
+                try fileManager.removeItem(atPath: "\(imagesDirectory)/\(now).jpg")
+            }
+            catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+            return false
+        }
+        else {
+            do {
+                try fileManager.removeItem(atPath: importFilePath)
+            } catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+            dbg.pt("import done")
+            return true
+        }
+    }
+    
     func migrateDatas() {
         // check if directories images & xml
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
@@ -522,7 +622,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let files = fileManager.enumerator(atPath: documentsDirectory)
         while let fileObject = files?.nextObject() {
             let file = fileObject as! String
-            if (String(file.prefix(6)) != "images" && String(file.prefix(3)) != "xml") {
+            if (String(file.prefix(6)) != "images" && String(file.prefix(3)) != "xml" && String(file.prefix(6)) != "oembed" && String(file.prefix(6)) != "import") {
                 let ext = String(file.suffix(3))
                 do {
                     switch (ext) {
@@ -542,3 +642,4 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
 }
+

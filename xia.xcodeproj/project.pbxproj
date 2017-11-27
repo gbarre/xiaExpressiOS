@@ -182,11 +182,11 @@
 			isa = PBXGroup;
 			children = (
 				F0BB83751D19D98F0070140A /* ipad_blanc_80.png */,
+				F03EA5C61D12EB02008678BC /* Products */,
+				F07709F11FC6D61E00174494 /* Sources */,
 				F03EA5C71D12EB02008678BC /* xia */,
 				F03EA5DC1D12EB02008678BC /* xiaTests */,
 				F03EA5E71D12EB02008678BC /* xiaUITests */,
-				F03EA5C61D12EB02008678BC /* Products */,
-				F07709F11FC6D61E00174494 /* Sources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -203,8 +203,8 @@
 		F03EA5C71D12EB02008678BC /* xia */ = {
 			isa = PBXGroup;
 			children = (
-				F076A8891FC5BCD80083A614 /* xia.entitlements */,
 				F03EA5FE1D12EC2B008678BC /* Settings.bundle */,
+				F076A8891FC5BCD80083A614 /* xia.entitlements */,
 				F03EA5D41D12EB02008678BC /* Info.plist */,
 				F03439E51F7D0A6900F49714 /* oembed.plist */,
 				F03EA5C81D12EB02008678BC /* AppDelegate.swift */,
