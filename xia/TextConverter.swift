@@ -56,9 +56,14 @@ class TextConverter: NSObject {
             
             // we have "Internet", have fun !
             htmlString = replaceURL(inText: htmlString, updateDB: useCache)
+            
+            htmlString = showCustomLinks(inText: htmlString)
+            // show latex
+            htmlString = "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>\n" + htmlString
+            
+        } else {
+            htmlString = showCustomLinks(inText: htmlString)
         }
-        
-        htmlString = showCustomLinks(inText: htmlString)
         //dbg.pt(htmlString)
         
         return htmlString
