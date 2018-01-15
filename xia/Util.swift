@@ -156,11 +156,6 @@ func convertStringToCGFloat(_ txt: String) -> CGFloat {
     return cgFloat!
 }
 
-/*func delay(delay:Double, closure:()->()) {
-    DispatchQueue.main.after(
-        when: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), block: closure)
-}*/
-
 func getCenter() -> CGPoint{
     var point = CGPoint(x: 0, y: 0)
     let screenWidth = UIScreen.main.bounds.width
