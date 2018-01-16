@@ -81,6 +81,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
             UIView.animate(withDuration: 2 * transitionDuration, animations: { () -> Void in
                 self.imgArea.alpha = 1
                 self.titleArea.alpha = 1
+                self.descView.alpha = 1
             }) 
             showZoom = false
         }
@@ -251,6 +252,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         
         UIView.animate(withDuration: transitionDuration, animations: { () -> Void in
             self.bkgdzoom.alpha = 1
+            self.descView.alpha = 0
             self.titleArea.alpha = 0
             self.imgArea.alpha = 0
             detailImg.transform = detailImg.transform.scaledBy(x: detailScale / self.currentScale, y: detailScale / self.currentScale)
