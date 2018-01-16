@@ -144,7 +144,10 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
             converter.videoHeight = 210
         }
         htmlString = converter._text2html(inText: htmlString)
-        htmlString = "<!DOCTYPE html><html><body style=\"font-size:16pt; text-align:justify;\">" + htmlString + "</body></html>"
+        // show latex, jutify & font-size
+        htmlString = "<!DOCTYPE html><html>\n" +
+            "<head><script type=\"text/javascript\" async src=\"MathJax-2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>\n" +
+            "<body style=\"font-size:16pt; text-align:justify;\">" + htmlString + "</body></html>"
         
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsAirPlayForMediaPlayback = true
