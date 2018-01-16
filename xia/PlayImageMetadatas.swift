@@ -20,8 +20,9 @@
 //
 
 import UIKit
+import WebKit
 
-class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
+class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var xml: AEXMLDocument!
     let xmlElementsDict: [String: String?] = [
@@ -61,7 +62,7 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
     @IBOutlet var documentKeywords: UILabel!
     @IBOutlet var documentCoverage: UILabel!
     @IBOutlet var documentContributors: UILabel!
-    @IBOutlet var documentDescription: UIWebView!
+    @IBOutlet weak var documentDescription: UIView!
     
     override func viewDidLoad() {
         
@@ -86,10 +87,27 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
             converter.videoHeight = 210
         }
         htmlString = converter._text2html(inText: htmlString)
+        htmlString = "<!DOCTYPE html><html><body style=\"font-size:16pt; text-align:justify;\">" + htmlString + "</body></html>"
         
-        documentDescription.loadHTMLString(htmlString, baseURL: nil)
-        documentDescription.allowsInlineMediaPlayback = true
-        documentDescription.delegate = self
+        var webView: WKWebView!
+        
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsAirPlayForMediaPlayback = true
+        webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.allowsAirPlayForMediaPlayback = true
+        if #available(iOS 10.0, *) {
+            webConfiguration.dataDetectorTypes = .all
+        }
+        
+        webView = WKWebView(frame: CGRect(x:0, y:0, width: documentDescription.frame.width, height: documentDescription.frame.height), configuration: webConfiguration)
+        webView.navigationDelegate = self
+        webView.uiDelegate = self
+        
+        let bundlePath = Bundle.main.bundlePath
+        let baseURL = NSURL.fileURL(withPath: bundlePath)
+        
+        webView.loadHTMLString(htmlString, baseURL: baseURL)
+        documentDescription.addSubview(webView)
         
     }
     
@@ -150,17 +168,19 @@ class PlayImageMetadatas: UIViewController, UIWebViewDelegate {
         return attributedText
     }
     
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        if navigationType == UIWebViewNavigationType.linkClicked {
-            /*if #available(iOS 10.0, *) {
-                UIApplication.shared().open(request.url!, options: [:], completionHandler: nil)
-            } else {
-                // Fallback on earlier versions*/
-                UIApplication.shared.openURL(request.url!)
-            //}
-            return false
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.navigationType == WKNavigationType.linkActivated {
+            let url = navigationAction.request.url
+            let shared = UIApplication.shared
+            
+            if shared.canOpenURL(url!) {
+                shared.openURL(url!)
+            }
+            
+            decisionHandler(WKNavigationActionPolicy.cancel)
+        } else {
+            decisionHandler(WKNavigationActionPolicy.allow)
         }
-        return true
     }
     
 }
