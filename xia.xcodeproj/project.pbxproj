@@ -75,6 +75,9 @@
 		F0770A031FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
 		F0770A041FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
 		F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F0BB83751D19D98F0070140A /* ipad_blanc_80.png */; };
+		F0D1CC7E200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
+		F0D1CC7F200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
+		F0D1CC80200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
 		F0D5EEB31F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
 		F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
 		F0D5EEB51F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
@@ -148,6 +151,7 @@
 		F07709F71FC6D61E00174494 /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		F07709F81FC6D61E00174494 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F0BB83751D19D98F0070140A /* ipad_blanc_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_blanc_80.png; sourceTree = "<group>"; };
+		F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "MathJax-2.7.2"; sourceTree = "<group>"; };
 		F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jsonDB.swift; sourceTree = "<group>"; };
 		F0EAFF0B1D12EDE500366F0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = xia/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0EAFF0D1D12EDF800366F0E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = xia/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 				F03EA5C71D12EB02008678BC /* xia */,
 				F03EA5DC1D12EB02008678BC /* xiaTests */,
 				F03EA5E71D12EB02008678BC /* xiaUITests */,
+				F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -403,6 +408,7 @@
 				F03EA6361D12ED02008678BC /* images.xcassets in Resources */,
 				F03EA5D01D12EB02008678BC /* Assets.xcassets in Resources */,
 				F07709FF1FC6D61E00174494 /* Info.plist in Resources */,
+				F0D1CC7E200E0AA60029C64A /* MathJax-2.7.2 in Resources */,
 				F03EA5CE1D12EB02008678BC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,6 +419,7 @@
 			files = (
 				F03EA6301D12EC89008678BC /* Assets.xcassets in Resources */,
 				F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */,
+				F0D1CC7F200E0AA60029C64A /* MathJax-2.7.2 in Resources */,
 				F0770A001FC6D61E00174494 /* Info.plist in Resources */,
 				F04543F31D17F93200BBF731 /* Localizable.strings in Resources */,
 				F03439E71F7D0A6900F49714 /* oembed.plist in Resources */,
@@ -424,6 +431,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0D1CC80200E0AA60029C64A /* MathJax-2.7.2 in Resources */,
 				F03439E81F7D0A6900F49714 /* oembed.plist in Resources */,
 				F04543FD1D17F93300BBF731 /* InfoPlist.strings in Resources */,
 			);

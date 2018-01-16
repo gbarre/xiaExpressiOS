@@ -59,7 +59,7 @@ class TextConverter: NSObject {
             
             htmlString = showCustomLinks(inText: htmlString)
             // show latex
-            htmlString = "<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>\n" + htmlString
+            htmlString = "<script type=\"text/javascript\" async src=\"MathJax-2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script>\n" + htmlString
             
         } else {
             htmlString = showCustomLinks(inText: htmlString)
