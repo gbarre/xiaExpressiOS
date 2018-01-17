@@ -71,6 +71,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     var menu: UIAlertController!
     var btnTag: Int = 0
     
+    var currentDirs = rootDirs
+    
     @IBOutlet weak var myToolbar: UIToolbar!
     @IBOutlet weak var imgTopBarBkgd: UIImageView!
     @IBOutlet var backView: UIView!
@@ -84,7 +86,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         imgTopBarBkgd.isHidden = false
         
         // Load image
-        let imagePath = imagesDirectory + "/\(self.fileName).jpg"
+        let imagePath = currentDirs["images"]! + "/\(self.fileName).jpg"
         img = UIImage(contentsOfFile: imagePath)!
         
         landscape = (img.size.width > img.size.height) ? true : false
@@ -408,7 +410,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = details["\(detailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
+            let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
         }
         
         if createDetail {
@@ -442,6 +444,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                         controller.index = self.index
                         controller.fileName = fileName
                         controller.ViewCreateDetailsController = self
+                        controller.currentDirs = currentDirs
                     }
                 }
             }
@@ -452,6 +455,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.fileName = self.fileName
                 controller.selectedSegment = btnTag
                 controller.ViewCreateDetailsController = self
+                controller.currentDirs = currentDirs
             }
         }
         if (segue.identifier == "playXia") {
@@ -459,12 +463,14 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                 controller.fileName = fileName
                 controller.xml = self.xml
                 controller.landscape = landscape
+                controller.currentDirs = currentDirs
             }
         }
         if (segue.identifier == "viewExport") {
             if let controller:ViewExport = segue.destination as? ViewExport {
                 controller.fileName = fileName
                 controller.xml = self.xml
+                controller.currentDirs = currentDirs
             }
         }
     }
@@ -519,7 +525,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
+            let _ = writeXML(self.xml, path: self.currentDirs["xml"]! + "/\(self.fileName).xml")
         })
         let ellipseAction = UIAlertAction(title: NSLocalizedString("ELLIPSE", comment: ""), style: .default, handler: { action in
             // Create new detail
@@ -554,7 +560,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.attributes["constraint"] = self.details["\(self.currentDetailTag)"]?.constraint
                 }
             }
-            let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
+            let _ = writeXML(self.xml, path: self.currentDirs["xml"]! + "/\(self.fileName).xml")
         })
         let polygonAction = UIAlertAction(title: NSLocalizedString("POLYGON", comment: ""), style: .default, handler: { action in
             // Create new detail object
@@ -821,7 +827,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
                     d.removeFromParent()
                 }
             }
-            let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
+            let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
             currentDetailTag = 0
         }
     }

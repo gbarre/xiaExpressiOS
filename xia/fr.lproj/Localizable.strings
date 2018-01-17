@@ -1,4 +1,10 @@
 /* No comment provided by engineer. */
+"ALPHANUM_ONLY" = "Caractères alpha-numériques seulement";
+
+/* No comment provided by engineer. */
+"ALREADY_EXIST" = "Le dossier existe déjà !";
+
+/* No comment provided by engineer. */
 "CANCEL" = "Annuler";
 
 /* No comment provided by engineer. */
@@ -68,10 +74,10 @@
 "FILE_SELECTED" = "fichier sélectionné";
 
 /* No comment provided by engineer. */
-"IDENTIFIER" = "Identifiant : ";
+"FOLDER_NAME" = "Nom du dossier";
 
 /* No comment provided by engineer. */
-"IMAGE_SAVE_FAILED" = "Impossible de sauver l'image.";
+"IDENTIFIER" = "Identifiant : ";
 
 /* No comment provided by engineer. */
 "KEYWORDS" = "Mots clés : ";
@@ -95,9 +101,6 @@
 "PASSWORD" = "Mot de passe";
 
 /* No comment provided by engineer. */
-"PHOTO_PUBLISHED_BY" = "Photo publiée par";
-
-/* No comment provided by engineer. */
 "POLYGON" = "Polygone";
 
 /* No comment provided by engineer. */
@@ -108,6 +111,9 @@
 
 /* No comment provided by engineer. */
 "RELATION" = "Relation : ";
+
+/* No comment provided by engineer. */
+"RESERVED" = "Nom réservé !";
 
 /* No comment provided by engineer. */
 "RIGHTS" = "Droits : ";

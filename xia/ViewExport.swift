@@ -32,12 +32,12 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
     var xmlSVG: AEXMLDocument = AEXMLDocument()
     var tmpFilePath: String = ""
-    //let now:Int = Int(Date().timeIntervalSince1970)
     weak var ViewCollection: ViewCollectionController?
+    var currentDirs = rootDirs
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        img = UIImage(contentsOfFile: "\(imagesDirectory)/\(fileName).jpg")!
+        img = UIImage(contentsOfFile: "\(currentDirs["images"]!)/\(fileName).jpg")!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

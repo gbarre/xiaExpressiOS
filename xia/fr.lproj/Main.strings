@@ -13,14 +13,14 @@
 /* Class = "UILabel"; text = "Xia Tablet"; ObjectID = "6ZW-hF-Iyq"; */
 "6ZW-hF-Iyq.text" = "Xia Tablette";
 
+/* Class = "UIBarButtonItem"; title = "Select"; ObjectID = "6th-nl-MK6"; */
+"6th-nl-MK6.title" = "Sélectionner";
+
 /* Class = "UILabel"; text = "Creator:"; ObjectID = "9Qo-Kh-Y2a"; */
 "9Qo-Kh-Y2a.text" = "Auteur :";
 
 /* Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ"; */
 "72e-zG-aQJ.text" = "Source :";
-
-/* Class = "UINavigationItem"; title = "Create new document"; ObjectID = "74f-sH-8RF"; */
-"74f-sH-8RF.title" = "Créer un nouveau document";
 
 /* Class = "UILabel"; text = "Identifier:"; ObjectID = "AFw-Te-aYH"; */
 "AFw-Te-aYH.text" = "Identifiant :";
@@ -88,11 +88,17 @@
 /* Class = "UILabel"; text = "Label"; ObjectID = "VlB-Ig-h1b"; */
 "VlB-Ig-h1b.text" = "Label";
 
+/* Class = "UINavigationItem"; title = "Title"; ObjectID = "ZDz-3U-gFM"; */
+"ZDz-3U-gFM.title" = "Titre";
+
 /* Class = "UITableViewController"; title = "Share"; ObjectID = "ZHU-7B-zUy"; */
 "ZHU-7B-zUy.title" = "Partager";
 
 /* Class = "UILabel"; text = "Inkscape (SVG)"; ObjectID = "a2S-of-Dk2"; */
 "a2S-of-Dk2.text" = "Inkscape (SVG)";
+
+/* Class = "UIBarButtonItem"; title = "Open"; ObjectID = "bup-js-iac"; */
+"bup-js-iac.title" = "Ouvrir";
 
 /* Class = "UIViewController"; title = "Detail Info"; ObjectID = "cwz-uV-RB1"; */
 "cwz-uV-RB1.title" = "Info";
@@ -154,12 +160,12 @@
 /* Class = "UIViewController"; title = "Play Xia"; ObjectID = "xod-8C-OKb"; */
 "xod-8C-OKb.title" = "Play Xia";
 
+/* Class = "UITableViewController"; title = "reorder"; ObjectID = "yTN-Dd-3vT"; */
+"yTN-Dd-3vT.title" = "reorder";
+
 /* Class = "UILabel"; text = "Creator:"; ObjectID = "yao-fD-b5p"; */
 "yao-fD-b5p.text" = "Auteur :";
 
 /* Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH"; */
 "ysm-4r-fEH.text" = "Description :";
-
-/* Class = "UIButton"; normalTitle = "Take a photo"; ObjectID = "zXw-1L-ZiN"; */
-"zXw-1L-ZiN.normalTitle" = "Prendre une photo";
 

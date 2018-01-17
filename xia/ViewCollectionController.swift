@@ -36,10 +36,21 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @objc let reuseIdentifier = "PhotoCell"
     var newMedia: Bool?
     @objc var landscape: Bool = false
+    var salt = "14876_"
+    var currentDirs = rootDirs
+    var toMove = [String]()
     
     @objc var selectedPhotos = [IndexPath]()
     
     @IBOutlet var navBar: UINavigationBar!
+    
+    @IBOutlet weak var btnBack: UIBarButtonItem!
+    @IBAction func btnBackAction(_ sender: Any) {
+        let dir = getParentDir(currentDir: currentDirs["root"]!)
+        currentDirs = getDirs(root: dir)
+        CollectionView.reloadData()
+        buildLeftNavbarItems(0)
+    }
     
     @IBOutlet var btnTrash: UIBarButtonItem!
     @IBAction func btnTrashAction(_ sender: AnyObject) {
@@ -60,7 +71,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // Delete files
             for path in sortedPath {
                 self.deleteFiles(path as! IndexPath)
-            }// end swift 2.2
+            }
             
             // Exit editing mode
             self.endEdit()
@@ -78,50 +89,136 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet var btnExport: UIBarButtonItem!
     @IBAction func btnExportAction(_ sender: AnyObject) {
         segueIndex = (selectedPhotos[0] as NSIndexPath).row
-        performSegue(withIdentifier: "export", sender: self)
+        if arrayNames[segueIndex].prefix(salt.count) != salt {
+            performSegue(withIdentifier: "export", sender: self)
+        }
     }
     
     @IBOutlet var btnEdit: UIBarButtonItem!
     @IBAction func btnEditAction(_ sender: AnyObject) {
         segueIndex = (selectedPhotos[0] as NSIndexPath).row
-        performSegue(withIdentifier: "viewMetas", sender: self)
+        if arrayNames[segueIndex].prefix(salt.count) != salt {
+            performSegue(withIdentifier: "viewMetas", sender: self)
+        }
+        else {
+            let oldDirName = arrayNames[segueIndex].suffix(arrayNames[segueIndex].count - salt.count)
+            // Ask for folder name in popup
+            let controller = UIAlertController(title: NSLocalizedString("FOLDER_NAME", comment: ""), message: NSLocalizedString("ALPHANUM_ONLY", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+            
+            controller.addTextField(configurationHandler: {(textField: UITextField!) in
+                textField.keyboardType = UIKeyboardType.alphabet
+                textField.text = "\(oldDirName)"
+            })
+            controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
+                // do nothing
+            }))
+            controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
+                let folder = controller.textFields!.first!.text
+                if self.checkDirName(dirName: folder!) {
+                    // Move folder
+                    do {
+                        try FileManager.default.moveItem(atPath: "\(self.currentDirs["root"]!)/\(oldDirName)", toPath: "\(self.currentDirs["root"]!)/\(folder!)")
+                        // Exit editing mode
+                        self.endEdit()
+                        // Rebuild the navbar
+                        self.buildLeftNavbarItems()
+                        self.CollectionView.reloadData()
+                    } catch let error as NSError {
+                        dbg.pt(error.localizedDescription)
+                    }
+                }
+            }))
+            present(controller, animated: true, completion: nil)
+        }
     }
     
     @IBOutlet var btnCopy: UIBarButtonItem!
     @IBAction func btnCopyAction(_ sender: AnyObject) {
-        // Show confirm alert
-        let controller = UIAlertController()
-        let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .default) { action in
-            // copy file
-            let now:Int = Int(Date().timeIntervalSince1970)
-            let selectedPhoto = self.arrayNames[(self.selectedPhotos[0] as NSIndexPath).row]
-            
-            let fileManager = FileManager.default
-            do {
-                try fileManager.copyItem(atPath: "\(imagesDirectory)/\(selectedPhoto).jpg", toPath: "\(imagesDirectory)/\(now).jpg")
-                try fileManager.copyItem(atPath: "\(xmlDirectory)/\(selectedPhoto).xml", toPath: "\(xmlDirectory)/\(now).xml")
+        if arrayNames[segueIndex].prefix(salt.count) != salt {
+            // Show confirm alert
+            let controller = UIAlertController()
+            let confirmDuplicate = UIAlertAction(title: NSLocalizedString("DUPLICATE", comment: ""), style: .default) { action in
+                // copy file
+                let now:Int = Int(Date().timeIntervalSince1970)
+                let selectedPhoto = self.arrayNames[(self.selectedPhotos[0] as NSIndexPath).row]
+                
+                let fileManager = FileManager.default
+                do {
+                    try fileManager.copyItem(atPath: "\(imagesDirectory)/\(selectedPhoto).jpg", toPath: "\(imagesDirectory)/\(now).jpg")
+                    try fileManager.copyItem(atPath: "\(xmlDirectory)/\(selectedPhoto).xml", toPath: "\(xmlDirectory)/\(now).xml")
+                }
+                catch let error as NSError {
+                    dbg.pt(error.localizedDescription)
+                }
+                
+                // Exit editing mode
+                self.endEdit()
+                // Rebuild the navbar
+                self.buildLeftNavbarItems()
+                self.arrayNames.append("\(now)")
+                self.CollectionView.reloadData()
+                
             }
-            catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+            controller.addAction(confirmDuplicate)
+            if let ppc = controller.popoverPresentationController {
+                ppc.barButtonItem = btnCopy
+                ppc.permittedArrowDirections = .up
             }
-            
-            // Exit editing mode
-            self.endEdit()
-            // Rebuild the navbar
-            self.buildLeftNavbarItems()
-            self.arrayNames.append("\(now)")
-            self.CollectionView.reloadData()
-            
+            present(controller, animated: true, completion: nil)
         }
-        controller.addAction(confirmDuplicate)
-        if let ppc = controller.popoverPresentationController {
-            ppc.barButtonItem = btnCopy
-            ppc.permittedArrowDirections = .up
+    }
+    
+    @IBOutlet weak var btnReorder: UIBarButtonItem!
+    @IBAction func btnReorderAction(_ sender: Any) {
+        toMove.removeAll()
+        // Get indexes
+        var indexes = [IndexPath:Int]()
+        for path in self.selectedPhotos {
+            indexes[path] = (path as NSIndexPath).row
         }
-        present(controller, animated: true, completion: nil)
+        let sortedPath = (indexes as NSDictionary).keysSortedByValue(comparator: {
+            ($1 as! NSNumber).compare($0 as! NSNumber)
+        })
+        // Get filesName to move
+        for path in sortedPath {
+            let index = (path as! NSIndexPath).row
+            toMove.append(arrayNames[index])
+        }
+        performSegue(withIdentifier: "reorder", sender: self)
+        
     }
     
     @IBOutlet var navBarTitle: UINavigationItem!
+    
+    @IBOutlet weak var btnDirs: UIBarButtonItem!
+    @IBAction func btnDirsAction(_ sender: Any) {
+        let fileManager = FileManager.default
+        
+        // Ask for folder name in popup
+        let controller = UIAlertController(title: NSLocalizedString("FOLDER_NAME", comment: ""), message: NSLocalizedString("ALPHANUM_ONLY", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+        
+        controller.addTextField(configurationHandler: {(textField: UITextField!) in
+            textField.keyboardType = UIKeyboardType.alphabet
+        })
+        controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
+            // do nothing
+        }))
+        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
+            let folder = controller.textFields!.first!.text
+            if self.checkDirName(dirName: folder!) {
+                // Create folder + images & xml subfolders
+                do {
+                    try fileManager.createDirectory(atPath: "\(self.currentDirs["root"]!)/\(folder!)/images", withIntermediateDirectories: true, attributes: nil)
+                    try fileManager.createDirectory(atPath: "\(self.currentDirs["root"]!)/\(folder!)/xml", withIntermediateDirectories: true, attributes: nil)
+                    self.CollectionView.reloadData()
+                } catch let error as NSError {
+                    dbg.pt(error.localizedDescription)
+                }
+            }
+        }))
+        present(controller, animated: true, completion: nil)
+        
+    }
     
     @objc weak var btnCreateState: UIBarButtonItem!
     
@@ -145,6 +242,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             // Cosmetic...
             btnCreateState.isEnabled = false
             btnCreateState.tintColor = selectingColor.withAlphaComponent(0)
+            btnDirs.isEnabled = false
+            btnDirs.tintColor = selectingColor.withAlphaComponent(0)
             navBar.barTintColor = selectingColor
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.white
@@ -194,7 +293,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // Put the StatusBar in white
+        UIApplication.shared.statusBarStyle = .lightContent
         self.navigationController!.hidesBarsOnTap = false
+        salt = "\(arc4random_uniform(100000))_"
         startImport()
         editingMode = false
     }
@@ -217,16 +319,26 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         if (segue.identifier == "Add") {
             if let controller:ViewMenuAddResource = segue.destination as? ViewMenuAddResource {
                 controller.ViewCollection = self
+                controller.currentDirs = currentDirs
+            }
+        }
+        else if (segue.identifier == "reorder") {
+            if let controller:ViewReorder = segue.destination as? ViewReorder {
+                controller.toMove = toMove
+                controller.ViewCollection = self
+                controller.currentDirs = currentDirs
+                controller.salt = salt
             }
         }
         else if arrayNames.count > 0 {
-            let xmlToSegue = getXML("\(xmlDirectory)/\(arrayNames[segueIndex]).xml")
+            let xmlToSegue = getXML("\(currentDirs["xml"]!)/\(arrayNames[segueIndex]).xml")
             let nameToSegue = "\(arrayNames[segueIndex])"
             if (segue.identifier == "viewLargePhoto") {
                 endEdit()
                 if let controller:ViewCreateDetails = segue.destination as? ViewCreateDetails {
                     controller.fileName = nameToSegue
                     controller.xml = xmlToSegue
+                    controller.currentDirs = currentDirs
                 }
             }
             if (segue.identifier == "viewMetas") {
@@ -234,6 +346,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     controller.xml = xmlToSegue
                     controller.fileName = nameToSegue
                     controller.ViewCollection = self
+                    controller.currentDirs = currentDirs
                 }
             }
             if (segue.identifier == "playXia") {
@@ -242,6 +355,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     controller.fileName = nameToSegue
                     controller.xml = xmlToSegue
                     controller.landscape = landscape
+                    controller.currentDirs = currentDirs
                 }
             }
             if (segue.identifier == "export") {
@@ -249,6 +363,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     controller.fileName = nameToSegue
                     controller.xml = xmlToSegue
                     controller.ViewCollection = self
+                    controller.currentDirs = currentDirs
                 }
             }
         }
@@ -258,6 +373,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let buttonColor = (isEditing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
+            btnBack.isEnabled = false
+            btnBack.tintColor = buttonColor.withAlphaComponent(0)
+            btnBack.title = ""
             btnTrash.isEnabled = true
             btnTrash.tintColor = UIColor.white
             btnExport.isEnabled = true
@@ -266,8 +384,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnEdit.tintColor = UIColor.white
             btnCopy.isEnabled = true
             btnCopy.tintColor = UIColor.white
+            btnReorder.isEnabled = true
+            btnReorder.tintColor = UIColor.white
             break
         case 2...9999:
+            btnBack.isEnabled = false
+            btnBack.tintColor = buttonColor.withAlphaComponent(0)
+            btnBack.title = ""
             btnTrash.isEnabled = true
             btnTrash.tintColor = UIColor.white
             btnExport.isEnabled = false
@@ -276,8 +399,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnEdit.tintColor = buttonColor.withAlphaComponent(0)
             btnCopy.isEnabled = false
             btnCopy.tintColor = buttonColor.withAlphaComponent(0)
+            btnReorder.isEnabled = true
+            btnReorder.tintColor = UIColor.white
             break
         default:
+            btnBack.isEnabled = (currentDirs["root"] == documentsDirectory) ? false : true
+            btnBack.tintColor = (currentDirs["root"] == documentsDirectory) ? buttonColor.withAlphaComponent(0) : UIColor.white
+            btnBack.title = "< Back"
             btnTrash.isEnabled = false
             btnTrash.tintColor = buttonColor.withAlphaComponent(0)
             btnExport.isEnabled = false
@@ -286,29 +414,53 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnEdit.tintColor = buttonColor.withAlphaComponent(0)
             btnCopy.isEnabled = false
             btnCopy.tintColor = buttonColor.withAlphaComponent(0)
+            btnReorder.isEnabled = false
+            btnReorder.tintColor = buttonColor.withAlphaComponent(0)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         self.arrayNames = []
-        // Load all images names
+        // Load all images / directories names
         let fileManager = FileManager.default
-        let files = fileManager.enumerator(atPath: imagesDirectory)
-        while let fileObject = files?.nextObject() {
-            var file = fileObject as! String
-            file = String(file.prefix(file.count - 4)) // remove .xyz
-            if fileManager.fileExists(atPath: "\(xmlDirectory)/\(file).xml") {
-                self.arrayNames.append(file)
-            }
-            else {
-                do {
-                    try fileManager.removeItem(atPath: "\(imagesDirectory)/\(file).jpg")
+        do {
+            let dirs = try fileManager.contentsOfDirectory(atPath: currentDirs["root"]!)
+            for dir in dirs {
+                switch dir {
+                case "Inbox":
+                    break
+                case "oembed.plist":
+                    break
+                case "xml":
+                    break
+                case "images":
+                    let files = fileManager.enumerator(atPath: currentDirs["images"]!)
+                    while let fileObject = files?.nextObject() {
+                        var file = fileObject as! String
+                        file = String(file.prefix(file.count - 4)) // remove .xyz
+                        if fileManager.fileExists(atPath: "\(currentDirs["xml"]!)/\(file).xml") {
+                            self.arrayNames.append(file)
+                        }
+                        else {
+                            do {
+                                try fileManager.removeItem(atPath: "\(currentDirs["images"]!)/\(file).jpg")
+                            }
+                            catch let error as NSError {
+                                dbg.pt(error.localizedDescription)
+                            }
+                        }
+                    }
+                    break
+                default:
+                    self.arrayNames.append(salt+dir)
+                    break
                 }
-                catch {
-                    dbg.pt(error.localizedDescription)
-                }
             }
+            
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
         }
+        
         // Add a "create image" if the is no image in Documents directory
         if ( self.arrayNames.count == 0 ) {
             editMode.isEnabled = false
@@ -321,12 +473,18 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // order thumb by title
         self.arraySortedNames = [:]
         for name in self.arrayNames {
-            let xml = getXML("\(xmlDirectory)/\(name).xml")
-            var title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
-            title = "\(String(describing: title))-\(name)"
+            var title: String!
+            if name.prefix(salt.count) == salt {
+                let clean_name = "\(name.suffix(name.count - salt.count))"
+                title = "\(clean_name)-\(name)"
+            }
+            else {
+                let xml = getXML("\(currentDirs["xml"]!)/\(name).xml")
+                title = (xml["xia"]["title"].value == nil) ? name : xml["xia"]["title"].value
+                title = "\(title!)-\(name)"
+            }
             self.arraySortedNames[title!] = name
         }
-        
         let orderedTitles = self.arraySortedNames.keys.sorted()
         self.arrayNames = []
         for title in orderedTitles {
@@ -347,19 +505,29 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
         else {
             let index = (indexPath as NSIndexPath).item
-            // Load image
-            let filePath = "\(imagesDirectory)/\(arrayNames[index]).jpg"
-            let img = UIImage(contentsOfFile: filePath)
-            cell.setThumbnail(img!)
             
-            // Load label
-            let xml = getXML("\(xmlDirectory)/\(arrayNames[index]).xml")
-            let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
-            cell.setLabel(label)
-            
-            // Show reaod Only Icon
-            let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
-            cell.showRoIcon(roState)
+            // check for dir
+            if "\(arrayNames[index])".prefix(salt.count) == salt {
+                let dirName = String(arrayNames[index].suffix(arrayNames[index].count - salt.count))
+                cell.setLabel(dirName)
+                cell.setThumbnail(UIImage(named: "folder")!)
+                cell.showRoIcon(false)
+            }
+            else {
+                // Load image
+                let filePath = "\(currentDirs["images"]!)/\(arrayNames[index]).jpg"
+                let img = UIImage(contentsOfFile: filePath)
+                cell.setThumbnail(img!)
+                
+                // Load label
+                let xml = getXML("\(currentDirs["xml"]!)/\(arrayNames[index]).xml")
+                let label = (xml["xia"]["title"].value == nil) ? arrayNames[index] : xml["xia"]["title"].value!
+                cell.setLabel(label)
+                
+                // Show reaod Only Icon
+                let roState = (xml["xia"]["readonly"].value! == "true") ? true : false
+                cell.showRoIcon(roState)
+            }
             
             if editingMode {
                 if selectedPhotos.contains(indexPath) {
@@ -396,6 +564,28 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
+    func checkDirName(dirName: String) -> Bool {
+        let fileManager = FileManager.default
+        if !dirName.isAlphanumeric {
+            let alert = UIAlertController(title: NSLocalizedString("WARNING", comment: ""), message: NSLocalizedString("ALPHANUM_ONLY", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return false
+        } else if dirName == "images" || dirName == "xml" || dirName == "Inbox" {
+            let alert = UIAlertController(title: NSLocalizedString("WARNING", comment: ""), message: NSLocalizedString("RESERVED", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return false
+        } else if fileManager.fileExists(atPath: "\(self.currentDirs["root"]!)/\(dirName)") {
+            let alert = UIAlertController(title: NSLocalizedString("WARNING", comment: ""), message: NSLocalizedString("ALREADY_EXIST", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return false
+        } else {
+            return true
+        }
+    }
+    
     @objc func endEdit() {
         editingMode = false
         editMode.title = NSLocalizedString("EDIT", comment: "")
@@ -407,6 +597,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         CollectionView.reloadData()
         btnCreateState.isEnabled = true
         btnCreateState.tintColor = UIColor.white
+        btnDirs.isEnabled = true
+        btnDirs.tintColor = UIColor.white
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.white
@@ -423,10 +615,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         // Delete the file
         let fileManager = FileManager()
         do {
-            var filePath = "\(imagesDirectory)/\(fileName).jpg"
-            try fileManager.removeItem(atPath: filePath)
-            filePath = "\(xmlDirectory)/\(fileName).xml"
-            try fileManager.removeItem(atPath: filePath)
+            if fileName.prefix(salt.count) == salt {
+                try fileManager.removeItem(atPath: "\(currentDirs["root"]!)/\(fileName.suffix(fileName.count - salt.count))")
+            } else {
+                var filePath = "\(currentDirs["images"]!)/\(fileName).jpg"
+                try fileManager.removeItem(atPath: filePath)
+                filePath = "\(currentDirs["xml"]!)/\(fileName).xml"
+                try fileManager.removeItem(atPath: filePath)
+            }
         }
         catch let error as NSError {
             dbg.pt(error.localizedDescription)
@@ -454,11 +650,18 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             else if arrayNames.count == 0 {
                 performSegue(withIdentifier: "Add", sender: self)
             }
+            else if "\(arrayNames[segueIndex])".prefix(salt.count) == salt {
+                let dirName = String(arrayNames[segueIndex].suffix(arrayNames[segueIndex].count - salt.count))
+                let oldRoot = currentDirs["root"]
+                currentDirs = getDirs(root: "\(oldRoot!)/\(dirName)")
+                CollectionView.reloadData()
+                buildLeftNavbarItems(0)
+            }
             else {
-                let xmlToSegue = getXML("\(xmlDirectory)/\(arrayNames[segueIndex]).xml")
+                let xmlToSegue = getXML("\(currentDirs["xml"]!)/\(arrayNames[segueIndex]).xml")
                 if xmlToSegue["xia"]["readonly"].value! == "true" {
                     // look for orientation before segue
-                    let filePath = "\(imagesDirectory)/\(arrayNames[segueIndex]).jpg"
+                    let filePath = "\(currentDirs["images"]!)/\(arrayNames[segueIndex]).jpg"
                     let img = UIImage(contentsOfFile: filePath)!
                     
                     landscape = (img.size.width > img.size.height) ? true : false
@@ -604,12 +807,12 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         // move files to their directory
-        let files = fileManager.enumerator(atPath: documentsDirectory)
-        while let fileObject = files?.nextObject() {
-            let file = fileObject as! String
-            if (String(file.prefix(6)) != "images" && String(file.prefix(3)) != "xml" && String(file.prefix(6)) != "oembed" && String(file.prefix(6)) != "import") {
-                let ext = String(file.suffix(3))
-                do {
+        do {
+            let files = try fileManager.contentsOfDirectory(atPath: currentDirs["root"]!)
+            for file in files {
+                if file != "oembed.plist" && file.contains(".") {
+                    dbg.pt("moving " + file)
+                    let ext = String(file.suffix(3))
                     switch (ext) {
                     case "xml":
                         try fileManager.moveItem(atPath: documentsDirectory + "/" + file, toPath: xmlPath + "/" + file)
@@ -620,10 +823,10 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     default:
                         break;
                     }
-                } catch let error as NSError {
-                    dbg.pt(error.localizedDescription)
                 }
             }
+        } catch let error as NSError {
+            dbg.pt(error.localizedDescription)
         }
     }
 }

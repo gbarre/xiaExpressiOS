@@ -2,7 +2,7 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
   <file original="xia/Base.lproj/LaunchScreen.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
       <trans-unit id="h3g-i8-Bnm.text">
@@ -14,7 +14,7 @@
   </file>
   <file original="xia/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
       <trans-unit id="0iM-yM-5dr.text">
@@ -42,6 +42,11 @@
         <target>Xia Tablette</target>
         <note>Class = "UILabel"; text = "Xia Tablet"; ObjectID = "6ZW-hF-Iyq";</note>
       </trans-unit>
+      <trans-unit id="6th-nl-MK6.title">
+        <source>Select</source>
+        <target>Sélectionner</target>
+        <note>Class = "UIBarButtonItem"; title = "Select"; ObjectID = "6th-nl-MK6";</note>
+      </trans-unit>
       <trans-unit id="9Qo-Kh-Y2a.text">
         <source>Creator:</source>
         <target>Auteur :</target>
@@ -51,11 +56,6 @@
         <source>Source:</source>
         <target>Source :</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ";</note>
-      </trans-unit>
-      <trans-unit id="74f-sH-8RF.title">
-        <source>Create new document</source>
-        <target>Créer un nouveau document</target>
-        <note>Class = "UINavigationItem"; title = "Create new document"; ObjectID = "74f-sH-8RF";</note>
       </trans-unit>
       <trans-unit id="AFw-Te-aYH.text">
         <source>Identifier:</source>
@@ -167,6 +167,11 @@
         <target>Label</target>
         <note>Class = "UILabel"; text = "Label"; ObjectID = "VlB-Ig-h1b";</note>
       </trans-unit>
+      <trans-unit id="ZDz-3U-gFM.title">
+        <source>Title</source>
+        <target>Titre</target>
+        <note>Class = "UINavigationItem"; title = "Title"; ObjectID = "ZDz-3U-gFM";</note>
+      </trans-unit>
       <trans-unit id="ZHU-7B-zUy.title">
         <source>Share</source>
         <target>Partager</target>
@@ -176,6 +181,11 @@
         <source>Inkscape (SVG)</source>
         <target>Inkscape (SVG)</target>
         <note>Class = "UILabel"; text = "Inkscape (SVG)"; ObjectID = "a2S-of-Dk2";</note>
+      </trans-unit>
+      <trans-unit id="bup-js-iac.title">
+        <source>Open</source>
+        <target>Ouvrir</target>
+        <note>Class = "UIBarButtonItem"; title = "Open"; ObjectID = "bup-js-iac";</note>
       </trans-unit>
       <trans-unit id="cwz-uV-RB1.title">
         <source>Detail Info</source>
@@ -277,6 +287,11 @@
         <target>Play Xia</target>
         <note>Class = "UIViewController"; title = "Play Xia"; ObjectID = "xod-8C-OKb";</note>
       </trans-unit>
+      <trans-unit id="yTN-Dd-3vT.title">
+        <source>reorder</source>
+        <target>reorder</target>
+        <note>Class = "UITableViewController"; title = "reorder"; ObjectID = "yTN-Dd-3vT";</note>
+      </trans-unit>
       <trans-unit id="yao-fD-b5p.text">
         <source>Creator:</source>
         <target>Auteur :</target>
@@ -287,16 +302,11 @@
         <target>Description :</target>
         <note>Class = "UILabel"; text = "Description:"; ObjectID = "ysm-4r-fEH";</note>
       </trans-unit>
-      <trans-unit id="zXw-1L-ZiN.normalTitle">
-        <source>Take a photo</source>
-        <target>Prendre une photo</target>
-        <note>Class = "UIButton"; normalTitle = "Take a photo"; ObjectID = "zXw-1L-ZiN";</note>
-      </trans-unit>
     </body>
   </file>
   <file original="xia/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
       <trans-unit id="CFBundleDisplayName">
@@ -305,16 +315,29 @@
       <trans-unit id="CFBundleName">
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
-      <trans-unit id="CFBundleShortVersionString">
-        <source>1.5</source>
+      <trans-unit id="NSCameraUsageDescription">
+        <source>Camera Access</source>
+      </trans-unit>
+      <trans-unit id="NSPhotoLibraryUsageDescription">
+        <source>Photos Access</source>
       </trans-unit>
     </body>
   </file>
   <file original="xia/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
+      <trans-unit id="ALPHANUM_ONLY">
+        <source>ALPHANUM_ONLY</source>
+        <target>Caractères alpha-numériques seulement</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="ALREADY_EXIST">
+        <source>ALREADY_EXIST</source>
+        <target>Le dossier existe déjà !</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="CANCEL">
         <source>CANCEL</source>
         <target>Annuler</target>
@@ -430,14 +453,14 @@
         <target>fichier sélectionné</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
+      <trans-unit id="FOLDER_NAME">
+        <source>FOLDER_NAME</source>
+        <target>Nom du dossier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="IDENTIFIER">
         <source>IDENTIFIER</source>
         <target>Identifiant : </target>
-        <note>No comment provided by engineer.</note>
-      </trans-unit>
-      <trans-unit id="IMAGE_SAVE_FAILED">
-        <source>IMAGE_SAVE_FAILED</source>
-        <target>Impossible de sauver l'image.</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="KEYWORDS">
@@ -475,11 +498,6 @@
         <target>Mot de passe</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
-      <trans-unit id="PHOTO_PUBLISHED_BY">
-        <source>PHOTO_PUBLISHED_BY</source>
-        <target>Photo publiée par</target>
-        <note>No comment provided by engineer.</note>
-      </trans-unit>
       <trans-unit id="POLYGON">
         <source>POLYGON</source>
         <target>Polygone</target>
@@ -498,6 +516,11 @@
       <trans-unit id="RELATION">
         <source>RELATION</source>
         <target>Relation : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="RESERVED">
+        <source>RESERVED</source>
+        <target>Nom réservé !</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="RIGHTS">
@@ -534,22 +557,29 @@
   </file>
   <file original="xiaTests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
       <trans-unit id="CFBundleName">
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
-      <trans-unit id="CFBundleShortVersionString">
-        <source>1.0</source>
-      </trans-unit>
     </body>
   </file>
   <file original="xiaTests/Localizable.strings" source-language="en" datatype="plaintext" target-language="fr">
     <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="9.2" build-num="9C40b"/>
     </header>
     <body>
+      <trans-unit id="ALPHANUM_ONLY">
+        <source>ALPHANUM_ONLY</source>
+        <target>Caractères alpha-numériques seulement</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="ALREADY_EXIST">
+        <source>ALREADY_EXIST</source>
+        <target>Le dossier existe déjà !</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="CANCEL">
         <source>CANCEL</source>
         <target>Annuler</target>
@@ -665,14 +695,14 @@
         <target>fichier sélectionné</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
+      <trans-unit id="FOLDER_NAME">
+        <source>FOLDER_NAME</source>
+        <target>Nom du dossier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="IDENTIFIER">
         <source>IDENTIFIER</source>
         <target>Identifiant : </target>
-        <note>No comment provided by engineer.</note>
-      </trans-unit>
-      <trans-unit id="IMAGE_SAVE_FAILED">
-        <source>IMAGE_SAVE_FAILED</source>
-        <target>Impossible de sauver l'image.</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="KEYWORDS">
@@ -710,11 +740,6 @@
         <target>Mot de passe</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
-      <trans-unit id="PHOTO_PUBLISHED_BY">
-        <source>PHOTO_PUBLISHED_BY</source>
-        <target>Photo publiée par</target>
-        <note>No comment provided by engineer.</note>
-      </trans-unit>
       <trans-unit id="POLYGON">
         <source>POLYGON</source>
         <target>Polygone</target>
@@ -733,6 +758,11 @@
       <trans-unit id="RELATION">
         <source>RELATION</source>
         <target>Relation : </target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="RESERVED">
+        <source>RESERVED</source>
+        <target>Nom réservé !</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="RIGHTS">
@@ -764,19 +794,6 @@
         <source>YES</source>
         <target>Oui</target>
         <note>No comment provided by engineer.</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="xiaUITests/Info.plist" source-language="en" datatype="plaintext" target-language="fr">
-    <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.1" build-num="8B62"/>
-    </header>
-    <body>
-      <trans-unit id="CFBundleName">
-        <source>$(PRODUCT_NAME)</source>
-      </trans-unit>
-      <trans-unit id="CFBundleShortVersionString">
-        <source>1.0</source>
       </trans-unit>
     </body>
   </file>

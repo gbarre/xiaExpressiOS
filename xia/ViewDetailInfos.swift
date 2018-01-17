@@ -33,6 +33,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     var index: Int = 0
     var fileName: String = ""
     weak var ViewCreateDetailsController: ViewCreateDetails?
+    var currentDirs = rootDirs
 
     @IBOutlet var switchZoom: UISwitch!
     @IBAction func btnZoomAction(_ sender: AnyObject) {
@@ -62,7 +63,7 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
                 d.value = txtDesc.text
             }
         }
-        let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
+        let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
         ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()

@@ -48,6 +48,11 @@
 "DELETE_N_FILES" = "Delete %d files";
 "CREATE_DOCUMENT" = "Create new document";
 "DUPLICATE" = "Duplicate file";
+"FOLDER_NAME" = "Folder name";
+"ALPHANUM_ONLY" = "Only alphanumeric chars";
+"EMPTY" = "Please type something!";
+"RESERVED" = "Reserved name!";
+"ALREADY_EXIST" = "Folder already exist!";
 
 // ViewCreateDetails.swift
 "DETAIL" = "Detail ";

@@ -74,6 +74,7 @@
 		F0770A021FC6D61E00174494 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F71FC6D61E00174494 /* Options.swift */; };
 		F0770A031FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
 		F0770A041FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
+		F0B4798F2011FB460050C2EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CC1D12EB02008678BC /* Main.storyboard */; };
 		F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F0BB83751D19D98F0070140A /* ipad_blanc_80.png */; };
 		F0D1CC7E200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
 		F0D1CC7F200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
@@ -82,6 +83,8 @@
 		F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
 		F0D5EEB51F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
 		F0EAFF0C1D12EDE500366F0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0EAFF0A1D12EDE500366F0E /* Localizable.strings */; };
+		F0F825C2200FFD2000578D8D /* ViewReorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F825C1200FFD2000578D8D /* ViewReorder.swift */; };
+		F0F825C3200FFD2000578D8D /* ViewReorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F825C1200FFD2000578D8D /* ViewReorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,6 +158,7 @@
 		F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jsonDB.swift; sourceTree = "<group>"; };
 		F0EAFF0B1D12EDE500366F0E /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = xia/Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F0EAFF0D1D12EDF800366F0E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = xia/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F0F825C1200FFD2000578D8D /* ViewReorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewReorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,13 +189,13 @@
 		F03EA5BC1D12EB02008678BC = {
 			isa = PBXGroup;
 			children = (
+				F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */,
 				F0BB83751D19D98F0070140A /* ipad_blanc_80.png */,
 				F03EA5C61D12EB02008678BC /* Products */,
 				F07709F11FC6D61E00174494 /* Sources */,
 				F03EA5C71D12EB02008678BC /* xia */,
 				F03EA5DC1D12EB02008678BC /* xiaTests */,
 				F03EA5E71D12EB02008678BC /* xiaUITests */,
-				F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -231,6 +235,7 @@
 				F03EA6051D12EC2B008678BC /* ViewExport.swift */,
 				F03EA6061D12EC2B008678BC /* ViewMenuAddResource.swift */,
 				F03EA6071D12EC2B008678BC /* ViewMetas.swift */,
+				F0F825C1200FFD2000578D8D /* ViewReorder.swift */,
 				F03EA6081D12EC2B008678BC /* xiaDetail.swift */,
 				F03EA5CF1D12EB02008678BC /* Assets.xcassets */,
 				F03EA6351D12ED02008678BC /* images.xcassets */,
@@ -420,6 +425,7 @@
 				F03EA6301D12EC89008678BC /* Assets.xcassets in Resources */,
 				F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */,
 				F0D1CC7F200E0AA60029C64A /* MathJax-2.7.2 in Resources */,
+				F0B4798F2011FB460050C2EF /* Main.storyboard in Resources */,
 				F0770A001FC6D61E00174494 /* Info.plist in Resources */,
 				F04543F31D17F93200BBF731 /* Localizable.strings in Resources */,
 				F03439E71F7D0A6900F49714 /* oembed.plist in Resources */,
@@ -452,6 +458,7 @@
 				F03EA60D1D12EC2B008678BC /* PhotoThumbnail.swift in Sources */,
 				F03EA6191D12EC2B008678BC /* ViewMenuAddResource.swift in Sources */,
 				F07709F91FC6D61E00174494 /* Document.swift in Sources */,
+				F0F825C2200FFD2000578D8D /* ViewReorder.swift in Sources */,
 				F07709FB1FC6D61E00174494 /* Element.swift in Sources */,
 				F03EA61A1D12EC2B008678BC /* ViewMetas.swift in Sources */,
 				F03EA6101D12EC2B008678BC /* PlayXia.swift in Sources */,
@@ -490,6 +497,7 @@
 				F03EA6281D12EC55008678BC /* Util.swift in Sources */,
 				F03EA61C1D12EC35008678BC /* AppDelegate.swift in Sources */,
 				F03EA6231D12EC48008678BC /* PlayImageMetadatas.swift in Sources */,
+				F0F825C3200FFD2000578D8D /* ViewReorder.swift in Sources */,
 				F07709FA1FC6D61E00174494 /* Document.swift in Sources */,
 				F03EA6291D12EC58008678BC /* ViewCollectionController.swift in Sources */,
 				F03EA6321D12ECA7008678BC /* TextConvertersTest.swift in Sources */,

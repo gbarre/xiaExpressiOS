@@ -24,6 +24,7 @@ import UIKit
 class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @objc weak var ViewCollection: ViewCollectionController?
+    var currentDirs = rootDirs
     
     @objc var newMedia: Bool = false
     @objc let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
@@ -56,13 +57,13 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let now: Int = Int(Date().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
-        try? imageData?.write(to: URL(fileURLWithPath: imagesDirectory + "/\(now).jpg"), options: [.atomic])
+        try? imageData?.write(to: URL(fileURLWithPath: currentDirs["images"]! + "/\(now).jpg"), options: [.atomic])
         
         // Create associated xml
         let xml = AEXMLDocument()
         let xmlString = xml.createXML("\(now)")
         do {
-            try xmlString.write(toFile: xmlDirectory + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+            try xmlString.write(toFile: currentDirs["xml"]! + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
             dbg.pt(error.localizedDescription)
@@ -71,7 +72,6 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         
         // copy the image in the library
         if newMedia {
-            //UIImageWriteToSavedPhotosAlbum(image!, self, #selector(ViewMenuAddResource.image(_:didFinishSavingWithError:contextInfo:)), nil)
             UIImageWriteToSavedPhotosAlbum(image!, self, nil, nil)
         }
         self.dismiss(animated: true, completion: nil)
@@ -84,27 +84,12 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         }
     }
     
-    
-    
-    /*func image(image: UIImage, didFinishSavingWithError error: NSErrorPointer?, contextInfo:UnsafePointer<Void>) {
-        if error != nil {
-            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("IMAGE_SAVE_FAILED", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
-            
-            let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: nil)
-            
-            alert.addAction(cancelAction)
-            self.present(alert, animated: true, completion: nil)
-        }
-    }*/
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //if segue.destinationViewController.isKind(UIImagePickerController) {
             let picker = segue.destination as! UIImagePickerController
             picker.delegate = self
-        //}
     }
 }

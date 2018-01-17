@@ -35,6 +35,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     var showKbd: Bool = true
     var iPadPro: Bool = false
     
+    var currentDirs = rootDirs
+    
     let availableLicenses = [
         "Proprietary - CC-Zero",
         "CC Attribution - CC-BY",
@@ -56,7 +58,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBAction func btnDone(_ sender: AnyObject) {
         prepareToWriteXML()
         
-        let _ = writeXML(xml, path: xmlDirectory + "/\(fileName).xml")
+        let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
         ViewCreateDetailsController?.setBtnsIcons()
         ViewCollection?.buildLeftNavbarItems()
@@ -122,7 +124,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         
                         // save to xml
                         self.prepareToWriteXML()
-                        let _ = writeXML(self.xml, path: xmlDirectory + "/\(self.fileName).xml")
+                        let _ = writeXML(self.xml, path: self.currentDirs["xml"]! + "/\(self.fileName).xml")
                         
                     }
                     else {

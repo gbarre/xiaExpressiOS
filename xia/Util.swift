@@ -172,6 +172,18 @@ func getCenter() -> CGPoint{
     return point
 }
 
+func getDirs(root: String) -> [String: String] {
+    return ["root": root, "images": "\(root)/images", "xml": "\(root)/xml"]
+}
+
+func getParentDir(currentDir: String) -> String {
+    var dir = currentDir
+    while dir.suffix(1) != "/" {
+        dir = String(dir.prefix(dir.count - 1))
+    }
+    return String(dir.prefix(dir.count - 1))
+}
+
 func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
     let data = try? Data(contentsOf: URL(fileURLWithPath: path))
     var xml: AEXMLDocument!
@@ -243,4 +255,10 @@ extension UIImage {
         return UIColor(red: red/4, green: green/4, blue: blue/4, alpha: alpha/4)
     }
     
+}
+
+extension String {
+    var isAlphanumeric: Bool {
+        return !isEmpty && range(of: "[^a-zA-Z0-9\\-\\_]", options: .regularExpression) == nil
+    }
 }

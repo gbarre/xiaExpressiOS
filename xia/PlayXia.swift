@@ -39,6 +39,8 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     var landscape: Bool = false
     
+    var currentDirs = rootDirs
+    
     @IBOutlet weak var bkgdImage: UIImageView!
     @IBOutlet var leftButtonBkgd: UIImageView!
     @IBOutlet var leftButton: UIButton!
@@ -71,7 +73,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let imagePath = imagesDirectory + "/\(self.fileName).jpg"
+        let imagePath = currentDirs["images"]! + "/\(self.fileName).jpg"
         img = UIImage(contentsOfFile: imagePath)
         bkgdImage.image = img
         bkgdImage.backgroundColor = img.getMediumBackgroundColor()
