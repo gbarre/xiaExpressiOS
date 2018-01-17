@@ -48,22 +48,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let title = (selectedPhotos.count == 1) ? NSLocalizedString("DELETE_FILE", comment: "") : String(format: NSLocalizedString("DELETE_N_FILES", comment: ""), selectedPhotos.count)
         let confirmDelete = UIAlertAction(title: title, style: .destructive) { action in
             // Reorder paths to delete from the end
-            
-            // Valid for swift 3, do not touch !!!
-            /*var indexes = [Int:IndexPath]()
-             for path in self.selectedPhotos {
-             indexes[(path as NSIndexPath).row] =  path
-             }
-             let sortedIndexes = indexes.keys.sorted()
-             var i = self.arrayNames.count - 1
-             while i >= sortedIndexes.first {
-             if sortedIndexes.contains(i) {
-             self.deleteFiles(indexes[i]!)
-             }
-             i = i - 1
-             }*/ // End swift 3
-            
-            // Valid for swift 2.2
+           
             var indexes = [IndexPath:Int]()
             for path in self.selectedPhotos {
                 indexes[path] = (path as NSIndexPath).row

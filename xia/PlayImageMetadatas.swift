@@ -88,9 +88,7 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         }
         htmlString = converter._text2html(inText: htmlString)
         // show latex, jutify & font-size
-        htmlString = "<!DOCTYPE html><html>\n" +
-            "<head><script type=\"text/javascript\" async src=\"MathJax-2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>\n" +
-            "<body style=\"font-size:16pt; text-align:justify;\">" + htmlString + "</body></html>"
+        htmlString = htmlHeader + htmlString + htmlFooter
         
         var webView: WKWebView!
         

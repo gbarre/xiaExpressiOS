@@ -44,3 +44,8 @@ let noEditColor: UIColor = UIColor.green
 let constraintRectangle = "rectangle"
 let constraintEllipse = "ellipse"
 let constraintPolygon = "polygon"
+
+let htmlHeader = "<!DOCTYPE html><html>\n" +
+    "<head><script type=\"text/javascript\" async src=\"MathJax-2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\"></script></head>\n" +
+    "<body style=\"font-size:16pt; text-align:justify;\">"
+let htmlFooter = "</body></html>"
