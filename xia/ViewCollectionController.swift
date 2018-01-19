@@ -39,6 +39,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     var salt = "14876_"
     var currentDirs = rootDirs
     var toMove = [String]()
+    var dirsInSelection = 0
     
     @objc var selectedPhotos = [IndexPath]()
     
@@ -378,14 +379,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnBack.title = ""
             btnTrash.isEnabled = true
             btnTrash.tintColor = UIColor.white
-            btnExport.isEnabled = true
-            btnExport.tintColor = UIColor.white
-            btnEdit.isEnabled = true
-            btnEdit.tintColor = UIColor.white
-            btnCopy.isEnabled = true
-            btnCopy.tintColor = UIColor.white
             btnReorder.isEnabled = true
             btnReorder.tintColor = UIColor.white
+            btnEdit.isEnabled = true
+            btnEdit.tintColor = UIColor.white
+            btnExport.isEnabled = (dirsInSelection == 0) ? true : false
+            btnExport.tintColor = (dirsInSelection == 0) ? UIColor.white : buttonColor.withAlphaComponent(0)
+            btnCopy.isEnabled = (dirsInSelection == 0) ? true : false
+            btnCopy.tintColor = (dirsInSelection == 0) ? UIColor.white : buttonColor.withAlphaComponent(0)
             break
         case 2...9999:
             btnBack.isEnabled = false
@@ -393,14 +394,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnBack.title = ""
             btnTrash.isEnabled = true
             btnTrash.tintColor = UIColor.white
-            btnExport.isEnabled = false
-            btnExport.tintColor = buttonColor.withAlphaComponent(0)
-            btnEdit.isEnabled = false
-            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
-            btnCopy.isEnabled = false
-            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
             btnReorder.isEnabled = true
             btnReorder.tintColor = UIColor.white
+            btnEdit.isEnabled = false
+            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
+            btnExport.isEnabled = false
+            btnExport.tintColor = buttonColor.withAlphaComponent(0)
+            btnCopy.isEnabled = false
+            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
             break
         default:
             btnBack.isEnabled = (currentDirs["root"] == documentsDirectory) ? false : true
@@ -408,14 +409,14 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnBack.title = "< Back"
             btnTrash.isEnabled = false
             btnTrash.tintColor = buttonColor.withAlphaComponent(0)
-            btnExport.isEnabled = false
-            btnExport.tintColor = buttonColor.withAlphaComponent(0)
-            btnEdit.isEnabled = false
-            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
-            btnCopy.isEnabled = false
-            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
             btnReorder.isEnabled = false
             btnReorder.tintColor = buttonColor.withAlphaComponent(0)
+            btnEdit.isEnabled = false
+            btnEdit.tintColor = buttonColor.withAlphaComponent(0)
+            btnExport.isEnabled = false
+            btnExport.tintColor = buttonColor.withAlphaComponent(0)
+            btnCopy.isEnabled = false
+            btnCopy.tintColor = buttonColor.withAlphaComponent(0)
         }
     }
     
@@ -552,10 +553,16 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             let indexOfPhoto = selectedPhotos.index(of: path)
             selectedPhotos.remove(at: indexOfPhoto!)
             labelColor = UIColor.clear
+            if arrayNames[path.row].prefix(salt.count) == salt {
+                dirsInSelection = dirsInSelection - 1
+            }
         }
         else {
             selectedPhotos.append(path)
             labelColor = selectingColor
+            if arrayNames[path.row].prefix(salt.count) == salt {
+                dirsInSelection = dirsInSelection + 1
+            }
         }
         if let cell = CollectionView.cellForItem(at: path) {
             let customCell: PhotoThumbnail = cell as! PhotoThumbnail

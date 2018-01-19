@@ -182,14 +182,14 @@
                                                     <action selector="btnReorderAction:" destination="BYZ-38-t0r" id="QNN-UJ-6DB"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem systemItem="action" id="Vxz-4Q-6V9">
-                                                <connections>
-                                                    <action selector="btnExportAction:" destination="BYZ-38-t0r" id="Nyp-8d-bhH"/>
-                                                </connections>
-                                            </barButtonItem>
                                             <barButtonItem image="edit" id="fu4-Qn-UIB">
                                                 <connections>
                                                     <action selector="btnEditAction:" destination="BYZ-38-t0r" id="vkM-6c-OHY"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem systemItem="action" id="Vxz-4Q-6V9">
+                                                <connections>
+                                                    <action selector="btnExportAction:" destination="BYZ-38-t0r" id="Nyp-8d-bhH"/>
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem image="copy" id="8Zd-W4-NtK">
