@@ -90,9 +90,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet var btnExport: UIBarButtonItem!
     @IBAction func btnExportAction(_ sender: AnyObject) {
         segueIndex = (selectedPhotos[0] as NSIndexPath).row
-        if arrayNames[segueIndex].prefix(salt.count) != salt {
-            performSegue(withIdentifier: "export", sender: self)
-        }
+        performSegue(withIdentifier: "export", sender: self)
     }
     
     @IBOutlet var btnEdit: UIBarButtonItem!
@@ -332,7 +330,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         else if arrayNames.count > 0 {
-            let xmlToSegue = getXML("\(currentDirs["xml"]!)/\(arrayNames[segueIndex]).xml")
+            let xmlToSegue = ( arrayNames[segueIndex].prefix(salt.count) != salt ) ? getXML("\(currentDirs["xml"]!)/\(arrayNames[segueIndex]).xml") : AEXMLDocument()
             let nameToSegue = "\(arrayNames[segueIndex])"
             if (segue.identifier == "viewLargePhoto") {
                 endEdit()
@@ -365,6 +363,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     controller.xml = xmlToSegue
                     controller.ViewCollection = self
                     controller.currentDirs = currentDirs
+                    controller.salt = salt
                 }
             }
         }
@@ -383,8 +382,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             btnReorder.tintColor = UIColor.white
             btnEdit.isEnabled = true
             btnEdit.tintColor = UIColor.white
-            btnExport.isEnabled = (dirsInSelection == 0) ? true : false
-            btnExport.tintColor = (dirsInSelection == 0) ? UIColor.white : buttonColor.withAlphaComponent(0)
+            btnExport.isEnabled = true
+            btnExport.tintColor = UIColor.white
             btnCopy.isEnabled = (dirsInSelection == 0) ? true : false
             btnCopy.tintColor = (dirsInSelection == 0) ? UIColor.white : buttonColor.withAlphaComponent(0)
             break

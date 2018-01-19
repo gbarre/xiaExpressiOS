@@ -57,6 +57,11 @@
         <target>Source :</target>
         <note>Class = "UILabel"; text = "Source:"; ObjectID = "72e-zG-aQJ";</note>
       </trans-unit>
+      <trans-unit id="468-yu-PQP.text">
+        <source>Zip</source>
+        <target>Zip</target>
+        <note>Class = "UILabel"; text = "Zip"; ObjectID = "468-yu-PQP";</note>
+      </trans-unit>
       <trans-unit id="AFw-Te-aYH.text">
         <source>Identifier:</source>
         <target>Identifiant :</target>
@@ -166,6 +171,11 @@
         <source>Label</source>
         <target>Label</target>
         <note>Class = "UILabel"; text = "Label"; ObjectID = "VlB-Ig-h1b";</note>
+      </trans-unit>
+      <trans-unit id="Wb6-GD-lim.headerTitle">
+        <source>File</source>
+        <target>Fichier</target>
+        <note>Class = "UITableViewSection"; headerTitle = "File"; ObjectID = "Wb6-GD-lim";</note>
       </trans-unit>
       <trans-unit id="ZDz-3U-gFM.title">
         <source>Title</source>
@@ -281,6 +291,11 @@
         <source>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</source>
         <target>Texte...</target>
         <note>Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "vF0-pf-13y";</note>
+      </trans-unit>
+      <trans-unit id="wgb-nz-iMj.headerTitle">
+        <source>Directory</source>
+        <target>Dossier</target>
+        <note>Class = "UITableViewSection"; headerTitle = "Directory"; ObjectID = "wgb-nz-iMj";</note>
       </trans-unit>
       <trans-unit id="xod-8C-OKb.title">
         <source>Play Xia</source>
@@ -408,6 +423,11 @@
         <target>Description...</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
+      <trans-unit id="DIRECTORY">
+        <source>DIRECTORY</source>
+        <target>Dossier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="DONE">
         <source>DONE</source>
         <target>Terminer</target>
@@ -441,6 +461,11 @@
       <trans-unit id="ERROR">
         <source>ERROR</source>
         <target>Erreur</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="FILE">
+        <source>FILE</source>
+        <target>Fichier</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="FILES_SELECTED">
@@ -650,6 +675,11 @@
         <target>Description...</target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
+      <trans-unit id="DIRECTORY">
+        <source>DIRECTORY</source>
+        <target>Dossier</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
       <trans-unit id="DONE">
         <source>DONE</source>
         <target>Terminer</target>
@@ -683,6 +713,11 @@
       <trans-unit id="ERROR">
         <source>ERROR</source>
         <target>Erreur</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="FILE">
+        <source>FILE</source>
+        <target>Fichier></target>
         <note>No comment provided by engineer.</note>
       </trans-unit>
       <trans-unit id="FILES_SELECTED">

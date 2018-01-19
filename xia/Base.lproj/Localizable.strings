@@ -54,6 +54,10 @@
 "RESERVED" = "Reserved name!";
 "ALREADY_EXIST" = "Folder already exist!";
 
+// ViewExport.swift
+"FILE" = "File";
+"DIRECTORY" = "Directory";
+
 // ViewCreateDetails.swift
 "DETAIL" = "Detail ";
 "RECTANGLE" = "Rectangle";

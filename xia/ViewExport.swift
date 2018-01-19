@@ -20,6 +20,7 @@
 //
 
 import UIKit
+import SSZipArchive
 
 class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate {
     
@@ -34,21 +35,67 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     var tmpFilePath: String = ""
     weak var ViewCollection: ViewCollectionController?
     var currentDirs = rootDirs
+    var salt = "14876_"
+    
+    let sectionsElements: [String] = [NSLocalizedString("FILE", comment: ""), NSLocalizedString("DIRECTORY", comment: "")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        img = UIImage(contentsOfFile: "\(currentDirs["images"]!)/\(fileName).jpg")!
+        if fileName.prefix(salt.count) != salt {
+            img = UIImage(contentsOfFile: "\(currentDirs["images"]!)/\(fileName).jpg")!
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        let fileCase = (fileName.prefix(salt.count) != salt) ? true : false
+        switch (indexPath as NSIndexPath).section {
+        case 0:
+            switch (indexPath as NSIndexPath).row {
+            case 0:
+                return fileCase
+            case 1:
+                return fileCase
+            default:
+                return false
+            }
+        case 1:
+            return !fileCase
+        default:
+            return false
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch (indexPath as NSIndexPath).row {
+        dbg.pt("\(indexPath)")
+        switch (indexPath as NSIndexPath).section {
         case 0:
-            exportSimpleXML()
+            switch (indexPath as NSIndexPath).row {
+            case 0:
+                exportSimpleXML()
+                break
+            case 1:
+                exportSVG()
+                break
+            default:
+                break
+            }
         case 1:
-            exportSVG()
+            exportZip()
         default:
-            dbg.pt("oups...")
+            break
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let returnedView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 25))
+        returnedView.backgroundColor = selectingColor
+        
+        let label = UILabel(frame: CGRect(x: 10, y: 2, width: view.frame.size.width, height: 25))
+        label.text = sectionsElements[section]
+        label.textColor = .black
+        returnedView.addSubview(label)
+        
+        return returnedView
     }
     
     func exportSimpleXML() {
@@ -388,6 +435,16 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
         
         openDocumentInteractionController(tmpFilePath)
+    }
+    
+    func exportZip() {
+        let cleanName = fileName.suffix(fileName.count - salt.count)
+        dbg.pt("\(cleanName)")
+        tmpFilePath = NSHomeDirectory() + "/tmp/\(cleanName).zip"
+        let zip = SSZipArchive.createZipFile(atPath: tmpFilePath, withContentsOfDirectory: "\(currentDirs["root"]!)/\(cleanName)")
+        dbg.pt("\(zip)")
+        openDocumentInteractionController(tmpFilePath)
+        
     }
     
     func getElementValue(_ element: String) -> String {
