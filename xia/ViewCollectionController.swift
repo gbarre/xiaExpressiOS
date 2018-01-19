@@ -144,8 +144,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 
                 let fileManager = FileManager.default
                 do {
-                    try fileManager.copyItem(atPath: "\(imagesDirectory)/\(selectedPhoto).jpg", toPath: "\(imagesDirectory)/\(now).jpg")
-                    try fileManager.copyItem(atPath: "\(xmlDirectory)/\(selectedPhoto).xml", toPath: "\(xmlDirectory)/\(now).xml")
+                    try fileManager.copyItem(atPath: "\(self.currentDirs["images"]!)/\(selectedPhoto).jpg", toPath: "\(self.currentDirs["images"]!)/\(now).jpg")
+                    try fileManager.copyItem(atPath: "\(self.currentDirs["xml"]!)/\(selectedPhoto).xml", toPath: "\(self.currentDirs["xml"]!)/\(now).xml")
                 }
                 catch let error as NSError {
                     dbg.pt(error.localizedDescription)
