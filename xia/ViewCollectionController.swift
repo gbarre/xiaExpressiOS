@@ -51,6 +51,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         currentDirs = getDirs(root: dir)
         CollectionView.reloadData()
         buildLeftNavbarItems(0)
+        navBarTitle.title = (currentDirs["root"]! == documentsDirectory) ? "Xia" : "Xia (\(getDirName(path: currentDirs["root"]!)))"
     }
     
     @IBOutlet var btnTrash: UIBarButtonItem!
@@ -608,7 +609,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         navBar.barTintColor = blueColor
         self.view.backgroundColor = blueColor
         navBar.tintColor = UIColor.white
-        navBarTitle.title = "Xia"
+        navBarTitle.title = (currentDirs["root"]! == documentsDirectory) ? "Xia" : "Xia (\(getDirName(path: currentDirs["root"]!)))"
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         
         // Put the StatusBar in white
@@ -662,6 +663,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 currentDirs = getDirs(root: "\(oldRoot!)/\(dirName)")
                 CollectionView.reloadData()
                 buildLeftNavbarItems(0)
+                navBarTitle.title = (currentDirs["root"]! == documentsDirectory) ? "Xia" : "Xia (\(getDirName(path: currentDirs["root"]!)))"
             }
             else {
                 let xmlToSegue = getXML("\(currentDirs["xml"]!)/\(arrayNames[segueIndex]).xml")

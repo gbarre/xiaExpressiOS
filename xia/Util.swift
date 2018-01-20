@@ -172,6 +172,16 @@ func getCenter() -> CGPoint{
     return point
 }
 
+func getDirName(path: String) -> String {
+    var dirName = path
+    var ret = ""
+    while dirName.suffix(1) != "/" {
+        ret = String(dirName.suffix(1)) + ret
+        dirName = String(dirName.prefix(dirName.count - 1))
+    }
+    return ret
+}
+
 func getDirs(root: String) -> [String: String] {
     return ["root": root, "images": "\(root)/images", "xml": "\(root)/xml"]
 }

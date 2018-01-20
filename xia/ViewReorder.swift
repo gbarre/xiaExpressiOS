@@ -138,7 +138,6 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
     
     func getchildsDirs(root: String) -> [String] {
-        print("root: " + root)
         var returnDirs = (root == documentsDirectory) ? [String]() : [".."]
         let fileManager = FileManager.default
         do {
@@ -163,18 +162,6 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
         } catch let error as NSError {
             dbg.pt(error.localizedDescription)
         }
-        dbg.ptLine()
-        print(returnDirs)
         return returnDirs
-    }
-    
-    func getDirName(path: String) -> String {
-        var dirName = path
-        var ret = ""
-        while dirName.suffix(1) != "/" {
-            ret = String(dirName.suffix(1)) + ret
-            dirName = String(dirName.prefix(dirName.count - 1))
-        }
-        return ret
     }
 }
