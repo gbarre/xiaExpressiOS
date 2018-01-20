@@ -204,7 +204,13 @@
                                                     <action selector="btnEdit:" destination="BYZ-38-t0r" id="Pak-jt-bKh"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem systemItem="add" id="5Zb-O2-v5O"/>
+                                            <barButtonItem systemItem="add" id="5Zb-O2-v5O">
+                                                <connections>
+                                                    <segue destination="CGO-w3-Ght" kind="popoverPresentation" identifier="Add" popoverAnchorBarButtonItem="5Zb-O2-v5O" id="c8e-ms-43C">
+                                                        <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                                                    </segue>
+                                                </connections>
+                                            </barButtonItem>
                                             <barButtonItem systemItem="organize" id="dAY-cY-U0Z">
                                                 <connections>
                                                     <action selector="btnDirsAction:" destination="BYZ-38-t0r" id="Pkv-ff-KQb"/>
@@ -756,7 +762,7 @@
                                                 <action selector="btnCancel:" destination="cwz-uV-RB1" id="49V-5j-hfx"/>
                                             </connections>
                                         </barButtonItem>
-                                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Detail title..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="i3A-TS-Y6z">
+                                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Detail title..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="i3A-TS-Y6z">
                                             <rect key="frame" x="326.5" y="7" width="127" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -1393,23 +1399,78 @@
             </objects>
             <point key="canvasLocation" x="927.53906249999989" y="2550.78125"/>
         </scene>
-        <!--Image Picker Controller-->
-        <scene sceneID="Pdt-i5-2zK">
+        <!--View Menu Add Resource-->
+        <scene sceneID="COi-sZ-KTU">
             <objects>
-                <viewController id="99H-qy-rZh" customClass="UIImagePickerController" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="formSheet" id="CGO-w3-Ght" customClass="ViewMenuAddResource" customModule="xia" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Omd-VS-iEM"/>
-                        <viewControllerLayoutGuide type="bottom" id="8ec-aj-Ttb"/>
+                        <viewControllerLayoutGuide type="top" id="r5s-AQ-hy0"/>
+                        <viewControllerLayoutGuide type="bottom" id="wWt-ZV-609"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="bzr-wV-4DS">
-                        <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
+                    <view key="view" contentMode="scaleToFill" id="V10-de-8t8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="04b-io-1Nm">
+                                <rect key="frame" x="-4" y="41" width="383" height="580"/>
+                                <connections>
+                                    <segue destination="W2E-WB-1Ww" kind="embed" id="SqB-jI-Cjn"/>
+                                </connections>
+                            </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kqi-IX-fBi">
+                                <rect key="frame" x="-4" y="622" width="383" height="45"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="G1t-BM-xrf"/>
+                                </constraints>
+                                <state key="normal" title="Take a photo"/>
+                                <connections>
+                                    <action selector="takePhoto:" destination="CGO-w3-Ght" eventType="touchUpInside" id="3to-AD-eW3"/>
+                                </connections>
+                            </button>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Zw-QR-L3X">
+                                <rect key="frame" x="-4" y="8" width="383" height="44"/>
+                                <items>
+                                    <navigationItem title="Create new document" id="i48-s0-n2P"/>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="wWt-ZV-609" firstAttribute="top" secondItem="04b-io-1Nm" secondAttribute="bottom" constant="46" id="6JT-f6-RDd"/>
+                            <constraint firstItem="wWt-ZV-609" firstAttribute="top" secondItem="Kqi-IX-fBi" secondAttribute="bottom" id="DKt-YW-EzS"/>
+                            <constraint firstItem="5Zw-QR-L3X" firstAttribute="top" secondItem="r5s-AQ-hy0" secondAttribute="bottom" constant="8" id="FUx-w0-eeG"/>
+                            <constraint firstItem="5Zw-QR-L3X" firstAttribute="leading" secondItem="V10-de-8t8" secondAttribute="leadingMargin" constant="-20" id="HCn-a6-dhZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Kqi-IX-fBi" secondAttribute="trailing" constant="-20" id="JnA-k4-d6A"/>
+                            <constraint firstItem="5Zw-QR-L3X" firstAttribute="top" secondItem="r5s-AQ-hy0" secondAttribute="bottom" constant="8" id="Ouo-9g-pc0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="04b-io-1Nm" secondAttribute="trailing" constant="-20" id="Qpt-Le-TPM"/>
+                            <constraint firstItem="Kqi-IX-fBi" firstAttribute="leading" secondItem="V10-de-8t8" secondAttribute="leadingMargin" constant="-20" id="Qyh-aP-BiH"/>
+                            <constraint firstItem="04b-io-1Nm" firstAttribute="leading" secondItem="V10-de-8t8" secondAttribute="leadingMargin" constant="-20" id="fff-ap-tbI"/>
+                            <constraint firstItem="04b-io-1Nm" firstAttribute="top" secondItem="5Zw-QR-L3X" secondAttribute="bottom" constant="-11" id="lSw-y8-9KG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5Zw-QR-L3X" secondAttribute="trailing" constant="-20" id="ve6-fx-eVC"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="912-mf-UDt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2239" y="-855"/>
+        </scene>
+        <!--Image Picker Controller-->
+        <scene sceneID="8se-iQ-KtG">
+            <objects>
+                <viewController id="W2E-WB-1Ww" customClass="UIImagePickerController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="QFx-vr-43t"/>
+                        <viewControllerLayoutGuide type="bottom" id="i7L-GO-7u7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="61g-33-Qtq">
+                        <rect key="frame" x="0.0" y="0.0" width="383" height="580"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dbN-CK-MkR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ehm-bs-6dd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2678" y="-855"/>
+            <point key="canvasLocation" x="2970" y="-855"/>
         </scene>
     </scenes>
     <resources>
