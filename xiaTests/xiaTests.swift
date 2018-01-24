@@ -52,6 +52,18 @@ class xiaTests: XCTestCase {
         XCTAssertEqual(output2, expectedOutput)
     }
     
+    func testUtilGetDirName() {
+        let output = getDirName(path: "/doc1/doc2/doc3")
+        let expextedOutput: String = "doc3"
+        XCTAssertEqual(output, expextedOutput)
+    }
+    
+    func testUtilGetParentDir() {
+        let output = getParentDir(currentDir: "/doc1/doc2/doc3")
+        let expextedOutput: String = "/doc1/doc2"
+        XCTAssertEqual(output, expextedOutput)
+    }
+    
     func testUtilPointInPolygon() {
         // point in
         let outputIn = pointInPolygon(multiplePointsDetail.points, touchPoint: CGPoint(x: 130, y: 140))

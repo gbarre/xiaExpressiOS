@@ -438,10 +438,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     func exportZip() {
         let cleanName = fileName.suffix(fileName.count - salt.count)
-        dbg.pt("\(cleanName)")
         tmpFilePath = NSHomeDirectory() + "/tmp/\(cleanName).zip"
-        let zip = SSZipArchive.createZipFile(atPath: tmpFilePath, withContentsOfDirectory: "\(currentDirs["root"]!)/\(cleanName)")
-        dbg.pt("\(zip)")
+        let _ = SSZipArchive.createZipFile(atPath: tmpFilePath, withContentsOfDirectory: "\(currentDirs["root"]!)/\(cleanName)")
         openDocumentInteractionController(tmpFilePath)
         
     }
