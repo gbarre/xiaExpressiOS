@@ -206,6 +206,15 @@ func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
     return (check) ? checkXML(xml) : xml
 }
 
+func lineGenerator(file:UnsafeMutablePointer<FILE>) -> AnyIterator<String> {
+    return AnyIterator { () -> String? in
+        var line:UnsafeMutablePointer<CChar>? = nil
+        var linecap:Int = 0
+        defer { free(line) }
+        return getline(&line, &linecap, file) > 0 ? String(cString:line!) : nil
+    }
+}
+
 func pointInPolygon(_ points: [Int: UIImageView], touchPoint: CGPoint) -> Bool {
     // translate from C : http://alienryderflex.com/polygon/
     let polyCorners = points.count

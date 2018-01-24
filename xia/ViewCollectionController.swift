@@ -189,6 +189,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     @IBOutlet var navBarTitle: UINavigationItem!
+    @IBOutlet weak var btnImports: UIBarButtonItem!
     
     @IBOutlet weak var btnDirs: UIBarButtonItem!
     @IBAction func btnDirsAction(_ sender: Any) {
@@ -262,6 +263,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         buildLeftNavbarItems()
         // Put the StatusBar in white
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        btnImports.isEnabled = false
+        btnImports.tintColor = blueColor.withAlphaComponent(0)
         
         // add observer to detect enter foreground and rebuild collection
         NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
@@ -717,6 +721,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 // Start to import the file
                 if fileManager.fileExists(atPath: importingPath) {
                     self.displayAlert(title: "Import", message: "Starting import... Continue to work")
+                    self.btnImports.isEnabled = true
+                    self.btnImports.tintColor = UIColor.white
                     DispatchQueue.global(qos: .background).async {
                         let importResult = self.importXML(importFilePath: importingPath)
                         
@@ -727,6 +733,9 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                             } else {
                                 self.displayAlert(title: "Import", message: "Error at import")
                             }
+                            self.btnImports.isEnabled = false
+                            self.btnImports.tintColor = blueColor.withAlphaComponent(0)
+                            
                         }
                     }
                 }

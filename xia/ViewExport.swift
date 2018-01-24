@@ -66,7 +66,6 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dbg.pt("\(indexPath)")
         switch (indexPath as NSIndexPath).section {
         case 0:
             switch (indexPath as NSIndexPath).row {
@@ -457,6 +456,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     }
     
     func openDocumentInteractionController(_ url: String) {
+        self.preferredContentSize = CGSize(width: 500, height: 600)
         // Show native export controller
         docController = UIDocumentInteractionController(url: URL(fileURLWithPath: url))
         docController.delegate = self

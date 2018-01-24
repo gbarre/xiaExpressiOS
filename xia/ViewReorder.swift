@@ -94,7 +94,8 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         btnSelect.isEnabled = (currentDirs["root"]! != originalDir)
-        
+        let height = (childDirs.count + 1) * 45
+        self.preferredContentSize = CGSize(width: 300, height: height)
         return childDirs.count
     }
 
