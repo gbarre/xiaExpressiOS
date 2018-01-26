@@ -32,7 +32,9 @@ let xmlElements: [String] = ["title", "description", "creator",
 let documentsDirectory: String = NSHomeDirectory() + "/Documents"
 let imagesDirectory: String = documentsDirectory + "/images"
 let xmlDirectory: String = documentsDirectory + "/xml"
+let localDatasDirectory: String = documentsDirectory + "/localDatas"
 let rootDirs: [String: String] = ["root": documentsDirectory, "images": imagesDirectory, "xml": xmlDirectory]
+let reservedDirs: [String] = ["images", "xml", "Inbox", "localDatas"]
 
 let dbPath = documentsDirectory + "/oembed.plist"
 let importPath = documentsDirectory + "/importFile.xml"

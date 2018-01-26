@@ -85,16 +85,9 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let returnedView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 25))
-        returnedView.backgroundColor = selectingColor
-        
-        let label = UILabel(frame: CGRect(x: 10, y: 2, width: view.frame.size.width, height: 25))
-        label.text = sectionsElements[section]
-        label.textColor = .black
-        returnedView.addSubview(label)
-        
-        return returnedView
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let title = sectionsElements[section]
+        return title.firstUppercased
     }
     
     func exportSimpleXML() {

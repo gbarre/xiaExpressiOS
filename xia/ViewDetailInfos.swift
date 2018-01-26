@@ -110,6 +110,17 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         txtDesc.setContentOffset(CGPoint(x: 0, y: -txtDesc.contentInset.top), animated: false)
     }
     
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "addMedia") {
+            if let controller:ViewTableLocalDatas = segue.destination as? ViewTableLocalDatas {
+                controller.ViewDetailInfosController = self
+                controller.cursorPosition = txtDesc.selectedTextRange
+            }
+        }
+     }
+    
     func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
         let descText = NSMutableString()
         descText.append(attrString.string)

@@ -144,20 +144,13 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
         do {
             let dirs = try fileManager.contentsOfDirectory(atPath: root)
             for dir in dirs {
-                switch dir {
-                case "Inbox":
-                    break
-                case "oembed.plist":
-                    break
-                case "xml":
-                    break
-                case "images":
-                    break
-                default:
+                if reservedDirs.contains(dir) || dir == "oembed.plist" {
+                    continue
+                }
+                else {
                     if !toMove.contains(salt+dir) {
                         returnDirs.append(dir)
                     }
-                    break
                 }
             }
         } catch let error as NSError {

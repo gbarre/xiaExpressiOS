@@ -438,6 +438,8 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                     break
                 case "xml":
                     break
+                case "localDatas":
+                    break
                 case "images":
                     let files = fileManager.enumerator(atPath: currentDirs["images"]!)
                     while let fileObject = files?.nextObject() {
@@ -582,7 +584,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             return false
-        } else if dirName == "images" || dirName == "xml" || dirName == "Inbox" {
+        } else if reservedDirs.contains(dirName) {
             let alert = UIAlertController(title: NSLocalizedString("WARNING", comment: ""), message: NSLocalizedString("RESERVED", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -819,6 +821,16 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 try fileManager.createDirectory(atPath: imagesPath, withIntermediateDirectories: false, attributes: nil)
                 try fileManager.createDirectory(atPath: xmlPath, withIntermediateDirectories: false, attributes: nil)
                 dbg.pt("create directories")
+            } catch let error as NSError {
+                dbg.pt(error.localizedDescription)
+            }
+        }
+        let localPath = url.appendingPathComponent("localDatas").path
+        if (!fileManager.fileExists(atPath: localPath)) {
+            do { // Add local dir & sub-dirs
+                try fileManager.createDirectory(atPath: localPath + "/images", withIntermediateDirectories: true, attributes: nil)
+                try fileManager.createDirectory(atPath: localPath + "/videos", withIntermediateDirectories: true, attributes: nil)
+                try fileManager.createDirectory(atPath: localPath + "/audios", withIntermediateDirectories: true, attributes: nil)
             } catch let error as NSError {
                 dbg.pt(error.localizedDescription)
             }

@@ -280,4 +280,9 @@ extension String {
     var isAlphanumeric: Bool {
         return !isEmpty && range(of: "[^a-zA-Z0-9\\-\\_]", options: .regularExpression) == nil
     }
+    
+    var firstUppercased: String {
+        guard let first = first else { return "" }
+        return String(first).uppercased() + dropFirst()
+    }
 }
