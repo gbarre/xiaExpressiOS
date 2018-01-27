@@ -63,7 +63,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         let _ = xmlSimpleXML["XiaiPad"].addChild("image", value: trimmedBase64String, attributes: nil)
         
         // write xml to temp directory
-        let tempTitle = cleanInput(getElementValue("title"))
+        let tmpTitle = cleanInput(getElementValue("title"))
+        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle
         tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).xml"
         do {
             try xmlSimpleXML.xmlString.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
@@ -84,7 +85,8 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
         
-        let tempTitle = cleanInput(getElementValue("title"))
+        let tmpTitle = cleanInput(getElementValue("title"))
+        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle
         
         // prepare xml
         let xmlAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
