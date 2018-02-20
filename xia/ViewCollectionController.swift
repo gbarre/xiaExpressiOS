@@ -826,13 +826,20 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             }
         }
         let localPath = url.appendingPathComponent("localDatas").path
+        let subLocals = ["/images", "/videos", "/audios"]
         if (!fileManager.fileExists(atPath: localPath)) {
             do { // Add local dir & sub-dirs
-                try fileManager.createDirectory(atPath: localPath + "/images", withIntermediateDirectories: true, attributes: nil)
-                try fileManager.createDirectory(atPath: localPath + "/videos", withIntermediateDirectories: true, attributes: nil)
-                try fileManager.createDirectory(atPath: localPath + "/audios", withIntermediateDirectories: true, attributes: nil)
+                for subLocal in subLocals {
+                    try fileManager.createDirectory(atPath: localPath + subLocal, withIntermediateDirectories: true, attributes: nil)
+                }
             } catch let error as NSError {
                 dbg.pt(error.localizedDescription)
+            }
+        } else {
+            for subLocal in subLocals {
+                if fileManager.fileExists(atPath: localPath + subLocal + "/.DS_Store") {
+                    try? fileManager.removeItem(atPath: localPath + subLocal + "/.DS_Store")
+                }
             }
         }
         // move files to their directory
