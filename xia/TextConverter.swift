@@ -62,7 +62,7 @@ class TextConverter: NSObject {
         } else {
             htmlString = showCustomLinks(inText: htmlString)
         }
-        //dbg.pt(htmlString)
+        dbg.pt(htmlString)
         
         return htmlString
     }
@@ -70,7 +70,7 @@ class TextConverter: NSObject {
     func replaceURL(inText: String!, updateDB: Bool) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "(^|\\ |\\<br \\/\\>)(https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: "(^|\\ |\\<br \\/\\>)(((https?|ftp|file):\\/)|\\.)\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
@@ -122,6 +122,31 @@ class TextConverter: NSObject {
                     // center iframe
                     htmlCode = "<center>" + htmlCode + "</center>"
                     output = output?.replacingOccurrences(of: cleanResult, with: htmlCode)
+                } else if (cleanResult.prefix(2) == "./") {
+                    let filePath = localDatasDirectory + "/" + cleanResult.suffix(cleanResult.count - 2)
+                    if cleanResult.suffix(3) == "JPG" || cleanResult.suffix(3) == "jpg" {
+                        if FileManager.default.fileExists(atPath: filePath) {
+                            let img = UIImage(contentsOfFile: filePath)!
+                            let imageData = UIImageJPEGRepresentation(img, 85)
+                            let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
+                            output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"data:image/jpeg;base64,\(base64String)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
+                        }
+                    } else if cleanResult.suffix(3) == "PNG" || cleanResult.suffix(3) == "png" {
+                        if FileManager.default.fileExists(atPath: filePath) {
+                            let img = UIImage(contentsOfFile: filePath)!
+                            let imageData = UIImagePNGRepresentation(img)
+                            let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
+                            output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"data:image/png;base64,\(base64String)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
+                        }
+                    } else if cleanResult.suffix(3) == "MP4" || cleanResult.suffix(3) == "mp4" || cleanResult.suffix(3) == "MOV" || cleanResult.suffix(3) == "mov" {
+                        let videoData = NSData(contentsOf: URL(fileURLWithPath: filePath))
+                        let base64String = videoData?.base64EncodedString(options: .lineLength76Characters)
+                        output = output?.replacingOccurrences(of: cleanResult, with: "<video controls width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"data:video/mp4;base64,\(base64String ?? "")\"><source type=\"video/mov\" src=\"data:video/mov;base64,\(base64String ?? "")\"></video>")
+                    } else if cleanResult.suffix(3) == "M4A" || cleanResult.suffix(3) == "m4a" || cleanResult.suffix(3) == "MP3" || cleanResult.suffix(3) == "mp3" {
+                        let audioData = NSData(contentsOf: URL(fileURLWithPath: filePath))
+                        let base64String = audioData?.base64EncodedString(options: .lineLength76Characters)
+                        output = output?.replacingOccurrences(of: cleanResult, with: "<audio controls><source type=\"audio/mpeg\" src=\"data:audio/mp3;base64,\(base64String ?? "")\" /><source type=\"audio/m4a\" src=\"data:audio/m4a;base64,\(base64String ?? "")\" /></audio>")
+                    }
                 } else if (cleanResult.range(of: "\\.(mp3|ogg|m4a)", options: .regularExpression) != nil) {
                     let audioUrl = showAudio(url: cleanResult)
                     output = output?.replacingOccurrences(of: cleanResult, with: audioUrl)
