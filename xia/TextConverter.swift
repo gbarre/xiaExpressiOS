@@ -71,7 +71,7 @@ class TextConverter: NSObject {
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://oembedproxy.funraiders.io/?"
+            let baseURL = "https://oembedproxy.backbone.education/?"
             
             // init local db
             let db = jsonDB(p: dbPath)
