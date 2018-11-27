@@ -100,7 +100,7 @@ open class AEXMLElement: NSObject {
     // MARK: XML Read
     
     /// This element name is used when unable to find element.
-    @objc open static let errorElementName = "AEXMLError"
+    @objc public static let errorElementName = "AEXMLError"
     
     // The first element with given name **(AEXMLError element if not exists)**.
     @objc open subscript(key: String) -> AEXMLElement {
@@ -287,13 +287,13 @@ open class AEXMLDocument: AEXMLElement {
     // MARK: Properties
     
     /// This is only used for XML Document header (default value is 1.0).
-    @objc open let version: Double
+    @objc public let version: Double
     
     /// This is only used for XML Document header (default value is "utf-8").
-    @objc open let encoding: String
+    @objc public let encoding: String
     
     /// This is only used for XML Document header (default value is "no").
-    @objc open let standalone: String
+    @objc public let standalone: String
     
     /// Root (the first child element) element of XML Document **(AEXMLError element if not exists)**.
     @objc open var root: AEXMLElement { return children.count == 1 ? children.first! : AEXMLElement(name: AEXMLElement.errorElementName, value: "XML Document must have root element.") }

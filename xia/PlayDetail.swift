@@ -255,7 +255,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         DispatchQueue.main.asyncAfter(deadline: delayTime){
             self.imgArea.isHidden = true
         }
-        dbg.ptLine()
+        /*dbg.ptLine()
         dbg.pt("currentCenter : \(currentCenter)")
         dbg.pt("detailScale : \(detailScale)")
         dbg.pt("currentScale : \(currentScale)")
@@ -264,7 +264,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, UIWeb
         dbg.pt("currentDetailFrame : \(currentDetailFrame)")
         dbg.pt("getCenter() : \(getCenter())")
         dbg.pt("xCoord : \(xCoord)")
-        dbg.pt("yCoord : \(yCoord)")
+        dbg.pt("yCoord : \(yCoord)")*/
         //dbg.pt(" : \()")
     }
     
