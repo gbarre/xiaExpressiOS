@@ -59,7 +59,7 @@ internal class AEXMLParser: NSObject, XMLParserDelegate {
         /*currentValue += string
         let newValue = currentValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         currentElement?.value = newValue == String() ? nil : newValue*/
-        currentValue.append(string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))
+        currentValue.append(string.trimmingCharacters(in: CharacterSet.newlines))
         currentElement?.value = currentValue.isEmpty ? nil : currentValue
     }
     
