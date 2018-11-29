@@ -1,1 +1,3 @@
 /* No Localized Strings */
+NSCameraUsageDescription = "Les photos prises seront copiées pour être enrichies avec des éléments dynamiques";
+NSPhotoLibraryUsageDescription = "Les photos choisies seront copiées pour être enrichies avec des éléments dynamiques";

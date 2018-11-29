@@ -48,9 +48,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera Access</string>
+	<string>The photos taken will be copied to be enriched with dynamic elements</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photos Access</string>
+	<string>The selected photos will be copied to be enriched with dynamic elements</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
