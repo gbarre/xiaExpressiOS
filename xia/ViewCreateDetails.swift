@@ -80,7 +80,6 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UIApplication.shared.statusBarStyle = .lightContent
         myToolbar.layer.zPosition = 999
         imgTopBarBkgd.layer.zPosition = 100
         imgTopBarBkgd.isHidden = false
@@ -97,6 +96,11 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
         doubleTapGesture.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTapGesture)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        // Put the StatusBar in white
+        return .lightContent
     }
     
     override func viewWillAppear(_ animated: Bool) {

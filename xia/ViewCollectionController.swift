@@ -261,8 +261,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         migrateDatas()
         // Hide left navbar buttons
         buildLeftNavbarItems()
-        // Put the StatusBar in white
-        UIApplication.shared.statusBarStyle = .lightContent
         
         btnImports.isEnabled = false
         btnImports.tintColor = blueColor.withAlphaComponent(0)
@@ -285,20 +283,21 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        // Put the StatusBar in white
+        return .lightContent
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
     @objc func applicationWillEnterForeground(_ notification: Notification) {
-        // Put the StatusBar in white
-        UIApplication.shared.statusBarStyle = .lightContent
         startImport()
         self.CollectionView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // Put the StatusBar in white
-        UIApplication.shared.statusBarStyle = .lightContent
         self.navigationController!.hidesBarsOnTap = false
         salt = "\(arc4random_uniform(100000))_"
         startImport()
@@ -307,13 +306,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidAppear(_ animated: Bool) {
         self.CollectionView.reloadData()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -617,9 +609,6 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         navBar.tintColor = UIColor.white
         navBarTitle.title = (currentDirs["root"]! == documentsDirectory) ? "Xia" : "Xia (\(getDirName(path: currentDirs["root"]!)))"
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-        
-        // Put the StatusBar in white
-        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     @objc func deleteFiles(_ path: IndexPath) {

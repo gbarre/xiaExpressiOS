@@ -86,9 +86,9 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         // Put the StatusBar in white
-        UIApplication.shared.statusBarStyle = .lightContent
+        return .lightContent
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
