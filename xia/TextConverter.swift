@@ -33,28 +33,28 @@ class TextConverter: NSObject {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(fatalErrorInit)
     }
     
     func _text2html(inText: String) -> String {
         var htmlString = inText
         
-        htmlString = htmlString.replacingOccurrences(of: "&", with: "&amp;")
-        htmlString = htmlString.replacingOccurrences(of: "<", with: "&lt;")
-        htmlString = htmlString.replacingOccurrences(of: ">", with: "&gt;")
-        htmlString = htmlString.replacingOccurrences(of: "\n", with: "<br />")
+        htmlString = htmlString.replacingOccurrences(of: ampersandString, with: htmlAmpersandString)
+        htmlString = htmlString.replacingOccurrences(of: lowerChevronString, with: htmlLowerChevronString)
+        htmlString = htmlString.replacingOccurrences(of: upperChevronString, with: htmlUpperChevronString)
+        htmlString = htmlString.replacingOccurrences(of: breakLineString, with: htmlBreakLineString)
         
         htmlString = pikipikiToHTML(text: htmlString)
         
-        htmlString = htmlString.replacingOccurrences(of: "}}}", with: "")
+        htmlString = htmlString.replacingOccurrences(of: String(repeating: closingBraceString, count: 3), with: emptyString)
         
         let defaults = UserDefaults.standard
-        let offline = defaults.bool(forKey: "offline")
-        let useCache = defaults.bool(forKey: "useCache")
+        let offline = defaults.bool(forKey: offlineKey)
+        let useCache = defaults.bool(forKey: useCacheKey)
         
         if Reachability.isConnectedToNetwork() && !offline {
             
-            // we have "Internet", have fun !
+            // we have Internet, have fun !
             htmlString = replaceURL(inText: htmlString, updateDB: useCache)
             
             htmlString = showCustomLinks(inText: htmlString)
@@ -62,7 +62,7 @@ class TextConverter: NSObject {
         } else {
             htmlString = showCustomLinks(inText: htmlString)
         }
-        dbg.pt(htmlString)
+        //debugPrint(htmlString)
         
         return htmlString
     }
@@ -70,95 +70,69 @@ class TextConverter: NSObject {
     func replaceURL(inText: String!, updateDB: Bool) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "(^|\\ |\\<br \\/\\>)(((https?|ftp|file):\\/)|\\.)\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: urlRegex, options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
-            let baseURL = "https://oembedproxy.backbone.education/?"
             
             // init local db
             let db = jsonDB(p: dbPath)
             db.getDict()
             
             for result in arrayResults { // browse all urls
-                var cleanResult = result.replacingOccurrences(of: "<br />", with: "")
-                cleanResult = cleanResult.replacingOccurrences(of: " ", with: "")
+                var cleanResult = result.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
+                cleanResult = cleanResult.replacingOccurrences(of: spaceString, with: emptyString)
                 
-                let urlString = "url=\(cleanResult)"
                 // look in local db for json
                 var dictJson = db.getJson(url: cleanResult)
-                if (dictJson == ["nothing": "here"]) {
-                    let datasJson = getJSON(urlToRequest: baseURL + urlString)
+                if (dictJson == nothingHereDictionary) {
+                    let datasJson = getJSON(urlToRequest: oembedProxyUrl + cleanResult)
                     dictJson = parseJSON(inputData: datasJson)
                     if (updateDB) {
                         db.insert(url: cleanResult, json: dictJson)
                     }
                 }
                 
-                var htmlCode = dictJson["html"]! as! String
+                var htmlCode = dictJson[htmlKey]! as! String
                 
-                if (htmlCode != "Please insert correct URL") {
-                    let providerName = dictJson["provider_name"]! as! String
+                if (htmlCode != pleaseInsertCorrectUrlString) {
                     htmlCode = solveSrcPb(htmlCode)
-                    // video / image resizing
-                    if (providerName != "Instagram" && providerName != "Twitter") {
-                        var jsonWidth: CGFloat;
-                        var jsonHeight: CGFloat;
-                        if (providerName.contains("WebTV de") || providerName.contains("Audio Lingua") || providerName.contains("Flickr")) {
-                            jsonWidth = convertStringToCGFloat(dictJson["width"]! as! String)
-                            jsonHeight = convertStringToCGFloat(dictJson["height"]! as! String)
-                        } else {
-                            jsonWidth = dictJson["width"]! as! CGFloat
-                            jsonHeight = dictJson["height"]! as! CGFloat
-                        }
-                        let scaleX = videoWidth / jsonWidth
-                        let scaleY = videoHeight / jsonHeight
-                        let scale = min(min(scaleX, scaleY), 1)
-                        let newWidth = Int(jsonWidth * scale)
-                        let newHeight = Int(jsonHeight * scale)
-                        htmlCode = htmlCode.replacingOccurrences(of: "width=\"\(jsonWidth)\"", with: "width=\"\(newWidth)\"");
-                        htmlCode = htmlCode.replacingOccurrences(of: "height=\"\(jsonHeight)\"", with: "height=\"\(newHeight)\"");
-                    }
+                    
                     // center iframe
-                    htmlCode = "<center>" + htmlCode + "</center>"
+                    htmlCode = String(format: htmlCenterString, htmlCode)
                     output = output?.replacingOccurrences(of: cleanResult, with: htmlCode)
-                } else if (cleanResult.prefix(2) == "./") {
-                    let filePath = localDatasDirectory + "/" + cleanResult.suffix(cleanResult.count - 2)
-                    if cleanResult.suffix(3) == "JPG" || cleanResult.suffix(3) == "jpg" {
+                } else if (cleanResult.prefix(2) == localDirString) {
+                    let filePath = localDatasDirectory + separatorString + String(cleanResult.suffix(cleanResult.count - 2))
+                    if cleanResult.suffix(4).lowercased() == jpgExtension {
                         if FileManager.default.fileExists(atPath: filePath) {
                             let img = UIImage(contentsOfFile: filePath)!
                             let imageData = UIImageJPEGRepresentation(img, 85)
                             let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
-                            output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"data:image/jpeg;base64,\(base64String)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
+                            output = output?.replacingOccurrences(of: cleanResult,
+                                                                  with: String(format: htmlImgString, jpgB64String + base64String, cleanResult, videoWidth))
                         }
-                    } else if cleanResult.suffix(3) == "PNG" || cleanResult.suffix(3) == "png" {
+                    } else if cleanResult.suffix(4).lowercased() == pngExtension {
                         if FileManager.default.fileExists(atPath: filePath) {
                             let img = UIImage(contentsOfFile: filePath)!
                             let imageData = UIImagePNGRepresentation(img)
                             let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
-                            output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"data:image/png;base64,\(base64String)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
+                            output = output?.replacingOccurrences(of: cleanResult,
+                                                                  with: String(format: htmlImgString, pngB64String + base64String, cleanResult, videoWidth))
                         }
-                    } else if cleanResult.suffix(3) == "MP4" || cleanResult.suffix(3) == "mp4" || cleanResult.suffix(3) == "MOV" || cleanResult.suffix(3) == "mov" {
-                        let videoData = NSData(contentsOf: URL(fileURLWithPath: filePath))
-                        let base64String = videoData?.base64EncodedString(options: .lineLength76Characters)
-                        output = output?.replacingOccurrences(of: cleanResult, with: "<video controls width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"data:video/mp4;base64,\(base64String ?? "")\"><source type=\"video/mov\" src=\"data:video/mov;base64,\(base64String ?? "")\"></video>")
-                    } else if cleanResult.suffix(3) == "M4A" || cleanResult.suffix(3) == "m4a" || cleanResult.suffix(3) == "MP3" || cleanResult.suffix(3) == "mp3" {
-                        let audioData = NSData(contentsOf: URL(fileURLWithPath: filePath))
-                        let base64String = audioData?.base64EncodedString(options: .lineLength76Characters)
-                        output = output?.replacingOccurrences(of: cleanResult, with: "<audio controls><source type=\"audio/mpeg\" src=\"data:audio/mp3;base64,\(base64String ?? "")\" /><source type=\"audio/m4a\" src=\"data:audio/m4a;base64,\(base64String ?? "")\" /></audio>")
                     }
-                } else if (cleanResult.range(of: "\\.(mp3|ogg|m4a)", options: .regularExpression) != nil) {
+                } else if (cleanResult.range(of: audioExtentionRegex, options: .regularExpression) != nil) {
                     let audioUrl = showAudio(url: cleanResult)
                     output = output?.replacingOccurrences(of: cleanResult, with: audioUrl)
-                } else if (cleanResult.range(of: "\\.(jpg|jpeg|gif|png)", options: .regularExpression) != nil) {
-                    output = output?.replacingOccurrences(of: cleanResult, with: "<img src=\"\(cleanResult)\" alt=\"\(cleanResult)\" style=\"max-width: \(videoWidth)px;\" />")
-                } else if (cleanResult.range(of: "\\.(mp4|ogv|webm)", options: .regularExpression) != nil) {
+                } else if (cleanResult.range(of: imageExtentionRegex, options: .regularExpression) != nil) {
+                    output = output?.replacingOccurrences(of: cleanResult,
+                                                          with: String(format: htmlImgString, cleanResult, cleanResult, videoWidth))
+                } else if (cleanResult.range(of: videoExtentionRegex, options: .regularExpression) != nil) {
                     let videoUrl = showVideo(url: cleanResult)
                     output = output?.replacingOccurrences(of: cleanResult, with: videoUrl)
                 }
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         return output!
     }
@@ -168,7 +142,7 @@ class TextConverter: NSObject {
             let data = try Data(contentsOf: URL(string: urlToRequest)!)
             return data
         } catch {
-            let string = "{\"html\": \"Please insert correct URL\"}"
+            let string = errorJSONString
             return string.data(using: .utf8)!
         }
     }
@@ -178,7 +152,7 @@ class TextConverter: NSObject {
         do {
             boardsDictionary = try JSONSerialization.jsonObject(with: inputData, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         return boardsDictionary
     }
@@ -187,100 +161,100 @@ class TextConverter: NSObject {
         var output = text
         // Make bold
         do {
-            let regex = try NSRegularExpression(pattern: "(\\*){3}((?!\\*{3}).)*\\*{3}", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: boldRegex, options: .caseInsensitive)
             let nsString = output as NSString
             let results = regex.matches(in: output, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
             for result in arrayResults {
-                let cleanResult = result.replacingOccurrences(of: "***", with: "")
-                output = output.replacingOccurrences(of: result, with: "<b>\(cleanResult)</b>")
+                let cleanResult = result.replacingOccurrences(of: String(repeating: jokerString, count: 3), with: emptyString)
+                output = output.replacingOccurrences(of: result, with: String(format: htmlBoldString, cleanResult))
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         
         // Make emphasize
         do {
-            let regex = try NSRegularExpression(pattern: "(\\*){2}((?!\\*{2}).)*\\*{2}", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: emphasizeRegex, options: .caseInsensitive)
             let nsString = output as NSString
             let results = regex.matches(in: output, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
             for result in arrayResults {
-                let cleanResult = result.replacingOccurrences(of: "**", with: "")
-                output = output.replacingOccurrences(of: result, with: "<em>\(cleanResult)</em>")
+                let cleanResult = result.replacingOccurrences(of: String(repeating: jokerString, count: 2), with: emptyString)
+                output = output.replacingOccurrences(of: result, with: String(format: htmlEmphasizeString, cleanResult))
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         
         // Make pre-formatted
         do {
-            let regex = try NSRegularExpression(pattern: "(\\{){3}((?!\\{{3}).)*\\}{3}", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: preformattedRegex, options: .caseInsensitive)
             let nsString = output as NSString
             let results = regex.matches(in: output, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
             for result in arrayResults {
-                var cleanResult = result.replacingOccurrences(of: "{{{", with: "")
-                cleanResult = cleanResult.replacingOccurrences(of: "}}}", with: "")
-                output = output.replacingOccurrences(of: result, with: "<pre>\n\(cleanResult)</pre>\n")
+                let cleanResult = result.replacingOccurrences(of: String(repeating: openingBraceString, count: 3), with: emptyString)
+                    .replacingOccurrences(of: String(repeating: closingBraceString, count: 3), with: emptyString)
+                output = output.replacingOccurrences(of: result, with: String(format: htmlPreFormattedString, cleanResult))
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         
         // Make line
-        output = output.replacingOccurrences(of: "-----", with: "<hr size=3/>")
-        output = output.replacingOccurrences(of: "----", with: "<hr/>")
+        output = output.replacingOccurrences(of: String(repeating: dashString, count: 5), with: htmlLineBigString)
+            .replacingOccurrences(of: String(repeating: dashString, count: 4), with: htmlLineString)
         
         // Make list line by line
-        let outputArray = output.components(separatedBy: "<br />")
+        let outputArray = output.components(separatedBy: htmlBreakLineString)
         let nbLines = outputArray.count
         var onLine = 0
         var levelList = [Int:Bool]()
-        var previousLine = ""
+        var previousLine = emptyString
         for line in outputArray {
             var replace = line
-            if line.count > 6 && line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 5)] != "<br />" {
-                replace = line.replacingOccurrences(of: "<br />", with: "")
+            if line.count > 6 && line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 5)] != htmlBreakLineString {
+                replace = line.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
                 if onLine == nbLines {
                     if (levelList[1] == true) {
                         levelList[1] = false
-                        output = output + "</li>\n\t</ul>\n" + line
+                        output = output + htmlListCloseLevel2String + line
                     }
                     if (levelList[0] == true) {
                         levelList[0] = false
-                        output = output + "</li>\n\t</ul>\n" + line
+                        output = output + htmlListCloseLevel2String + line
                     }
                 }
-                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] != " * " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] != spaceString + jokerString + spaceString {
                     if (levelList[1] == true) {
                         levelList[1] = false
-                        replace = "</li>\n\t</ul>\n" + line
+                        replace = htmlListCloseLevel2String + line
                     }
                 }
-                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] != "* " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] != jokerString + spaceString {
                     if (levelList[0] == true && levelList[1] == false) {
                         levelList[0] = false
-                        replace = "</li></ul>\n" + line
+                        replace = htmlListCloseLevel1String + line
                     }
                 }
-                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] == "* " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 1)] == jokerString + spaceString {
                     if (levelList[0] == nil) {
                         levelList[0] = true
-                        replace = "<ul>\n\t<li>"
+                        replace = htmlListOpenLevel1String
                     }
                     else {
-                        replace = "</li>\n<li>"
+                        replace = htmlListCloseOpenString
                     }
                     replace = replace + line[line.index(line.startIndex, offsetBy: 2)...line.index(before: line.endIndex)]
                 }
-                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] == " * " {
+                if line[line.index(line.startIndex, offsetBy: 0)...line.index(line.startIndex, offsetBy: 2)] == spaceString + jokerString + spaceString {
                     if (levelList[1] == nil) {
                         levelList[1] = true
-                        replace = "<ul>\n\t<li>"
+                        replace = htmlListOpenLevel1String
                     }
                     else {
-                        replace = "\t<li>"
+                        replace = htmlListOpenString
                     }
                     replace = replace + line[line.index(line.startIndex, offsetBy: 3)...line.index(before: line.endIndex)]
                 }
@@ -290,12 +264,12 @@ class TextConverter: NSObject {
             else {
                 if (levelList[1] == true) {
                     levelList[1] = false
-                    replace = previousLine + "</li>\n\t</ul></li>\n</ul>\n" + line
+                    replace = previousLine + htmlListCloseAtEndLevel2String + line
                     output = output.replacingOccurrences(of: previousLine, with: replace)
                 }
                 else if (levelList[0] == true) {
                     levelList[0] = false
-                    replace = previousLine + "</li>\n</ul>\n" + line
+                    replace = previousLine + htmlListCloseAtEndLevel1String + line
                     output = output.replacingOccurrences(of: previousLine, with: replace)
                 }
                 previousLine = line
@@ -307,42 +281,42 @@ class TextConverter: NSObject {
     }
     
     func showAudio(url: String) -> String {
-        let mp3Result = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".mp3", options:NSString.CompareOptions.regularExpression, range: nil)
-        let oggResult = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".ogg", options:NSString.CompareOptions.regularExpression, range: nil)
-        let m4aResult = url.replacingOccurrences(of: "\\.(mp3|ogg|m4a)( autostart)?", with: ".m4a", options:NSString.CompareOptions.regularExpression, range: nil)
+        let mp3Result = url.replacingOccurrences(of: audioAutoRegex, with: mp3Extension, options:NSString.CompareOptions.regularExpression, range: nil)
+        let oggResult = url.replacingOccurrences(of: audioAutoRegex, with: oggExtension, options:NSString.CompareOptions.regularExpression, range: nil)
+        let m4aResult = url.replacingOccurrences(of: audioAutoRegex, with: m4aExtension, options:NSString.CompareOptions.regularExpression, range: nil)
         
-        return "<center><audio controls><source type=\"audio/mpeg\" src=\"\(mp3Result)\" /><source type=\"audio/ogg\" src=\"\(oggResult)\" /><source type=\"audio/m4a\" src=\"\(m4aResult)\" /></audio></center>"
+        return String(format: htmlCenterString, String(format: htmlAudioString, mp3Result, oggResult, m4aResult))
     }
     
     func showCustomLinks(inText: String) -> String {
         var output = inText
         do {
-            let regex = try NSRegularExpression(pattern: "\\[https?:\\/{2}((?! ).)* *((?!\\]).)*\\]", options: .caseInsensitive)
+            let regex = try NSRegularExpression(pattern: customLinkRegex, options: .caseInsensitive)
             let nsString = inText as NSString
             let results = regex.matches(in: inText, options: [], range: NSMakeRange(0, nsString.length))
             let arrayResults = results.map {nsString.substring(with: $0.range)}
             for result in arrayResults {
-                let text = result.replacingOccurrences(of: "\\[|\\]", with: "", options:NSString.CompareOptions.regularExpression, range: nil)
-                let urlEndRange: NSRange = (text as NSString).range(of: " ")
+                let text = result.replacingOccurrences(of: hookRegex, with: emptyString, options:NSString.CompareOptions.regularExpression, range: nil)
+                let urlEndRange: NSRange = (text as NSString).range(of: spaceString)
                 let url = (urlEndRange.length == 1) ? String(text[text.index(text.startIndex, offsetBy: 0)...text.index(text.startIndex, offsetBy: urlEndRange.location - 1)]) : text
                 let linkText = (urlEndRange.length == 1) ? String(text[text.index(text.startIndex, offsetBy: urlEndRange.location+1)...text.index(before: text.endIndex)]) : text
-                let replaceString = "<a href=\"\(url)\">\(linkText)</a>";
+                let replaceString = String(format: htmlLinkString, url, linkText)
                 output = output.replacingOccurrences(of: result, with: replaceString)
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         return output
     }
     
     func showVideo(url: String) -> String {
-        let mp4Result = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".mp4", options:NSString.CompareOptions.regularExpression, range: nil)
-        let ogvResult = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".ogv", options:NSString.CompareOptions.regularExpression, range: nil)
-        let webmResult = url.replacingOccurrences(of: "\\.(mp4|ogv|webm)", with: ".webm", options:NSString.CompareOptions.regularExpression, range: nil)
-        return "<center><video controls preload=\"none\" width=\"\(videoWidth)\" height=\"\(videoHeight)\"><source type=\"video/mp4\" src=\"\(mp4Result)\" /><source type=\"video/ogg\" src=\"\(ogvResult)\" /><source type=\"video/webm\" src=\"\(webmResult)\" /></video></center>";
+        let mp4Result = url.replacingOccurrences(of: videoRegex, with: mp4Extension, options:NSString.CompareOptions.regularExpression, range: nil)
+        let ogvResult = url.replacingOccurrences(of: videoRegex, with: ogvExtension, options:NSString.CompareOptions.regularExpression, range: nil)
+        let webmResult = url.replacingOccurrences(of: videoRegex, with: webmExtension, options:NSString.CompareOptions.regularExpression, range: nil)
+        return String(format: htmlCenterString, String(format: htmlVideoString, videoWidth, videoHeight, mp4Result, ogvResult, webmResult))
     }
     
-    func solveSrcPb(_ intext: String, s: String = "s") -> String {
-        return intext.replacingOccurrences(of: "src=\"//", with: "src=\"http\(s)://")
+    func solveSrcPb(_ intext: String, s: String = sString) -> String {
+        return intext.replacingOccurrences(of: srcRegex, with: String(format: srcReplaceString, s))
     }
 }

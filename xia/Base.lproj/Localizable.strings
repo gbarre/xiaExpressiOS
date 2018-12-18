@@ -53,6 +53,9 @@
 "EMPTY" = "Please type something!";
 "RESERVED" = "Reserved name!";
 "ALREADY_EXIST" = "Folder already exist!";
+"IMPORT" = "Import";
+"IMPORT_SUCCESSFULL" = "The file has been successfully imported.";
+"IMPORT_ERROR" = "Something went wrong while importing. Please be sure the file is correct.";
 
 // ViewExport.swift
 "FILE" = "File";
@@ -75,3 +78,5 @@
 "TRY_AGAIN" = "Please, try again...";
 "DOUBLE_CHECK" = "Type again please";
 
+// ViewPicker.swift
+"CHOOSE_FILENAME" = "Choose file name";

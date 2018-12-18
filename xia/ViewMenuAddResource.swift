@@ -41,8 +41,8 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         }
         else{
             //no camera available
-            let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("NO_CAMERA", comment: ""), preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: {(alertAction)in
+            let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(noCameraKey, comment: emptyString), preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: .default, handler: {(alertAction)in
                 alert.dismiss(animated: true, completion: nil)
             }))
             self.present(alert, animated: true, completion: nil)
@@ -57,18 +57,18 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let now: Int = Int(Date().timeIntervalSince1970)
         let imageData = UIImageJPEGRepresentation(image!, 85)
-        try? imageData?.write(to: URL(fileURLWithPath: currentDirs["images"]! + "/\(now).jpg"), options: [.atomic])
+        try? imageData?.write(to: URL(fileURLWithPath: currentDirs[imagesString]! + separatorString + String(now) + jpgExtension), options: [.atomic])
         
         // Create associated xml
         let xml = AEXMLDocument()
-        let xmlString = xml.createXML("\(now)")
+        let xmlAsString = xml.createXML(String(now))
         do {
-            try xmlString.write(toFile: currentDirs["xml"]! + "/\(now).xml", atomically: false, encoding: String.Encoding.utf8)
+            try xmlAsString.write(toFile: currentDirs[xmlString]! + separatorString + String(now) + xmlExtension, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
-        ViewCollection!.arrayNames.append("\(now)")
+        ViewCollection!.arrayNames.append(String(now))
         
         // copy the image in the library
         if newMedia {

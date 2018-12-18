@@ -26,23 +26,23 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     var docController:UIDocumentInteractionController!
     
-    var fileName: String = ""
+    var fileName: String = emptyString
     var xml: AEXMLDocument = AEXMLDocument()
     var img = UIImage()
     
     var xmlSimpleXML: AEXMLDocument = AEXMLDocument()
     var xmlSVG: AEXMLDocument = AEXMLDocument()
-    var tmpFilePath: String = ""
+    var tmpFilePath: String = emptyString
     weak var ViewCollection: ViewCollectionController?
     var currentDirs = rootDirs
-    var salt = "14876_"
+    var salt = defaultSalt
     
-    let sectionsElements: [String] = [NSLocalizedString("FILE", comment: ""), NSLocalizedString("DIRECTORY", comment: "")]
+    let sectionsElements: [String] = [NSLocalizedString(fileKey, comment: emptyString), NSLocalizedString(directoryKey, comment: emptyString)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if fileName.prefix(salt.count) != salt {
-            img = UIImage(contentsOfFile: "\(currentDirs["images"]!)/\(fileName).jpg")!
+            img = UIImage(contentsOfFile: currentDirs[imagesString]! + separatorString + fileName + jpgExtension)!
         }
     }
     
@@ -94,22 +94,22 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
         // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
-        let trimmedBase64String: String = base64String.replacingOccurrences(of: "\n", with: "")
+        let trimmedBase64String: String = base64String.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
         
         // prepare xml
-        let _ = xmlSimpleXML.addChild(name: "XiaiPad")
-        let _ = xmlSimpleXML["XiaiPad"].addChild(xml["xia"])
-        let _ = xmlSimpleXML["XiaiPad"].addChild(name: "image", value: trimmedBase64String)
+        let _ = xmlSimpleXML.addChild(name: xmlXiaIPadKey)
+        let _ = xmlSimpleXML[xmlXiaIPadKey].addChild(xml[xmlXiaKey])
+        let _ = xmlSimpleXML[xmlXiaIPadKey].addChild(name: xmlImageKey, value: trimmedBase64String)
         
         // write xml to temp directory
-        let tmpTitle = cleanInput(getElementValue("title"))
-        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle;
-        tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).xml"
+        let tmpTitle = cleanInput(getElementValue(titleKey))
+        let tempTitle = (tmpTitle == emptyString) ? fileName : tmpTitle;
+        tmpFilePath = NSHomeDirectory() + separatorString + tmpString + separatorString + tempTitle + xmlExtension
         do {
             try xmlSimpleXML.xml.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         
         openDocumentInteractionController(tmpFilePath)
@@ -119,252 +119,260 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
        // encode image to base64
         let imageData = UIImageJPEGRepresentation(img, 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
-        let trimmedBase64String = base64String.replacingOccurrences(of: "\n", with: "")
+        let trimmedBase64String = base64String.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
         
         // randomize svg id
         let svgID: UInt32 = arc4random_uniform(8999)
         
-        let tmpTitle = cleanInput(getElementValue("title"))
-        let tempTitle = (tmpTitle == "") ? fileName : tmpTitle;
+        let tmpTitle = cleanInput(getElementValue(titleKey))
+        let tempTitle = (tmpTitle == emptyString) ? fileName : tmpTitle;
         
         // prepare xml
-        let xmlAttributes = ["xmlns:dc" : "http://purl.org/dc/elements/1.1/",
-                             "xmlns:cc" : "http://creativecommons.org/ns#",
-                             "xmlns:rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                             "xmlns:svg" : "http://www.w3.org/2000/svg",
-                             "xmlns" : "http://www.w3.org/2000/svg",
-                             "xmlns:xlink" : "http://www.w3.org/1999/xlink",
-                             "xmlns:sodipodi" : "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
-                             "xmlns:inkscape" : "http://www.inkscape.org/namespaces/inkscape",
-                             "id" : "svg\(svgID)",
-                             "version" : "1.1",
-                             "inkscape:version" : "0.91",
-                             "width" : "\(img.size.width)",
-                             "height" : "\(img.size.height)",
-                             "viewBox" : "0 0 \(img.size.width) \(img.size.height)",
-                             "sodipodi:docname" : "\(tempTitle).svg"]
-        let _ = xmlSVG.addChild(name: "svg", value: "", attributes: xmlAttributes)
+        var xmlAttributes = xmlDefaultAttributes
+        xmlAttributes[svgIdKey] = svgString + String(svgID)
+        xmlAttributes[widthKey] = img.size.width.toString
+        xmlAttributes[heightKey] = img.size.height.toString
+        xmlAttributes[svgViewBoxKey] = zeroSpaceString + zeroSpaceString + img.size.width.toString + spaceString + img.size.height.toString
+        xmlAttributes[svgSodipodiDocnameKey] = tempTitle + svgExtension
+        
+        let _ = xmlSVG.addChild(name: svgString, value: emptyString, attributes: xmlAttributes)
         
         
-        let _ = xmlSVG["svg"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+1)"])
+        let _ = xmlSVG[svgRootKey].addChild(name: titleKey, value: getElementValue(titleKey), attributes: [svgIdKey : titleKey + String(svgID+1)])
         
         // Metas
-        let _ = xmlSVG["svg"].addChild(name: "metadata", value: "", attributes: ["id" : "metadata\(svgID+2)"])
-        let _ = xmlSVG["svg"]["metadata"].addChild(name: "rdf:RDF")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:Work", value: "", attributes: ["rdf:about" : ""])
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:format", value: "image/svg+xml")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:type", value: "", attributes: ["rdf:resource" : "http://purl.org/dc/dcmitype/StillImage"])
+        let _ = xmlSVG[svgRootKey].addChild(name: svgMetaDataKey, value: emptyString, attributes: [svgIdKey : svgMetaDataKey + String(svgID+2)])
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey].addChild(name: svgRDFKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey].addChild(name: svgCcWorkKey, value: emptyString, attributes: [svgRdfAboutKey : emptyString])
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcFormatKey, value: imgSvgXmlString)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcTypeKey, value: emptyString, attributes: dcTypeAttribute)
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:title", value: getElementValue("title"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcTitleKey, value: getElementValue(titleKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:date", value: getElementValue("date"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcDateKey, value: getElementValue(dateKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:creator")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"].addChild(name: "cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:creator"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("creator"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcCreatorKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcCreatorKey].addChild(name: svgCcAgentKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcCreatorKey][svgCcAgentKey].addChild(name: svgDcTitleKey, value: getElementValue(creatorKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:rights")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"].addChild(name: "cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:rights"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("rights"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcRightKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcRightKey].addChild(name: svgCcAgentKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcRightKey][svgCcAgentKey].addChild(name: svgDcTitleKey, value: getElementValue(rightsKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:publisher")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"].addChild(name: "cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:publisher"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("publisher"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcPublisherKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcPublisherKey].addChild(name: svgCcAgentKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcPublisherKey][svgCcAgentKey].addChild(name: svgDcTitleKey, value: getElementValue(publisherKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:identifier", value: getElementValue("identifier"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcIdentifierKey, value: getElementValue(identifierKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:source", value: getElementValue("source"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcSourceKey, value: getElementValue(sourceKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:relation", value: getElementValue("relation"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcRelationKey, value: getElementValue(relationKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:language", value: getElementValue("language"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcLanguageKey, value: getElementValue(languageKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:subject")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"].addChild(name: "rdf:Bag")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:subject"]["rdf:Bag"].addChild(name: "rdf:li", value: getElementValue("keywords"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcSubjectKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcSubjectKey].addChild(name: svgRdfBagKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcSubjectKey][svgRdfBagKey].addChild(name: svgRdfLiKey, value: getElementValue(keywordsKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:coverage", value: getElementValue("coverage"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcCoverageKey, value: getElementValue(coverageKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:description", value: getElementValue("description"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcDescriptionKey, value: getElementValue(descriptionKey))
         
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "dc:contributor")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"].addChild(name: "cc:Agent")
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"]["dc:contributor"]["cc:Agent"].addChild(name: "dc:title", value: getElementValue("contributor"))
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgDcContributorKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcContributorKey].addChild(name: svgCcAgentKey)
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey][svgDcContributorKey][svgCcAgentKey].addChild(name: svgDcTitleKey, value: getElementValue(contributorsKey))
         
-        let license = getElementValue("license")
+        let license = getElementValue(licenseKey)
         var addPermits: Bool = false
-        var permits: [String: String] = [
-            "Reproduction" : "none",
-            "Distribution" : "none",
-            "Notice" : "none",
-            "Attribution" : "none",
-            "CommercialUse" : "none",
-            "DerivativeWorks" : "none",
-            "ShareAlike" : "none"
-        ]
-        var rdfResource: String = ""
+        var permits = svgDefaultLicensePermits
+        
+        var rdfResource: String = emptyString
         switch license {
-        case "Proprietary - CC-Zero":
-            rdfResource = ""
+        case svgLicenseProprietaryKey:
+            rdfResource = emptyString
             addPermits = false
             break
-        case "CC Attribution - CC-BY":
-            rdfResource = "http://creativecommons.org/licenses/by/3.0/"
+        case svgLicenseCCBYKey:
+            rdfResource = urlCCBY
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["DerivativeWorks"] = "permits"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgDerivativeWorksKey] = permitsString
             break
-        case "CC Attribution-ShareALike - CC-BY-SA":
-            rdfResource = "http://creativecommons.org/licenses/by-sa/3.0/"
+        case svgLicenseCCBYSAKey:
+            rdfResource = urlCCBYSA
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["DerivativeWorks"] = "permits"
-            permits["ShareAlike"] = "requires"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgDerivativeWorksKey] = permitsString
+            permits[svgShareAlikeKey] = requiresString
             break
-        case "CC Attribution-NoDerivs - CC-BY-ND":
-            rdfResource = "http://creativecommons.org/licenses/by-nd/3.0/"
+        case svgLicenseCCBYNDKey:
+            rdfResource = urlCCBYND
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
             break
-        case "CC Attribution-NonCommercial - CC-BY-NC":
-            rdfResource = "http://creativecommons.org/licenses/by-nc/3.0/"
+        case svgLicenseCCBYNCKey:
+            rdfResource = urlCCBYNC
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["CommercialUse"] = "prohibits"
-            permits["DerivativeWorks"] = "permits"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgCommercialUseKey] = prohibitsString
+            permits[svgDerivativeWorksKey] = permitsString
             break
-        case "CC Attribution-NonCommercial-ShareALike - CC-BY-NC-SA":
-            rdfResource = "http://creativecommons.org/licenses/by-nc-sa/3.0/"
+        case svgLicenseCCBYNCSAKey:
+            rdfResource = urlCCBYNCSA
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["CommercialUse"] = "prohibits"
-            permits["DerivativeWorks"] = "permits"
-            permits["ShareAlike"] = "requires"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgCommercialUseKey] = prohibitsString
+            permits[svgDerivativeWorksKey] = permitsString
+            permits[svgShareAlikeKey] = requiresString
             break
-        case "CC Attribution-NonCommercial-NoDerivs - CC-BY-NC-ND":
-            rdfResource = "http://creativecommons.org/licenses/by-nc-nd/3.0/"
+        case svgLicenseCCBYNCNDKey:
+            rdfResource = urlCCBYNCNS
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["CommercialUse"] = "prohibits"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgCommercialUseKey] = prohibitsString
             break
-        case "CC0 Public Domain Dedication":
-            rdfResource = "http://creativecommons.org/publicdomain/zero/1.0/"
+        case svgLicenceCC0Key:
+            rdfResource = urlPublicDomain
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["DerivativeWorks"] = "permits"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgDerivativeWorksKey] = permitsString
             break
-        case "Free Art":
-            rdfResource = "http://artlibre.org/licence/lal"
+        case svgLicenceFreeArtKey:
+            rdfResource = urlFreeArt
             addPermits = true
-            permits["Reproduction"] = "permits"
-            permits["Distribution"] = "permits"
-            permits["Notice"] = "requires"
-            permits["Attribution"] = "requires"
-            permits["DerivativeWorks"] = "permits"
-            permits["ShareAlike"] = "requires"
+            permits[svgReproductionKey] = permitsString
+            permits[svgDistributionKey] = permitsString
+            permits[svgNoticeKey] = requiresString
+            permits[svgAttributionKey] = requiresString
+            permits[svgDerivativeWorksKey] = permitsString
+            permits[svgShareAlikeKey] = requiresString
             break
-        case "Open Font License":
-            rdfResource = "http://scripts.sil.org/OFL"
+        case svgLicenseOFLKey:
+            rdfResource = urlOFL
             addPermits = false
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:license", value: "", attributes: ["rdf:about" : rdfResource])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Reproduction"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Distribution"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Embedding"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeWorks"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Notice"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/Attribution"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/ShareAlike"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/DerivativeRenaming"])
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:permits", value: "", attributes: ["rdf:resource" : "http://scripts.sil.org/pub/OFL/BundlingWhenSelling"])
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey].addChild(name: svgCcLicenseKey, value: emptyString, attributes: [svgRdfAboutKey : rdfResource])
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgReproductionKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgDistributionKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgEmbeddingKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgDerivativeWorksKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgNoticeKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgAttributionKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgShareAlikeKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgDerivativeRenamingKey]
+            )
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(
+                name: svgCcPermitsKey,
+                value: emptyString,
+                attributes: [svgRdfResourceKey : urlOFL + separatorString + svgBundlingWhenSellingKey]
+            )
             break
-        case "Other":
-            rdfResource = ""
+        case svgLicenseOtherKey:
+            rdfResource = emptyString
             addPermits = false
             break
         default:
-            rdfResource = ""
+            rdfResource = emptyString
             addPermits = false
             break
         }
-        let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:Work"].addChild(name: "cc:license", value: "", attributes: ["rdf:resource" : rdfResource])
+        let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcWorkKey].addChild(name: svgCcLicenseKey, value: emptyString, attributes: [svgRdfResourceKey : rdfResource])
         if addPermits {
-            let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"].addChild(name: "cc:license", value: "", attributes: ["rdf:about" : rdfResource])
+            let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey].addChild(name: svgCcLicenseKey, value: emptyString, attributes: [svgRdfAboutKey : rdfResource])
             for (permit, state) in permits {
-                if state != "none" {
-                    let _ = xmlSVG["svg"]["metadata"]["rdf:RDF"]["cc:license"].addChild(name: "cc:\(state)", value: "", attributes: ["rdf:resource" : "http://creativecommons.org/ns#\(permit)"])
+                if state != noneString.lowercased() {
+                    let _ = xmlSVG[svgRootKey][svgMetaDataKey][svgRDFKey][svgCcLicenseKey].addChild(name: svgCC + state, value: emptyString, attributes: [svgRdfResourceKey : ccOrgNS + permit])
                 }
             }
         }
         
-        let _ = xmlSVG["svg"].addChild(name: "defs", value: "", attributes: ["id" : "defs\(svgID+3)"])
+        let _ = xmlSVG[svgRootKey].addChild(name: defsString, value: emptyString, attributes: [svgIdKey : defsString + String(svgID+3)])
         
-        let sodipodiAttributes = ["pagecolor" : "#ffffff",
-                                  "bordercolor" : "#666666",
-                                  "borderopacity" : "1",
-                                  "objecttolerance" : "10",
-                                  "gridtolerance" : "10",
-                                  "guidetolerance" : "10",
-                                  "inkscape:pageopacity" : "0",
-                                  "inkscape:pageshadow" : "2",
-                                  "inkscape:window-width" : "640",
-                                  "inkscape:window-height" : "480",
-                                  "id" : "namedview\(svgID+4)",
-                                  "showgrid" : "false",
-                                  "inkscape:zoom" : "0.25",
-                                  "inkscape:cx" : "640",
-                                  "inkscape:cy" : "480",
-                                  "inkscape:current-layer" : "svg\(svgID+5)"
+        var sodipodiAttributes = sodipodiDefaultAttributes
+        sodipodiAttributes[svgIdKey] = (sodipodiAttributes[svgIdKey])! + String(svgID+4)
+        sodipodiAttributes[svgInkscapeCurrentLayerKey] = (sodipodiAttributes[svgInkscapeCurrentLayerKey])! + String(svgID+5)
+        
+        let _ = xmlSVG[svgRootKey].addChild(name: svgSodipodiNamedviewKey, value: emptyString, attributes: sodipodiAttributes)
+        
+        let imageAttributes = [widthKey : img.size.width.toString,
+                               heightKey : img.size.height.toString,
+                               svgPreserveAspectRatioKey : noneString.lowercased(),
+                               svgXlinkHrefKey : jpgB64String + trimmedBase64String,
+                               svgIdKey : xmlImageKey + String(svgID+6)
         ]
-        let _ = xmlSVG["svg"].addChild(name: "sodipodi:namedview", value: "", attributes: sodipodiAttributes)
+        let _ = xmlSVG[svgRootKey].addChild(name: xmlImageKey, value: emptyString, attributes: imageAttributes)
         
-        let imageAttributes = ["width" : "\(img.size.width)",
-                               "height" : "\(img.size.height)",
-                               "preserveAspectRatio" : "none",
-                               "xlink:href" : "data:image/jpeg;base64,\(trimmedBase64String)",
-                               "id" : "image\(svgID+6)"
-        ]
-        let _ = xmlSVG["svg"].addChild(name: "image", value: "", attributes: imageAttributes)
+        let _ = xmlSVG[svgRootKey][xmlImageKey].addChild(name: svgDescKey, value: getElementValue(descriptionKey), attributes: [svgIdKey : svgDescKey + String(svgID+7)])
+        let _ = xmlSVG[svgRootKey][xmlImageKey].addChild(name: titleKey, value: getElementValue(titleKey), attributes: [svgIdKey : titleKey +  String(svgID+8)])
         
-        let _ = xmlSVG["svg"]["image"].addChild(name: "desc", value: getElementValue("description"), attributes: ["id" : "desc\(svgID+7)"])
-        let _ = xmlSVG["svg"]["image"].addChild(name: "title", value: getElementValue("title"), attributes: ["id" : "title\(svgID+8)"])
-        
-        if let xmlDetails = xml.root["details"]["detail"].all {
+        if let xmlDetails = xml.root[xmlDetailsKey][xmlDetailKey].all {
             for detail in xmlDetails {
-                let path = detail.attributes["path"]
-                let pointsArray = path!.split{$0 == " "}.map(String.init)
+                let path = detail.attributes[xmlPathKey]
+                let pointsArray = path!.split{$0 == spaceCharacter}.map(String.init)
                 
                 let currentDetail: AEXMLDocument = AEXMLDocument()
-                let detailTitle = (detail.attributes["title"] != nil) ? detail.attributes["title"]! : ""
-                let detailDescription = (detail.value != nil) ? detail.value! : ""
+                let detailTitle = (detail.attributes[xmlTitleKey] != nil) ? detail.attributes[xmlTitleKey]! : emptyString
+                let detailDescription = (detail.value != nil) ? detail.value! : emptyString
                 var detailType = constraintPolygon
                 var detailAttributes = [String:String]()
                 
-                if ( detail.attributes["constraint"] == constraintRectangle || detail.attributes["constraint"] == constraintEllipse ) {
-                    detailType = (detail.attributes["constraint"] == constraintRectangle) ? "rect" : constraintEllipse
+                if ( detail.attributes[xmlConstraintKey] == constraintRectangle || detail.attributes[xmlConstraintKey] == constraintEllipse ) {
+                    detailType = (detail.attributes[xmlConstraintKey] == constraintRectangle) ? rectString : constraintEllipse
                     var originPoint = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
                     var maxPoint = CGPoint(x: 0.0, y: 0.0)
                     
                     for point in pointsArray {
-                        let coords = point.split{$0 == ";"}.map(String.init)
+                        let coords = point.split{$0 == semicolonCharacter}.map(String.init)
                         let x = convertStringToCGFloat(coords[0])
                         let y = convertStringToCGFloat(coords[1])
                         if x < originPoint.x {
@@ -383,47 +391,55 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
                     let width: CGFloat = maxPoint.x - originPoint.x
                     let height: CGFloat = maxPoint.y - originPoint.y
                     
-                    let rectAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                                          "id" : "rect\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                                          "width" : "\(width)",
-                                          "height" : "\(height)",
-                                          "x" : "\(originPoint.x)",
-                                          "y" : "\(originPoint.y)"
+                    let rectAttributes = [styleString : svgDefaultStyle,
+                                          svgIdKey : rectString + String(Int(svgID) + Int(detail.attributes[tagString]!)!),
+                                          widthKey : width.toString,
+                                          heightKey : height.toString,
+                                          xString : originPoint.x.toString,
+                                          yString : originPoint.y.toString
                     ]
-                    let ellipseAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                                             "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                                             "cx" : "\(originPoint.x + width/2)",
-                                             "cy" : "\(originPoint.y + height/2)",
-                                             "rx" : "\(width/2)",
-                                             "ry" : "\(height/2)"
+                    let ellipseAttributes = [styleString : svgDefaultStyle,
+                                             svgIdKey : pathString + String(Int(svgID) + Int(detail.attributes[tagString]!)!),
+                                             cxString : (originPoint.x + width/2).toString,
+                                             cyString : (originPoint.y + height/2).toString,
+                                             rxString : (width/2).toString,
+                                             ryString : (height/2).toString
                     ]
                     
-                    detailAttributes = (detailType == "rect") ? rectAttributes : ellipseAttributes
+                    detailAttributes = (detailType == rectString) ? rectAttributes : ellipseAttributes
                 }
                 else {
-                    detailType = "path"
-                    detailAttributes = ["style" : "opacity:0.3;fill:#ff0000;stroke:#000000;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1",
-                                        "id" : "path\(Int(svgID) + Int(detail.attributes["tag"]!)!)",
-                                        "d" : "M \(path!.replacingOccurrences(of: ";", with: ",")) Z",
-                                        "inkscape:connector-curvature" : "0"
+                    detailType = pathString
+                    detailAttributes = [styleString : svgDefaultStyle,
+                                        svgIdKey : pathString + String(Int(svgID) + Int(detail.attributes[tagString]!)!),
+                                        dString : String(format: pathAttribute, path!.replacingOccurrences(of: semicolonString, with: commaString)),
+                                        svgInkscapeConnectorCurvatureKey : String(0)
                     ]
                 }
                 
                 let _ = currentDetail.addChild(name: detailType, attributes: detailAttributes)
-                let _ = currentDetail[detailType].addChild(name: "desc", value: detailDescription, attributes: ["id" : "desc\(Int(svgID) + Int(detail.attributes["tag"]!)! + 100)"])
-                let _ = currentDetail[detailType].addChild(name: "title", value: detailTitle, attributes: ["id" : "title\(Int(svgID) + Int(detail.attributes["tag"]!)! + 200)"])
+                let _ = currentDetail[detailType].addChild(
+                    name: svgDescKey,
+                    value: detailDescription,
+                    attributes: [svgIdKey : svgDescKey + String(Int(svgID) + Int(detail.attributes[tagString]!)! + 100)]
+                )
+                let _ = currentDetail[detailType].addChild(
+                    name: titleKey,
+                    value: detailTitle,
+                    attributes: [svgIdKey : titleKey + String(Int(svgID) + Int(detail.attributes[tagString]!)! + 200)]
+                )
                 
-                let _ = xmlSVG["svg"].addChild(currentDetail[detailType])
+                let _ = xmlSVG[svgRootKey].addChild(currentDetail[detailType])
             }
         }
         
         // write xml to temp directory
-        tmpFilePath = NSHomeDirectory() + "/tmp/\(tempTitle).svg"
+        tmpFilePath = NSHomeDirectory() + separatorString + tmpString + separatorString + tempTitle + svgExtension
         do {
             try xmlSVG.xml.write(toFile: tmpFilePath, atomically: false, encoding: String.Encoding.utf8)
         }
         catch {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         
         openDocumentInteractionController(tmpFilePath)
@@ -431,18 +447,18 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     func exportZip() {
         let cleanName = fileName.suffix(fileName.count - salt.count)
-        tmpFilePath = NSHomeDirectory() + "/tmp/\(cleanName).zip"
-        let _ = SSZipArchive.createZipFile(atPath: tmpFilePath, withContentsOfDirectory: "\(currentDirs["root"]!)/\(cleanName)")
+        tmpFilePath = NSHomeDirectory() + separatorString + tmpString + separatorString + cleanName + zipExtension
+        let _ = SSZipArchive.createZipFile(atPath: tmpFilePath, withContentsOfDirectory: currentDirs[rootString]! + separatorString + cleanName)
         openDocumentInteractionController(tmpFilePath)
         
     }
     
     func getElementValue(_ element: String) -> String {
-        if (xml["xia"][element].value != nil && xml["xia"][element].value! != "element <\(element)> not found") {
-            return xml["xia"][element].value!
+        if (xml[xmlXiaKey][element].value != nil && xml[xmlXiaKey][element].value! != String(format: xmlElementNotFound, element)) {
+            return xml[xmlXiaKey][element].value!
         }
         else {
-            return ""
+            return emptyString
         }
     }
     

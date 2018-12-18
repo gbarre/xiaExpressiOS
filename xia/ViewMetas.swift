@@ -25,30 +25,30 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     var readOnlyState: Bool = false
     var xml: AEXMLDocument = AEXMLDocument()
-    var fileName: String = ""
+    var fileName: String = emptyString
     var selectedSegment: Int = 0
     weak var ViewCollection: ViewCollectionController?
     weak var ViewCreateDetailsController: ViewCreateDetails?
     
-    var pass: String = ""
-    var selectedLicense: String = ""
+    var pass: String = emptyString
+    var selectedLicense: String = emptyString
     var showKbd: Bool = true
     var iPadPro: Bool = false
     
     var currentDirs = rootDirs
     
     let availableLicenses = [
-        "Proprietary - CC-Zero",
-        "CC Attribution - CC-BY",
-        "CC Attribution-ShareALike - CC-BY-SA",
-        "CC Attribution-NoDerivs - CC-BY-ND",
-        "CC Attribution-NonCommercial - CC-BY-NC",
-        "CC Attribution-NonCommercial-ShareALike - CC-BY-NC-SA",
-        "CC Attribution-NonCommercial-NoDerivs - CC-BY-NC-ND",
-        "CC0 Public Domain Dedication",
-        "Free Art",
-        "Open Font License",
-        "Other"
+        svgLicenseProprietaryKey,
+        svgLicenseCCBYKey,
+        svgLicenseCCBYSAKey,
+        svgLicenseCCBYNDKey,
+        svgLicenseCCBYNCKey,
+        svgLicenseCCBYNCSAKey,
+        svgLicenseCCBYNCNDKey,
+        svgLicenceCC0Key,
+        svgLicenceFreeArtKey,
+        svgLicenseOFLKey,
+        svgLicenseOtherKey
     ]
     
     @IBAction func btnCancel(_ sender: AnyObject) {
@@ -58,7 +58,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBAction func btnDone(_ sender: AnyObject) {
         prepareToWriteXML()
         
-        let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
+        let _ = writeXML(xml, path: currentDirs[xmlString]! + separatorString + fileName + xmlExtension)
         ViewCreateDetailsController?.fileTitle = (txtTitle.text == nil) ? fileName : txtTitle.text!
         ViewCreateDetailsController?.setBtnsIcons()
         ViewCollection?.buildLeftNavbarItems()
@@ -77,19 +77,19 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtTitle: UITextField!
     @IBOutlet var roSwitch: UISwitch!
     @IBAction func roBtnAction(_ sender: AnyObject) {
-        let passTitle = (readOnlyState) ? NSLocalizedString("ENTER_CODE", comment: "") : NSLocalizedString("CREATE_CODE", comment: "")
+        let passTitle = (readOnlyState) ? NSLocalizedString(enterCodeKey, comment: emptyString) : NSLocalizedString(createCodeKey, comment: emptyString)
         let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.alert)
         
         controller.addTextField(configurationHandler: {(textField: UITextField!) in
-            textField.placeholder = NSLocalizedString("PASSWORD", comment: "")
+            textField.placeholder = NSLocalizedString(passwordKey, comment: emptyString)
             textField.isSecureTextEntry = true  // setting the secured text for using password
             textField.keyboardType = UIKeyboardType.decimalPad
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
             self.roSwitch.isOn = self.readOnlyState
         }))
-        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
-            self.pass = (self.xml["xia"]["readonly"].attributes["code"] == nil) ? "" : self.xml["xia"]["readonly"].attributes["code"]!
+        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+            self.pass = (self.xml[xmlXiaKey][xmlreadonlyKey].attributes[xmlCodeKey] == nil) ? emptyString : self.xml[xmlXiaKey][xmlreadonlyKey].attributes[xmlCodeKey]!
             let currentPass = controller.textFields!.first!.text
             
             if self.readOnlyState {
@@ -97,8 +97,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     self.readOnlyState = !self.readOnlyState
                 }
                 else {
-                    let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.destructive, handler: { action in
+                    let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.destructive, handler: { action in
                         self.present(controller, animated: true, completion: nil)
                     }))
                     self.present(alert, animated: true, completion: nil)
@@ -106,30 +106,30 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             }
             else { // create password
                 // double check
-                let check = UIAlertController(title: NSLocalizedString("DOUBLE_CHECK", comment: ""), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                let check = UIAlertController(title: NSLocalizedString(doubleCheckKey, comment: emptyString), message: nil, preferredStyle: UIAlertControllerStyle.alert)
                 
                 check.addTextField(configurationHandler: {(checkPass: UITextField!) in
-                    checkPass.placeholder = NSLocalizedString("PASSWORD", comment: "")
+                    checkPass.placeholder = NSLocalizedString(passwordKey, comment: emptyString)
                     checkPass.isSecureTextEntry = true  // setting the secured text for using password
                     checkPass.keyboardType = UIKeyboardType.decimalPad
                 })
-                check.addAction(UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: UIAlertActionStyle.cancel, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
                     self.roSwitch.isOn = self.readOnlyState
                 }))
-                check.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
-                        self.pass = (currentPass == nil) ? "" : currentPass!
+                        self.pass = (currentPass == nil) ? emptyString : currentPass!
                         self.readOnlyState = !self.readOnlyState
                         
                         // save to xml
                         self.prepareToWriteXML()
-                        let _ = writeXML(self.xml, path: self.currentDirs["xml"]! + "/\(self.fileName).xml")
+                        let _ = writeXML(self.xml, path: self.currentDirs[xmlString]! + separatorString + self.fileName + xmlExtension)
                         
                     }
                     else {
-                        let alert = UIAlertController(title: NSLocalizedString("ERROR", comment: ""), message: NSLocalizedString("TRY_AGAIN", comment: ""), preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.destructive, handler: nil))
+                        let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.destructive, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }
                     
@@ -216,39 +216,39 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         var systemInfo = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let machineString = machineMirror.children.reduce("") { identifier, element in
+        let machineString = machineMirror.children.reduce(emptyString) { identifier, element in
             guard let value = element.value as? Int8 , value != 0 else { return identifier }
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
-        iPadPro = (machineString == "iPad6,7" || machineString == "iPad6,8") ? true : false
+        iPadPro = (machineString == iPad67String || machineString == iPad68String) ? true : false
         
         // First subview
         if selectedSegment == 0 {
             txtTitle.becomeFirstResponder()
         }
-        txtTitle.text = (xml["xia"]["title"].value != nil) ? xml["xia"]["title"].value : ""
-        navBar.topItem?.title = (txtTitle.text == "") ? fileName : txtTitle.text
-        readOnlyState = (xml["xia"]["readonly"].value == "true" ) ? true : false
+        txtTitle.text = (xml[xmlXiaKey][xmlTitleKey].value != nil) ? xml[xmlXiaKey][xmlTitleKey].value : emptyString
+        navBar.topItem?.title = (txtTitle.text == emptyString) ? fileName : txtTitle.text
+        readOnlyState = (xml[xmlXiaKey][xmlreadonlyKey].value == trueString ) ? true : false
         roSwitch.isOn = readOnlyState
-        showDetailSwitch.isOn = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        showDetailSwitch.isOn = (xml[xmlXiaKey][xmlDetailsKey].attributes[xmlShowKey] == trueString) ? true : false
         
-        txtDescription.text = (xml["xia"]["description"].value != nil) ? xml["xia"]["description"].value! : ""
+        txtDescription.text = (xml[xmlXiaKey][xmlDescriptionKey].value != nil) ? xml[xmlXiaKey][xmlDescriptionKey].value! : emptyString
         txtDescription.layer.cornerRadius = 5        
 
         // Second subview
-        txtCreator.text = (xml["xia"]["creator"].value != nil) ? xml["xia"]["creator"].value : ""
-        txtRights.text = (xml["xia"]["rights"].value != nil) ? xml["xia"]["rights"].value : ""
-        txtPublisher.text = (xml["xia"]["publisher"].value != nil) ? xml["xia"]["publisher"].value : ""
-        txtIdentifier.text = (xml["xia"]["identifier"].value != nil) ? xml["xia"]["identifier"].value : ""
-        txtSource.text = (xml["xia"]["source"].value != nil) ? xml["xia"]["source"].value : ""
+        txtCreator.text = (xml[xmlXiaKey][creatorKey].value != nil) ? xml[xmlXiaKey][creatorKey].value : emptyString
+        txtRights.text = (xml[xmlXiaKey][rightsKey].value != nil) ? xml[xmlXiaKey][rightsKey].value : emptyString
+        txtPublisher.text = (xml[xmlXiaKey][publisherKey].value != nil) ? xml[xmlXiaKey][publisherKey].value : emptyString
+        txtIdentifier.text = (xml[xmlXiaKey][identifierKey].value != nil) ? xml[xmlXiaKey][identifierKey].value : emptyString
+        txtSource.text = (xml[xmlXiaKey][sourceKey].value != nil) ? xml[xmlXiaKey][sourceKey].value : emptyString
         
         var detailDate = Date(timeIntervalSinceNow: TimeInterval(0))
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.none
-        if ( xml["xia"]["date"].value != nil && xml["xia"]["date"].value! != "element <date> not found"){
-            detailDate = (dateFormatter.date(from: xml["xia"]["date"].value!) != nil) ? dateFormatter.date(from: xml["xia"]["date"].value!)! : detailDate
-            txtDate.setTitle(xml["xia"]["date"].value!, for: UIControlState())
+        if ( xml[xmlXiaKey][dateKey].value != nil && xml[xmlXiaKey][dateKey].value! != String(format: xmlElementNotFound, dateKey) ){
+            detailDate = (dateFormatter.date(from: xml[xmlXiaKey][dateKey].value!) != nil) ? dateFormatter.date(from: xml[xmlXiaKey][dateKey].value!)! : detailDate
+            txtDate.setTitle(xml[xmlXiaKey][dateKey].value!, for: UIControlState())
         }
         else {
             let stringDate: String = dateFormatter.string(from: detailDate)
@@ -258,13 +258,13 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         datePicker.setDate(detailDate, animated: false)
         
         // Third subview
-        txtLanguages.text = (xml["xia"]["language"].value != nil) ? xml["xia"]["language"].value : ""
-        txtKeywords.text = (xml["xia"]["keywords"].value != nil) ? xml["xia"]["keywords"].value : ""
-        txtContributors.text = (xml["xia"]["contributors"].value != nil) ? xml["xia"]["contributors"].value : ""
-        txtRelation.text = (xml["xia"]["relation"].value != nil) ? xml["xia"]["relation"].value : ""
-        txtCoverage.text = (xml["xia"]["coverage"].value != nil) ? xml["xia"]["coverage"].value : ""
+        txtLanguages.text = (xml[xmlXiaKey][languageKey].value != nil) ? xml[xmlXiaKey][languageKey].value : emptyString
+        txtKeywords.text = (xml[xmlXiaKey][keywordsKey].value != nil) ? xml[xmlXiaKey][keywordsKey].value : emptyString
+        txtContributors.text = (xml[xmlXiaKey][contributorsKey].value != nil) ? xml[xmlXiaKey][contributorsKey].value : emptyString
+        txtRelation.text = (xml[xmlXiaKey][relationKey].value != nil) ? xml[xmlXiaKey][relationKey].value : emptyString
+        txtCoverage.text = (xml[xmlXiaKey][coverageKey].value != nil) ? xml[xmlXiaKey][coverageKey].value : emptyString
         
-        let xmlLicense = (xml["xia"]["license"].value != nil) ? xml["xia"]["license"].value! : "CC Attribution-NonCommercial - CC-BY-NC"
+        let xmlLicense = (xml[xmlXiaKey][licenseKey].value != nil) ? xml[xmlXiaKey][licenseKey].value! : svgLicenseCCBYNCKey
         licensePicker.dataSource = self
         licensePicker.delegate = self
         for (index, namedLicense) in availableLicenses.enumerated()
@@ -278,8 +278,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         selectedLicense = xmlLicense
         
         // Fourth subview
-        imgTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"]! : ""
-        imgDescription.text = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
+        imgTitle.text = (xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey] != nil) ? xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey]! : emptyString
+        imgDescription.text = (xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey] != nil) ? xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey]! : emptyString
         imgDescription.layer.cornerRadius = 5
     }
     
@@ -322,31 +322,31 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     func prepareToWriteXML() {
         // Save metas in xml
-        xml["xia"]["title"].value = txtTitle.text
-        xml["xia"]["readonly"].value = "\(roSwitch.isOn)"
-        xml["xia"]["readonly"].attributes["code"] = pass
-        xml["xia"]["details"].attributes["show"] = "\(showDetailSwitch.isOn)"
-        xml["xia"]["description"].value = txtDescription.text
+        xml[xmlXiaKey][xmlTitleKey].value = txtTitle.text
+        xml[xmlXiaKey][xmlreadonlyKey].value = String(roSwitch.isOn)
+        xml[xmlXiaKey][xmlreadonlyKey].attributes[xmlCodeKey] = pass
+        xml[xmlXiaKey][xmlDetailsKey].attributes[xmlShowKey] = String(showDetailSwitch.isOn)
+        xml[xmlXiaKey][xmlDescriptionKey].value = txtDescription.text
         
-        xml["xia"]["creator"].value = txtCreator.text
-        xml["xia"]["rights"].value = txtRights.text
-        xml["xia"]["publisher"].value = txtPublisher.text
-        xml["xia"]["identifier"].value = txtIdentifier.text
-        xml["xia"]["source"].value = txtSource.text
+        xml[xmlXiaKey][creatorKey].value = txtCreator.text
+        xml[xmlXiaKey][rightsKey].value = txtRights.text
+        xml[xmlXiaKey][publisherKey].value = txtPublisher.text
+        xml[xmlXiaKey][identifierKey].value = txtIdentifier.text
+        xml[xmlXiaKey][sourceKey].value = txtSource.text
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.none
-        xml["xia"]["date"].value = dateFormatter.string(from: datePicker.date)
+        xml[xmlXiaKey][dateKey].value = dateFormatter.string(from: datePicker.date)
         
-        xml["xia"]["language"].value = txtLanguages.text
-        xml["xia"]["keywords"].value = txtKeywords.text
-        xml["xia"]["contributors"].value = txtContributors.text
-        xml["xia"]["relation"].value = txtRelation.text
-        xml["xia"]["coverage"].value = txtCoverage.text
-        xml["xia"]["license"].value = selectedLicense
+        xml[xmlXiaKey][languageKey].value = txtLanguages.text
+        xml[xmlXiaKey][keywordsKey].value = txtKeywords.text
+        xml[xmlXiaKey][contributorsKey].value = txtContributors.text
+        xml[xmlXiaKey][relationKey].value = txtRelation.text
+        xml[xmlXiaKey][coverageKey].value = txtCoverage.text
+        xml[xmlXiaKey][licenseKey].value = selectedLicense
         
-        xml["xia"]["image"].attributes["title"] = imgTitle.text
-        xml["xia"]["image"].attributes["description"] = imgDescription.text
+        xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey] = imgTitle.text
+        xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey] = imgDescription.text
     }
     
     //MARK: - Delegates and data sources

@@ -23,7 +23,6 @@
 		F03EA5E91D12EB02008678BC /* xiaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5E81D12EB02008678BC /* xiaUITests.swift */; };
 		F03EA60A1D12EC2B008678BC /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */; };
 		F03EA60B1D12EC2B008678BC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F81D12EC2B008678BC /* Constants.swift */; };
-		F03EA60C1D12EC2B008678BC /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F91D12EC2B008678BC /* debug.swift */; };
 		F03EA60D1D12EC2B008678BC /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */; };
 		F03EA60E1D12EC2B008678BC /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */; };
 		F03EA60F1D12EC2B008678BC /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FC1D12EC2B008678BC /* PlayImageMetadatas.swift */; };
@@ -42,7 +41,6 @@
 		F03EA61C1D12EC35008678BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5C81D12EB02008678BC /* AppDelegate.swift */; };
 		F03EA61E1D12EC3A008678BC /* BubbleTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */; };
 		F03EA61F1D12EC3D008678BC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F81D12EC2B008678BC /* Constants.swift */; };
-		F03EA6201D12EC40008678BC /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5F91D12EC2B008678BC /* debug.swift */; };
 		F03EA6211D12EC43008678BC /* PhotoThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */; };
 		F03EA6221D12EC45008678BC /* PlayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */; };
 		F03EA6231D12EC48008678BC /* PlayImageMetadatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03EA5FC1D12EC2B008678BC /* PlayImageMetadatas.swift */; };
@@ -137,7 +135,6 @@
 		F03EA5EA1D12EB02008678BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleTransition.swift; sourceTree = "<group>"; };
 		F03EA5F81D12EC2B008678BC /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		F03EA5F91D12EC2B008678BC /* debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
 		F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoThumbnail.swift; sourceTree = "<group>"; };
 		F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayDetail.swift; sourceTree = "<group>"; };
 		F03EA5FC1D12EC2B008678BC /* PlayImageMetadatas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayImageMetadatas.swift; sourceTree = "<group>"; };
@@ -254,7 +251,6 @@
 				F03EA5C81D12EB02008678BC /* AppDelegate.swift */,
 				F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */,
 				F03EA5F81D12EC2B008678BC /* Constants.swift */,
-				F03EA5F91D12EC2B008678BC /* debug.swift */,
 				F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */,
 				F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */,
 				F03EA5FB1D12EC2B008678BC /* PlayDetail.swift */,
@@ -346,7 +342,6 @@
 				F03EA5C21D12EB02008678BC /* Frameworks */,
 				F03EA5C31D12EB02008678BC /* Resources */,
 				BCD5B1741F0804CFF72DC854 /* [CP] Embed Pods Frameworks */,
-				8B391E1A18FC96687051842A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -366,7 +361,6 @@
 				F03EA5D61D12EB02008678BC /* Frameworks */,
 				F03EA5D71D12EB02008678BC /* Resources */,
 				72C701BBC03F27097229DE91 /* [CP] Embed Pods Frameworks */,
-				C01E0B5B614F53EE7A71F106 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -387,7 +381,6 @@
 				F03EA5E11D12EB02008678BC /* Frameworks */,
 				F03EA5E21D12EB02008678BC /* Resources */,
 				236C74841E36DBC5037498D2 /* [CP] Embed Pods Frameworks */,
-				CBE6871CBA42464477D0DE5F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -595,21 +588,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xiaTests/Pods-xiaTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8B391E1A18FC96687051842A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xia/Pods-xia-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		BCD5B1741F0804CFF72DC854 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -628,36 +606,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xia/Pods-xia-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C01E0B5B614F53EE7A71F106 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xiaTests/Pods-xiaTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CBE6871CBA42464477D0DE5F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xiaUITests/Pods-xiaUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -668,7 +616,6 @@
 				F03EA6121D12EC2B008678BC /* ShapeView.swift in Sources */,
 				F03EA60F1D12EC2B008678BC /* PlayImageMetadatas.swift in Sources */,
 				F07709FD1FC6D61E00174494 /* Error.swift in Sources */,
-				F03EA60C1D12EC2B008678BC /* debug.swift in Sources */,
 				F00A96FC201B213300F9EDD8 /* ViewTableLocalDatas.swift in Sources */,
 				F0770A011FC6D61E00174494 /* Options.swift in Sources */,
 				F03EA60D1D12EC2B008678BC /* PhotoThumbnail.swift in Sources */,
@@ -707,7 +654,6 @@
 				F04D92252018BA4C007A6073 /* ViewImport.swift in Sources */,
 				F0770A021FC6D61E00174494 /* Options.swift in Sources */,
 				F07709FC1FC6D61E00174494 /* Element.swift in Sources */,
-				F03EA6201D12EC40008678BC /* debug.swift in Sources */,
 				F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */,
 				F03EA6211D12EC43008678BC /* PhotoThumbnail.swift in Sources */,
 				F03EA61E1D12EC3A008678BC /* BubbleTransition.swift in Sources */,
@@ -871,6 +817,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -924,6 +872,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

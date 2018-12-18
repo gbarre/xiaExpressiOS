@@ -139,3 +139,14 @@
 /* No comment provided by engineer. */
 "YES" = "Oui";
 
+/* No comment provided by engineer. */
+"IMPORT" = "Import";
+
+/* No comment provided by engineer. */
+"IMPORT_SUCCESSFULL" = "Le fichier a été importé avec succès.";
+
+/* No comment provided by engineer. */
+"IMPORT_ERROR" = "Une erreur s'est produite lors de l'importation. Assurez-vous que le fichier est correct";
+
+/* No comment provided by engineer. */
+"CHOOSE_FILENAME" = "Choisissez un nom de fichier";

@@ -26,7 +26,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     var xml: AEXMLDocument = AEXMLDocument()
     let transition = BubbleTransition()
     
-    var fileName: String = ""
+    var fileName: String = emptyString
     var details = [String: xiaDetail]()
     var location = CGPoint(x: 0, y: 0)
     var touchedTag: Int = 0
@@ -45,18 +45,18 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet var leftButtonBkgd: UIImageView!
     @IBOutlet var leftButton: UIButton!
     @IBAction func showMetas(_ sender: AnyObject) {
-        performSegue(withIdentifier: "playMetas", sender: self)
+        performSegue(withIdentifier: playMetasSegueKey, sender: self)
     }
     @IBAction func showImgInfos(_ sender: AnyObject) {
         touchedTag = 0
-        performSegue(withIdentifier: "openDetail", sender: self)
+        performSegue(withIdentifier: openDetailSegueKey, sender: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         // hide left button (image infos) if there are no title & description
         // hide left button if details are not showed
-        if ( ((xml["xia"]["image"].attributes["title"] == nil || xml["xia"]["image"].attributes["title"]! == "") &&
-            (xml["xia"]["image"].attributes["description"] == nil || xml["xia"]["image"].attributes["description"]! == ""))
+        if ( ((xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey] == nil || xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey]! == emptyString) &&
+            (xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey] == nil || xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey]! == emptyString))
             ) {
             leftButton.isHidden = true
             leftButtonBkgd.isHidden = true
@@ -73,13 +73,13 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
-        let imagePath = currentDirs["images"]! + "/\(self.fileName).jpg"
+        let imagePath = currentDirs[imagesString]! + separatorString + self.fileName + jpgExtension
         img = UIImage(contentsOfFile: imagePath)
         bkgdImage.image = img
         bkgdImage.backgroundColor = img.getMediumBackgroundColor()
         
         // Load xmlDetails from xml
-        if let _ = xml.root["details"]["detail"].all {
+        if let _ = xml.root[xmlDetailsKey][xmlDetailKey].all {
             loadDetails(xml)
         }
         
@@ -101,26 +101,26 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             let (detailTag, detailPoints) = detail
             if (pointInPolygon(detailPoints.points, touchPoint: location)) {
                 touchedTag = (NumberFormatter().number(from: detailTag)?.intValue)!
-                performSegue(withIdentifier: "openDetail", sender: self)
+                performSegue(withIdentifier: openDetailSegueKey, sender: self)
                 break
             }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "playMetas") {
+        if (segue.identifier == playMetasSegueKey) {
             if let controller:PlayImageMetadatas = segue.destination as? PlayImageMetadatas {
                 controller.xml = self.xml
                 controller.landscape = landscape
             }
         }
-        if (segue.identifier == "openDetail") {
+        if (segue.identifier == openDetailSegueKey) {
             if let controller:PlayDetail = segue.destination as? PlayDetail {
                 controller.transitioningDelegate = self
                 controller.modalPresentationStyle = .formSheet
                 controller.xml = self.xml
                 controller.tag = touchedTag
-                controller.detail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
+                controller.detail = (touchedTag != 0) ? details[String(touchedTag)] : xiaDetail(tag: 0, scale: 1)
                 controller.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
                 controller.bkgdImage = bkgdImage
                 controller.landscape = landscape
@@ -132,9 +132,9 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .present
         transition.startingPoint = location
         transition.bubbleColor = blueColor
-        transition.detailFrame = (touchedTag != 0) ? details["\(touchedTag)"]?.bezierFrame() : UIScreen.main.bounds
+        transition.detailFrame = (touchedTag != 0) ? details[String(touchedTag)]?.bezierFrame() : UIScreen.main.bounds
         transition.path = (touchedTag != 0) ? paths[touchedTag] : UIBezierPath()
-        transition.theDetail = (touchedTag != 0) ? details["\(touchedTag)"] : xiaDetail(tag: 0, scale: 1)
+        transition.theDetail = (touchedTag != 0) ? details[String(touchedTag)] : xiaDetail(tag: 0, scale: 1)
         transition.bkgdImage = bkgdImage
         transition.noDetailStatus = (touchedTag != 0) ? false : true
         transition.duration = 0.5
@@ -164,14 +164,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         let xSpace: CGFloat = (screenWidth - img!.size.width * scale) / 2
         let ySpace: CGFloat = (screenHeight - img!.size.height * scale) / 2
         
-        let xmlDetails = xml.root["details"]["detail"].all!
+        let xmlDetails = xml.root[xmlDetailsKey][xmlDetailKey].all!
         for detail in xmlDetails {
-            if let path = detail.attributes["path"] {
+            if let path = detail.attributes[xmlPathKey] {
                 // Add detail object
-                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                let detailTag = (NumberFormatter().number(from: detail.attributes[tagString]!)?.intValue)!
                 let newDetail = xiaDetail(tag: detailTag, scale: scale)
-                details["\(detailTag)"] = newDetail
-                details["\(detailTag)"]!.constraint = detail.attributes["constraint"]!
+                details[String(detailTag)] = newDetail
+                details[String(detailTag)]!.constraint = detail.attributes[xmlConstraintKey]!
                 
                 // clean this tag
                 for subview in view.subviews {
@@ -181,24 +181,24 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
                 }
                 
                 // Add points to detail
-                let pointsArray = path.split{$0 == " "}.map(String.init)
+                let pointsArray = path.split{$0 == spaceCharacter}.map(String.init)
                 var pointIndex = 0
                 for point in pointsArray {
-                    let coords = point.split{$0 == ";"}.map(String.init)
+                    let coords = point.split{$0 == semicolonCharacter}.map(String.init)
                     let x = convertStringToCGFloat(coords[0]) * scale + xSpace
                     let y = convertStringToCGFloat(coords[1]) * scale + ySpace
-                    let newPoint = details["\(detailTag)"]?.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
+                    let newPoint = details[String(detailTag)]?.createPoint(CGPoint(x: x, y: y), imageName: cornerString, index: pointIndex)
                     newPoint?.layer.zPosition = -1
                     pointIndex = pointIndex + 1
                     view.addSubview(newPoint!)
                 }
-                let drawEllipse: Bool = (detail.attributes["constraint"] == constraintEllipse) ? true : false
-                buildShape(false, color: blueColor, tag: detailTag, points: details["\(detailTag)"]!.points, parentView: view, ellipse: drawEllipse)
-                paths[detailTag] = details["\(detailTag)"]!.bezierPath()
+                let drawEllipse: Bool = (detail.attributes[xmlConstraintKey] == constraintEllipse) ? true : false
+                buildShape(false, color: blueColor, tag: detailTag, points: details[String(detailTag)]!.points, parentView: view, ellipse: drawEllipse)
+                paths[detailTag] = details[String(detailTag)]!.bezierPath()
             }
         }
         
-        showDetails = (xml["xia"]["details"].attributes["show"] == "true") ? true : false
+        showDetails = (xml[xmlXiaKey][xmlDetailsKey].attributes[xmlShowKey] == trueString) ? true : false
         for subview in view.subviews {
             if subview.tag > 199 {
                 subview.isHidden = !showDetails

@@ -65,7 +65,7 @@ func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageVie
     
     // Shape is locked ?
     if locked {
-        let lock = UIImage(named: "lock")
+        let lock = UIImage(named: lockString)
         let lockView = UIImageView(image: lock!)
         lockView.center = CGPoint(x: shapeFrame.midX, y: shapeFrame.midY)
         lockView.tag = shapeTag
@@ -76,38 +76,38 @@ func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageVie
 }
 
 func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
-    for child in xml["xia"].all! {
+    for child in xml[xmlXiaKey].all! {
         // Look for readonly child
-        if let readonly = child["readonly"].value {
-            if (readonly != "true" && readonly != "false") {
-                let _ = xml["xia"].addChild(name: "readonly", value: "false", attributes: ["code" : "1234"])
+        if let readonly = child[xmlreadonlyKey].value {
+            if (readonly != trueString && readonly != falseString) {
+                let _ = xml[xmlXiaKey].addChild(name: xmlreadonlyKey, value: falseString, attributes: defaultCodeDict)
             }
         }
         // Look for image child (to store image title & description)
-        if child["image"].attributes["title"] == nil {
-            let _ = xml["xia"].addChild(name: "image", value: "", attributes: ["title" : "", "desctription" : ""])
+        if child[xmlImageKey].attributes[xmlTitleKey] == nil {
+            let _ = xml[xmlXiaKey].addChild(name: xmlImageKey, value: emptyString, attributes: [titleKey : emptyString, xmlDescriptionKey : emptyString])
         }
         // Look for the default show details attributes
-        if child["details"].attributes["show"] == nil {
-            xml["xia"]["details"].attributes["show"] = "true"
+        if child[xmlDetailsKey].attributes[xmlShowKey] == nil {
+            xml[xmlXiaKey][xmlDetailsKey].attributes[xmlShowKey] = trueString
         }
             
     }
-    if let xmlDetails = xml["xia"]["details"]["detail"].all {
+    if let xmlDetails = xml[xmlXiaKey][xmlDetailsKey][xmlDetailKey].all {
         for detail in xmlDetails {
-            if detail.attributes["locked"] == nil {
-                detail.attributes["locked"] = "false"
+            if detail.attributes[xmlLockedKey] == nil {
+                detail.attributes[xmlLockedKey] = falseString
             }
         }
     }
     
     for element in xmlElements {
-        if (xml["xia"][element].value != nil && xml["xia"][element].value! == "element <\(element)> not found") {
-            let _ = xml["xia"].addChild(name: element)
-            if (element == "creator" && xml["xia"]["author"].value != nil) {
-                xml["xia"][element].value = xml["xia"]["author"].value!
-                if xml["xia"]["author"].value! != "element <author> not found" {
-                    xml["xia"]["author"].removeFromParent()
+        if (xml[xmlXiaKey][element].value != nil && xml[xmlXiaKey][element].value! == String(format: xmlElementNotFound, element)) {
+            let _ = xml[xmlXiaKey].addChild(name: element)
+            if (element == creatorKey && xml[xmlXiaKey][xmlAuthorKey].value != nil) {
+                xml[xmlXiaKey][element].value = xml[xmlXiaKey][xmlAuthorKey].value!
+                if xml[xmlXiaKey][xmlAuthorKey].value! != String(format: xmlElementNotFound, xmlAuthorKey) {
+                    xml[xmlXiaKey][xmlAuthorKey].removeFromParent()
                 }
             }            
         }
@@ -120,18 +120,18 @@ func checkXML (_ xml: AEXMLDocument) -> AEXMLDocument {
 func cleanInput(_ strIn: String) -> String {
     // Replace invalid characters with empty strings.
     var out: String = strIn
-    out = out.replacingOccurrences(of: " ", with: "_")
+    out = out.replacingOccurrences(of: spaceString, with: underscoreString)
     do {
-        let regex = try NSRegularExpression(pattern: "[^\\w\\.\\-\\_]", options: .caseInsensitive)
+        let regex = try NSRegularExpression(pattern: wordRegex, options: .caseInsensitive)
         let nsString = strIn as NSString
         let results = regex.matches(in: strIn, options: [], range: NSMakeRange(0, nsString.length))
         let arrayResults = results.map {nsString.substring(with: $0.range)}
         for result in arrayResults {
-            out = out.replacingOccurrences(of: result, with: "")
+            out = out.replacingOccurrences(of: result, with: emptyString)
         }
     }
     catch let error as NSError {
-        dbg.pt(error.localizedDescription)
+        debugPrint(error.localizedDescription)
     }
     
     // Truncate to 45 characters
@@ -146,12 +146,12 @@ func cleanInput(_ strIn: String) -> String {
 
 func convertStringToCGFloat(_ txt: String) -> CGFloat {
     let cgFloat: CGFloat?
-    if let double = Double("\(txt)") {
+    if let double = Double(String(txt)) {
         cgFloat = CGFloat(double)
     }
     else {
-        let d = txt.replacingOccurrences(of: ",", with: ".")
-        cgFloat = (Double("\(d)") == nil) ? -12345.6789 : CGFloat(Double("\(d)")!)
+        let d = txt.replacingOccurrences(of: commaString, with: dotString)
+        cgFloat = (Double(String(d)) == nil) ? -12345.6789 : CGFloat(Double(String(d))!)
     }
     return cgFloat!
 }
@@ -174,8 +174,8 @@ func getCenter() -> CGPoint{
 
 func getDirName(path: String) -> String {
     var dirName = path
-    var ret = ""
-    while dirName.suffix(1) != "/" {
+    var ret = emptyString
+    while dirName.suffix(1) != separatorString {
         ret = String(dirName.suffix(1)) + ret
         dirName = String(dirName.prefix(dirName.count - 1))
     }
@@ -183,12 +183,12 @@ func getDirName(path: String) -> String {
 }
 
 func getDirs(root: String) -> [String: String] {
-    return ["root": root, "images": "\(root)/images", "xml": "\(root)/xml"]
+    return [rootString: root, imagesString: root + separatorString + imagesString, xmlString: root + separatorString + xmlString]
 }
 
 func getParentDir(currentDir: String) -> String {
     var dir = currentDir
-    while dir.suffix(1) != "/" {
+    while dir.suffix(1) != separatorString {
         dir = String(dir.prefix(dir.count - 1))
     }
     return String(dir.prefix(dir.count - 1))
@@ -201,7 +201,7 @@ func getXML(_ path: String, check: Bool = true) -> AEXMLDocument {
         try xml = AEXMLDocument(xml: data!)
     }
     catch {
-        dbg.pt(error.localizedDescription)
+        debugPrint(error.localizedDescription)
     }
     return (check) ? checkXML(xml) : xml
 }
@@ -242,7 +242,7 @@ func writeXML(_ xml: AEXMLDocument, path: String) -> Bool {
         error = false
     }
     catch {
-        dbg.pt(error.localizedDescription)
+        debugPrint(error.localizedDescription)
     }
     return error
 }
@@ -278,11 +278,17 @@ extension UIImage {
 
 extension String {
     var isAlphanumeric: Bool {
-        return !isEmpty && range(of: "[^a-zA-Z0-9\\-\\_]", options: .regularExpression) == nil
+        return !isEmpty && range(of: alphaNumericRegex, options: .regularExpression) == nil
     }
     
     var firstUppercased: String {
-        guard let first = first else { return "" }
+        guard let first = first else { return emptyString }
         return String(first).uppercased() + dropFirst()
+    }
+}
+
+extension CGFloat {
+    var toString: String {
+        return String(Int(self))
     }
 }

@@ -26,7 +26,7 @@ class xiaDetail: NSObject {
     @objc var points = [Int: UIImageView]()
     @objc var tag: Int = 0
     @objc var scale: CGFloat = 1.0
-    @objc var constraint: String = ""
+    @objc var constraint: String = emptyString
     @objc var locked: Bool = false
     
     @objc init(tag: Int, scale: CGFloat){
@@ -36,7 +36,7 @@ class xiaDetail: NSObject {
     }
     
     @objc required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(fatalErrorInit)
     }
     
     @objc func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
@@ -86,16 +86,16 @@ class xiaDetail: NSObject {
     
     @objc func createPath() -> String {
         if (points.count < 2) {
-            return "0;0"
+            return newDetailPathString
         }
         else {
             
-            var path: String = ""
+            var path: String = emptyString
             let sortedPoints = points.sorted{$0.0 < $1.0}
             for (_,point) in sortedPoints {
                 let x = point.center.x / scale
                 let y = point.center.y / scale
-                path += "\(x);\(y) "
+                path += x.toString + semicolonString + y.toString + spaceString
             }
             path = String(path.prefix(path.count - 1))
             
@@ -130,7 +130,7 @@ class xiaDetail: NSObject {
             if dist > 50 {
                 // We can show a virt point
                 let newPoint = CGPoint(x: (point1.x+point2.x)/2, y: (point1.y+point2.y)/2)
-                let image = UIImage(named: "corner")
+                let image = UIImage(named: cornerString)
                 let imageView = UIImageView(image: image!)
                 imageView.alpha = 0.2
                 imageView.tag = tag+100

@@ -25,22 +25,6 @@ import WebKit
 class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     var xml: AEXMLDocument!
-    let xmlElementsDict: [String: String?] = [
-        "license" : NSLocalizedString("LICENSE", comment: ""),
-        "title" : NSLocalizedString("TITLE", comment: ""),
-        "date" : NSLocalizedString("DATE", comment: ""),
-        "creator" : NSLocalizedString("CREATOR", comment: ""),
-        "rights" : NSLocalizedString("RIGHTS", comment: ""),
-        "publisher" : NSLocalizedString("PUBLISHER", comment: ""),
-        "identifier" : NSLocalizedString("IDENTIFIER", comment: ""),
-        "source" : NSLocalizedString("SOURCE", comment: ""),
-        "relation" : NSLocalizedString("RELATION", comment: ""),
-        "language" : NSLocalizedString("LANGUAGES", comment: ""),
-        "keywords" : NSLocalizedString("KEYWORDS", comment: ""),
-        "coverage" : NSLocalizedString("COVERAGE", comment: ""),
-        "contributors" : NSLocalizedString("CONTRIBUTORS", comment: ""),
-        "description" : NSLocalizedString("DESCRIPTION", comment: "")
-    ]
     
     var landscape: Bool = true
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
@@ -67,20 +51,34 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     override func viewDidLoad() {
         
         documentLicense.attributedText = getLicense()
-        documentTitle.text = (xml["xia"]["title"].value != nil && xml["xia"]["title"].value != "element <title> not found") ? xml["xia"]["title"].value! : ""
-        documentDate.attributedText = getElementValue("date")
-        documentCreator.text = (xml["xia"]["creator"].value != nil && xml["xia"]["creator"].value != "element <creator> not found") ? xml["xia"]["creator"].value! : ""
-        documentRights.attributedText = getElementValue("rights")
-        documentPublisher.attributedText = getElementValue("publisher")
-        documentIdentifier.attributedText = getElementValue("identifier")
-        documentSource.attributedText = getElementValue("source")
-        documentRelation.attributedText = getElementValue("relation")
-        documentLanguage.attributedText = getElementValue("language")
-        documentKeywords.attributedText = getElementValue("keywords")
-        documentCoverage.attributedText = getElementValue("coverage")
-        documentContributors.attributedText = getElementValue("contributors")
         
-        var htmlString = (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") ? xml["xia"]["description"].value! : ""
+        documentTitle.text =
+            (xml[xmlXiaKey][xmlTitleKey].value != nil &&
+                xml[xmlXiaKey][xmlTitleKey].value != String(format: xmlElementNotFound, xmlTitleKey))
+            ? xml[xmlXiaKey][xmlTitleKey].value! : emptyString
+        
+        documentDate.attributedText = getElementValue(dateKey)
+        
+        documentCreator.text =
+            (xml[xmlXiaKey][creatorKey].value != nil &&
+                xml[xmlXiaKey][creatorKey].value != String(format: xmlElementNotFound, creatorKey))
+            ? xml[xmlXiaKey][creatorKey].value! : emptyString
+        
+        documentRights.attributedText = getElementValue(rightsKey)
+        documentPublisher.attributedText = getElementValue(publisherKey)
+        documentIdentifier.attributedText = getElementValue(identifierKey)
+        documentSource.attributedText = getElementValue(sourceKey)
+        documentRelation.attributedText = getElementValue(relationKey)
+        documentLanguage.attributedText = getElementValue(languageKey)
+        documentKeywords.attributedText = getElementValue(keywordsKey)
+        documentCoverage.attributedText = getElementValue(coverageKey)
+        documentContributors.attributedText = getElementValue(contributorsKey)
+        
+        var htmlString =
+            (xml[xmlXiaKey][xmlDescriptionKey].value != nil &&
+                xml[xmlXiaKey][xmlDescriptionKey].value != String(format: xmlElementNotFound, xmlDescriptionKey))
+                ? xml[xmlXiaKey][xmlDescriptionKey].value! : emptyString
+        
         // Build the webView
         if !landscape {
             converter.videoWidth = 360
@@ -126,8 +124,9 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let txtSize: CGFloat = 14
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
         
-        if (xml["xia"][element].value != nil && xml["xia"][element].value != "element <\(element)> not found") {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"][element].value!)
+        if (xml[xmlXiaKey][element].value != nil &&
+            xml[xmlXiaKey][element].value != String(format: xmlElementNotFound, element)) {
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml[xmlXiaKey][element].value!)
             attributedText.append(attributedValue)
         }
         
@@ -135,15 +134,16 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     func getDescriptionValue() -> NSAttributedString! {
-        let key = xmlElementsDict["description"]
+        let key = xmlElementsDict[xmlDescriptionKey]
         let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
         
-        if (xml["xia"]["description"].value != nil && xml["xia"]["description"].value != "element <description> not found") {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml["xia"]["description"].value!)
+        if (xml[xmlXiaKey][xmlDescriptionKey].value != nil &&
+            xml[xmlXiaKey][xmlDescriptionKey].value != String(format: xmlElementNotFound, xmlDescriptionKey)) {
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml[xmlXiaKey][xmlDescriptionKey].value!)
             attributedText.append(attributedValue)
-            let descWidth = xml["xia"]["description"].value!.count
+            let descWidth = xml[xmlXiaKey][xmlDescriptionKey].value!.count
             attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
 
         }
@@ -152,17 +152,18 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     }
     
     func getLicense() -> NSAttributedString! {
-        let key = xmlElementsDict["license"]
+        let key = xmlElementsDict[licenseKey]
         let keyWidth = key!?.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
         
-        if (xml["xia"]["license"].value != nil && xml["xia"]["license"].value != "element <license> not found") {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: " \(xml["xia"]["license"].value!)")
+        if (xml[xmlXiaKey][licenseKey].value != nil &&
+            xml[xmlXiaKey][licenseKey].value != String(format: xmlElementNotFound, licenseKey)) {
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: String(spaceString + xml[xmlXiaKey][licenseKey].value!))
             attributedText.append(attributedValue)
         }
         else {
-            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: " None")
+            let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: spaceString + noneString)
             attributedText.append(attributedValue)
         }
         

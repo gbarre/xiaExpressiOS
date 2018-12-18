@@ -31,7 +31,7 @@ class jsonDB: NSObject {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(fatalErrorInit)
     }
     
     func getDict() {
@@ -39,11 +39,11 @@ class jsonDB: NSObject {
         let fileManager = FileManager.default
         if (!fileManager.fileExists(atPath: path)) {
             do {
-                let pathToBundleDB = Bundle.main.path(forResource: "oembed", ofType: "plist")!
+                let pathToBundleDB = Bundle.main.path(forResource: oembedKey, ofType: plistKey)!
                 try fileManager.copyItem(atPath: pathToBundleDB, toPath: path)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                debugPrint(error.localizedDescription)
             }
         }
         dict = NSDictionary(contentsOfFile: path)! as! [String: NSDictionary]
@@ -63,7 +63,7 @@ class jsonDB: NSObject {
         if (dict[url] != nil) {
             return dict[url]!
         } else {
-            return ["nothing": "here"]
+            return nothingHereDictionary
         }
     }
 }

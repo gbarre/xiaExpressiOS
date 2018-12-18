@@ -37,7 +37,7 @@ class ShapeView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(fatalErrorInit)
     }
     
     override func draw(_ rect: CGRect) {
@@ -47,7 +47,7 @@ class ShapeView: UIView {
         case 2: drawEllipse()
         case 3: drawEllipseFilled()
         case 4: drawCircle()
-        default: dbg.pt("default")
+        default: break
         }
     }
     

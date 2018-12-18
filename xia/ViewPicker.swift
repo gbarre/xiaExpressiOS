@@ -23,31 +23,22 @@ class ViewPicker: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        switch info["UIImagePickerControllerMediaType"] as! String {
-        case "public.movie":
-            let path = (info["UIImagePickerControllerMediaURL"] as! NSURL).path!
-            copyFile(at: path, type: "videos", ext: "MOV")
-        case "public.image":
-            let path = (info["UIImagePickerControllerImageURL"] as! NSURL).path!
-            copyFile(at: path, type: "images", ext: "JPG")
-        default:
-            print("default")
-        }
+        let path = (info[IPCImageURLKey] as! NSURL).path!
+        copyFile(at: path, type: imagesString, ext: jpgString.uppercased())
     }
     
     func copyFile(at: String, type: String, ext: String) {
-        let controller = UIAlertController(title: "Choose FileName", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let controller = UIAlertController(title: NSLocalizedString(chooseFileNameKey, comment: emptyString), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         controller.addTextField(configurationHandler: {(textField: UITextField!) in
             textField.keyboardType = UIKeyboardType.alphabet
-            textField.placeholder = "filename"
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: UIAlertActionStyle.default, handler: { action in
-            if (controller.textFields![0].text! != "") {
-                let fileName = controller.textFields![0].text! + "." + ext
+        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+            if (controller.textFields![0].text! != emptyString) {
+                let fileName = controller.textFields![0].text! + dotString + ext
                 do {
-                    try FileManager.default.copyItem(atPath: at, toPath: localDatasDirectory + "/" + type + "/" + fileName)
+                    try FileManager.default.copyItem(atPath: at, toPath: localDatasDirectory + separatorString + type + separatorString + fileName)
                 } catch {
-                    dbg.pt(error.localizedDescription)
+                    debugPrint(error.localizedDescription)
                 }
                 self.dismiss(animated: true, completion: nil)
                 self.tableLocalDatas?.tableView.reloadData()

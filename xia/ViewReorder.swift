@@ -27,26 +27,25 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
     var currentDirs = rootDirs
     var childDirs = [String]()
     var toMove = [String]()
-    let cellReuseIdentifier = "reorderIdentifier"
-    var selectedDir = ""
+    var selectedDir = emptyString
     var originalDir = documentsDirectory
-    var salt = "14876_"
+    var salt = defaultSalt
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var currentDirectory: UINavigationItem!
     
     @IBOutlet weak var btnOpen: UIBarButtonItem!
     @IBAction func btnOpenAction(_ sender: Any) {
-        if selectedDir == ".." {
-            let parentDir = getParentDir(currentDir: currentDirs["root"]!)
+        if selectedDir == String(repeating: dotString, count: 2) {
+            let parentDir = getParentDir(currentDir: currentDirs[rootString]!)
             currentDirs = getDirs(root: parentDir)
         }
-        else if selectedDir != "" {
-            currentDirs = getDirs(root: "\(currentDirs["root"]!)/\(selectedDir)")
+        else if selectedDir != emptyString {
+            currentDirs = getDirs(root: currentDirs[rootString]! + separatorString + selectedDir)
         }
-        childDirs = getchildsDirs(root: currentDirs["root"]!)
-        selectedDir = ""
-        currentDirectory.title = getDirName(path: currentDirs["root"]!)
+        childDirs = getchildsDirs(root: currentDirs[rootString]!)
+        selectedDir = emptyString
+        currentDirectory.title = getDirName(path: currentDirs[rootString]!)
         tableView.reloadData()
     }
     
@@ -57,16 +56,32 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
             for file in toMove {
                 var fileName = file
                 if fileName.prefix(salt.count) == salt { // moving a directory
-                    fileName = "\(fileName.suffix(fileName.count - salt.count))"
-                    try fileManager.moveItem(atPath: "\(originalDir)/\(fileName)", toPath: "\(currentDirs["root"]!)/\(selectedDir)/\(fileName)")
+                    fileName = String(fileName.suffix(fileName.count - salt.count))
+                    try fileManager.moveItem(atPath: originalDir + separatorString + fileName,
+                                             toPath: currentDirs[rootString]! + separatorString + selectedDir + separatorString + fileName
+                    )
                 }
                 else { // moving resource
-                    try fileManager.moveItem(atPath: "\(originalDir)/images/\(fileName).jpg", toPath: "\(currentDirs["root"]!)/\(selectedDir)/images/\(fileName).jpg")
-                    try fileManager.moveItem(atPath: "\(originalDir)/xml/\(fileName).xml", toPath: "\(currentDirs["root"]!)/\(selectedDir)/xml/\(fileName).xml")
+                    try fileManager.moveItem(atPath: originalDir + separatorString
+                                                    + imagesString + separatorString
+                                                    + fileName + jpgExtension,
+                                             toPath: currentDirs[rootString]! + separatorString
+                                                    + selectedDir + separatorString
+                                                    + imagesString + separatorString
+                                                    + fileName + jpgExtension
+                    )
+                    try fileManager.moveItem(atPath: originalDir + separatorString
+                                                    + xmlString + separatorString
+                                                    + fileName + xmlExtension,
+                                             toPath: currentDirs[rootString]! + separatorString
+                                                    + selectedDir + separatorString
+                                                    + xmlString + separatorString
+                                                    + fileName + xmlExtension
+                    )
                 }
             }
         } catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                debugPrint(error.localizedDescription)
         }
         ViewCollection?.buildLeftNavbarItems()
         ViewCollection?.endEdit()
@@ -86,14 +101,14 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
         tableView.delegate = self
         tableView.dataSource = self
         
-        originalDir = currentDirs["root"]!
-        childDirs = getchildsDirs(root: currentDirs["root"]!)
-        currentDirectory.title = getDirName(path: currentDirs["root"]!)
+        originalDir = currentDirs[rootString]!
+        childDirs = getchildsDirs(root: currentDirs[rootString]!)
+        currentDirectory.title = getDirName(path: currentDirs[rootString]!)
         btnOpen.isEnabled = false
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        btnSelect.isEnabled = (currentDirs["root"]! != originalDir)
+        btnSelect.isEnabled = (currentDirs[rootString]! != originalDir)
         let height = (childDirs.count + 1) * 45
         self.preferredContentSize = CGSize(width: 300, height: height)
         return childDirs.count
@@ -110,14 +125,14 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         let cell = self.tableView.cellForRow(at: indexPath)
-        if selectedDir == "" { // nothing selected, highlight this one
+        if selectedDir == emptyString { // nothing selected, highlight this one
             selectedDir = childDirs[indexPath.row]
             cell?.accessoryType = UITableViewCellAccessoryType.checkmark
             btnOpen.isEnabled = true
-            btnSelect.isEnabled = (selectedDir == "..") ? false : true
+            btnSelect.isEnabled = (selectedDir == String(repeating: dotString, count: 2)) ? false : true
         }
         else if selectedDir == childDirs[indexPath.row] { // unhighlight this one
-            selectedDir = ""
+            selectedDir = emptyString
             cell?.accessoryType = UITableViewCellAccessoryType.none
             btnOpen.isEnabled = false
             btnSelect.isEnabled = false
@@ -132,19 +147,19 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
                     self.tableView.cellForRow(at: IndexPath(row: i, section: 0))?.accessoryType = UITableViewCellAccessoryType.none
                 }
                 btnOpen.isEnabled = true
-                btnSelect.isEnabled = (selectedDir == "..") ? false : true
+                btnSelect.isEnabled = (selectedDir == String(repeating: dotString, count: 2)) ? false : true
             }
         }
         return false
     }
     
     func getchildsDirs(root: String) -> [String] {
-        var returnDirs = (root == documentsDirectory) ? [String]() : [".."]
+        var returnDirs = (root == documentsDirectory) ? [String]() : [String(repeating: dotString, count: 2)]
         let fileManager = FileManager.default
         do {
             let dirs = try fileManager.contentsOfDirectory(atPath: root)
             for dir in dirs {
-                if reservedDirs.contains(dir) || dir == "oembed.plist" {
+                if reservedDirs.contains(dir) || dir == oembedKey + dotString + plistKey {
                     continue
                 }
                 else {
@@ -154,7 +169,7 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
                 }
             }
         } catch let error as NSError {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         }
         return returnDirs
     }

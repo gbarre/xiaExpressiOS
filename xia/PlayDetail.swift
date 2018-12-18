@@ -118,24 +118,24 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         imgThumb.center = newCenter
         
         // Show text
-        var htmlString: String = ""
+        var htmlString: String = emptyString
         if tag != 0 {
-            if let detail = xml["xia"]["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"]) {
+            if let detail = xml[xmlXiaKey][xmlDetailsKey][xmlDetailKey].all(withAttributes: [tagString : String(tag)]) {
                 for d in detail {
-                    detailTitle.text = d.attributes["title"]
+                    detailTitle.text = d.attributes[xmlTitleKey]
                     detailTitle.sizeToFit()
                     detailTitle.numberOfLines = 0
-                    htmlString = (d.value != nil) ? d.value! : ""
-                    zoomDisable = (d.attributes["zoom"] == "true") ? false : true
+                    htmlString = (d.value != nil) ? d.value! : emptyString
+                    zoomDisable = (d.attributes[xmlZoomKey] == trueString) ? false : true
                 }
             }
             currentDetailFrame = getDetailFrame()
         }
         else {
-            detailTitle.text = (xml["xia"]["image"].attributes["title"] != nil) ? xml["xia"]["image"].attributes["title"] : ""
+            detailTitle.text = (xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey] != nil) ? xml[xmlXiaKey][xmlImageKey].attributes[xmlTitleKey] : emptyString
             detailTitle.sizeToFit()
             detailTitle.numberOfLines = 0
-            htmlString = (xml["xia"]["image"].attributes["description"] != nil) ? xml["xia"]["image"].attributes["description"]! : ""
+            htmlString = (xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey] != nil) ? xml[xmlXiaKey][xmlImageKey].attributes[xmlDescriptionKey]! : emptyString
             zoomDisable = true
         }
         
@@ -172,8 +172,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
                 DispatchQueue.main.asyncAfter(deadline: delayTime){
             self.imgThumb.isHidden = false
         }
-        
-        //NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(PlayDetail.rotated), name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     // Disable round corners on modal view
@@ -199,22 +197,21 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         let xSpace: CGFloat = (screenWidth - imgThumb!.image!.size.width * localScale) / 2
         let ySpace: CGFloat = (screenHeight - imgThumb!.image!.size.height * localScale) / 2
         
-        let xmlDetails = xml.root["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"])!
+        let xmlDetails = xml.root[xmlDetailsKey][xmlDetailKey].all(withAttributes: [tagString : String(tag)])!
         for detail in xmlDetails {
-            if let path = detail.attributes["path"] {
+            if let path = detail.attributes[xmlPathKey] {
                 // Add detail object
-                let detailTag = (NumberFormatter().number(from: detail.attributes["tag"]!)?.intValue)!
+                let detailTag = (NumberFormatter().number(from: detail.attributes[tagString]!)?.intValue)!
                 newDetail = xiaDetail(tag: detailTag, scale: localScale)
-                //details["\(detailTag)"] = newDetail
                 
                 // Add points to detail
-                let pointsArray = path.split{$0 == " "}.map(String.init)
+                let pointsArray = path.split{$0 == spaceCharacter}.map(String.init)
                 var pointIndex = 0
                 for point in pointsArray {
-                    let coords = point.split{$0 == ";"}.map(String.init)
+                    let coords = point.split{$0 == semicolonCharacter}.map(String.init)
                     let x = convertStringToCGFloat(coords[0]) * localScale + xSpace
                     let y = convertStringToCGFloat(coords[1]) * localScale + ySpace
-                    let newPoint = newDetail.createPoint(CGPoint(x: x, y: y), imageName: "corner", index: pointIndex)
+                    let newPoint = newDetail.createPoint(CGPoint(x: x, y: y), imageName: cornerString, index: pointIndex)
                     newPoint.layer.zPosition = -1
                     pointIndex = pointIndex + 1
                 }

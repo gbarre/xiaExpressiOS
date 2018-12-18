@@ -27,11 +27,11 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     var tag: Int = 0
     var zoom: Bool = false
     var lock: Bool = false
-    var detailTitle: String = ""
-    var detailDescription: String = ""
+    var detailTitle: String = emptyString
+    var detailDescription: String = emptyString
     var xml: AEXMLDocument = AEXMLDocument()
     var index: Int = 0
-    var fileName: String = ""
+    var fileName: String = emptyString
     weak var ViewCreateDetailsController: ViewCreateDetails?
     var currentDirs = rootDirs
 
@@ -54,17 +54,16 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     @IBAction func btnDone(_ sender: AnyObject) {
         // Save the detail in xml
-        if let detail = xml["xia"]["details"]["detail"].all(withAttributes: ["tag" : "\(tag)"]) {
+        if let detail = xml[xmlXiaKey][xmlDetailsKey][xmlDetailKey].all(withAttributes: [tagString : String(tag)]) {
             for d in detail {
-                d.attributes["zoom"] = "\(switchZoom.isOn)"
-                d.attributes["locked"] = "\(switchLock.isOn)"
-                d.attributes["title"] = txtTitle.text
-                //d.value = attributedString2pikipiki(txtDesc.attributedText)
+                d.attributes[xmlZoomKey] = String(switchZoom.isOn)
+                d.attributes[xmlLockedKey] = String(switchLock.isOn)
+                d.attributes[xmlTitleKey] = txtTitle.text
                 d.value = txtDesc.text
             }
         }
-        let _ = writeXML(xml, path: currentDirs["xml"]! + "/\(fileName).xml")
-        ViewCreateDetailsController?.details["\(tag)"]?.locked = lock
+        let _ = writeXML(xml, path: currentDirs[xmlString]! + separatorString + fileName + xmlExtension)
+        ViewCreateDetailsController?.details[String(tag)]?.locked = lock
         ViewCreateDetailsController!.changeDetailColor(tag)
         ViewCreateDetailsController?.setBtnsIcons()
         self.dismiss(animated: true, completion: nil)
@@ -79,8 +78,8 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
         txtTitle.text = self.detailTitle
         
         txtDesc.delegate = self
-        if self.detailDescription == "" {// Add placeholder
-            txtDesc.text = NSLocalizedString("DESCRIPTION...", comment: "")
+        if self.detailDescription == emptyString {// Add placeholder
+            txtDesc.text = NSLocalizedString(descriptionDotKey, comment: emptyString)
             txtDesc.textColor = UIColor.lightGray
         }
         else {
@@ -94,14 +93,14 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
-            textView.text = ""
+            textView.text = emptyString
             textView.textColor = UIColor.black
         }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = NSLocalizedString("DESCRIPTION...", comment: "")
+            textView.text = NSLocalizedString(descriptionDotKey, comment: emptyString)
             textView.textColor = UIColor.lightGray
         }
     }
@@ -113,130 +112,11 @@ class ViewDetailInfos: UIViewController, UITextViewDelegate {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "addMedia") {
+        if (segue.identifier == addMediaSegueKey) {
             if let controller:ViewTableLocalDatas = segue.destination as? ViewTableLocalDatas {
                 controller.ViewDetailInfosController = self
                 controller.cursorPosition = txtDesc.selectedTextRange
             }
         }
      }
-    
-    func attributedString2pikipiki(_ attrString: NSAttributedString) -> String {
-        let descText = NSMutableString()
-        descText.append(attrString.string)
-        //var text = String()
-        var offset: Int = 0
-        var bold: Bool = false
-        var italic: Bool = false
-        
-        attrString.enumerateAttribute(NSAttributedStringKey.font, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
-            if (value != nil) {
-                var startIndex: Int = r.location
-                var endIndex: Int = r.location+r.length
-                let tmpAttr = "\(value!)"
-                if (tmpAttr.range(of: "bold") != nil && tmpAttr.range(of: "italic") != nil) {
-                    startIndex += offset
-                    descText.insert("*****", at: startIndex)
-                    offset += 5
-                    endIndex += offset
-                    descText.insert("*****", at: endIndex)
-                    offset += 5
-                    bold = true
-                    italic = true
-                }
-                else {
-                    if (tmpAttr.range(of: "bold") != nil) {
-                        startIndex += offset
-                        descText.insert("***", at: startIndex)
-                        offset += 3
-                        endIndex += offset
-                        descText.insert("***", at: endIndex)
-                        offset += 3
-                        bold = true
-                    }
-                    else {
-                        bold = false
-                    }
-                    if (tmpAttr.range(of: "italic") != nil) {
-                        startIndex += offset
-                        descText.insert("**", at: startIndex)
-                        offset += 2
-                        endIndex += offset
-                        descText.insert("**", at: endIndex)
-                        offset += 2
-                        italic = true
-                    }
-                    else {
-                        italic = false
-                    }
-                }
-            }
-            //text = "\(descText)"
-        }
-        
-        attrString.enumerateAttribute(NSAttributedStringKey.underlineStyle, in: NSMakeRange(0, attrString.length), options:[]) {value,r,_ in
-            if (value != nil) {
-                dbg.pt("\(r)")
-                dbg.pt(descText as String)
-                var startIndex: Int = r.location
-                var endIndex: Int = r.location+r.length
-                if bold {
-                    offset -= 3
-                }
-                if italic {
-                    offset -= 2
-                }
-                startIndex += offset
-                descText.insert("__", at: startIndex)
-                dbg.pt(descText as String)
-                offset += 2
-                endIndex += offset
-                descText.insert("__", at: endIndex)
-                offset += 2
-            }
-        }
-        
-        return "\(descText)"
-    }
-    
-    /*func pikipiki2AttributedString(_ text: String) -> NSAttributedString {
-        let attributedText = NSMutableAttributedString(string: text)
-        let size = [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 15.0)]
-        attributedText.addAttributes(size, range: NSRange(location: 0, length: attributedText.length))
-        
-        let attributeBold = [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 15)]
-        try! attributedText.addAttributes(attributeBold, delimiter: "***")
-        
-        let attributeItalic = [NSAttributedStringKey.font: UIFont.italicSystemFont(ofSize: 15)]
-        try! attributedText.addAttributes(attributeItalic, delimiter: "**")
-        
-        //let attributeUnderline = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
-        //try! attributedText.addAttributes(attributeUnderline, delimiter: "__")
-        
-        //dbg.pt(attributedText)
-        
-        
-        return attributedText
-    }*/
-    
-}
-
-public extension NSMutableAttributedString {
-    func addAttributes(_ attrs: [NSAttributedStringKey : Any], delimiter: String) throws {
-        let escaped = NSRegularExpression.escapedPattern(for: delimiter)
-        let regex = try NSRegularExpression(pattern:"\(escaped)(.*?)\(escaped)", options: [])
-        
-        var offset = 0
-        regex.enumerateMatches(in: string, options: [], range: NSRange(location: 0, length: string.count)) { (result, flags, stop) -> Void in
-            guard let result = result else {
-                return
-            }
-            
-            let range = NSRange(location: result.range.location + offset, length: result.range.length)
-            self.addAttributes(attrs, range: range)
-            let replacement = regex.replacementString(for: result, in: self.string, offset: offset, template: "$1")
-            self.replaceCharacters(in: range, with: replacement)
-            offset -= (2 * delimiter.count)
-        }
-    }
 }

@@ -28,7 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        dbg.enable = true
         return true
     }
     
@@ -50,19 +49,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         let defaults = UserDefaults.standard
         // update version in settings
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        defaults.set(version, forKey: "version")
+        let version = Bundle.main.object(forInfoDictionaryKey: CFBundleShortVersionStringKey) as! String
+        defaults.set(version, forKey: versionKey)
         // Empty oembed.plist if useCache is not enable
-        let useCache = defaults.bool(forKey: "useCache")
+        let useCache = defaults.bool(forKey: useCacheKey)
         if (!useCache) {
             let fileManager = FileManager.default
             do {
-                let pathToBundleDB = Bundle.main.path(forResource: "oembed", ofType: "plist")!
+                let pathToBundleDB = Bundle.main.path(forResource: oembedKey, ofType: plistKey)!
                 try fileManager.removeItem(atPath: dbPath)
                 try fileManager.copyItem(atPath: pathToBundleDB, toPath: dbPath)
             }
             catch let error as NSError {
-                dbg.pt(error.localizedDescription)
+                debugPrint(error.localizedDescription)
             }
         }
     }
@@ -82,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             }
         } catch {
-            dbg.pt(error.localizedDescription)
+            debugPrint(error.localizedDescription)
             return false
         }
         
