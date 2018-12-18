@@ -68,6 +68,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet var segment: UISegmentedControl!
+    @IBOutlet weak var stackView: UIStackView!
     
     @IBAction func changeSegment(_ sender: AnyObject) {
         showSegmentView(segment.selectedSegmentIndex)
@@ -297,7 +298,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     }
 
     func showSegmentView(_ index: Int) {
-        for subview in view.subviews {
+        for subview in stackView.subviews {
             if subview.tag > 9 {
                 if subview.tag == index + 10 {
                     subview.isHidden = false
