@@ -95,7 +95,7 @@ class xiaDetail: NSObject {
             for (_,point) in sortedPoints {
                 let x = point.center.x / scale
                 let y = point.center.y / scale
-                path += x.toString + semicolonString + y.toString + spaceString
+                path += x.description + semicolonString + y.description + spaceString
             }
             path = String(path.prefix(path.count - 1))
             

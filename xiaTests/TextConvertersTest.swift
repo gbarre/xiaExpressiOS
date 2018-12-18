@@ -23,8 +23,8 @@ import XCTest
 
 class TextConvertersTest: XCTestCase {
     
-    let videoWidth: CGFloat = 480
-    let videoHeight: CGFloat = 270
+    let videoWidth: Int = 480
+    let videoHeight: Int = 270
     let converter = TextConverter(videoWidth: 480, videoHeight: 270)
     
     func test_print_html1( ) {
