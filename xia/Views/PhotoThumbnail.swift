@@ -23,25 +23,24 @@ import UIKit
 
 class PhotoThumbnail: UICollectionViewCell {
         
-    @objc let animationRotateDegres: CGFloat = 0.5
+    let animationRotateDegres: CGFloat = 0.5
     
-    @IBOutlet var imgBkgd: UIView!
+    @IBOutlet weak var imgBkgd: UIView!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var imgViewHeight: NSLayoutConstraint!
     @IBOutlet weak var imgLabel: UILabel!
-    @IBOutlet var roIcon: UIImageView!
+    @IBOutlet weak var roIcon: UIImageView!
     
-    @objc func setLabel(_ text: String) {
+    func setLabel(_ text: String) {
         self.imgLabel.text = text
     }
     
-    @objc func setLabelBkgColor(_ color: UIColor) {
-        //self.backgroundColor = color
-        imgBkgd.isHidden = (color == UIColor.clear) ? true : false
+    func setLabelBkgColor(_ color: UIColor) {
+        imgBkgd.isHidden = (color == UIColor.clear)
         imgLabel.textColor = (color == UIColor.clear) ? blueColor : UIColor.white
     }
     
-    @objc func setThumbnail(_ thumbnailImage: UIImage) {
+    func setThumbnail(_ thumbnailImage: UIImage) {
         if thumbnailImage.size.width > thumbnailImage.size.height {
             let newHeight = thumbnailImage.size.height * 200 / thumbnailImage.size.width
             self.imgViewHeight.constant = newHeight
@@ -52,15 +51,15 @@ class PhotoThumbnail: UICollectionViewCell {
         self.imgView.image = thumbnailImage
     }
     
-    @objc func showRoIcon(_ roState: Bool = false) {
+    func showRoIcon(_ roState: Bool = false) {
         roIcon.isHidden = !roState
     }
     
-    @objc func degreesToRadians(_ x: CGFloat) -> CGFloat {
+    func degreesToRadians(_ x: CGFloat) -> CGFloat {
         return .pi * x / 180.0
     }
     
-    @objc func wobble(_ enable: Bool) {
+    func wobble(_ enable: Bool) {
         let leftOrRight: CGFloat = 1
         let rightOrLeft: CGFloat = -1
         let leftWobble: CGAffineTransform = CGAffineTransform(rotationAngle: degreesToRadians(animationRotateDegres * leftOrRight))

@@ -30,10 +30,6 @@ class jsonDB: NSObject {
         self.path = p
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError(fatalErrorInit)
-    }
-    
     func getDict() {
         // check if file exist
         let fileManager = FileManager.default

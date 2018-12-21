@@ -23,23 +23,19 @@ import UIKit
 
 class xiaDetail: NSObject {
 
-    @objc var points = [Int: UIImageView]()
-    @objc var tag: Int = 0
-    @objc var scale: CGFloat = 1.0
-    @objc var constraint: String = emptyString
-    @objc var locked: Bool = false
+    var points = [Int: UIImageView]()
+    var tag: Int = 0
+    var scale: CGFloat = 1.0
+    var constraint: String = emptyString
+    var locked: Bool = false
     
-    @objc init(tag: Int, scale: CGFloat){
+    init(tag: Int, scale: CGFloat){
         self.tag = tag
         self.points = [:]
         self.scale = scale
     }
     
-    @objc required init?(coder aDecoder: NSCoder) {
-        fatalError(fatalErrorInit)
-    }
-    
-    @objc func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
+    func bezierFrame(_ scale:CGFloat = 1.0) -> CGRect {
         var xMin: CGFloat = UIScreen.main.bounds.width
         var xMax: CGFloat = 0
         var yMin: CGFloat = UIScreen.main.bounds.height
@@ -64,7 +60,7 @@ class xiaDetail: NSObject {
         return CGRect(x: xMin * scale, y: yMin * scale, width: (xMax - xMin) * scale, height: (yMax - yMin) * scale)
     }
     
-    @objc func bezierPath(_ scale:CGFloat = 1.0) -> UIBezierPath {
+    func bezierPath(_ scale:CGFloat = 1.0) -> UIBezierPath {
         var path = UIBezierPath()
         if constraint == constraintEllipse {
             path = UIBezierPath(ovalIn: self.bezierFrame())
@@ -84,7 +80,7 @@ class xiaDetail: NSObject {
         return path
     }
     
-    @objc func createPath() -> String {
+    func createPath() -> String {
         if (points.count < 2) {
             return newDetailPathString
         }
@@ -103,7 +99,7 @@ class xiaDetail: NSObject {
         }
     }
     
-    @objc func createPoint(_ location: CGPoint, imageName: String, index: Int) -> UIImageView {
+    func createPoint(_ location: CGPoint, imageName: String, index: Int) -> UIImageView {
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
         imageView.center = location
@@ -115,7 +111,7 @@ class xiaDetail: NSObject {
         // view.addSubview(newPoint)
     }
     
-    @objc func makeVirtPoints() -> [Int: UIImageView] {
+    func makeVirtPoints() -> [Int: UIImageView] {
         let nbPoints = points.count
         var virtPoints = [Int: UIImageView]()
         

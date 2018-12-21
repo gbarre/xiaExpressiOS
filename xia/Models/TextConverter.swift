@@ -32,10 +32,6 @@ class TextConverter: NSObject {
         self.videoHeight = videoHeight
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError(fatalErrorInit)
-    }
-    
     func _text2html(inText: String) -> String {
         var htmlString = inText
         

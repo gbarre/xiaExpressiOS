@@ -23,12 +23,12 @@ import UIKit
 
 class ShapeView: UIView {
     
-    @objc var currentShapeType: Int = 0
-    @objc var arrayPoints = [Int: UIImageView]()
-    @objc var origin: CGPoint = CGPoint(x: 0, y: 0)
-    @objc var color: UIColor = UIColor.black
+    var currentShapeType: Int = 0
+    var arrayPoints = [Int: UIImageView]()
+    var origin: CGPoint = CGPoint(x: 0, y: 0)
+    var color: UIColor = UIColor.black
     
-    @objc init(frame: CGRect, shape: Int, points: [Int: UIImageView], color: UIColor) {
+    init(frame: CGRect, shape: Int, points: [Int: UIImageView], color: UIColor) {
         super.init(frame: frame)
         self.currentShapeType = shape
         self.arrayPoints = points
@@ -51,7 +51,7 @@ class ShapeView: UIView {
         }
     }
     
-    @objc func drawLines() {
+    func drawLines() {
         let ctx = UIGraphicsGetCurrentContext()!
         
         var beginPoint = arrayPoints[0]!.center
@@ -76,7 +76,7 @@ class ShapeView: UIView {
         ctx.strokePath()
     }
     
-    @objc func drawPolygon() {
+    func drawPolygon() {
         let ctx = UIGraphicsGetCurrentContext()!
         
         var beginPoint = arrayPoints[0]!.center
@@ -99,7 +99,7 @@ class ShapeView: UIView {
         ctx.fillPath()
     }
     
-    @objc func drawEllipse() {
+    func drawEllipse() {
         let ctx = UIGraphicsGetCurrentContext()!
         
         ctx.setLineDash(phase: 0, lengths: [5])
@@ -114,7 +114,7 @@ class ShapeView: UIView {
         ctx.strokePath()
     }
     
-    @objc func drawEllipseFilled() {
+    func drawEllipseFilled() {
         let size = CGSize(width: arrayPoints[1]!.center.x - arrayPoints[3]!.center.x, height: arrayPoints[2]!.center.y - arrayPoints[0]!.center.y)
         
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 5, y: 5, width: abs(size.width), height: abs(size.height)))
@@ -122,7 +122,7 @@ class ShapeView: UIView {
         ovalPath.fill()
     }
     
-    @objc func drawCircle() {
+    func drawCircle() {
         let center = CGPoint(x: self.frame.size.width / 2.0, y: self.frame.size.height / 2.0)
         let ctx = UIGraphicsGetCurrentContext()!
         ctx.beginPath()

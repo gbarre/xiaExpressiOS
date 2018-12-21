@@ -24,26 +24,26 @@ import Foundation
 
 class ViewCollectionController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
-    @objc var arrayNames = [String]()
-    @objc var arraySortedNames = [String: String]() // Label : FileName
-    @objc var segueIndex: Int = -1
-    @objc var editingMode: Bool = false
-    @objc var showHelp = false
+    var arrayNames = [String]()
+    var arraySortedNames = [String: String]() // Label : FileName
+    var segueIndex: Int = -1
+    var editingMode: Bool = false
+    var showHelp = false
     
-    @objc var b64IMG:String = emptyString
-    @objc var currentElement:String = emptyString
-    @objc var passData:Bool=false
-    @objc var passName:Bool=false
+    var b64IMG:String = emptyString
+    var currentElement:String = emptyString
+    var passData:Bool=false
+    var passName:Bool=false
     var newMedia: Bool?
-    @objc var landscape: Bool = false
+    var landscape: Bool = false
     var salt = defaultSalt
     var currentDirs = rootDirs
     var toMove = [String]()
     var dirsInSelection = 0
     
-    @objc var selectedPhotos = [IndexPath]()
+    var selectedPhotos = [IndexPath]()
     
-    @IBOutlet var navBar: UINavigationBar!
+    @IBOutlet weak var navBar: UINavigationBar!
     
     @IBOutlet weak var btnBack: UIBarButtonItem!
     @IBAction func btnBackAction(_ sender: Any) {
@@ -55,7 +55,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             XiaTitleString : String(format: XiaTitleSubDirString, getDirName(path: currentDirs[rootString]!))
     }
     
-    @IBOutlet var btnTrash: UIBarButtonItem!
+    @IBOutlet weak var btnTrash: UIBarButtonItem!
     @IBAction func btnTrashAction(_ sender: AnyObject) {
         // Show confirm alert
         let controller = UIAlertController()
@@ -89,13 +89,13 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         present(controller, animated: true, completion: nil)
     }
     
-    @IBOutlet var btnExport: UIBarButtonItem!
+    @IBOutlet weak var btnExport: UIBarButtonItem!
     @IBAction func btnExportAction(_ sender: AnyObject) {
         segueIndex = (selectedPhotos[0] as NSIndexPath).row
         performSegue(withIdentifier: exportSegueKey, sender: self)
     }
     
-    @IBOutlet var btnEdit: UIBarButtonItem!
+    @IBOutlet weak var btnEdit: UIBarButtonItem!
     @IBAction func btnEditAction(_ sender: AnyObject) {
         segueIndex = (selectedPhotos[0] as NSIndexPath).row
         if arrayNames[segueIndex].prefix(salt.count) != salt {
@@ -134,7 +134,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    @IBOutlet var btnCopy: UIBarButtonItem!
+    @IBOutlet weak var btnCopy: UIBarButtonItem!
     @IBAction func btnCopyAction(_ sender: AnyObject) {
         if arrayNames[segueIndex].prefix(salt.count) != salt {
             // Show confirm alert
@@ -192,7 +192,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         
     }
     
-    @IBOutlet var navBarTitle: UINavigationItem!
+    @IBOutlet weak var navBarTitle: UINavigationItem!
     
     @IBOutlet weak var btnDirs: UIBarButtonItem!
     @IBAction func btnDirsAction(_ sender: Any) {
@@ -294,7 +294,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func applicationWillEnterForeground(_ notification: Notification) {
+    func applicationWillEnterForeground(_ notification: Notification) {
         startImport()
         self.CollectionView.reloadData()
     }
@@ -369,7 +369,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    @objc func buildLeftNavbarItems(_ selectedItems: Int = 0) {
+    func buildLeftNavbarItems(_ selectedItems: Int = 0) {
         let buttonColor = (isEditing) ? selectingColor : blueColor
         switch selectedItems {
         case 1:
@@ -546,7 +546,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         return cell
     }
     
-    @objc func changeCellLabelBkgColor(_ path: IndexPath) {
+    func changeCellLabelBkgColor(_ path: IndexPath) {
         var labelColor: UIColor
         if selectedPhotos.contains(path) {
             let indexOfPhoto = selectedPhotos.index(of: path)
@@ -592,7 +592,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    @objc func endEdit() {
+    func endEdit() {
         editingMode = false
         editMode.title = NSLocalizedString(editKey, comment: emptyString)
         for cell in CollectionView.visibleCells {
@@ -613,7 +613,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
-    @objc func deleteFiles(_ path: IndexPath) {
+    func deleteFiles(_ path: IndexPath) {
         let deleteIndex = (path as NSIndexPath).row
         let fileName = arrayNames[deleteIndex]
         // Delete the file

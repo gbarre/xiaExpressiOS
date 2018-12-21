@@ -60,8 +60,6 @@
 		F04543F31D17F93200BBF731 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543F51D17F93200BBF731 /* Localizable.strings */; };
 		F04543F81D17F93200BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04543FA1D17F93200BBF731 /* InfoPlist.strings */; };
 		F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F04544041D17F93300BBF731 /* InfoPlist.strings */; };
-		F04D92242018BA4C007A6073 /* ViewImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04D92232018BA4C007A6073 /* ViewImport.swift */; };
-		F04D92252018BA4C007A6073 /* ViewImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04D92232018BA4C007A6073 /* ViewImport.swift */; };
 		F059F582201B7C530074B20C /* ViewPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F059F581201B7C530074B20C /* ViewPicker.swift */; };
 		F059F583201B7C530074B20C /* ViewPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F059F581201B7C530074B20C /* ViewPicker.swift */; };
 		F06592A621C9588E0080160F /* xiaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06592A521C9588E0080160F /* xiaUITests.swift */; };
@@ -76,7 +74,6 @@
 		F0770A031FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
 		F0770A041FC6D61E00174494 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07709F81FC6D61E00174494 /* Parser.swift */; };
 		F0B4798F2011FB460050C2EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03EA5CC1D12EB02008678BC /* Main.storyboard */; };
-		F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */ = {isa = PBXBuildFile; fileRef = F0BB83751D19D98F0070140A /* ipad_blanc_80.png */; };
 		F0D1CC7E200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
 		F0D1CC7F200E0AA60029C64A /* MathJax-2.7.2 in Resources */ = {isa = PBXBuildFile; fileRef = F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */; };
 		F0D5EEB31F7BF9440043D9CD /* jsonDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */; };
@@ -147,7 +144,6 @@
 		F04543F41D17F93200BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F04543F91D17F93200BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F04544031D17F93300BBF731 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F04D92232018BA4C007A6073 /* ViewImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewImport.swift; sourceTree = "<group>"; };
 		F059F581201B7C530074B20C /* ViewPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPicker.swift; sourceTree = "<group>"; };
 		F06592A321C9588E0080160F /* xiaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xiaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F06592A521C9588E0080160F /* xiaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = xiaUITests.swift; sourceTree = "<group>"; };
@@ -159,7 +155,6 @@
 		F07709F61FC6D61E00174494 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F07709F71FC6D61E00174494 /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		F07709F81FC6D61E00174494 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
-		F0BB83751D19D98F0070140A /* ipad_blanc_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_blanc_80.png; sourceTree = "<group>"; };
 		F0C6099421CD1A960048BD02 /* xia.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = xia.entitlements; sourceTree = "<group>"; };
 		F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "MathJax-2.7.2"; sourceTree = "<group>"; };
 		F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jsonDB.swift; sourceTree = "<group>"; };
@@ -210,7 +205,6 @@
 			isa = PBXGroup;
 			children = (
 				F0D1CC7D200E0AA60029C64A /* MathJax-2.7.2 */,
-				F0BB83751D19D98F0070140A /* ipad_blanc_80.png */,
 				1C8A919A3280663E7A97B05C /* Frameworks */,
 				F4F524A1C2A6DEA91F3D7262 /* Pods */,
 				F03EA5C61D12EB02008678BC /* Products */,
@@ -234,15 +228,15 @@
 		F03EA5C71D12EB02008678BC /* xia */ = {
 			isa = PBXGroup;
 			children = (
+				F0C6099421CD1A960048BD02 /* xia.entitlements */,
 				F03EA5D41D12EB02008678BC /* Info.plist */,
 				F03EA5C81D12EB02008678BC /* AppDelegate.swift */,
 				F03EA5CF1D12EB02008678BC /* Assets.xcassets */,
-				F0EAFF0A1D12EDE500366F0E /* Localizable.strings */,
-				F03EA5D11D12EB02008678BC /* LaunchScreen.storyboard */,
-				F03EA5CC1D12EB02008678BC /* Main.storyboard */,
-				F0C6099421CD1A960048BD02 /* xia.entitlements */,
 				F0C6099121CD17810048BD02 /* Extensions */,
+				F03EA5D11D12EB02008678BC /* LaunchScreen.storyboard */,
 				F0C6099221CD17B50048BD02 /* LocalData */,
+				F0EAFF0A1D12EDE500366F0E /* Localizable.strings */,
+				F03EA5CC1D12EB02008678BC /* Main.storyboard */,
 				F0C6098E21CD17800048BD02 /* Models */,
 				F0C6099021CD17800048BD02 /* Network */,
 				F0C6099321CD1A790048BD02 /* Settings */,
@@ -322,6 +316,8 @@
 			children = (
 				F03EA5F71D12EC2B008678BC /* BubbleTransition.swift */,
 				F0D5EEB21F7BF9440043D9CD /* jsonDB.swift */,
+				F03EA5FF1D12EC2B008678BC /* ShapeView.swift */,
+				F03EA6001D12EC2B008678BC /* TextConverter.swift */,
 				F03EA6081D12EC2B008678BC /* xiaDetail.swift */,
 			);
 			path = Models;
@@ -331,7 +327,6 @@
 			isa = PBXGroup;
 			children = (
 				F03EA5FA1D12EC2B008678BC /* PhotoThumbnail.swift */,
-				F04D92232018BA4C007A6073 /* ViewImport.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -347,8 +342,6 @@
 		F0C6099121CD17810048BD02 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				F03EA5FF1D12EC2B008678BC /* ShapeView.swift */,
-				F03EA6001D12EC2B008678BC /* TextConverter.swift */,
 				F03EA6011D12EC2B008678BC /* Util.swift */,
 			);
 			path = Extensions;
@@ -517,7 +510,6 @@
 				F03EA6111D12EC2B008678BC /* Settings.bundle in Resources */,
 				F03439E61F7D0A6900F49714 /* oembed.plist in Resources */,
 				F04544021D17F93300BBF731 /* InfoPlist.strings in Resources */,
-				F0BB83761D19D98F0070140A /* ipad_blanc_80.png in Resources */,
 				F03EA5D31D12EB02008678BC /* LaunchScreen.storyboard in Resources */,
 				F0EAFF0C1D12EDE500366F0E /* Localizable.strings in Resources */,
 				F03EA5D01D12EB02008678BC /* Assets.xcassets in Resources */,
@@ -649,7 +641,6 @@
 				F03EA6141D12EC2B008678BC /* Util.swift in Sources */,
 				F0770A031FC6D61E00174494 /* Parser.swift in Sources */,
 				F03EA5C91D12EB02008678BC /* AppDelegate.swift in Sources */,
-				F04D92242018BA4C007A6073 /* ViewImport.swift in Sources */,
 				F0D5EEB31F7BF9440043D9CD /* jsonDB.swift in Sources */,
 				F03EA60B1D12EC2B008678BC /* Constants.swift in Sources */,
 				F03EA60E1D12EC2B008678BC /* PlayDetail.swift in Sources */,
@@ -667,7 +658,6 @@
 				F03EA6241D12EC4A008678BC /* PlayXia.swift in Sources */,
 				F059F583201B7C530074B20C /* ViewPicker.swift in Sources */,
 				F03EA61F1D12EC3D008678BC /* Constants.swift in Sources */,
-				F04D92252018BA4C007A6073 /* ViewImport.swift in Sources */,
 				F0770A021FC6D61E00174494 /* Options.swift in Sources */,
 				F07709FC1FC6D61E00174494 /* Element.swift in Sources */,
 				F0D5EEB41F7BF9440043D9CD /* jsonDB.swift in Sources */,
