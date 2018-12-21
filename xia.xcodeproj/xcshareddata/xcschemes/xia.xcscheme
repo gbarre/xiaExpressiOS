@@ -21,14 +21,14 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "NO"
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F03EA5E31D12EB02008678BC"
+               BlueprintIdentifier = "F06592A221C9588E0080160F"
                BuildableName = "xiaUITests.xctest"
                BlueprintName = "xiaUITests"
                ReferencedContainer = "container:xia.xcodeproj">
@@ -49,6 +49,16 @@
                BlueprintIdentifier = "F03EA5D81D12EB02008678BC"
                BuildableName = "xiaTests.xctest"
                BlueprintName = "xiaTests"
+               ReferencedContainer = "container:xia.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F06592A221C9588E0080160F"
+               BuildableName = "xiaUITests.xctest"
+               BlueprintName = "xiaUITests"
                ReferencedContainer = "container:xia.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -61,6 +61,7 @@ func buildShape(_ fill: Bool, color: UIColor, tag: Int, points: [Int: UIImageVie
     let myView = ShapeView(frame: shapeFrame, shape: shapeArg, points: points, color: color)
     myView.backgroundColor = UIColor(white: 0, alpha: 0)
     myView.tag = shapeTag
+    myView.accessibilityIdentifier = String(shapeTag)
     parentView.addSubview(myView)
     
     // Shape is locked ?
