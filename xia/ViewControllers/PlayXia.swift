@@ -93,14 +93,14 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch: UITouch = touches.first!
-        location = touch.location(in: self.bkgdImage)
+        location = touch.location(in: self.view)
         touchedTag = 0
         
         // Get tag of the touched detail
-        for detail in details {
-            let (detailTag, detailPoints) = detail
-            if (pointInPolygon(detailPoints.points, touchPoint: location)) {
-                touchedTag = (NumberFormatter().number(from: detailTag)?.intValue)!
+        for subview in view.subviews {
+            guard let accessibitilyIdentifier = subview.accessibilityIdentifier else {continue}
+            if accessibitilyIdentifier.contains(xmlDetailKey) && subview.frame.contains(location) {
+                touchedTag = subview.tag - 100
                 performSegue(withIdentifier: openDetailSegueKey, sender: self)
                 break
             }

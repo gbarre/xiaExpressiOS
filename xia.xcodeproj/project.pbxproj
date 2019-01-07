@@ -240,7 +240,6 @@
 				F0C6098E21CD17800048BD02 /* Models */,
 				F0C6099021CD17800048BD02 /* Network */,
 				F0C6099321CD1A790048BD02 /* Settings */,
-				F0C6099521CD1AF30048BD02 /* Storyboards */,
 				F0C6098C21CD17430048BD02 /* Strings */,
 				F0C6098D21CD17800048BD02 /* ViewControllers */,
 				F0C6098F21CD17800048BD02 /* Views */,
@@ -361,13 +360,6 @@
 				F03EA5FE1D12EC2B008678BC /* Settings.bundle */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		F0C6099521CD1AF30048BD02 /* Storyboards */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		F4F524A1C2A6DEA91F3D7262 /* Pods */ = {

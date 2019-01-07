@@ -51,31 +51,55 @@ class xiaUITests: XCTestCase {
     
     func testAddRectangle() {
         let app = XCUIApplication()
+        
+        // Open first element in collection
         app.collectionViews.cells.otherElements.firstMatch.tap()
         
+        // Add rectangle
         let toolbar = app.toolbars["Toolbar"]
         toolbar.buttons["Ajouter"].tap()
         app.sheets.buttons["Rectangle"].tap()
+        
+        // Open detail
+        app.toolbars["Toolbar"].buttons["edit"].tap()
+        
+        // Add title
+        app.typeText("Un titre")
+        
+        // Add description
+        app.buttons["tab"].tap()
+        app.typeText("Une description simple...")
+        app/*@START_MENU_TOKEN@*/.buttons["Return"]/*[[".keyboards",".buttons[\"retour\"]",".buttons[\"Return\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.typeText("Un lien : http://perdu.com")
+        
+        // Close popup
+        app.navigationBars.buttons["OK"].tap()
+        
     }
     
     func testOpenRectangle() {
         let app = XCUIApplication()
+        
+        // Open first element in collection
         app.collectionViews.cells.otherElements.firstMatch.tap()
+        
+        // Go to PlayView
         let toolbar = app.toolbars["Toolbar"]
         toolbar.buttons["Lecture"].tap()
         
-        XCTAssertTrue(app.otherElements["200"].exists)
+        // Try to open the first detail
+        app.otherElements["detail200"].tap()
         
-        app.otherElements["200"].tap()
+        // Check for title
+        let title = app.staticTexts["DetailTitle"].label
+        XCTAssertEqual(title, "Un titre")
         
-        let window = app.children(matching: .window).element(boundBy: 0)
-        let element = window.children(matching: .other).element(boundBy: 1).children(matching: .other).element(boundBy: 1).children(matching: .other).element
-        element.children(matching: .other).element(boundBy: 0).tap()
-        element.tap()
-        app.buttons["delete"].tap()
-        window.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.tap()
-        toolbar.buttons["Collection"].tap()
+        // Check for description
+        let text1 = app.webViews.staticTexts["Une description simple..."].label
+        XCTAssertEqual(text1, "Une description simple...")
         
+        let text2 = app.webViews.staticTexts["http://perdu.com"].label
+        XCTAssertEqual(text2, "http://perdu.com")
         
     }
 }
