@@ -394,7 +394,7 @@ let showPickerSegueKey: String = "showPicker"
 let photoCellIdentifier: String = "PhotoCell"
 let importIdentifier: String = "importIdentifier"
 let cellReuseIdentifier: String = "reorderIdentifier"
-let reuseIdentifier: String = "fileID"
+let fileIdentifier: String = "fileID"
 
 // Regex
 let urlRegex: String = "(^|\\ |\\<br \\/\\>)(((https?|ftp|file):\\/)|\\.)\\/[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"

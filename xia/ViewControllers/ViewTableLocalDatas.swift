@@ -79,7 +79,7 @@ class ViewTableLocalDatas: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         filesImages = getFiles(localDatasDirectory + separatorString + imagesString)
-        let height = 45 * filesImages.count
+        let height = 45 * (filesImages.count + 1)
         self.preferredContentSize = CGSize(width: 300, height: height)
         return 1
     }
@@ -89,9 +89,23 @@ class ViewTableLocalDatas: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: fileIdentifier, for: indexPath)
         
         cell.textLabel?.text = filesImages[indexPath.row]
+        
+        // show thumbnail
+        let filePath = localDatasDirectory + separatorString + imagesString + separatorString + filesImages[indexPath.row]
+        if fm.fileExists(atPath: filePath) {
+            let cover = UIImage(contentsOfFile: filePath)
+            cell.imageView?.image = cover
+            let itemSize = CGSize.init(width: 30, height: 30)
+            UIGraphicsBeginImageContextWithOptions(itemSize, false, UIScreen.main.scale);
+            let imageRect = CGRect.init(origin: CGPoint.zero, size: itemSize)
+            cell.imageView?.image!.draw(in: imageRect)
+            cell.imageView?.image! = UIGraphicsGetImageFromCurrentImageContext()!;
+            UIGraphicsEndImageContext();
+        }
+        
         return cell
     }
     
