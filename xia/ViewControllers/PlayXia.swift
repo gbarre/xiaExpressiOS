@@ -69,7 +69,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
         // Add gestures on swipe
         let gbSelector = #selector(PlayXia.goBack)
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: gbSelector )
-        rightSwipe.direction = UISwipeGestureRecognizerDirection.right
+        rightSwipe.direction = UISwipeGestureRecognizer.Direction.right
         view.addGestureRecognizer(rightSwipe)
         
         // Load image
@@ -83,7 +83,7 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
             loadDetails(xml)
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PlayXia.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlayXia.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -208,6 +208,6 @@ class PlayXia: UIViewController, UIViewControllerTransitioningDelegate {
     
     @objc func rotated() {
         loadDetails(xml)
-        landscape = (UIDeviceOrientationIsLandscape(UIDevice.current.orientation)) ? true : false
+        landscape = (UIDevice.current.orientation.isLandscape) ? true : false
     }
 }

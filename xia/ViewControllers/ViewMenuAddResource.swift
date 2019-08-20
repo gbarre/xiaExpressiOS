@@ -30,10 +30,10 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
     @objc let imagePicker = UIImagePickerController() // Needed to show the imagePicker in the Container View
     
     @IBAction func takePhoto(_ sender: AnyObject) {
-        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
+        if(UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
             //load the camera interface
             let picker:UIImagePickerController = UIImagePickerController()
-            picker.sourceType = UIImagePickerControllerSourceType.camera
+            picker.sourceType = UIImagePickerController.SourceType.camera
             picker.delegate = self
             picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
@@ -53,11 +53,14 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
         super.viewDidLoad()
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
+        let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
         let now: Int = Int(Date().timeIntervalSince1970)
-        let imageData = UIImageJPEGRepresentation(image!, 85)
-        try? imageData?.write(to: URL(fileURLWithPath: currentDirs[imagesString]! + separatorString + String(now) + jpgExtension), options: [.atomic])
+        let imageData = image!.jpegData(compressionQuality: 85)
+        ((try? imageData?.write(to: URL(fileURLWithPath: currentDirs[imagesString]! + separatorString + String(now) + jpgExtension), options: [.atomic])) as ()??)
         
         // Create associated xml
         let xml = AEXMLDocument()
@@ -92,4 +95,14 @@ class ViewMenuAddResource: UIViewController, UIImagePickerControllerDelegate, UI
             let picker = segue.destination as! UIImagePickerController
             picker.delegate = self
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

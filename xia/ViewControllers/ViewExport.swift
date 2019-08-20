@@ -92,7 +92,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     func exportSimpleXML() {
         // encode image to base64
-        let imageData = UIImageJPEGRepresentation(img, 85)
+        let imageData = img.jpegData(compressionQuality: 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
         let trimmedBase64String: String = base64String.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
         
@@ -117,7 +117,7 @@ class ViewExport: UITableViewController, UIDocumentInteractionControllerDelegate
     
     func exportSVG() {
        // encode image to base64
-        let imageData = UIImageJPEGRepresentation(img, 85)
+        let imageData = img.jpegData(compressionQuality: 85)
         let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
         let trimmedBase64String = base64String.replacingOccurrences(of: htmlBreakLineString, with: emptyString)
         

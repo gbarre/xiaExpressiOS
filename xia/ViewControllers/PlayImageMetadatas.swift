@@ -20,6 +20,7 @@
 //
 
 import UIKit
+import SafariServices
 import WebKit
 
 class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
@@ -46,7 +47,7 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     @IBOutlet var documentKeywords: UILabel!
     @IBOutlet var documentCoverage: UILabel!
     @IBOutlet var documentContributors: UILabel!
-    @IBOutlet weak var documentDescription: UIView!
+    @IBOutlet weak var webView: WKWebView!
     
     override func viewDidLoad() {
         
@@ -88,7 +89,6 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         // show latex, jutify & font-size
         htmlString = htmlHeader + htmlString + htmlFooter
         
-        var webView: WKWebView!
         
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsAirPlayForMediaPlayback = true
@@ -98,7 +98,6 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
             webConfiguration.dataDetectorTypes = .all
         }
         
-        webView = WKWebView(frame: CGRect(x:0, y:0, width: documentDescription.frame.width, height: documentDescription.frame.height), configuration: webConfiguration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
         
@@ -106,7 +105,6 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let baseURL = NSURL.fileURL(withPath: bundlePath)
         
         webView.loadHTMLString(htmlString, baseURL: baseURL)
-        documentDescription.addSubview(webView)
         
     }
     
@@ -122,7 +120,7 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
         let txtSize: CGFloat = 14
-        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: txtSize)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml[xmlXiaKey][element].value != nil &&
             xml[xmlXiaKey][element].value != String(format: xmlElementNotFound, element)) {
@@ -137,14 +135,14 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let key = xmlElementsDict[xmlDescriptionKey]
         let keyWidth = key??.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
-        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml[xmlXiaKey][xmlDescriptionKey].value != nil &&
             xml[xmlXiaKey][xmlDescriptionKey].value != String(format: xmlElementNotFound, xmlDescriptionKey)) {
             let attributedValue: NSMutableAttributedString = NSMutableAttributedString(string: xml[xmlXiaKey][xmlDescriptionKey].value!)
             attributedText.append(attributedValue)
             let descWidth = xml[xmlXiaKey][xmlDescriptionKey].value!.count
-            attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
+            attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)], range: NSRange(location: keyWidth!, length: descWidth))
 
         }
         
@@ -155,7 +153,7 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let key = xmlElementsDict[licenseKey]
         let keyWidth = key!?.count
         let attributedText: NSMutableAttributedString = NSMutableAttributedString(string: key!!)
-        attributedText.addAttributes([NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
+        attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 17)], range: NSRange(location: 0, length: keyWidth!))
         
         if (xml[xmlXiaKey][licenseKey].value != nil &&
             xml[xmlXiaKey][licenseKey].value != String(format: xmlElementNotFound, licenseKey)) {
@@ -172,17 +170,14 @@ class PlayImageMetadatas: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.navigationType == WKNavigationType.linkActivated {
-            let url = navigationAction.request.url
-            let shared = UIApplication.shared
-            
-            if shared.canOpenURL(url!) {
-                shared.openURL(url!)
-            }
+            guard let url = navigationAction.request.url else {return}
+            // Use SafariService instead of opening Safari
+            let safariViewController = SFSafariViewController(url: url)
+            present(safariViewController, animated: true, completion: nil)
             
             decisionHandler(WKNavigationActionPolicy.cancel)
         } else {
-            decisionHandler(WKNavigationActionPolicy.allow)
-        }
+            decisionHandler(WKNavigationActionPolicy.allow)        }
     }
     
 }

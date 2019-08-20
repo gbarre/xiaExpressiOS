@@ -124,7 +124,7 @@ class ViewTableLocalDatas: UITableViewController {
         let touched = imagesString + separatorString + filesImages[indexPath.row]
         
         if selectedElements.contains(touched) {
-            selectedElements.remove(at: selectedElements.index(of: touched)!)
+            selectedElements.remove(at: selectedElements.firstIndex(of: touched)!)
         }
         
         btnTrash.isEnabled = (selectedElements.count > 0)

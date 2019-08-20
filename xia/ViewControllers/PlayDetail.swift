@@ -20,6 +20,7 @@
 //
 
 import UIKit
+import SafariServices
 import WebKit
 
 class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUIDelegate, WKNavigationDelegate {
@@ -43,7 +44,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
     var screenWidth = UIScreen.main.bounds.width
     var screenHeight = UIScreen.main.bounds.height
     
-    var webView: WKWebView!
     
     let converter: TextConverter = TextConverter(videoWidth: 480, videoHeight: 270)
     
@@ -58,7 +58,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
     @IBOutlet var imgThumb: UIImageView!
     @IBOutlet var titleArea: UIView!
     @IBOutlet var detailTitle: UILabel!
-    @IBOutlet weak var descView: UIView!
+    @IBOutlet weak var webView: WKWebView!
     @IBOutlet var bkgdzoom: UIImageView!
     
     @IBAction func btnZoomAction(_ sender: AnyObject) {
@@ -81,7 +81,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
             UIView.animate(withDuration: 2 * transitionDuration, animations: { () -> Void in
                 self.imgArea.alpha = 1
                 self.titleArea.alpha = 1
-                self.descView.alpha = 1
+                self.webView.alpha = 1
             }) 
             showZoom = false
         }
@@ -94,7 +94,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         bkgdzoom.transform = bkgdzoom.transform.scaledBy(x: 3, y: 3)
         
         imgThumb = UIImageView(frame: CGRect(x: 0, y: 0, width: bkgdImage.frame.width, height: bkgdImage.frame.height))
-        imgThumb.contentMode = UIViewContentMode.scaleAspectFit
+        imgThumb.contentMode = UIView.ContentMode.scaleAspectFit
         imgThumb.image = bkgdImage.image
         
         // Cropping image
@@ -156,7 +156,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
             webConfiguration.dataDetectorTypes = .all
         }
         
-        webView = WKWebView(frame: CGRect(x:0, y:0, width: descView.frame.width, height: descView.frame.height), configuration: webConfiguration)
         webView.allowsLinkPreview = true
         webView.navigationDelegate = self
         webView.uiDelegate = self
@@ -165,7 +164,6 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         let baseURL = NSURL.fileURL(withPath: bundlePath)
         
         webView.loadHTMLString(htmlString, baseURL: baseURL)
-        descView.addSubview(webView)
         
         // wait 0.5s before showing image (bubbletransition effect)
         let delayTime = DispatchTime.now() + Double(Int64(NSEC_PER_MSEC * 500)) / Double(NSEC_PER_SEC)
@@ -247,7 +245,7 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
         
         UIView.animate(withDuration: transitionDuration, animations: { () -> Void in
             self.bkgdzoom.alpha = 1
-            self.descView.alpha = 0
+            self.webView.alpha = 0
             self.titleArea.alpha = 0
             self.imgArea.alpha = 0
             detailImg.transform = detailImg.transform.scaledBy(x: detailScale / self.currentScale, y: detailScale / self.currentScale)
@@ -278,17 +276,14 @@ class PlayDetail: UIViewController, UIViewControllerTransitioningDelegate, WKUID
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.navigationType == WKNavigationType.linkActivated {
-            let url = navigationAction.request.url
-            let shared = UIApplication.shared
-            
-            if shared.canOpenURL(url!) {
-                shared.openURL(url!)
-            }
+            guard let url = navigationAction.request.url else {return}
+            // Use SafariService instead of opening Safari
+            let safariViewController = SFSafariViewController(url: url)
+            present(safariViewController, animated: true, completion: nil)
             
             decisionHandler(WKNavigationActionPolicy.cancel)
         } else {
-            decisionHandler(WKNavigationActionPolicy.allow)
-        }
+            decisionHandler(WKNavigationActionPolicy.allow)        }
     }
     
 }

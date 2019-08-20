@@ -176,7 +176,7 @@ extension BubbleTransition: UIViewControllerAnimatedTransitioning {
         }
         let pathFrameCorners = (!noDetail) ? (myDetail as! xiaDetail).bezierFrame() : UIScreen.main.bounds
         let imgThumb: UIImageView = UIImageView(frame: fullImage.frame)
-        imgThumb.contentMode = UIViewContentMode.scaleAspectFit
+        imgThumb.contentMode = UIView.ContentMode.scaleAspectFit
         imgThumb.image = fullImage.image
         
         let containerView = transitionContext.containerView

@@ -22,17 +22,20 @@ class ViewPicker: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         self.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         let path = (info[IPCImageURLKey] as! NSURL).path!
         copyFile(at: path, type: imagesString, ext: jpgString.uppercased())
     }
     
     func copyFile(at: String, type: String, ext: String) {
-        let controller = UIAlertController(title: NSLocalizedString(chooseFileNameKey, comment: emptyString), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let controller = UIAlertController(title: NSLocalizedString(chooseFileNameKey, comment: emptyString), message: nil, preferredStyle: UIAlertController.Style.alert)
         controller.addTextField(configurationHandler: {(textField: UITextField!) in
             textField.keyboardType = UIKeyboardType.alphabet
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: { action in
             if (controller.textFields![0].text! != emptyString) {
                 let fileName = controller.textFields![0].text! + dotString + ext
                 do {
@@ -52,9 +55,14 @@ class ViewPicker: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let picker = segue.destination as! UIImagePickerController
         picker.delegate = self
-        picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        picker.sourceType = UIImagePickerController.SourceType.photoLibrary
         picker.allowsEditing = false
         picker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

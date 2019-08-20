@@ -115,10 +115,10 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
+        let cell:UITableViewCell = (self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell?)!
 
         cell.textLabel?.text = childDirs[indexPath.row]
-        cell.accessoryType = UITableViewCellAccessoryType.none
+        cell.accessoryType = UITableViewCell.AccessoryType.none
         
         return cell
     }
@@ -127,24 +127,24 @@ class ViewReorder: UIViewController, UITableViewDelegate, UITableViewDataSource 
         let cell = self.tableView.cellForRow(at: indexPath)
         if selectedDir == emptyString { // nothing selected, highlight this one
             selectedDir = childDirs[indexPath.row]
-            cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+            cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
             btnOpen.isEnabled = true
             btnSelect.isEnabled = (selectedDir == String(repeating: dotString, count: 2)) ? false : true
         }
         else if selectedDir == childDirs[indexPath.row] { // unhighlight this one
             selectedDir = emptyString
-            cell?.accessoryType = UITableViewCellAccessoryType.none
+            cell?.accessoryType = UITableViewCell.AccessoryType.none
             btnOpen.isEnabled = false
             btnSelect.isEnabled = false
         }
         else { // another cell is highlighted, let's switch !
             for i in 0...childDirs.count {
                 if i == indexPath.row {
-                    cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+                    cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
                     selectedDir = childDirs[indexPath.row]
                 }
                 else {
-                    self.tableView.cellForRow(at: IndexPath(row: i, section: 0))?.accessoryType = UITableViewCellAccessoryType.none
+                    self.tableView.cellForRow(at: IndexPath(row: i, section: 0))?.accessoryType = UITableViewCell.AccessoryType.none
                 }
                 btnOpen.isEnabled = true
                 btnSelect.isEnabled = (selectedDir == String(repeating: dotString, count: 2)) ? false : true

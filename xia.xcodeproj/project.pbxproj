@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A145C4E268DC718478C551A1 /* Pods_xiaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64BB42C294F13B1CE03DE39D /* Pods_xiaUITests.framework */; };
 		EBB13964036B575B8A8FDCE2 /* Pods_xia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A83A9D4CE53784DB02A34822 /* Pods_xia.framework */; };
 		EE85E4AB3F9DF4EF58E42247 /* Pods_xiaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF57D228DBA8712B6C941D93 /* Pods_xiaTests.framework */; };
 		F00A96FC201B213300F9EDD8 /* ViewTableLocalDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00A96FB201B213300F9EDD8 /* ViewTableLocalDatas.swift */; };
@@ -185,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A145C4E268DC718478C551A1 /* Pods_xiaUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,9 +423,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F06592AA21C9588E0080160F /* Build configuration list for PBXNativeTarget "xiaUITests" */;
 			buildPhases = (
+				722A7803C3EB3B14946F26B7 /* [CP] Check Pods Manifest.lock */,
 				F065929F21C9588E0080160F /* Sources */,
 				F06592A021C9588E0080160F /* Frameworks */,
 				F06592A121C9588E0080160F /* Resources */,
+				8D2ECC5FB30312C609D943DC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -450,7 +454,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4S6NJ45954;
 						DevelopmentTeamName = "Academie de Versailles";
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.iCloud = {
@@ -462,13 +466,14 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4S6NJ45954;
 						DevelopmentTeamName = "Academie de Versailles";
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						TestTargetID = F03EA5C41D12EB02008678BC;
 					};
 					F06592A221C9588E0080160F = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = 4S6NJ45954;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						TestTargetID = F03EA5C41D12EB02008678BC;
 					};
@@ -476,11 +481,12 @@
 			};
 			buildConfigurationList = F03EA5C01D12EB02008678BC /* Build configuration list for PBXProject "xia" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				fr,
 			);
 			mainGroup = F03EA5BC1D12EB02008678BC;
 			productRefGroup = F03EA5C61D12EB02008678BC /* Products */;
@@ -570,13 +576,35 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		722A7803C3EB3B14946F26B7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-xiaUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		72C701BBC03F27097229DE91 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-xiaTests/Pods-xiaTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-xiaTests/Pods-xiaTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -585,7 +613,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xiaTests/Pods-xiaTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-xiaTests/Pods-xiaTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8D2ECC5FB30312C609D943DC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-xiaUITests/Pods-xiaUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-xiaUITests/Pods-xiaUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BCD5B1741F0804CFF72DC854 /* [CP] Embed Pods Frameworks */ = {
@@ -594,7 +644,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-xia/Pods-xia-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-xia/Pods-xia-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -603,7 +653,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-xia/Pods-xia-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-xia/Pods-xia-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -809,7 +859,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -864,7 +914,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -881,11 +931,11 @@
 				CODE_SIGN_ENTITLEMENTS = xia/xia.entitlements;
 				DEVELOPMENT_TEAM = 4S6NJ45954;
 				INFOPLIST_FILE = xia/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -897,11 +947,11 @@
 				CODE_SIGN_ENTITLEMENTS = xia/xia.entitlements;
 				DEVELOPMENT_TEAM = 4S6NJ45954;
 				INFOPLIST_FILE = xia/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xia";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -915,7 +965,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xiaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Debug;
@@ -930,13 +980,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xiaTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/xia.app/xia";
 			};
 			name = Release;
 		};
 		F06592AB21C9588E0080160F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B07E5900770C782ED1B1CA03 /* Pods-xiaUITests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -953,7 +1004,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xiaUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = xia;
 			};
@@ -961,6 +1012,7 @@
 		};
 		F06592AC21C9588E0080160F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 911242FDE4F11A060E214CD8 /* Pods-xiaUITests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -976,7 +1028,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "fr.ac-versailles.dane.xiaUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = xia;
 			};

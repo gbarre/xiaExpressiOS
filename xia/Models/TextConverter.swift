@@ -102,7 +102,7 @@ class TextConverter: NSObject {
                     if cleanResult.suffix(4).lowercased() == jpgExtension {
                         if FileManager.default.fileExists(atPath: filePath) {
                             let img = UIImage(contentsOfFile: filePath)!
-                            let imageData = UIImageJPEGRepresentation(img, 85)
+                            let imageData = img.jpegData(compressionQuality: 85)
                             let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
                             output = output?.replacingOccurrences(of: cleanResult,
                                                                   with: String(format: htmlImgString, jpgB64String + base64String, cleanResult, videoWidth))
@@ -110,7 +110,7 @@ class TextConverter: NSObject {
                     } else if cleanResult.suffix(4).lowercased() == pngExtension {
                         if FileManager.default.fileExists(atPath: filePath) {
                             let img = UIImage(contentsOfFile: filePath)!
-                            let imageData = UIImagePNGRepresentation(img)
+                            let imageData = img.pngData()
                             let base64String = imageData!.base64EncodedString(options: .lineLength76Characters)
                             output = output?.replacingOccurrences(of: cleanResult,
                                                                   with: String(format: htmlImgString, pngB64String + base64String, cleanResult, videoWidth))

@@ -90,7 +90,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         
         landscape = (img.size.width > img.size.height) ? true : false
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ViewCreateDetails.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         let dSelector : Selector = #selector(ViewCreateDetails.detailInfos)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: dSelector)
@@ -575,8 +575,8 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
             }
         })
         let attributedTitle = NSAttributedString(string: NSLocalizedString(createDetailKey, comment: emptyString), attributes: [
-            NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 18),
-            NSAttributedStringKey.foregroundColor : UIColor.black
+            NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18),
+            NSAttributedString.Key.foregroundColor : UIColor.black
             ])
         menu.setValue(attributedTitle, forKey: attributedTitleKey)
         
@@ -791,7 +791,7 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
         let x: CGFloat = (availableWidth - imageWidth) / 2
         let y: CGFloat = 64 + (availableHeight - imageHeight) / 2
         imgView.frame = CGRect(x: x, y: y, width: imageWidth, height: imageHeight)
-        imgView.contentMode = UIViewContentMode.scaleAspectFill
+        imgView.contentMode = UIView.ContentMode.scaleAspectFill
         imgView.image = img
         view.addSubview(imgView)
         backView.backgroundColor = img.getMediumBackgroundColor()
@@ -869,48 +869,48 @@ class ViewCreateDetails: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func setBtnsIcons() {
-        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: self, action: nil)
+        let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: self, action: nil)
         fixedSpace.width = 15.0
         var items = [UIBarButtonItem]()
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: self, action: nil))
         items.append(UIBarButtonItem(title: NSLocalizedString(collectionKey, comment: emptyString), style: .plain, target: self, action: #selector(ViewCreateDetails.goBack)))
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil))
         var itemText = (fileTitle == emptyString) ? fileName : fileTitle
         if itemText.count > 47 {
             itemText = itemText[itemText.index(itemText.startIndex, offsetBy: 0)...itemText.index(itemText.startIndex, offsetBy: 46)] + String(repeating: dotString, count: 3)
         }
         items.append(UIBarButtonItem(title: (itemText), style: .plain, target: self, action: #selector(ViewCreateDetails.openMetas)))
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil))
         if !createDetail {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(ViewCreateDetails.addDetail(_:))))
             items.append(fixedSpace)
         }
         if (currentDetailTag != 0 && createDetail && details[String(currentDetailTag)]!.constraint == constraintPolygon && details[String(currentDetailTag)]?.points.count > 3) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.reply, target: self, action: #selector(ViewCreateDetails.polygonUndo)))
             items.append(fixedSpace)
         }
         if (currentDetailTag != 0 && !details[String(currentDetailTag)]!.locked) {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.trash, target: self, action: #selector(ViewCreateDetails.deleteDetail)))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.trash, target: self, action: #selector(ViewCreateDetails.deleteDetail)))
             items.append(fixedSpace)
         }
         if createDetail {
             items.append(UIBarButtonItem(title: NSLocalizedString(okKey, comment: emptyString), style: .done, target: self, action: #selector(ViewCreateDetails.stopCreation)))
         }
         else {
-            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.play, target: self, action: #selector(ViewCreateDetails.goForward)))
+            items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.play, target: self, action: #selector(ViewCreateDetails.goForward)))
         }
         items.append(fixedSpace)
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(ViewCreateDetails.export)))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: self, action: #selector(ViewCreateDetails.export)))
         items.append(fixedSpace)
         let editBtn: UIButton = UIButton()
         editBtn.frame = CGRect(x: 0, y: 0, width: 25, height: 25)
         editBtn.backgroundColor = blueColor
-        editBtn.setImage(UIImage(named: editString), for: UIControlState())
-        editBtn.addTarget(self, action: #selector(ViewCreateDetails.detailInfos), for: UIControlEvents.touchUpInside)
+        editBtn.setImage(UIImage(named: editString), for: UIControl.State())
+        editBtn.addTarget(self, action: #selector(ViewCreateDetails.detailInfos), for: UIControl.Event.touchUpInside)
         let customEditBtn: UIBarButtonItem = UIBarButtonItem()
         customEditBtn.customView = editBtn
         items.append(customEditBtn)
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: self, action: nil))
+        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: self, action: nil))
         
         myToolbar.items = items
     }

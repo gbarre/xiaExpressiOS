@@ -104,16 +104,16 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         else {
             let oldDirName = arrayNames[segueIndex].suffix(arrayNames[segueIndex].count - salt.count)
             // Ask for folder name in popup
-            let controller = UIAlertController(title: NSLocalizedString(folderNameKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
+            let controller = UIAlertController(title: NSLocalizedString(folderNameKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
             
             controller.addTextField(configurationHandler: {(textField: UITextField!) in
                 textField.keyboardType = UIKeyboardType.alphabet
                 textField.text = String(oldDirName)
             })
-            controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
+            controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertAction.Style.cancel, handler: { action in
                 // do nothing
             }))
-            controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+            controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: { action in
                 let folder = controller.textFields!.first!.text
                 if self.checkDirName(dirName: folder!) {
                     // Move folder
@@ -199,15 +199,15 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         let fileManager = FileManager.default
         
         // Ask for folder name in popup
-        let controller = UIAlertController(title: NSLocalizedString(folderNameKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
+        let controller = UIAlertController(title: NSLocalizedString(folderNameKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
         
         controller.addTextField(configurationHandler: {(textField: UITextField!) in
             textField.keyboardType = UIKeyboardType.alphabet
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertAction.Style.cancel, handler: { action in
             // do nothing
         }))
-        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: { action in
             let folder = controller.textFields!.first!.text
             if self.checkDirName(dirName: folder!) {
                 // Create folder + images & xml subfolders
@@ -244,7 +244,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
                 customCell.wobble(true)
             }
             CollectionView.allowsMultipleSelection = true
-            CollectionView.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
+            CollectionView.selectItem(at: nil, animated: true, scrollPosition: UICollectionView.ScrollPosition())
             // Cosmetic...
             btnCreateState.isEnabled = false
             btnCreateState.tintColor = selectingColor.withAlphaComponent(0)
@@ -254,7 +254,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             self.view.backgroundColor = selectingColor
             navBar.tintColor = UIColor.white
             navBarTitle.title = String(selectedPhotos.count) + spaceString + ((selectedPhotos.count > 1) ? NSLocalizedString(filesSelectedKey, comment: emptyString) : NSLocalizedString(fileSelectedKey, comment: emptyString))
-            navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         }
         buildLeftNavbarItems(selectedPhotos.count)
     }
@@ -268,7 +268,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         buildLeftNavbarItems()
         
         // add observer to detect enter foreground and rebuild collection
-        NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
         
         // purge tmp
         let fileManager = FileManager.default
@@ -549,7 +549,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     func changeCellLabelBkgColor(_ path: IndexPath) {
         var labelColor: UIColor
         if selectedPhotos.contains(path) {
-            let indexOfPhoto = selectedPhotos.index(of: path)
+            let indexOfPhoto = selectedPhotos.firstIndex(of: path)
             selectedPhotos.remove(at: indexOfPhoto!)
             labelColor = UIColor.clear
             if arrayNames[path.row].prefix(salt.count) == salt {
@@ -573,18 +573,18 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     func checkDirName(dirName: String) -> Bool {
         let fileManager = FileManager.default
         if !dirName.isAlphanumeric {
-            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(alphaNumKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             return false
         } else if reservedDirs.contains(dirName) {
-            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(reservedKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(reservedKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             return false
         } else if fileManager.fileExists(atPath: self.currentDirs[rootString]! + separatorString + dirName) {
-            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(alreadyExistKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: nil))
+            let alert = UIAlertController(title: NSLocalizedString(warningKey, comment: emptyString), message: NSLocalizedString(alreadyExistKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             return false
         } else {
@@ -610,7 +610,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
         navBar.tintColor = UIColor.white
         navBarTitle.title = (currentDirs[rootString]! == documentsDirectory) ?
             XiaTitleString : String(format: XiaTitleSubDirString, getDirName(path: currentDirs[rootString]!))
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
     
     func deleteFiles(_ path: IndexPath) {
@@ -637,7 +637,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     @objc func handleTap(_ gestureReconizer: UITapGestureRecognizer) {
-        if gestureReconizer.state != UIGestureRecognizerState.ended {
+        if gestureReconizer.state != UIGestureRecognizer.State.ended {
             return
         }
         
@@ -680,7 +680,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
     }
     
     func displayAlert(title: String, message: String) {
-        let refreshAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let refreshAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         
         refreshAlert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: .default, handler: { (action: UIAlertAction!) in
         }))
@@ -771,7 +771,7 @@ class ViewCollectionController: UIViewController, UICollectionViewDataSource, UI
             
             
             // store new image to document directory
-            let imageData = UIImageJPEGRepresentation(image!, 85)
+            let imageData = image!.jpegData(compressionQuality: 85)
             do {
                 try imageData?.write(to: URL(fileURLWithPath: imagesDirectory + separatorString + String(now) + jpgExtension), options: [.atomicWrite])
             }

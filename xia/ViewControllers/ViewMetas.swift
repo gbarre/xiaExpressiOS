@@ -79,17 +79,17 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var roSwitch: UISwitch!
     @IBAction func roBtnAction(_ sender: AnyObject) {
         let passTitle = (readOnlyState) ? NSLocalizedString(enterCodeKey, comment: emptyString) : NSLocalizedString(createCodeKey, comment: emptyString)
-        let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let controller = UIAlertController(title: passTitle, message: nil, preferredStyle: UIAlertController.Style.alert)
         
         controller.addTextField(configurationHandler: {(textField: UITextField!) in
             textField.placeholder = NSLocalizedString(passwordKey, comment: emptyString)
             textField.isSecureTextEntry = true  // setting the secured text for using password
             textField.keyboardType = UIKeyboardType.decimalPad
         })
-        controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertAction.Style.cancel, handler: { action in
             self.roSwitch.isOn = self.readOnlyState
         }))
-        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+        controller.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: { action in
             self.pass = (self.xml[xmlXiaKey][xmlreadonlyKey].attributes[xmlCodeKey] == nil) ? emptyString : self.xml[xmlXiaKey][xmlreadonlyKey].attributes[xmlCodeKey]!
             let currentPass = controller.textFields!.first!.text
             
@@ -98,8 +98,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                     self.readOnlyState = !self.readOnlyState
                 }
                 else {
-                    let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.destructive, handler: { action in
+                    let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.destructive, handler: { action in
                         self.present(controller, animated: true, completion: nil)
                     }))
                     self.present(alert, animated: true, completion: nil)
@@ -107,17 +107,17 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
             }
             else { // create password
                 // double check
-                let check = UIAlertController(title: NSLocalizedString(doubleCheckKey, comment: emptyString), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                let check = UIAlertController(title: NSLocalizedString(doubleCheckKey, comment: emptyString), message: nil, preferredStyle: UIAlertController.Style.alert)
                 
                 check.addTextField(configurationHandler: {(checkPass: UITextField!) in
                     checkPass.placeholder = NSLocalizedString(passwordKey, comment: emptyString)
                     checkPass.isSecureTextEntry = true  // setting the secured text for using password
                     checkPass.keyboardType = UIKeyboardType.decimalPad
                 })
-                check.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertActionStyle.cancel, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString(cancelKey, comment: emptyString), style: UIAlertAction.Style.cancel, handler: { action in
                     self.roSwitch.isOn = self.readOnlyState
                 }))
-                check.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.default, handler: { action in
+                check.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.default, handler: { action in
                     let doubleCheck = check.textFields!.first!.text
                     if currentPass == doubleCheck {
                         self.pass = (currentPass == nil) ? emptyString : currentPass!
@@ -129,8 +129,8 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                         
                     }
                     else {
-                        let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertActionStyle.destructive, handler: nil))
+                        let alert = UIAlertController(title: NSLocalizedString(errorKey, comment: emptyString), message: NSLocalizedString(tryAgainKey, comment: emptyString), preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: NSLocalizedString(okKey, comment: emptyString), style: UIAlertAction.Style.destructive, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }
                     
@@ -155,7 +155,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtSource: UITextField!
     @IBOutlet var txtDate: UIButton!
     @IBAction func showDatePicker(_ sender: AnyObject) {
-        if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && !iPadPro {
+        if UIDevice.current.orientation.isLandscape && !iPadPro {
             if showKbd {
                 txtCreator.resignFirstResponder()
                 datePicker.isHidden = false
@@ -172,7 +172,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         let strDate = dateFormatter.string(from: datePicker.date)
-        txtDate.setTitle(strDate, for: UIControlState())
+        txtDate.setTitle(strDate, for: UIControl.State())
     }
     
     // Third subview
@@ -184,7 +184,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     @IBOutlet var txtCoverage: UITextField!
     @IBOutlet var txtLicense: UIButton!
     @IBAction func showLicensePicker(_ sender: AnyObject) {
-        if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && !iPadPro {
+        if UIDevice.current.orientation.isLandscape && !iPadPro {
             if showKbd {
                 txtLanguages.resignFirstResponder()
                 licensePicker.isHidden = false
@@ -208,10 +208,10 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         segment.selectedSegmentIndex = selectedSegment
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewMetas.keybShow(_:)),
-            name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+            name: UIResponder.keyboardWillHideNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewMetas.keybHide(_:)),
-            name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+            name: UIResponder.keyboardWillHideNotification, object: nil)
         
         // Get the device model identifier
         var systemInfo = utsname()
@@ -249,11 +249,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         dateFormatter.timeStyle = DateFormatter.Style.none
         if ( xml[xmlXiaKey][dateKey].value != nil && xml[xmlXiaKey][dateKey].value! != String(format: xmlElementNotFound, dateKey) ){
             detailDate = (dateFormatter.date(from: xml[xmlXiaKey][dateKey].value!) != nil) ? dateFormatter.date(from: xml[xmlXiaKey][dateKey].value!)! : detailDate
-            txtDate.setTitle(xml[xmlXiaKey][dateKey].value!, for: UIControlState())
+            txtDate.setTitle(xml[xmlXiaKey][dateKey].value!, for: UIControl.State())
         }
         else {
             let stringDate: String = dateFormatter.string(from: detailDate)
-            txtDate.setTitle(stringDate, for: UIControlState())
+            txtDate.setTitle(stringDate, for: UIControl.State())
             
         }
         datePicker.setDate(detailDate, animated: false)
@@ -275,7 +275,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
                 licensePicker.selectRow(index, inComponent: 0, animated: true)
             }
         }
-        txtLicense.setTitle(xmlLicense, for: UIControlState())
+        txtLicense.setTitle(xmlLicense, for: UIControl.State())
         selectedLicense = xmlLicense
         
         // Fourth subview
@@ -310,11 +310,11 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
         }
         if index == 1 {
             txtCreator.becomeFirstResponder()
-            datePicker.isHidden = (UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && !iPadPro) ? true : false
+            datePicker.isHidden = (UIDevice.current.orientation.isLandscape && !iPadPro) ? true : false
         }
         if index == 2 {
             txtLanguages.becomeFirstResponder()
-            licensePicker.isHidden = (UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && !iPadPro) ? true : false
+            licensePicker.isHidden = (UIDevice.current.orientation.isLandscape && !iPadPro) ? true : false
         }
         if index == 3 {
             imgTitle.becomeFirstResponder()
@@ -366,7 +366,7 @@ class ViewMetas: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate 
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedLicense = availableLicenses[row]
-        txtLicense.setTitle(selectedLicense, for: UIControlState())
+        txtLicense.setTitle(selectedLicense, for: UIControl.State())
     }
     
 }
